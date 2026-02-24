@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LHRC Transformation Scorecard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f0f4f8; color: #1a202c; }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, #1a3a5c 0%, #0f2744 100%);
+    color: white; padding: 20px 32px;
+    display: flex; align-items: center; justify-content: space-between;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+  }
+  .header-left h1 { font-size: 1.4rem; font-weight: 700; letter-spacing: 0.3px; }
+  .header-left p { font-size: 0.78rem; opacity: 0.75; margin-top: 2px; }
+  .header-right { display: flex; gap: 12px; align-items: center; }
+  .phase-badge {
+    background: #e67e22; color: white; padding: 5px 14px;
+    border-radius: 20px; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.5px;
+  }
+  .date-badge {
+    background: rgba(255,255,255,0.15); padding: 5px 14px;
+    border-radius: 20px; font-size: 0.75rem; font-weight: 600;
+  }
+
+  /* PHASE STRIP */
+  .phase-strip {
+    background: white; border-bottom: 1px solid #e2e8f0;
+    padding: 12px 32px; display: flex; gap: 0; overflow: hidden;
+  }
+  .phase-item {
+    flex: 1; padding: 8px 16px; position: relative; cursor: default;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .phase-item:not(:last-child)::after {
+    content: ''; position: absolute; right: -12px; top: 50%; transform: translateY(-50%);
+    width: 0; height: 0;
+    border-top: 20px solid transparent; border-bottom: 20px solid transparent;
+    border-left: 12px solid #e2e8f0; z-index: 2;
+  }
+  .phase-item:not(:last-child)::before {
+    content: ''; position: absolute; right: -10px; top: 50%; transform: translateY(-50%);
+    width: 0; height: 0;
+    border-top: 19px solid transparent; border-bottom: 19px solid transparent;
+    border-left: 11px solid white; z-index: 3;
+  }
+  .phase-dot { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 800; flex-shrink: 0; }
+  .phase-item.active .phase-dot { background: #1a3a5c; color: white; }
+  .phase-item.upcoming .phase-dot { background: #e2e8f0; color: #718096; }
+  .phase-item.completed .phase-dot { background: #27ae60; color: white; }
+  .phase-text h4 { font-size: 0.78rem; font-weight: 700; color: #1a202c; }
+  .phase-text p { font-size: 0.68rem; color: #718096; }
+
+  /* MAIN CONTENT */
+  .main { padding: 20px 32px; max-width: 1400px; margin: 0 auto; }
+
+  /* SECTION TITLES */
+  .section-title {
+    font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 1.2px; color: #718096; margin-bottom: 12px; margin-top: 20px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .section-title::after { content: ''; flex: 1; height: 1px; background: #e2e8f0; }
+
+  /* KPI CARDS */
+  .kpi-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
+  .kpi-card {
+    background: white; border-radius: 10px; padding: 16px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06); border-top: 3px solid #1a3a5c;
+    position: relative; overflow: hidden;
+  }
+  .kpi-card.highlight { border-top-color: #e67e22; }
+  .kpi-card.green { border-top-color: #27ae60; }
+  .kpi-card.purple { border-top-color: #8e44ad; }
+  .kpi-card.teal { border-top-color: #16a085; }
+  .kpi-card.red { border-top-color: #e74c3c; }
+  .kpi-label { font-size: 0.67rem; font-weight: 600; color: #718096; text-transform: uppercase; letter-spacing: 0.8px; }
+  .kpi-value { font-size: 1.55rem; font-weight: 800; color: #1a202c; margin: 4px 0 2px; line-height: 1; }
+  .kpi-sub { font-size: 0.68rem; color: #a0aec0; }
+  .kpi-target { font-size: 0.68rem; margin-top: 8px; color: #718096; }
+  .kpi-target span { font-weight: 700; color: #27ae60; }
+  .progress-bar { height: 4px; background: #edf2f7; border-radius: 2px; margin-top: 8px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 2px; transition: width 0.8s ease; }
+  .delta-badge {
+    position: absolute; top: 12px; right: 12px;
+    font-size: 0.65rem; font-weight: 700; padding: 2px 7px;
+    border-radius: 10px;
+  }
+  .delta-up { background: #e8f5e9; color: #27ae60; }
+  .delta-down { background: #fce4ec; color: #e74c3c; }
+
+  /* CHART GRID */
+  .chart-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
+  .chart-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .chart-card {
+    background: white; border-radius: 10px; padding: 20px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .chart-title { font-size: 0.8rem; font-weight: 700; color: #2d3748; margin-bottom: 4px; }
+  .chart-subtitle { font-size: 0.68rem; color: #a0aec0; margin-bottom: 14px; }
+  .chart-canvas-wrapper { position: relative; }
+
+  /* MILESTONE TRACKER */
+  .milestone-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .milestone-card {
+    background: white; border-radius: 10px; padding: 18px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .milestone-header {
+    display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;
+    padding-bottom: 10px; border-bottom: 1px solid #edf2f7;
+  }
+  .milestone-header h3 { font-size: 0.82rem; font-weight: 700; color: #1a202c; }
+  .milestone-year { font-size: 0.7rem; color: white; background: #1a3a5c; padding: 3px 10px; border-radius: 10px; font-weight: 700; }
+  .milestone-year.fy27 { background: #e67e22; }
+  .milestone-year.fy28 { background: #8e44ad; }
+  .milestone-year.fy29 { background: #27ae60; }
+  .milestone-kpis { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+  .milestone-kpi { background: #f7fafc; border-radius: 6px; padding: 8px 10px; }
+  .milestone-kpi-label { font-size: 0.62rem; color: #a0aec0; font-weight: 600; text-transform: uppercase; }
+  .milestone-kpi-value { font-size: 0.92rem; font-weight: 800; color: #1a202c; margin-top: 2px; }
+  .milestone-items { list-style: none; }
+  .milestone-items li {
+    font-size: 0.71rem; color: #4a5568; padding: 5px 0;
+    border-bottom: 1px dashed #edf2f7; display: flex; align-items: flex-start; gap: 7px;
+  }
+  .milestone-items li:last-child { border-bottom: none; }
+  .milestone-items li::before { content: '→'; color: #1a3a5c; font-weight: 700; flex-shrink: 0; margin-top: 0px; }
+
+  /* CAPEX TRACKER */
+  .capex-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 16px; }
+  .capex-list { list-style: none; }
+  .capex-item {
+    display: flex; align-items: center; gap: 10px; padding: 9px 0;
+    border-bottom: 1px solid #edf2f7;
+  }
+  .capex-item:last-child { border-bottom: none; }
+  .capex-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .capex-name { font-size: 0.72rem; color: #4a5568; flex: 1; }
+  .capex-amount { font-size: 0.72rem; font-weight: 700; color: #1a202c; }
+  .capex-pct { font-size: 0.65rem; color: #a0aec0; margin-left: 4px; }
+  .capex-summary { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 16px; }
+  .capex-sum-item { background: #f7fafc; border-radius: 8px; padding: 12px; text-align: center; }
+  .capex-sum-label { font-size: 0.62rem; color: #a0aec0; text-transform: uppercase; font-weight: 600; }
+  .capex-sum-value { font-size: 1.1rem; font-weight: 800; color: #1a202c; margin-top: 3px; }
+
+  /* RISK STRIP */
+  .risk-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+  .risk-card { background: white; border-radius: 8px; padding: 12px 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); border-left: 3px solid; }
+  .risk-card.high { border-color: #e74c3c; }
+  .risk-card.medium { border-color: #f39c12; }
+  .risk-card.low { border-color: #27ae60; }
+  .risk-label { font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+  .risk-card.high .risk-label { color: #e74c3c; }
+  .risk-card.medium .risk-label { color: #f39c12; }
+  .risk-card.low .risk-label { color: #27ae60; }
+  .risk-name { font-size: 0.75rem; font-weight: 700; color: #1a202c; margin-top: 4px; }
+  .risk-desc { font-size: 0.65rem; color: #718096; margin-top: 3px; line-height: 1.4; }
+
+  /* FOOTER */
+  .footer {
+    background: #1a3a5c; color: rgba(255,255,255,0.5);
+    text-align: center; padding: 12px; font-size: 0.65rem; margin-top: 24px;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-left">
+    <h1>LHRC Transformation Scorecard</h1>
+    <p>VPS Lakeshore Hospital & Research Centre, Kochi &nbsp;|&nbsp; Complex Cancer & Rare Disease Transformation</p>
+  </div>
+  <div class="header-right">
+    <div class="phase-badge">▶ PRE PHASE 1</div>
+    <div class="date-badge">Feb 2026 &nbsp;|&nbsp; FY26 M10</div>
+  </div>
+</div>
+
+<!-- PHASE STRIP -->
+<div class="phase-strip">
+  <div class="phase-item active">
+    <div class="phase-dot">✦</div>
+    <div class="phase-text"><h4>FY26 Baseline</h4><p>Current &nbsp;|&nbsp; INR 500 Cr / 19% EBITDA</p></div>
+  </div>
+  <div class="phase-item upcoming">
+    <div class="phase-dot">1</div>
+    <div class="phase-text"><h4>Phase 1 – FY27</h4><p>Scope & Transform &nbsp;|&nbsp; INR 150 Cr</p></div>
+  </div>
+  <div class="phase-item upcoming">
+    <div class="phase-dot">2</div>
+    <div class="phase-text"><h4>Phase 2 – FY28</h4><p>Scale-Up &nbsp;|&nbsp; INR 100 Cr</p></div>
+  </div>
+  <div class="phase-item upcoming">
+    <div class="phase-dot">3</div>
+    <div class="phase-text"><h4>Phase 3 – FY29</h4><p>Market Leadership &nbsp;|&nbsp; INR 50 Cr</p></div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- SECTION: FY26 BASELINE KPIs -->
+  <div class="section-title">FY26 Baseline KPIs &nbsp; <span style="font-size:0.65rem;font-weight:500;color:#a0aec0;text-transform:none;letter-spacing:0">(YTD Jan 2026 actuals · FY26 full-year estimates)</span></div>
+  <div class="kpi-grid">
+
+    <div class="kpi-card highlight">
+      <div class="delta-badge delta-up">+23% YoY</div>
+      <div class="kpi-label">Revenue</div>
+      <div class="kpi-value">₹500 Cr</div>
+      <div class="kpi-sub">FY26E &nbsp;|&nbsp; ₹381 Cr YTD (10M)</div>
+      <div class="kpi-target">FY29 target: <span>₹780 Cr</span></div>
+      <div class="progress-bar"><div class="progress-fill" style="width:64%;background:#e67e22;"></div></div>
+    </div>
+
+    <div class="kpi-card green">
+      <div class="delta-badge delta-up">+34% YoY</div>
+      <div class="kpi-label">EBITDA</div>
+      <div class="kpi-value">₹95 Cr</div>
+      <div class="kpi-sub">19.0% margin &nbsp;|&nbsp; FY26E</div>
+      <div class="kpi-target">FY29 target: <span>₹187 Cr (24%)</span></div>
+      <div class="progress-bar"><div class="progress-fill" style="width:51%;background:#27ae60;"></div></div>
+    </div>
+
+    <div class="kpi-card purple">
+      <div class="delta-badge delta-up">+7% YoY</div>
+      <div class="kpi-label">ARPOB / day</div>
+      <div class="kpi-value">₹49K</div>
+      <div class="kpi-sub">Blended &nbsp;|&nbsp; IP: ₹35,188</div>
+      <div class="kpi-target">FY29 target: <span>₹70K (+43%)</span></div>
+      <div class="progress-bar"><div class="progress-fill" style="width:70%;background:#8e44ad;"></div></div>
+    </div>
+
+    <div class="kpi-card teal">
+      <div class="delta-badge delta-up">+11pp YoY</div>
+      <div class="kpi-label">Occupancy</div>
+      <div class="kpi-value">63%</div>
+      <div class="kpi-sub">572 operating beds</div>
+      <div class="kpi-target">FY29 target: <span>70% / 700 beds</span></div>
+      <div class="progress-bar"><div class="progress-fill" style="width:90%;background:#16a085;"></div></div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="delta-badge delta-up">+20% YoY</div>
+      <div class="kpi-label">IP Discharges</div>
+      <div class="kpi-value">25,283</div>
+      <div class="kpi-sub">FY26E &nbsp;|&nbsp; 18,476 YTD (10M)</div>
+      <div class="kpi-target">FY29 target: <span>32,500</span></div>
+      <div class="progress-bar"><div class="progress-fill" style="width:78%;background:#1a3a5c;"></div></div>
+    </div>
+
+    <div class="kpi-card red">
+      <div class="kpi-label">Complex Care Mix</div>
+      <div class="kpi-value">36%</div>
+      <div class="kpi-sub">Core transformation lever</div>
+      <div class="kpi-target">FY29 target: <span>62% (+26pp)</span></div>
+      <div class="progress-bar"><div class="progress-fill" style="width:58%;background:#e74c3c;"></div></div>
+    </div>
+
+  </div><!-- /kpi-grid -->
+
+  <!-- SECTION: FINANCIAL TRAJECTORY -->
+  <div class="section-title">Financial Trajectory &nbsp; <span style="font-size:0.65rem;font-weight:500;color:#a0aec0;text-transform:none;letter-spacing:0">(FY22 actuals → FY29 targets)</span></div>
+  <div class="chart-grid">
+    <div class="chart-card">
+      <div class="chart-title">Revenue & EBITDA (INR Crore)</div>
+      <div class="chart-subtitle">Historical actuals + transformation plan projections — shaded region = projected</div>
+      <div class="chart-canvas-wrapper"><canvas id="revenueChart" height="200"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">EBITDA Margin %</div>
+      <div class="chart-subtitle">Target: 24% by FY29 via case mix shift</div>
+      <div class="chart-canvas-wrapper"><canvas id="marginChart" height="200"></canvas></div>
+    </div>
+  </div>
+
+  <!-- SECTION: OPERATIONAL METRICS -->
+  <div class="section-title">Key Operational Metrics</div>
+  <div class="chart-grid-3">
+    <div class="chart-card">
+      <div class="chart-title">ARPOB Trajectory (INR/day)</div>
+      <div class="chart-subtitle">From ₹33.4K (FY22) → ₹70K (FY29)</div>
+      <canvas id="arpobChart" height="180"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Complex Care Mix (%)</div>
+      <div class="chart-subtitle">Target: 62% by FY29 — the core transformation lever</div>
+      <canvas id="casemixChart" height="180"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Occupancy & Bed Expansion</div>
+      <div class="chart-subtitle">Beds: 572 → 700 &nbsp;|&nbsp; Occupancy: 63% → 70%</div>
+      <canvas id="occupancyChart" height="180"></canvas>
+    </div>
+  </div>
+
+  <!-- SECTION: PHASE MILESTONES -->
+  <div class="section-title">3-Year Phase Milestones</div>
+  <div class="milestone-grid">
+
+    <div class="milestone-card">
+      <div class="milestone-header">
+        <h3>Phase 1 — Scope & Transform</h3>
+        <span class="milestone-year fy27">FY27</span>
+      </div>
+      <div class="milestone-kpis">
+        <div class="milestone-kpi">
+          <div class="milestone-kpi-label">Revenue</div>
+          <div class="milestone-kpi-value">₹575 Cr</div>
+        </div>
+        <div class="milestone-kpi">
+          <div class="milestone-kpi-label">EBITDA</div>
+          <div class="milestone-kpi-value">₹115 Cr</div>
+        </div>
+        <div class="milestone-kpi">
+          <div class="milestone-kpi-label">Complex Mix</div>
+          <div class="milestone-kpi-value">42%</div>
+        </div>
+        <div class="milestone-kpi">
+          <div class="milestone-kpi-label">ARPOB</div>
+          <div class="milestone-kpi-value">₹54K</div>
+        </div>
+      </div>
+      <ul class="milestone-items">
+        <li>LINAC commissioned &amp; AERB approved</li>
+        <li>5–6 senior oncologists recruited</li>
+        <li>620 beds operational</li>
+        <li>AI-based EMR deployed</li>
+        <li>Molecular diagnostics lab repurposed</li>
+        <li>Capex: INR 150 Cr deployed</li>
+      </ul>
+    </div>
+
+    <div class="milestone-card">
+      <div class="milestone-header">
+        <h3>Phase 2 — Scale-Up</h3>
+        <span class="milestone-year fy28">FY28</span>
+      </div>
+      <div class="milestone-kpis">
+        <div class="milestone-kpi">
+          <div class="milestone-kpi-label">Revenue</div>
+          <div class="milestone-kpi-value">₹675 Cr</div>
+        </div>
+        <div class="milestone-kpi">
+          <div class="milestone-kpi-label">EBITDA</div>
+          <div class="milestone-kpi-value">₹149 Cr</div>
+        </div>
+        <div class="milestone-kpi">
+          <div class="milestone-kpi-label">Complex Mix</div>
+          <div class="milestone-kpi-value">52%</div>
+        </div>
+        <div class="milestone-kpi">
+          <div class="milestone-kpi-label">ARPOB</div>
+          <div class="milestone-kpi-value">₹62K</div>
+        </div>
+      </div>
+      <ul class="milestone-items">
+        <li>Multiple LINACs operational</li>
+        <li>SBRT &amp; SRS capabilities live</li>
+        <li>Genetics &amp; Rare Disease Centre functional</li>
+        <li>650 beds operational</li>
+        <li>Delhi site under construction (M7–18)</li>
+        <li>Capex: INR 100 Cr deployed</li>
+      </ul>
+    </div>
+
+    <div class="milestone-card">
+      <div class="milestone-header">
+        <h3>Phase 3 — Market Leadership</h3>
+        <span class="milestone-year fy29">FY29</span>
+      </div>
+      <div class="milestone-kpis">
+        <div class="milestone-kpi">
+          <div class="milestone-kpi-label">Revenue</div>
+          <div class="milestone-kpi-value">₹780 Cr</div>
+        </div>
+        <div class="milestone-kpi">
+          <div class="milestone-kpi-label">EBITDA</div>
+          <div class="milestone-kpi-value">₹187 Cr</div>
+        </div>
+        <div class="milestone-kpi">
+          <div class="milestone-kpi-label">Complex Mix</div>
+          <div class="milestone-kpi-value">62%</div>
+        </div>
+        <div class="milestone-kpi">
+          <div class="milestone-kpi-label">ARPOB</div>
+          <div class="milestone-kpi-value">₹70K</div>
+        </div>
+      </div>
+      <ul class="milestone-items">
+        <li>700 beds at 70% occupancy</li>
+        <li>200+ BMTs per year</li>
+        <li>Delhi Qutub Centre open (Q1 FY29)</li>
+        <li>24% EBITDA margin achieved</li>
+        <li>NRI &amp; international referrals: ₹35 Cr</li>
+        <li>Capex: INR 50 Cr deployed</li>
+      </ul>
+    </div>
+
+  </div><!-- /milestone-grid -->
+
+  <!-- SECTION: CAPEX DEPLOYMENT -->
+  <div class="section-title">Capital Deployment Plan — INR 300 Cr (FY27–FY29)</div>
+  <div class="capex-grid">
+    <div class="chart-card">
+      <div class="capex-summary">
+        <div class="capex-sum-item">
+          <div class="capex-sum-label">Total Capex</div>
+          <div class="capex-sum-value">₹300 Cr</div>
+        </div>
+        <div class="capex-sum-item">
+          <div class="capex-sum-label">Equity</div>
+          <div class="capex-sum-value">₹100 Cr</div>
+        </div>
+        <div class="capex-sum-item">
+          <div class="capex-sum-label">Debt</div>
+          <div class="capex-sum-value">₹200 Cr</div>
+        </div>
+      </div>
+      <ul class="capex-list">
+        <li class="capex-item"><div class="capex-dot" style="background:#1a3a5c;"></div><div class="capex-name">Radiation Oncology (2 LINACs)</div><div class="capex-amount">₹70 Cr</div><div class="capex-pct">23%</div></li>
+        <li class="capex-item"><div class="capex-dot" style="background:#e67e22;"></div><div class="capex-name">Oncology Infrastructure & Beds</div><div class="capex-amount">₹65 Cr</div><div class="capex-pct">22%</div></li>
+        <li class="capex-item"><div class="capex-dot" style="background:#8e44ad;"></div><div class="capex-name">Working Capital & Physician Ramp</div><div class="capex-amount">₹50 Cr</div><div class="capex-pct">17%</div></li>
+        <li class="capex-item"><div class="capex-dot" style="background:#16a085;"></div><div class="capex-name">Imaging & Diagnostics (PET-CT)</div><div class="capex-amount">₹35 Cr</div><div class="capex-pct">12%</div></li>
+        <li class="capex-item"><div class="capex-dot" style="background:#27ae60;"></div><div class="capex-name">BMT & Transplant Expansion</div><div class="capex-amount">₹35 Cr</div><div class="capex-pct">12%</div></li>
+        <li class="capex-item"><div class="capex-dot" style="background:#e74c3c;"></div><div class="capex-name">Genetics & Rare Disease Lab</div><div class="capex-amount">₹25 Cr</div><div class="capex-pct">8%</div></li>
+        <li class="capex-item"><div class="capex-dot" style="background:#f39c12;"></div><div class="capex-name">IT & Digital (AI EMR)</div><div class="capex-amount">₹20 Cr</div><div class="capex-pct">7%</div></li>
+      </ul>
+      <div style="margin-top:14px;padding-top:12px;border-top:1px solid #edf2f7;font-size:0.7rem;color:#718096;">
+        Capital yield (FY29 incremental EBITDA / invested): <strong style="color:#27ae60;">31%</strong> &nbsp;·&nbsp;
+        Incremental EBITDA FY29 vs FY26: <strong style="color:#1a3a5c;">₹92 Cr</strong>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-title">Revenue Bridge: FY26 → FY29 (INR Crore)</div>
+      <div class="chart-subtitle">Growth decomposition by stream</div>
+      <canvas id="bridgeChart" height="220"></canvas>
+    </div>
+  </div>
+
+  <!-- SECTION: KEY RISKS -->
+  <div class="section-title">Key Risks</div>
+  <div class="risk-grid">
+    <div class="risk-card high">
+      <div class="risk-label">● HIGH</div>
+      <div class="risk-name">Execution Speed</div>
+      <div class="risk-desc">Parallel workstreams across infra, recruitment & regulatory. Needs dedicated PMO + weekly steering committee.</div>
+    </div>
+    <div class="risk-card high">
+      <div class="risk-label">● HIGH</div>
+      <div class="risk-name">Physician Recruitment</div>
+      <div class="risk-desc">5–6 senior oncologists in 18 months vs. typical 24–36 month cycle. Premium comp + international search needed.</div>
+    </div>
+    <div class="risk-card medium">
+      <div class="risk-label">● MEDIUM</div>
+      <div class="risk-name">ARPOB Ramp</div>
+      <div class="risk-desc">₹49K → ₹70K requires 43% improvement. Depends on case mix shift, not just pricing.</div>
+    </div>
+    <div class="risk-card medium">
+      <div class="risk-label">● MEDIUM</div>
+      <div class="risk-name">Construction Delays</div>
+      <div class="risk-desc">Delhi monsoon & approval timelines could slip Q1 FY29 target. 9% contingency budgeted (₹13 Cr).</div>
+    </div>
+    <div class="risk-card low">
+      <div class="risk-label">● LOW</div>
+      <div class="risk-name">Govt Scheme Dilution</div>
+      <div class="risk-desc">ECHS / Ayushman volumes could pressure blended ARPOB. Mitigation: volume caps, premium pay focus.</div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<div class="footer">
+  LHRC Transformation Scorecard &nbsp;|&nbsp; VPS Lakeshore Hospital & Research Centre &nbsp;|&nbsp; Confidential — Internal Use Only &nbsp;|&nbsp; Data: Feb 2026
+</div>
+
+<script>
+const YEARS = ['FY22','FY23','FY24','FY25','FY26E','FY27E','FY28E','FY29E'];
+const ACTUAL_END = 4; // index of last actual (FY26E inclusive)
+
+function makeGradient(ctx, colorStart, colorEnd) {
+  const grad = ctx.createLinearGradient(0, 0, 0, 300);
+  grad.addColorStop(0, colorStart);
+  grad.addColorStop(1, colorEnd);
+  return grad;
+}
+
+// ---- REVENUE & EBITDA CHART ----
+{
+  const ctx = document.getElementById('revenueChart').getContext('2d');
+  const revenueData = [242, 359, 396, 408, 500, 575, 675, 780];
+  const ebitdaData  = [34,  85,  95,  71,  95, 115, 149, 187];
+  new Chart(ctx, {
+    data: {
+      labels: YEARS,
+      datasets: [
+        {
+          type: 'bar', label: 'Revenue (₹ Cr)',
+          data: revenueData,
+          backgroundColor: YEARS.map((_, i) => i < ACTUAL_END ? '#1a3a5c' : 'rgba(26,58,92,0.35)'),
+          borderRadius: 4, yAxisID: 'y',
+        },
+        {
+          type: 'line', label: 'EBITDA (₹ Cr)',
+          data: ebitdaData,
+          borderColor: '#e67e22', backgroundColor: 'rgba(230,126,34,0.08)',
+          borderWidth: 2.5, pointRadius: 5, pointBackgroundColor: YEARS.map((_, i) => i < ACTUAL_END ? '#e67e22' : 'rgba(230,126,34,0.5)'),
+          tension: 0.35, yAxisID: 'y', fill: false,
+          borderDash: [0], segment: { borderDash: ctx2 => ctx2.p1DataIndex >= ACTUAL_END - 1 ? [5,4] : [] }
+        }
+      ]
+    },
+    options: {
+      responsive: true, interaction: { mode: 'index' },
+      plugins: {
+        legend: { position: 'top', labels: { font: { size: 11 }, boxWidth: 14 } },
+        tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ₹${ctx.parsed.y} Cr` } },
+        annotation: {
+          annotations: {
+            box: {
+              type: 'box', xMin: 3.5, xMax: 7.5,
+              backgroundColor: 'rgba(230,126,34,0.04)',
+              borderColor: 'rgba(230,126,34,0.2)', borderWidth: 1,
+            }
+          }
+        }
+      },
+      scales: {
+        y: { grid: { color: '#f0f4f8' }, ticks: { font: { size: 10 }, callback: v => '₹' + v } },
+        x: { grid: { display: false }, ticks: { font: { size: 10 } } }
+      }
+    }
+  });
+}
+
+// ---- MARGIN CHART ----
+{
+  const ctx = document.getElementById('marginChart').getContext('2d');
+  const data = [13.8, 23.5, 23.8, 17.2, 19.0, 20.0, 22.0, 24.0];
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: YEARS,
+      datasets: [{
+        label: 'EBITDA Margin %',
+        data,
+        borderColor: '#27ae60',
+        backgroundColor: ctx2 => {
+          const g = ctx2.chart.ctx.createLinearGradient(0,0,0,220);
+          g.addColorStop(0,'rgba(39,174,96,0.25)'); g.addColorStop(1,'rgba(39,174,96,0.01)');
+          return g;
+        },
+        borderWidth: 2.5, pointRadius: 5,
+        pointBackgroundColor: YEARS.map((_, i) => i < ACTUAL_END ? '#27ae60' : 'rgba(39,174,96,0.5)'),
+        fill: true, tension: 0.35,
+        segment: { borderDash: ctx2 => ctx2.p1DataIndex >= ACTUAL_END - 1 ? [5,4] : [] }
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ` Margin: ${ctx.parsed.y}%` } }
+      },
+      scales: {
+        y: {
+          min: 0, max: 30,
+          grid: { color: '#f0f4f8' },
+          ticks: { font: { size: 10 }, callback: v => v + '%' }
+        },
+        x: { grid: { display: false }, ticks: { font: { size: 10 } } }
+      }
+    }
+  });
+}
+
+// ---- ARPOB CHART ----
+{
+  const ctx = document.getElementById('arpobChart').getContext('2d');
+  const data = [33400, 37600, 41681, 45683, 49000, 54000, 62000, 70000];
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: YEARS,
+      datasets: [{
+        label: 'ARPOB (₹/day)',
+        data,
+        borderColor: '#8e44ad',
+        backgroundColor: ctx2 => {
+          const g = ctx2.chart.ctx.createLinearGradient(0,0,0,200);
+          g.addColorStop(0,'rgba(142,68,173,0.2)'); g.addColorStop(1,'rgba(142,68,173,0.01)');
+          return g;
+        },
+        borderWidth: 2.5, fill: true, tension: 0.4,
+        pointRadius: 4.5,
+        pointBackgroundColor: YEARS.map((_, i) => i < ACTUAL_END ? '#8e44ad' : 'rgba(142,68,173,0.4)'),
+        segment: { borderDash: ctx2 => ctx2.p1DataIndex >= ACTUAL_END - 1 ? [5,4] : [] }
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ₹${ctx.parsed.y.toLocaleString('en-IN')}` } } },
+      scales: {
+        y: { grid: { color: '#f0f4f8' }, ticks: { font: { size: 10 }, callback: v => '₹' + (v/1000).toFixed(0) + 'K' } },
+        x: { grid: { display: false }, ticks: { font: { size: 10 } } }
+      }
+    }
+  });
+}
+
+// ---- CASE MIX CHART ----
+{
+  const ctx = document.getElementById('casemixChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['FY25','FY26E','FY27E','FY28E','FY29E'],
+      datasets: [{
+        label: 'Complex Care Mix %',
+        data: [35, 36, 42, 52, 62],
+        backgroundColor: ['rgba(231,76,60,0.5)','rgba(231,76,60,0.6)','rgba(231,76,60,0.4)','rgba(231,76,60,0.3)','rgba(231,76,60,0.25)'],
+        borderColor: ['#e74c3c','#e74c3c','rgba(231,76,60,0.6)','rgba(231,76,60,0.5)','rgba(231,76,60,0.4)'],
+        borderWidth: 1.5, borderRadius: 4
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` Complex Care: ${ctx.parsed.y}%` } } },
+      scales: {
+        y: { min: 0, max: 70, grid: { color: '#f0f4f8' }, ticks: { font: { size: 10 }, callback: v => v + '%' } },
+        x: { grid: { display: false }, ticks: { font: { size: 10 } } }
+      }
+    }
+  });
+}
+
+// ---- OCCUPANCY & BEDS ----
+{
+  const ctx = document.getElementById('occupancyChart').getContext('2d');
+  new Chart(ctx, {
+    data: {
+      labels: ['FY22','FY23','FY24','FY25','FY26E','FY27E','FY28E','FY29E'],
+      datasets: [
+        {
+          type: 'bar', label: 'Operating Beds',
+          data: [499, 436, 482, 572, 572, 620, 660, 700],
+          backgroundColor: YEARS.map((_, i) => i < ACTUAL_END ? 'rgba(22,160,133,0.7)' : 'rgba(22,160,133,0.3)'),
+          borderRadius: 4, yAxisID: 'y1'
+        },
+        {
+          type: 'line', label: 'Occupancy %',
+          data: [40, 60, 53, 52, 63, 65, 67, 70],
+          borderColor: '#1a3a5c', backgroundColor: 'transparent',
+          borderWidth: 2.5, pointRadius: 4,
+          pointBackgroundColor: YEARS.map((_, i) => i < ACTUAL_END ? '#1a3a5c' : 'rgba(26,58,92,0.4)'),
+          tension: 0.35, yAxisID: 'y',
+          segment: { borderDash: ctx2 => ctx2.p1DataIndex >= ACTUAL_END - 1 ? [5,4] : [] }
+        }
+      ]
+    },
+    options: {
+      responsive: true, interaction: { mode: 'index' },
+      plugins: {
+        legend: { position: 'top', labels: { font: { size: 10 }, boxWidth: 12 } },
+        tooltip: { callbacks: { label: ctx => ctx.datasetIndex === 0 ? ` Beds: ${ctx.parsed.y}` : ` Occupancy: ${ctx.parsed.y}%` } }
+      },
+      scales: {
+        y: { min: 0, max: 100, position: 'right', grid: { display: false }, ticks: { font: { size: 9 }, callback: v => v + '%' } },
+        y1: { min: 0, max: 900, grid: { color: '#f0f4f8' }, ticks: { font: { size: 9 } } },
+        x: { grid: { display: false }, ticks: { font: { size: 10 } } }
+      }
+    }
+  });
+}
+
+// ---- REVENUE BRIDGE ----
+{
+  const ctx = document.getElementById('bridgeChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['FY26\nBase', 'Base\nHospital', 'Oncology\nTransform', 'Data &\nClinical Trials', 'NRI\nReferrals', 'FY29\nTarget'],
+      datasets: [{
+        label: 'Revenue (₹ Cr)',
+        data: [500, 40, 160, 45, 35, 780],
+        backgroundColor: ['#1a3a5c', '#16a085', '#e67e22', '#8e44ad', '#27ae60', '#1a3a5c'],
+        borderRadius: 4,
+        borderSkipped: false,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ` ₹${ctx.parsed.y} Cr` } }
+      },
+      scales: {
+        y: { grid: { color: '#f0f4f8' }, ticks: { font: { size: 10 }, callback: v => '₹' + v } },
+        x: { grid: { display: false }, ticks: { font: { size: 9 } } }
+      }
+    }
+  });
+}
+</script>
+</body>
+</html>
