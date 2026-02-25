@@ -357,6 +357,88 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f0f4f8;color:#1a202
     </table>
     </div>
   </div>
+
+  <div class="slabel">Cancer & Oncology Capex — Strategic Sub-Analysis</div>
+
+  <div class="ibox red">
+    <div class="ibox-title">&#x1F3AF; Strategic Review: Cancer Relevance of Biomedical Capex</div>
+    <div class="ibox-text">Of ₹95.3 Cr biomedical capex, <strong>₹24.3 Cr (25.5%) is DIRECTLY or HIGHLY relevant to cancer/transplant programs</strong> — including tomotherapy (₹2.3 Cr), brachytherapy sources (₹0.4 Cr), digital pathology (₹5.5 Cr), and oncology ICU equipment. A further ₹25.7 Cr (26.9%) is MODERATELY relevant (shared imaging, ICU ventilators, monitors). <strong>The remaining ₹45.4 Cr (47.6%) serves general hospital operations</strong> — spine robotics (₹12 Cr), biplane cathlab (₹11 Cr), and routine replacements. See separate Excel for full item-level assessment.</div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Cancer Relevance of Biomedical Capex (₹95.3 Cr)</div>
+      <div class="card-sub">DIRECT = onco-specific &middot; HIGH = transplant/pathology &middot; MODERATE = shared clinical &middot; LOW = general</div>
+      <div style="position:relative;height:260px"><canvas id="cancerDonut"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Utility Classification — All 261 Biomedical Items</div>
+      <div class="card-sub">New capability vs end-of-life replacement vs other</div>
+      <div style="position:relative;height:260px"><canvas id="utilDonut"></canvas></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">DIRECT &amp; HIGH Cancer-Aligned Items — ₹24.3 Cr (41 items)</div>
+    <div class="card-sub">Core investments supporting cancer transformation thesis</div>
+    <table class="tbl">
+      <thead><tr><th>#</th><th>Equipment</th><th>Location</th><th style="text-align:right">Cost ₹L</th><th>Cancer Tag</th><th>Justification</th></tr></thead>
+      <tbody>
+        <tr class="top3"><td>1</td><td><strong>Digital Microscope</strong></td><td>Histopathology</td><td style="text-align:right">300.0</td><td><span class="pill rp">Direct Onco Dx</span></td><td style="font-size:0.63rem;color:#718096">New capability — cancer pathology digitization</td></tr>
+        <tr class="top3"><td>2</td><td><strong>Digital Slide Scanner</strong></td><td>Histopathology</td><td style="text-align:right">250.0</td><td><span class="pill rp">Direct Onco Dx</span></td><td style="font-size:0.63rem;color:#718096">New — enables remote onco-pathology review</td></tr>
+        <tr class="top3"><td>3</td><td><strong>Tomotherapy Equipment</strong></td><td>Radiotherapy</td><td style="text-align:right">230.0</td><td><span class="pill rp">Direct Onco</span></td><td style="font-size:0.63rem;color:#718096">Cancer treatment anchor — Burjeel playbook</td></tr>
+        <tr><td>4</td><td>PET Scan Upgradation</td><td>Nuclear Medicine</td><td style="text-align:right">100.0</td><td><span class="pill rp">Direct Onco</span></td><td style="font-size:0.63rem;color:#718096">Upgrade — cancer staging &amp; monitoring</td></tr>
+        <tr><td>5</td><td>Multipara Monitor (×4)</td><td>ONCICU</td><td style="text-align:right">20.0</td><td><span class="pill rp">Onco Location</span></td><td style="font-size:0.63rem;color:#718096">New — oncology ICU build-out</td></tr>
+        <tr><td>6</td><td>Brachytherapy HDR Source Ir-192 (×4)</td><td>Radiotherapy</td><td style="text-align:right">40.0</td><td><span class="pill rp">Direct Onco</span></td><td style="font-size:0.63rem;color:#718096">New — HDR brachytherapy capability</td></tr>
+        <tr><td>7</td><td>Dose Calibrator (×2)</td><td>Nuclear Medicine</td><td style="text-align:right">20.0</td><td><span class="pill rp">Direct Onco</span></td><td style="font-size:0.63rem;color:#718096">Replacement — nuclear medicine dosing</td></tr>
+        <tr><td>8</td><td>Anesthesia Machine</td><td>Radiotherapy</td><td style="text-align:right">25.0</td><td><span class="pill rp">Onco Location</span></td><td style="font-size:0.63rem;color:#718096">Replacement — radiotherapy sedation</td></tr>
+        <tr><td>9</td><td>Ultrasound Machine</td><td>Radiotherapy</td><td style="text-align:right">25.0</td><td><span class="pill rp">Onco Location</span></td><td style="font-size:0.63rem;color:#718096">New — radiotherapy imaging guidance</td></tr>
+        <tr><td>10</td><td>Breast Board (Patient Positioning)</td><td>Radiotherapy</td><td style="text-align:right">0.6</td><td><span class="pill rp">Direct Onco</span></td><td style="font-size:0.63rem;color:#718096">New — breast cancer RT positioning</td></tr>
+        <tr><td>11</td><td>Microwave Ablation System</td><td>Interventional Radiology</td><td style="text-align:right">28.0</td><td><span class="pill op">Onco-Surgical</span></td><td style="font-size:0.63rem;color:#718096">New — tumor ablation capability</td></tr>
+        <tr><td>12</td><td>RF Ablation System</td><td>Radiology</td><td style="text-align:right">25.0</td><td><span class="pill op">Onco-Surgical</span></td><td style="font-size:0.63rem;color:#718096">Replacement — tumor ablation</td></tr>
+        <tr><td>13</td><td>Surgical Aspirator - CUSA</td><td>Neuro OT</td><td style="text-align:right">60.0</td><td><span class="pill op">Onco-Surgical</span></td><td style="font-size:0.63rem;color:#718096">Replacement — used in brain tumor surgery</td></tr>
+        <tr><td>14</td><td>Penumbra Aspiration Pump</td><td>Interventional Radiology</td><td style="text-align:right">4.0</td><td><span class="pill op">Interventional</span></td><td style="font-size:0.63rem;color:#718096">New — thrombectomy/onco-interventional</td></tr>
+        <tr><td>15</td><td>Ventilator</td><td>BMT</td><td style="text-align:right">25.0</td><td><span class="pill op">BMT/Transplant</span></td><td style="font-size:0.63rem;color:#718096">New — bone marrow transplant unit</td></tr>
+        <tr><td>16</td><td>Infusion Pump</td><td>BMT</td><td style="text-align:right">0.5</td><td><span class="pill op">BMT/Transplant</span></td><td style="font-size:0.63rem;color:#718096">New — BMT infusion support</td></tr>
+        <tr><td>—</td><td colspan="4"><em>+ 25 more items (syringe pumps, monitors, immunofluorescence microscope, cytocentrifuge, molecular biology freezers, etc.)</em></td><td></td></tr>
+        <tr class="top3"><td></td><td><strong>TOTAL DIRECT + HIGH</strong></td><td></td><td style="text-align:right"><strong>₹24.3 Cr</strong></td><td><strong>41 items</strong></td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="g3">
+    <div class="card">
+      <div class="card-title">Cancer Capex Summary</div>
+      <div class="card-sub">₹ Crore by relevance tier</div>
+      <div class="mini-grid">
+        <div class="mini-box"><div class="ml">DIRECT (Onco-specific)</div><div class="mv" style="color:#e74c3c">₹10.6 Cr</div></div>
+        <div class="mini-box"><div class="ml">HIGH (BMT/Path/IR)</div><div class="mv" style="color:#e67e22">₹13.6 Cr</div></div>
+        <div class="mini-box"><div class="ml">MODERATE (Shared)</div><div class="mv" style="color:#1976d2">₹25.7 Cr</div></div>
+        <div class="mini-box"><div class="ml">LOW/NONE (General)</div><div class="mv" style="color:#718096">₹45.4 Cr</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">By Utility/Justification</div>
+      <div class="card-sub">New vs replacement split</div>
+      <div class="mini-grid">
+        <div class="mini-box"><div class="ml">New Capability</div><div class="mv" style="color:#27ae60">₹59.2 Cr</div></div>
+        <div class="mini-box"><div class="ml">End-of-Life Replace</div><div class="mv" style="color:#e67e22">₹22.8 Cr</div></div>
+        <div class="mini-box"><div class="ml">Failing/Upgrade</div><div class="mv" style="color:#8e44ad">₹3.9 Cr</div></div>
+        <div class="mini-box"><div class="ml">Other/Unspecified</div><div class="mv" style="color:#718096">₹9.4 Cr</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Key Takeaway</div>
+      <div class="card-sub">Strategic assessment</div>
+      <div style="font-size:0.73rem;color:#4a5568;line-height:1.7;margin-top:8px">
+        &#x2192; <strong>25.5%</strong> of biomed capex is cancer-aligned<br>
+        &#x2192; <strong>62%</strong> is new capability (not just replacement)<br>
+        &#x2192; Top 3 cancer items: digital pathology ₹5.5 Cr, tomotherapy ₹2.3 Cr, PET upgrade ₹1 Cr<br>
+        &#x2192; ₹45 Cr in general items driven by spine robotics + cathlab
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <!-- ===== PAGE: EFFICIENCY ===== -->
@@ -719,6 +801,17 @@ new Chart(document.getElementById('monthlyChart'),{type:'bar',data:{
     {label:'Outsource',data:[107.5,107.5,107.5,107.5,107.5,107.5,107.5,107.5,107.5,107.5,107.5,107.5],backgroundColor:TEAL,borderRadius:2}
   ]
 },options:{plugins:{legend:{position:'bottom',labels:{font:{size:9},boxWidth:10}}},scales:{x:{stacked:true,ticks:{font:{size:9}}},y:{stacked:true,ticks:{callback:v=>'₹'+v+'L',font:{size:8}}}}}});
+
+// ===== CANCER ANALYSIS =====
+new Chart(document.getElementById('cancerDonut'),{type:'doughnut',data:{
+  labels:['DIRECT ₹10.6Cr','HIGH ₹13.6Cr','MODERATE ₹25.7Cr','LOW/NONE ₹45.4Cr'],
+  datasets:[{data:[10.6,13.6,25.7,45.4],backgroundColor:[RED,ORANGE,BLUE,'#bdbdbd']}]
+},options:{plugins:{legend:{position:'right',labels:{font:{size:9},boxWidth:8}}}}});
+
+new Chart(document.getElementById('utilDonut'),{type:'doughnut',data:{
+  labels:['New Capability ₹59.2Cr','End-of-Life Replace ₹22.8Cr','Failing/Upgrade ₹3.9Cr','Other ₹9.4Cr'],
+  datasets:[{data:[59.2,22.8,3.9,9.4],backgroundColor:[GREEN,ORANGE,PURPLE,'#bdbdbd']}]
+},options:{plugins:{legend:{position:'right',labels:{font:{size:9},boxWidth:8}}}}});
 
 </script>
 </body>
