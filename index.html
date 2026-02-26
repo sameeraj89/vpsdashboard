@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VPS Lakeshore — Dashboards</title>
+<title>VPS Lakeshore — Strategic Dashboards</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
@@ -33,11 +33,12 @@ body {
   margin-right: 6px;
 }
 .badge.orange { background: #e67e22; }
+.badge.green { background: #27ae60; }
 
 .main {
   flex: 1;
-  max-width: 860px;
-  margin: 48px auto;
+  max-width: 920px;
+  margin: 44px auto;
   padding: 0 24px;
   width: 100%;
 }
@@ -55,16 +56,17 @@ body {
 }
 .section-label::after { content:''; flex:1; height:1px; background:#e2e8f0; }
 
-.card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 40px; }
+.card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 36px; }
 
 .card {
   background: white;
   border-radius: 14px;
-  padding: 28px;
+  padding: 26px;
   box-shadow: 0 2px 12px rgba(0,0,0,0.07);
   text-decoration: none;
   color: inherit;
-  display: block;
+  display: flex;
+  flex-direction: column;
   border-top: 4px solid;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
   cursor: pointer;
@@ -73,17 +75,22 @@ body {
   transform: translateY(-3px);
   box-shadow: 0 8px 24px rgba(0,0,0,0.12);
 }
-.card.blue { border-top-color: #1a3a5c; }
+.card.navy   { border-top-color: #1a3a5c; }
 .card.orange { border-top-color: #e67e22; }
+.card.green  { border-top-color: #27ae60; }
+.card.purple { border-top-color: #8e44ad; }
+.card.red    { border-top-color: #e74c3c; }
+.card.teal   { border-top-color: #16a085; }
 
-.card-icon { font-size: 2rem; margin-bottom: 14px; }
-.card-title { font-size: 1rem; font-weight: 800; color: #1a202c; margin-bottom: 6px; }
-.card-desc { font-size: 0.78rem; color: #718096; line-height: 1.6; margin-bottom: 16px; }
-.card-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.card-icon { font-size: 1.8rem; margin-bottom: 12px; }
+.card-title { font-size: 0.95rem; font-weight: 800; color: #1a202c; margin-bottom: 5px; }
+.card-year { font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #a0aec0; margin-bottom: 8px; }
+.card-desc { font-size: 0.76rem; color: #718096; line-height: 1.6; margin-bottom: 14px; flex:1; }
+.card-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 4px; }
 .tag {
-  font-size: 0.65rem;
+  font-size: 0.62rem;
   font-weight: 600;
-  padding: 3px 9px;
+  padding: 3px 8px;
   border-radius: 10px;
   background: #f0f4f8;
   color: #4a5568;
@@ -92,14 +99,33 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  margin-top: 18px;
-  font-size: 0.78rem;
+  margin-top: 14px;
+  font-size: 0.76rem;
   font-weight: 700;
   color: #1a3a5c;
-  text-decoration: none;
 }
 .card.orange .card-cta { color: #e67e22; }
+.card.green  .card-cta { color: #27ae60; }
+.card.purple .card-cta { color: #8e44ad; }
+.card.red    .card-cta { color: #e74c3c; }
+.card.teal   .card-cta { color: #16a085; }
 .card-cta::after { content: '→'; }
+
+.card-full { grid-column: 1 / -1; }
+
+.kpi-strip {
+  background: white;
+  border-radius: 10px;
+  padding: 24px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+  text-align: center;
+  margin-bottom: 36px;
+}
+.kpi-val { font-size: 1.35rem; font-weight: 800; }
+.kpi-lbl { font-size: 0.62rem; color: #a0aec0; margin-top: 3px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
 
 .footer {
   background: #1a3a5c;
@@ -108,69 +134,174 @@ body {
   padding: 16px;
   font-size: 0.65rem;
 }
+
+@media (max-width: 700px) {
+  .card-grid { grid-template-columns: 1fr; }
+  .kpi-strip { grid-template-columns: repeat(3, 1fr); }
+  .card-full { grid-column: auto; }
+}
 </style>
 </head>
 <body>
 
 <div class="header">
   <h1>VPS Lakeshore — Strategic Dashboards</h1>
-  <p>Kochi, Kerala &nbsp;·&nbsp; Internal Use Only</p>
+  <p>Lakeshore Hospital &amp; Research Centre, Kochi &nbsp;&middot;&nbsp; Internal Use Only</p>
   <div style="margin-top:14px;">
-    <span class="badge orange">FY26 Data</span>
-    <span class="badge">Feb 2026</span>
+    <span class="badge orange">FY24 – FY26</span>
+    <span class="badge green">7 Dashboards</span>
     <span class="badge">Confidential</span>
   </div>
 </div>
 
 <div class="main">
 
-  <div class="section-label">Dashboards</div>
+  <div class="section-label">Quick Context</div>
+
+  <div class="kpi-strip">
+    <div><div class="kpi-val" style="color:#1a3a5c">&#x20B9;500 Cr</div><div class="kpi-lbl">FY26E Revenue</div></div>
+    <div><div class="kpi-val" style="color:#27ae60">19%</div><div class="kpi-lbl">EBITDA Margin</div></div>
+    <div><div class="kpi-val" style="color:#e67e22">&#x20B9;49K</div><div class="kpi-lbl">ARPOB / Day</div></div>
+    <div><div class="kpi-val" style="color:#8e44ad">570+</div><div class="kpi-lbl">Operating Beds</div></div>
+    <div><div class="kpi-val" style="color:#e74c3c">8.6%</div><div class="kpi-lbl">8-Yr Rev CAGR</div></div>
+  </div>
+
+  <!-- ===== STRATEGY & TRANSFORMATION ===== -->
+  <div class="section-label">Strategy &amp; Transformation</div>
 
   <div class="card-grid">
-    <a class="card blue" href="LHRC_Transformation_Scorecard.html">
-      <div class="card-icon">📊</div>
+    <a class="card navy card-full" href="LHRC_Transformation_Scorecard.html">
+      <div class="card-icon">&#x1F3AF;</div>
       <div class="card-title">Transformation Scorecard</div>
+      <div class="card-year">FY26 Baseline → FY29 Target</div>
       <div class="card-desc">
-        FY26 baseline KPIs versus FY29 targets. Tracks the three-year transformation plan across revenue, EBITDA, ARPOB, complex care mix, and capital deployment.
+        The 3-year strategic transformation plan. FY26 baseline KPIs versus FY29 targets across revenue (&#x20B9;500→&#x20B9;780 Cr), EBITDA, ARPOB (&#x20B9;49K→&#x20B9;70K), complex care mix, and &#x20B9;300 Cr capital deployment. Tracks phase milestones and readiness.
       </div>
       <div class="card-tags">
         <span class="tag">Revenue: ₹500→₹780 Cr</span>
         <span class="tag">ARPOB: ₹49K→₹70K</span>
-        <span class="tag">Phase Milestones</span>
+        <span class="tag">3-Phase Roadmap</span>
         <span class="tag">Capex ₹300 Cr</span>
+        <span class="tag">+23% YoY Rev</span>
       </div>
-      <span class="card-cta">Open Dashboard</span>
-    </a>
-
-    <a class="card orange" href="LHRC_Revenue_Analysis.html">
-      <div class="card-icon">🏥</div>
-      <div class="card-title">Revenue Analysis</div>
-      <div class="card-desc">
-        Deep cuts on FY26 YTD revenue by department, payor, volume vs ARPP quadrant, and monthly trend. Highlights what's working and what isn't.
-      </div>
-      <div class="card-tags">
-        <span class="tag">YTD ₹381 Cr</span>
-        <span class="tag">Dept Breakdown</span>
-        <span class="tag">Payor Mix</span>
-        <span class="tag">Volume vs ARPP</span>
-      </div>
-      <span class="card-cta">Open Dashboard</span>
+      <span class="card-cta">Open Scorecard</span>
     </a>
   </div>
 
-  <div class="section-label">Quick Context</div>
+  <!-- ===== FY26 CURRENT YEAR ===== -->
+  <div class="section-label">FY26 — Current Year</div>
 
-  <div style="background:white;border-radius:10px;padding:24px;box-shadow:0 1px 4px rgba(0,0,0,0.06);display:grid;grid-template-columns:repeat(4,1fr);gap:16px;text-align:center;">
-    <div><div style="font-size:1.4rem;font-weight:800;color:#1a3a5c">₹500 Cr</div><div style="font-size:0.68rem;color:#a0aec0;margin-top:3px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px">FY26 Revenue</div></div>
-    <div><div style="font-size:1.4rem;font-weight:800;color:#27ae60">19%</div><div style="font-size:0.68rem;color:#a0aec0;margin-top:3px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px">EBITDA Margin</div></div>
-    <div><div style="font-size:1.4rem;font-weight:800;color:#e67e22">₹49K</div><div style="font-size:0.68rem;color:#a0aec0;margin-top:3px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px">ARPOB / day</div></div>
-    <div><div style="font-size:1.4rem;font-weight:800;color:#8e44ad">570+</div><div style="font-size:0.68rem;color:#a0aec0;margin-top:3px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px">Operating Beds</div></div>
+  <div class="card-grid">
+    <a class="card orange" href="LHRC_FY26_Performance_Dashboard.html">
+      <div class="card-icon">&#x1F4CA;</div>
+      <div class="card-title">FY26 Performance Dashboard</div>
+      <div class="card-year">YTD Jan '26 &middot; 10 Months &middot; 10 Tabs</div>
+      <div class="card-desc">
+        Comprehensive FY26 year-to-date operating dashboard. Revenue, volumes, ARPOB, department-level drill-down, monthly trends, and variance analysis against budget and prior year.
+      </div>
+      <div class="card-tags">
+        <span class="tag">YTD Performance</span>
+        <span class="tag">Dept Breakdown</span>
+        <span class="tag">Monthly Trends</span>
+        <span class="tag">Budget vs Actual</span>
+      </div>
+      <span class="card-cta">Open Dashboard</span>
+    </a>
+
+    <a class="card red" href="LHRC_Cost_Analysis.html">
+      <div class="card-icon">&#x1F52C;</div>
+      <div class="card-title">Cost Intelligence &amp; FY27 Budget</div>
+      <div class="card-year">FY27 Budget Analytics &middot; 8 Tabs</div>
+      <div class="card-desc">
+        Deep-dive into cost structure, headcount economics, and FY27 budget build. Covers &#x20B9;202 Cr people cost, 2,589 FTEs, department-wise cost allocation, and margin levers.
+      </div>
+      <div class="card-tags">
+        <span class="tag">₹202 Cr People Cost</span>
+        <span class="tag">2,589 FTEs</span>
+        <span class="tag">₹130 Cr Capex</span>
+        <span class="tag">People/Rev 36.7%</span>
+      </div>
+      <span class="card-cta">Open Analysis</span>
+    </a>
+  </div>
+
+  <!-- ===== FY25 ===== -->
+  <div class="section-label">FY25 — Prior Year</div>
+
+  <div class="card-grid">
+    <a class="card green" href="LHRC_Revenue_Analysis_FY25.html">
+      <div class="card-icon">&#x1F3E5;</div>
+      <div class="card-title">Revenue &amp; Doctor Analytics — FY25</div>
+      <div class="card-year">FY25 Full Year BRM &middot; 10 Tabs</div>
+      <div class="card-desc">
+        FY25 full-year revenue analysis by department, doctor, and payor. &#x20B9;410 Cr revenue across 40+ doctors, 21,023 IP discharges. Doctor MIS, concentration risk, and portfolio matrix.
+      </div>
+      <div class="card-tags">
+        <span class="tag">₹410 Cr Revenue</span>
+        <span class="tag">21,023 IP Discharges</span>
+        <span class="tag">Top 2 = 20.7%</span>
+        <span class="tag">Doctor MIS</span>
+      </div>
+      <span class="card-cta">Open Dashboard</span>
+    </a>
+
+    <a class="card purple" href="LHRC_Historical_PL_Analysis.html">
+      <div class="card-icon">&#x1F4D0;</div>
+      <div class="card-title">Historical P&amp;L Deep-Dive</div>
+      <div class="card-year">FY18–FY25 Audited &middot; 9 Tabs</div>
+      <div class="card-desc">
+        8-year consolidated P&amp;L trend analysis. Revenue trajectory, cost structure evolution, margin architecture, DuPont decomposition, cash flow, balance sheet quality, and CEO dashboard.
+      </div>
+      <div class="card-tags">
+        <span class="tag">₹228→₹408 Cr</span>
+        <span class="tag">EBITDA 8.8%→19.4%</span>
+        <span class="tag">Debt-Free</span>
+        <span class="tag">CAGR 8.6%</span>
+      </div>
+      <span class="card-cta">Open Analysis</span>
+    </a>
+  </div>
+
+  <!-- ===== FY24 ===== -->
+  <div class="section-label">FY24 — Base Year</div>
+
+  <div class="card-grid">
+    <a class="card navy" href="LHRC_Revenue_Analysis.html">
+      <div class="card-icon">&#x1F468;&#x200D;&#x2695;&#xFE0F;</div>
+      <div class="card-title">Revenue &amp; Doctor Analytics — FY24</div>
+      <div class="card-year">FY24 Full Year BRM &middot; 10 Tabs</div>
+      <div class="card-desc">
+        FY24 full-year BRM data. &#x20B9;397 Cr revenue, 115 doctors, 20,932 IP discharges. Includes department breakdown, doctor-level MIS, concentration risk analysis, peer benchmarks, and strategic priorities.
+      </div>
+      <div class="card-tags">
+        <span class="tag">₹397 Cr Revenue</span>
+        <span class="tag">115 Doctors</span>
+        <span class="tag">20,932 Discharges</span>
+        <span class="tag">Top 2 = 27.4%</span>
+      </div>
+      <span class="card-cta">Open Dashboard</span>
+    </a>
+
+    <a class="card teal" href="LHRC_Biomedical_Capex_Analysis.xlsx" download>
+      <div class="card-icon">&#x2699;&#xFE0F;</div>
+      <div class="card-title">Biomedical Capex Analysis</div>
+      <div class="card-year">Excel Workbook &middot; Download</div>
+      <div class="card-desc">
+        Detailed biomedical equipment capital expenditure analysis. Asset-level breakdown, useful life, replacement schedule, and budget impact assessment.
+      </div>
+      <div class="card-tags">
+        <span class="tag">Excel (.xlsx)</span>
+        <span class="tag">Equipment Capex</span>
+        <span class="tag">Replacement Plan</span>
+      </div>
+      <span class="card-cta">Download File</span>
+    </a>
   </div>
 
 </div>
 
 <div class="footer">
-  VPS Lakeshore Hospital & Research Centre &nbsp;·&nbsp; Confidential — Internal Use Only &nbsp;·&nbsp; February 2026
+  VPS Lakeshore Hospital &amp; Research Centre &nbsp;&middot;&nbsp; Confidential — Internal Use Only &nbsp;&middot;&nbsp; February 2026
 </div>
 
 </body>
