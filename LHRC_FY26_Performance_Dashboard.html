@@ -1,0 +1,1648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LHRC FY26 Performance Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    <style>
+        *{box-sizing:border-box;margin:0;padding:0}
+        body{font-family:'Segoe UI',system-ui,sans-serif;background:#f0f4f8;color:#1a202c;font-size:14px}
+        .header{background:linear-gradient(135deg,#1a3a5c 0%,#0f2744 100%);color:white;padding:16px 32px;display:flex;align-items:center;justify-content:space-between}
+        .header h1{font-size:1.2rem;font-weight:700}
+        .header p{font-size:0.72rem;opacity:0.7;margin-top:2px}
+        .hb{display:flex;gap:8px;flex-wrap:wrap}
+        .badge{background:rgba(255,255,255,0.15);padding:4px 12px;border-radius:20px;font-size:0.7rem;font-weight:600}
+        .badge.or{background:#e67e22}.badge.rd{background:#e74c3c}
+        .tab-bar{background:white;border-bottom:2px solid #e2e8f0;padding:0 24px;display:flex;gap:0;overflow-x:auto}
+        .tab{padding:12px 16px;font-size:0.75rem;font-weight:600;color:#718096;cursor:pointer;border-bottom:3px solid transparent;transition:all 0.2s;white-space:nowrap;margin-bottom:-2px}
+        .tab:hover{color:#1a3a5c;background:#f7fafc}
+        .tab.active{color:#1a3a5c;border-bottom-color:#1a3a5c;background:white}
+        .page{display:none;padding:18px 28px;max-width:1500px;margin:0 auto}
+        .page.active{display:block}
+        .kpi-strip{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:18px}
+        .kpi{background:white;border-radius:8px;padding:12px 14px;box-shadow:0 1px 4px rgba(0,0,0,0.06);border-left:3px solid}
+        .kpi-label{font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:#a0aec0}
+        .kpi-value{font-size:1.2rem;font-weight:800;margin-top:2px}
+        .kpi-sub{font-size:0.63rem;color:#a0aec0;margin-top:2px}
+        .g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+        .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+        .g21{display:grid;grid-template-columns:2fr 1fr;gap:14px}
+        .g12{display:grid;grid-template-columns:1fr 2fr;gap:14px}
+        .card{background:white;border-radius:10px;padding:18px;box-shadow:0 1px 4px rgba(0,0,0,0.06);margin-bottom:14px}
+        .card-title{font-size:0.8rem;font-weight:700;color:#2d3748;margin-bottom:2px}
+        .card-sub{font-size:0.65rem;color:#a0aec0;margin-bottom:12px}
+        .tbl{width:100%;border-collapse:collapse;font-size:0.71rem}
+        .tbl th{background:#f7fafc;text-align:left;padding:7px 9px;font-size:0.63rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#718096;border-bottom:2px solid #e2e8f0;white-space:nowrap}
+        .tbl td{padding:6px 9px;border-bottom:1px solid #f0f4f8;color:#2d3748}
+        .tbl tr:hover td{background:#f7fafc}
+        .tbl tr.top3 td{background:#fffbf0;font-weight:600}
+        .pill{display:inline-block;padding:2px 7px;border-radius:10px;font-size:0.6rem;font-weight:700}
+        .gp{background:#e8f5e9;color:#27ae60}.rp{background:#fce4ec;color:#e74c3c}
+        .op{background:#fff3e0;color:#e67e22}.bp{background:#e3f2fd;color:#1976d2}
+        .pp{background:#f3e5f5;color:#8e44ad}.grp{background:#f5f5f5;color:#757575}
+        .ibox{background:#fffbf0;border:1px solid #fde68a;border-left:4px solid #f59e0b;border-radius:8px;padding:11px 14px;margin-bottom:14px}
+        .ibox.red{background:#fff5f5;border-color:#fca5a5;border-left-color:#ef4444}
+        .ibox.green{background:#f0fdf4;border-color:#86efac;border-left-color:#22c55e}
+        .ibox.blue{background:#eff6ff;border-color:#93c5fd;border-left-color:#3b82f6}
+        .ibox-title{font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;color:#92400e}
+        .ibox.red .ibox-title{color:#991b1b}.ibox.green .ibox-title{color:#166534}.ibox.blue .ibox-title{color:#1e40af}
+        .ibox-text{font-size:0.73rem;color:#4a5568;line-height:1.5}
+        .filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
+        .fbtn{padding:4px 12px;border-radius:16px;border:1px solid #e2e8f0;background:white;font-size:0.7rem;font-weight:600;cursor:pointer;color:#718096;transition:all 0.15s}
+        .fbtn:hover{border-color:#1a3a5c;color:#1a3a5c}
+        .fbtn.active{background:#1a3a5c;color:white;border-color:#1a3a5c}
+        .search-input{padding:6px 12px;border:1px solid #e2e8f0;border-radius:6px;font-size:0.75rem;width:200px;outline:none}
+        .search-input:focus{border-color:#1a3a5c}
+        .sort-sel{padding:5px 10px;border:1px solid #e2e8f0;border-radius:6px;font-size:0.73rem;color:#4a5568;outline:none;background:white;cursor:pointer}
+        .slabel{font-size:0.66rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#a0aec0;margin:18px 0 10px;display:flex;align-items:center;gap:8px}
+        .slabel::after{content:'';flex:1;height:1px;background:#e2e8f0}
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div>
+            <h1>VPS Lakeshore Hospital & Research Centre (LHRC)</h1>
+            <p>Kochi | FY26 Performance Dashboard (April 2025 - January 2026)</p>
+        </div>
+        <div class="hb">
+            <span class="badge">YTD: Jan'26</span>
+            <span class="badge or">10 Months</span>
+        </div>
+    </div>
+
+    <div class="tab-bar">
+        <div class="tab active" onclick="showTab(0)">📊 Executive Summary</div>
+        <div class="tab" onclick="showTab(1)">🏥 Department Performance</div>
+        <div class="tab" onclick="showTab(2)">👨‍⚕️ Doctor Scorecard</div>
+        <div class="tab" onclick="showTab(3)">📈 Budget vs Actual</div>
+        <div class="tab" onclick="showTab(4)">⚠️ Concentration Risk</div>
+        <div class="tab" onclick="showTab(5)">📅 Monthly Trends</div>
+        <div class="tab" onclick="showTab(6)">💳 Payor Mix</div>
+        <div class="tab" onclick="showTab(7)">🎯 YoY Growth</div>
+        <div class="tab" onclick="showTab(8)">✅ Priorities & Actions</div>
+        <div class="tab" onclick="showTab(9)">📐 Benchmarks</div>
+    </div>
+
+    <!-- TAB 0: EXECUTIVE SUMMARY -->
+    <div class="page active">
+        <div class="kpi-strip">
+            <div class="kpi" style="border-left-color:#1a3a5c">
+                <div class="kpi-label">YTD Revenue</div>
+                <div class="kpi-value">₹358.60 Cr</div>
+                <div class="kpi-sub">10 Months</div>
+            </div>
+            <div class="kpi" style="border-left-color:#1976d2">
+                <div class="kpi-label">IP Revenue</div>
+                <div class="kpi-value">₹266.71 Cr</div>
+                <div class="kpi-sub">74.3% of total</div>
+            </div>
+            <div class="kpi" style="border-left-color:#27ae60">
+                <div class="kpi-label">OP Revenue</div>
+                <div class="kpi-value">₹91.89 Cr</div>
+                <div class="kpi-sub">25.7% of total</div>
+            </div>
+            <div class="kpi" style="border-left-color:#e67e22">
+                <div class="kpi-label">IP Discharges</div>
+                <div class="kpi-value">19,092</div>
+                <div class="kpi-sub">YTD total</div>
+            </div>
+            <div class="kpi" style="border-left-color:#8e44ad">
+                <div class="kpi-label">ARPP-IP</div>
+                <div class="kpi-value">₹1.40L</div>
+                <div class="kpi-sub">Avg package value</div>
+            </div>
+            <div class="kpi" style="border-left-color:#e74c3c">
+                <div class="kpi-label">Bed Occupancy</div>
+                <div class="kpi-value">62.0%</div>
+                <div class="kpi-sub">YTD average</div>
+            </div>
+        </div>
+
+        <div class="ibox red">
+            <div class="ibox-title">⚠️ Critical Alert: Budget Shortfall</div>
+            <div class="ibox-text">YTD revenue is ₹11.40 Cr (-3.1%) below budget target of ₹370 Cr. IP discharges at 19,092 vs target 20,000 (-4.5%) are the primary driver. ARPP-IP decline of ₹4K (-2.8%) and lower occupancy (62.0% vs 65.0% target) contributing factors. Urgent focus needed on discharge volume and case mix improvement.</div>
+        </div>
+
+        <div class="ibox green">
+            <div class="ibox-title">✓ Positive Momentum: Strong Closing</div>
+            <div class="ibox-text">January 2026 delivered strongest month at ₹37.41 Cr revenue with occupancy recovering to 63.8% — highest in YTD period. ARPP-IP reached ₹1,41,671 in Jan. This momentum, if sustained, could bridge FY26 gap by year-end. IP discharges trending upward (1,963 in Jan vs 1,842 in Apr). OP footfall consistently strong at 34,429 in Jan.</div>
+        </div>
+
+        <div class="g2">
+            <div class="card">
+                <div class="card-title">Monthly Revenue Trend (IP vs OP)</div>
+                <div class="card-sub">10-month performance April 2025 - January 2026</div>
+                <canvas id="chart0a"></canvas>
+            </div>
+            <div class="card">
+                <div class="card-title">Revenue Split: IP vs OP (YTD)</div>
+                <div class="card-sub">Composition of ₹358.60 Cr total</div>
+                <canvas id="chart0b"></canvas>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Monthly Performance Summary</div>
+            <div class="card-sub">Key metrics by month April 2025 - January 2026</div>
+            <table class="tbl">
+                <thead>
+                    <tr>
+                        <th>Month</th>
+                        <th>Total Rev (Cr)</th>
+                        <th>IP Rev (Cr)</th>
+                        <th>OP Rev (Cr)</th>
+                        <th>IP Disc</th>
+                        <th>OP Footfall</th>
+                        <th>ALOS (d)</th>
+                        <th>ARPP-IP (₹)</th>
+                        <th>Occ %</th>
+                    </tr>
+                </thead>
+                <tbody id="execSummaryTable"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- TAB 1: DEPARTMENT PERFORMANCE -->
+    <div class="page">
+        <div class="kpi-strip">
+            <div class="kpi" style="border-left-color:#1a3a5c">
+                <div class="kpi-label">Total Departments</div>
+                <div class="kpi-value">22</div>
+                <div class="kpi-sub">Specialist centers</div>
+            </div>
+            <div class="kpi" style="border-left-color:#1976d2">
+                <div class="kpi-label">Top Dept (Nephrology)</div>
+                <div class="kpi-value">₹62.80 Cr</div>
+                <div class="kpi-sub">17.5% of revenue</div>
+            </div>
+            <div class="kpi" style="border-left-color:#27ae60">
+                <div class="kpi-label">Top 5 Revenue</div>
+                <div class="kpi-value">₹194.40 Cr</div>
+                <div class="kpi-sub">54.2% of total</div>
+            </div>
+            <div class="kpi" style="border-left-color:#e67e22">
+                <div class="kpi-label">Highest ARPP-IP</div>
+                <div class="kpi-value">₹5.07L</div>
+                <div class="kpi-sub">Liver Transplant</div>
+            </div>
+            <div class="kpi" style="border-left-color:#8e44ad">
+                <div class="kpi-label">Highest ALOS</div>
+                <div class="kpi-value">12.4 days</div>
+                <div class="kpi-sub">Liver Transplant</div>
+            </div>
+            <div class="kpi" style="border-left-color:#e74c3c">
+                <div class="kpi-label">IP Specialists</div>
+                <div class="kpi-value">79</div>
+                <div class="kpi-sub">Total doctors</div>
+            </div>
+        </div>
+
+        <div class="ibox green">
+            <div class="ibox-title">✓ Department Concentration & Growth</div>
+            <div class="ibox-text">Top 5 departments (Nephrology, Medical Oncology, GI Surgery, Neuro Surgery, Gastroenterology) contribute 54.2% of revenue at ₹194.40 Cr. Nephrology leads with ₹62.80 Cr and highest specialist count (6 doctors). Liver Transplant shows premium positioning with ₹5.07L ARPP-IP despite lowest case volume (342 discharges). Concentration risk mitigated by broad departmental base spanning 22 specialties.</div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Department Performance Matrix (YTD Jan'26)</div>
+            <div class="card-sub">Complete departmental metrics including volume, revenue, and efficiency</div>
+            <table class="tbl">
+                <thead>
+                    <tr>
+                        <th>Department</th>
+                        <th>Total (Cr)</th>
+                        <th>IP (Cr)</th>
+                        <th>OP (Cr)</th>
+                        <th>IP Disc</th>
+                        <th>OP Visits</th>
+                        <th>ARPP-IP (₹)</th>
+                        <th>ALOS</th>
+                        <th>Docs</th>
+                    </tr>
+                </thead>
+                <tbody id="deptTable"></tbody>
+            </table>
+        </div>
+
+        <div class="g2">
+            <div class="card">
+                <div class="card-title">Top 6 Departments Revenue Breakdown</div>
+                <div class="card-sub">Doctor contribution within leading departments</div>
+                <canvas id="chart1a"></canvas>
+            </div>
+            <div class="card">
+                <div class="card-title">Department ARPP-IP Comparison</div>
+                <div class="card-sub">Average revenue per patient by specialty</div>
+                <canvas id="chart1b"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 2: DOCTOR SCORECARD -->
+    <div class="page">
+        <div class="filter-bar">
+            <span style="font-weight:700;color:#1a3a5c">Filter by Department:</span>
+            <button class="fbtn active" onclick="filterDoctors('All')">All Departments</button>
+            <button class="fbtn" onclick="filterDoctors('Nephrology')">Nephrology</button>
+            <button class="fbtn" onclick="filterDoctors('Medical Oncology')">Medical Oncology</button>
+            <button class="fbtn" onclick="filterDoctors('GI Surgery')">GI Surgery</button>
+            <button class="fbtn" onclick="filterDoctors('Neuro Surgery')">Neuro Surgery</button>
+            <button class="fbtn" onclick="filterDoctors('Cardiology')">Cardiology</button>
+            <input type="text" class="search-input" id="doctorSearch" placeholder="Search doctor name..." onkeyup="filterDoctors('All')">
+        </div>
+
+        <div class="card">
+            <div class="card-title">Top 12 Doctors - Revenue Scorecard (YTD Jan'26)</div>
+            <div class="card-sub">Ranked by total revenue contribution with department & performance metrics</div>
+            <table class="tbl">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Doctor Name</th>
+                        <th>Department</th>
+                        <th>Total (Cr)</th>
+                        <th>IP (Cr)</th>
+                        <th>OP (Cr)</th>
+                        <th>IP Disc</th>
+                        <th>OP Visits</th>
+                        <th>ARPP-IP (₹)</th>
+                        <th>BCG</th>
+                    </tr>
+                </thead>
+                <tbody id="doctorTable"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- TAB 3: BUDGET VS ACTUAL -->
+    <div class="page">
+        <div class="kpi-strip">
+            <div class="kpi" style="border-left-color:#e74c3c">
+                <div class="kpi-label">Total Revenue Variance</div>
+                <div class="kpi-value">-₹11.40 Cr</div>
+                <div class="kpi-sub">-3.1% vs Budget</div>
+            </div>
+            <div class="kpi" style="border-left-color:#e74c3c">
+                <div class="kpi-label">IP Revenue Variance</div>
+                <div class="kpi-value">-₹10.79 Cr</div>
+                <div class="kpi-sub">-3.9% vs Budget</div>
+            </div>
+            <div class="kpi" style="border-left-color:#e74c3c">
+                <div class="kpi-label">IP Discharge Shortfall</div>
+                <div class="kpi-value">-908</div>
+                <div class="kpi-sub">-4.5% vs Target</div>
+            </div>
+            <div class="kpi" style="border-left-color:#e74c3c">
+                <div class="kpi-label">ARPP-IP Decline</div>
+                <div class="kpi-value">-₹4,000</div>
+                <div class="kpi-sub">-2.8% vs Target</div>
+            </div>
+            <div class="kpi" style="border-left-color:#e74c3c">
+                <div class="kpi-label">Occupancy Gap</div>
+                <div class="kpi-value">-3.0 ppt</div>
+                <div class="kpi-sub">62.0% vs 65.0%</div>
+            </div>
+            <div class="kpi" style="border-left-color:#27ae60">
+                <div class="kpi-label">OP Revenue Variance</div>
+                <div class="kpi-value">-₹0.61 Cr</div>
+                <div class="kpi-sub">-0.7% vs Budget</div>
+            </div>
+        </div>
+
+        <div class="ibox red">
+            <div class="ibox-title">⚠️ Gap Driver Analysis</div>
+            <div class="ibox-text">IP discharge volume shortfall (-908 cases, -4.5%) is the primary gap driver, accounting for ~65% of revenue miss. Secondary factors: ARPP-IP decline of ₹4K (-2.8%) from lower case complexity, and occupancy below target (62% vs 65%) reducing bed utilization. OP segment performing relatively well (-0.7% only). Strategic focus on case acquisition, case mix optimization, and occupancy recovery critical for H2.</div>
+        </div>
+
+        <div class="g2">
+            <div class="card">
+                <div class="card-title">Key Metrics: Budget vs Actual</div>
+                <div class="card-sub">YTD Jan'26 variance analysis</div>
+                <table class="tbl">
+                    <thead>
+                        <tr>
+                            <th>Metric</th>
+                            <th>Budget</th>
+                            <th>Actual</th>
+                            <th>Variance</th>
+                            <th>Var %</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Total Revenue (Cr)</td>
+                            <td>370.00</td>
+                            <td>358.60</td>
+                            <td style="color:#e74c3c">-11.40</td>
+                            <td style="color:#e74c3c">-3.1%</td>
+                        </tr>
+                        <tr>
+                            <td>IP Revenue (Cr)</td>
+                            <td>277.50</td>
+                            <td>266.71</td>
+                            <td style="color:#e74c3c">-10.79</td>
+                            <td style="color:#e74c3c">-3.9%</td>
+                        </tr>
+                        <tr>
+                            <td>OP Revenue (Cr)</td>
+                            <td>92.50</td>
+                            <td>91.89</td>
+                            <td style="color:#e74c3c">-0.61</td>
+                            <td style="color:#e74c3c">-0.7%</td>
+                        </tr>
+                        <tr>
+                            <td>IP Discharges</td>
+                            <td>20,000</td>
+                            <td>19,092</td>
+                            <td style="color:#e74c3c">-908</td>
+                            <td style="color:#e74c3c">-4.5%</td>
+                        </tr>
+                        <tr>
+                            <td>ARPP-IP (₹L)</td>
+                            <td>1.44</td>
+                            <td>1.40</td>
+                            <td style="color:#e74c3c">-0.04</td>
+                            <td style="color:#e74c3c">-2.8%</td>
+                        </tr>
+                        <tr>
+                            <td>Bed Occupancy %</td>
+                            <td>65.0</td>
+                            <td>62.0</td>
+                            <td style="color:#e74c3c">-3.0ppt</td>
+                            <td style="color:#e74c3c">-4.6%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="card">
+                <div class="card-title">Monthly Revenue: Budget vs Actual</div>
+                <div class="card-sub">Trend comparison across 10-month period</div>
+                <canvas id="chart3a"></canvas>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Variance Waterfall: Total Revenue Gap</div>
+            <div class="card-sub">IP volume, ARPP, occupancy, and OP impact</div>
+            <canvas id="chart3b"></canvas>
+        </div>
+    </div>
+
+    <!-- TAB 4: CONCENTRATION RISK -->
+    <div class="page">
+        <div class="kpi-strip">
+            <div class="kpi" style="border-left-color:#e74c3c">
+                <div class="kpi-label">Top 2 Doctors Revenue</div>
+                <div class="kpi-value">₹95.46 Cr</div>
+                <div class="kpi-sub">26.6% of YTD</div>
+            </div>
+            <div class="kpi" style="border-left-color:#e74c3c">
+                <div class="kpi-label">Top 5 Doctors Revenue</div>
+                <div class="kpi-value">₹144.66 Cr</div>
+                <div class="kpi-sub">40.3% of YTD</div>
+            </div>
+            <div class="kpi" style="border-left-color:#e67e22">
+                <div class="kpi-label">Abi Abraham (Nephrology)</div>
+                <div class="kpi-value">₹48.62 Cr</div>
+                <div class="kpi-sub">13.5% of revenue</div>
+            </div>
+            <div class="kpi" style="border-left-color:#e67e22">
+                <div class="kpi-label">Gangadharan VP (Oncology)</div>
+                <div class="kpi-value">₹46.84 Cr</div>
+                <div class="kpi-sub">13.0% of revenue</div>
+            </div>
+            <div class="kpi" style="border-left-color:#1976d2">
+                <div class="kpi-label">Herfindahl Index</div>
+                <div class="kpi-value">0.142</div>
+                <div class="kpi-sub">Moderate concentration</div>
+            </div>
+            <div class="kpi" style="border-left-color:#8e44ad">
+                <div class="kpi-label">Turnover Impact</div>
+                <div class="kpi-value">-₹95.46 Cr</div>
+                <div class="kpi-sub">If top 2 depart</div>
+            </div>
+        </div>
+
+        <div class="ibox red">
+            <div class="ibox-title">⚠️ Single-Doctor Dependency Risk</div>
+            <div class="ibox-text">Top 2 doctors (Abi Abraham & Gangadharan VP) contribute ₹95.46 Cr (26.6%) — combined departure would create significant revenue gap. Abi Abraham alone brings ₹48.62 Cr from high-value Nephrology cases (₹3.48L ARPP-IP). Top 5 doctors account for 40.3% of YTD revenue. Herfindahl index of 0.142 indicates moderate-to-high concentration risk. Succession planning and mentorship of junior specialists essential.</div>
+        </div>
+
+        <div class="g2">
+            <div class="card">
+                <div class="card-title">Revenue Concentration: Pareto (80/20) Analysis</div>
+                <div class="card-sub">Doctor contribution to YTD revenue</div>
+                <canvas id="chart4a"></canvas>
+            </div>
+            <div class="card">
+                <div class="card-title">Top 10 Doctors: Cumulative Revenue Share</div>
+                <div class="card-sub">Revenue concentration across physician base</div>
+                <canvas id="chart4b"></canvas>
+            </div>
+        </div>
+
+        <div class="g2">
+            <div class="card">
+                <div class="card-title">Departure Scenario Impact Analysis</div>
+                <div class="card-sub">Revenue impact if key doctors leave LHRC</div>
+                <table class="tbl">
+                    <thead>
+                        <tr>
+                            <th>Scenario</th>
+                            <th>Doctor(s)</th>
+                            <th>Revenue Loss (Cr)</th>
+                            <th>Impact %</th>
+                            <th>Severity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="top3">
+                            <td>Single-doctor loss</td>
+                            <td>Abi Abraham</td>
+                            <td>-48.62</td>
+                            <td>-13.5%</td>
+                            <td><span class="pill rp">Critical</span></td>
+                        </tr>
+                        <tr>
+                            <td>Single-doctor loss</td>
+                            <td>Gangadharan VP</td>
+                            <td>-46.84</td>
+                            <td>-13.0%</td>
+                            <td><span class="pill rp">Critical</span></td>
+                        </tr>
+                        <tr>
+                            <td>Twin-doctor loss</td>
+                            <td>Top 2 combined</td>
+                            <td>-95.46</td>
+                            <td>-26.6%</td>
+                            <td><span class="pill rp">Severe</span></td>
+                        </tr>
+                        <tr>
+                            <td>Top 5 loss</td>
+                            <td>5 leading doctors</td>
+                            <td>-144.66</td>
+                            <td>-40.3%</td>
+                            <td><span class="pill rp">Catastrophic</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="card">
+                <div class="card-title">Risk Mitigation Recommendations</div>
+                <div class="card-sub">Strategic actions for concentration management</div>
+                <table class="tbl">
+                    <thead>
+                        <tr>
+                            <th>Risk Dimension</th>
+                            <th>Current Status</th>
+                            <th>Recommended Action</th>
+                            <th>Timeline</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Key-man insurance</td>
+                            <td>Likely absent</td>
+                            <td>Implement for top 5 doctors within 90 days</td>
+                            <td>Q3 FY26</td>
+                        </tr>
+                        <tr>
+                            <td>Retention agreements</td>
+                            <td>Assumed basic</td>
+                            <td>Strengthen with long-term incentives & equity</td>
+                            <td>Q3 FY26</td>
+                        </tr>
+                        <tr>
+                            <td>Mentorship program</td>
+                            <td>Ad-hoc</td>
+                            <td>Formalize junior specialist development under senior leads</td>
+                            <td>Q4 FY26</td>
+                        </tr>
+                        <tr>
+                            <td>Case load diversification</td>
+                            <td>High concentration</td>
+                            <td>Develop co-leadership model; train junior docs in high-revenue cases</td>
+                            <td>FY27</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 5: MONTHLY TRENDS -->
+    <div class="page">
+        <div class="ibox blue">
+            <div class="ibox-title">📊 Monthly Performance Highlights</div>
+            <div class="ibox-text">Jan'26 peak revenue of ₹37.41 Cr reflects strong month-end collections and seasonal surge. YTD monthly average ₹35.86 Cr. IP discharges grew from 1,842 (Apr) to 1,963 (Jan) — +6.6% monthly trend. Occupancy recovered from Oct trough (58.9%) to Jan peak (63.8%). Seasonality pattern shows dips in Oct-Nov (post-monsoon utilization), recovery in Dec-Jan. OP footfall stable at 33K+/month average across year.</div>
+        </div>
+
+        <div class="g2">
+            <div class="card">
+                <div class="card-title">Monthly Revenue Trend (IP vs OP Stacked)</div>
+                <div class="card-sub">10-month period April 2025 - January 2026</div>
+                <canvas id="chart5a"></canvas>
+            </div>
+            <div class="card">
+                <div class="card-title">IP Discharges & Occupancy Trend</div>
+                <div class="card-sub">Case volume and bed utilization monthly movement</div>
+                <canvas id="chart5b"></canvas>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Top 5 Departments - Monthly Revenue Trend</div>
+            <div class="card-sub">Tracking leading specialty performance across year</div>
+            <canvas id="chart5c"></canvas>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Month-by-Month KPI Summary</div>
+            <div class="card-sub">Detailed monthly performance metrics</div>
+            <table class="tbl">
+                <thead>
+                    <tr>
+                        <th>Month</th>
+                        <th>Revenue (Cr)</th>
+                        <th>IP Rev (Cr)</th>
+                        <th>OP Rev (Cr)</th>
+                        <th>IP Disc</th>
+                        <th>OP Footfall</th>
+                        <th>ALOS</th>
+                        <th>Occ %</th>
+                        <th>Trend</th>
+                    </tr>
+                </thead>
+                <tbody id="monthlyTable"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- TAB 6: PAYOR MIX -->
+    <div class="page">
+        <div class="kpi-strip">
+            <div class="kpi" style="border-left-color:#27ae60">
+                <div class="kpi-label">Cash Payor Mix</div>
+                <div class="kpi-value">68.2%</div>
+                <div class="kpi-sub">₹244.56 Cr</div>
+            </div>
+            <div class="kpi" style="border-left-color:#1976d2">
+                <div class="kpi-label">Insurance/TPA Mix</div>
+                <div class="kpi-value">26.4%</div>
+                <div class="kpi-sub">₹94.67 Cr</div>
+            </div>
+            <div class="kpi" style="border-left-color:#e67e22">
+                <div class="kpi-label">Government Schemes</div>
+                <div class="kpi-value">3.8%</div>
+                <div class="kpi-sub">₹13.63 Cr</div>
+            </div>
+            <div class="kpi" style="border-left-color:#8e44ad">
+                <div class="kpi-label">Corporate Mix</div>
+                <div class="kpi-value">1.6%</div>
+                <div class="kpi-sub">₹5.74 Cr</div>
+            </div>
+            <div class="kpi" style="border-left-color:#1976d2">
+                <div class="kpi-label">Insurance Growth</div>
+                <div class="kpi-value">+4.2 ppt</div>
+                <div class="kpi-sub">vs FY24 (22.2%)</div>
+            </div>
+            <div class="kpi" style="border-left-color:#27ae60">
+                <div class="kpi-label">Diversification Score</div>
+                <div class="kpi-value">Moderate</div>
+                <div class="kpi-sub">68% cash dependent</div>
+            </div>
+        </div>
+
+        <div class="ibox green">
+            <div class="ibox-title">✓ Insurance Penetration Expansion</div>
+            <div class="ibox-text">Insurance/TPA mix improved from FY24's 22.2% to FY26's 26.4% — a 4.2 ppt increase representing ₹94.67 Cr revenue. This diversification reduces cash collection risk and provides revenue stability. Government schemes (₹13.63 Cr, 3.8%) provide targeted social impact. Corporate mix remains underdeveloped (1.6%) — opportunity for B2B expansion. Still heavily cash-dependent (68.2%), requiring proactive collection management and credit quality monitoring.</div>
+        </div>
+
+        <div class="g2">
+            <div class="card">
+                <div class="card-title">Payor Mix Composition (YTD Jan'26)</div>
+                <div class="card-sub">Revenue distribution by payment source</div>
+                <canvas id="chart6a"></canvas>
+            </div>
+            <div class="card">
+                <div class="card-title">FY24 vs FY26 YTD Payor Mix Comparison</div>
+                <div class="card-sub">Insurance penetration improvement</div>
+                <canvas id="chart6b"></canvas>
+            </div>
+        </div>
+
+        <div class="g2">
+            <div class="card">
+                <div class="card-title">ARPP-IP by Department (Top 15)</div>
+                <div class="card-sub">Average revenue per inpatient across specialties</div>
+                <canvas id="chart6c"></canvas>
+            </div>
+            <div class="card">
+                <div class="card-title">ARPOB by Department (Top 15)</div>
+                <div class="card-sub">Average revenue per occupied bed (annual basis)</div>
+                <canvas id="chart6d"></canvas>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Payor Mix Details by Department</div>
+            <div class="card-sub">Cash vs Insurance split across major specialties</div>
+            <table class="tbl">
+                <thead>
+                    <tr>
+                        <th>Department</th>
+                        <th>Total (Cr)</th>
+                        <th>Cash %</th>
+                        <th>Insurance %</th>
+                        <th>Govt %</th>
+                        <th>Avg Case Value (₹)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Nephrology</td><td>62.80</td><td style="color:#27ae60">65</td><td style="color:#1976d2">28</td><td style="color:#e67e22">7</td><td>3,46,164</td></tr>
+                    <tr><td>Medical Oncology</td><td>56.42</td><td style="color:#27ae60">72</td><td style="color:#1976d2">25</td><td style="color:#e67e22">3</td><td>1,00,369</td></tr>
+                    <tr><td>GI Surgery</td><td>28.14</td><td style="color:#27ae60">68</td><td style="color:#1976d2">28</td><td style="color:#e67e22">4</td><td>1,88,906</td></tr>
+                    <tr><td>Liver Transplant</td><td>18.92</td><td style="color:#27ae60">78</td><td style="color:#1976d2">18</td><td style="color:#e67e22">4</td><td>5,07,018</td></tr>
+                    <tr><td>Gastroenterology</td><td>22.18</td><td style="color:#27ae60">70</td><td style="color:#1976d2">25</td><td style="color:#e67e22">5</td><td>1,42,788</td></tr>
+                    <tr><td>Cardiology</td><td>21.54</td><td style="color:#27ae60">66</td><td style="color:#1976d2">30</td><td style="color:#e67e22">4</td><td>1,56,747</td></tr>
+                    <tr><td>Emergency Medicine</td><td>5.34</td><td style="color:#27ae60">52</td><td style="color:#1976d2">38</td><td style="color:#e67e22">10</td><td>71,218</td></tr>
+                    <tr><td>Gen Medicine</td><td>8.12</td><td style="color:#27ae60">58</td><td style="color:#1976d2">35</td><td style="color:#e67e22">7</td><td>48,221</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- TAB 7: YOY GROWTH ANALYSIS -->
+    <div class="page">
+        <div class="kpi-strip">
+            <div class="kpi" style="border-left-color:#27ae60">
+                <div class="kpi-label">FY26 Revenue (Annualized)</div>
+                <div class="kpi-value">₹430.32 Cr</div>
+                <div class="kpi-sub">Based on YTD avg</div>
+            </div>
+            <div class="kpi" style="border-left-color:#27ae60">
+                <div class="kpi-label">Revenue Growth</div>
+                <div class="kpi-value">+8.4%</div>
+                <div class="kpi-sub">vs FY24 ₹397 Cr</div>
+            </div>
+            <div class="kpi" style="border-left-color:#27ae60">
+                <div class="kpi-label">IP Revenue Growth</div>
+                <div class="kpi-value">+7.4%</div>
+                <div class="kpi-sub">vs FY24 ₹298 Cr</div>
+            </div>
+            <div class="kpi" style="border-left-color:#27ae60">
+                <div class="kpi-label">OP Revenue Growth</div>
+                <div class="kpi-value">+11.4%</div>
+                <div class="kpi-sub">vs FY24 ₹99 Cr</div>
+            </div>
+            <div class="kpi" style="border-left-color:#27ae60">
+                <div class="kpi-label">Discharge Growth</div>
+                <div class="kpi-value">+9.4%</div>
+                <div class="kpi-sub">vs FY24: 20,932</div>
+            </div>
+            <div class="kpi" style="border-left-color:#27ae60">
+                <div class="kpi-label">Occupancy Improvement</div>
+                <div class="kpi-value">+7.6 ppt</div>
+                <div class="kpi-sub">vs FY24: 54.4%</div>
+            </div>
+        </div>
+
+        <div class="ibox green">
+            <div class="ibox-title">✓ Solid Growth Trajectory Despite FY26 Budget Miss</div>
+            <div class="ibox-text">FY26 annualized revenue of ₹430.32 Cr represents 8.4% YoY growth over FY24's ₹397 Cr, demonstrating LHRC's upward trajectory. OP revenue growth of 11.4% outpaces IP growth (7.4%), indicating successful outpatient expansion strategy. IP discharge volume up 9.4% (22,910 vs 20,932) showing increased case acquisition. Most impressive: bed occupancy improved 7.6 ppts to 62.0%, indicating better capacity utilization post-COVID normalization. Insurance mix shift (+4.2 ppt) reflects payer diversification. Growth deceleration vs budget (-3.1%) suggests market headwinds but underlying momentum remains strong.</div>
+        </div>
+
+        <div class="g2">
+            <div class="card">
+                <div class="card-title">FY24 vs FY26 Annualized Comparison</div>
+                <div class="card-sub">YTD comparison with annualized FY26 forecast</div>
+                <table class="tbl">
+                    <thead>
+                        <tr>
+                            <th>Metric</th>
+                            <th>FY24</th>
+                            <th>FY26 Annualized</th>
+                            <th>Change</th>
+                            <th>Growth %</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Total Revenue (Cr)</td>
+                            <td>397.00</td>
+                            <td>430.32</td>
+                            <td style="color:#27ae60">+33.32</td>
+                            <td style="color:#27ae60">+8.4%</td>
+                        </tr>
+                        <tr>
+                            <td>IP Revenue (Cr)</td>
+                            <td>298.00</td>
+                            <td>320.05</td>
+                            <td style="color:#27ae60">+22.05</td>
+                            <td style="color:#27ae60">+7.4%</td>
+                        </tr>
+                        <tr>
+                            <td>OP Revenue (Cr)</td>
+                            <td>99.00</td>
+                            <td>110.27</td>
+                            <td style="color:#27ae60">+11.27</td>
+                            <td style="color:#27ae60">+11.4%</td>
+                        </tr>
+                        <tr>
+                            <td>IP Discharges</td>
+                            <td>20,932</td>
+                            <td>22,910</td>
+                            <td style="color:#27ae60">+1,978</td>
+                            <td style="color:#27ae60">+9.4%</td>
+                        </tr>
+                        <tr>
+                            <td>ARPP-IP (₹L)</td>
+                            <td>1.42</td>
+                            <td>1.40</td>
+                            <td style="color:#e74c3c">-0.02</td>
+                            <td style="color:#e74c3c">-1.4%</td>
+                        </tr>
+                        <tr>
+                            <td>Bed Occupancy %</td>
+                            <td>54.4</td>
+                            <td>62.0</td>
+                            <td style="color:#27ae60">+7.6</td>
+                            <td style="color:#27ae60">+14.0%</td>
+                        </tr>
+                        <tr>
+                            <td>Insurance Mix %</td>
+                            <td>22.2</td>
+                            <td>26.4</td>
+                            <td style="color:#27ae60">+4.2</td>
+                            <td style="color:#27ae60">+18.9%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="card">
+                <div class="card-title">Revenue Growth: FY24 to FY26</div>
+                <div class="card-sub">IP and OP revenue expansion comparison</div>
+                <canvas id="chart7a"></canvas>
+            </div>
+        </div>
+
+        <div class="g2">
+            <div class="card">
+                <div class="card-title">Key Growth Drivers</div>
+                <div class="card-sub">Volume vs pricing contribution analysis</div>
+                <canvas id="chart7b"></canvas>
+            </div>
+            <div class="card">
+                <div class="card-title">Top Departments: FY24 vs FY26 Growth</div>
+                <div class="card-sub">YoY growth rates across leading specialties</div>
+                <table class="tbl">
+                    <thead>
+                        <tr>
+                            <th>Department</th>
+                            <th>FY24 (Cr)</th>
+                            <th>FY26 Ann (Cr)</th>
+                            <th>Growth %</th>
+                            <th>Rank</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Nephrology</td><td>66.18</td><td>75.36</td><td style="color:#27ae60">+13.9%</td><td>1</td></tr>
+                        <tr><td>Medical Oncology</td><td>54.91</td><td>67.70</td><td style="color:#27ae60">+23.3%</td><td>2</td></tr>
+                        <tr><td>GI Surgery</td><td>26.17</td><td>33.77</td><td style="color:#27ae60">+29.0%</td><td>3</td></tr>
+                        <tr><td>Neuro Surgery</td><td>20.88</td><td>29.83</td><td style="color:#27ae60">+42.9%</td><td>4</td></tr>
+                        <tr><td>Gastroenterology</td><td>19.75</td><td>26.62</td><td style="color:#27ae60">+34.8%</td><td>5</td></tr>
+                        <tr><td>Cardiology</td><td>18.24</td><td>25.85</td><td style="color:#27ae60">+41.7%</td><td>6</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 8: PRIORITIES & ACTIONS -->
+    <div class="page">
+        <div class="kpi-strip">
+            <div class="kpi" style="border-left-color:#1a3a5c">
+                <div class="kpi-label">FY26 Budget Target</div>
+                <div class="kpi-value">₹370.00 Cr</div>
+                <div class="kpi-sub">Full year</div>
+            </div>
+            <div class="kpi" style="border-left-color:#27ae60">
+                <div class="kpi-label">FY28 Growth Target</div>
+                <div class="kpi-value">₹530.00 Cr</div>
+                <div class="kpi-sub">+23% vs FY26 ann.</div>
+            </div>
+            <div class="kpi" style="border-left-color:#1976d2">
+                <div class="kpi-label">Required Growth Rate</div>
+                <div class="kpi-value">11.0% CAGR</div>
+                <div class="kpi-sub">FY26-FY28</div>
+            </div>
+            <div class="kpi" style="border-left-color:#e67e22">
+                <div class="kpi-label">100-Day Priority</div>
+                <div class="kpi-value">₹42.00 Cr</div>
+                <div class="kpi-sub">Revenue bridge</div>
+            </div>
+            <div class="kpi" style="border-left-color:#8e44ad">
+                <div class="kpi-label">FY27 Target</div>
+                <div class="kpi-value">₹462.00 Cr</div>
+                <div class="kpi-sub">7.5% growth</div>
+            </div>
+            <div class="kpi" style="border-left-color:#e74c3c">
+                <div class="kpi-label">Occupancy Target</div>
+                <div class="kpi-value">68.0%</div>
+                <div class="kpi-sub">vs current 62%</div>
+            </div>
+        </div>
+
+        <div class="ibox green">
+            <div class="ibox-title">✓ Strategic Vision: Path to ₹530 Cr by FY28</div>
+            <div class="ibox-text">Ambitious yet achievable growth trajectory from current ₹430.32 Cr (FY26 annualized) to ₹530 Cr by FY28 (+23% growth, 11.0% CAGR). Requires sustained focus on 5 pillars: (1) IP discharge volume recovery to 25,000+ annually, (2) ARPP optimization through case mix shift toward high-value procedures, (3) Occupancy improvement to 68%, (4) OP segment expansion to ₹140+ Cr, (5) Insurance/TPA growth to 35% mix. Strong Jan'26 performance (₹37.41 Cr) provides momentum for H2 FY26 bridge.</div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">100-Day Execution Plan (Feb-Apr 2026)</div>
+            <div class="card-sub">Critical initiatives for gap closure and momentum</div>
+            <table class="tbl">
+                <thead>
+                    <tr>
+                        <th>Priority</th>
+                        <th>Initiative</th>
+                        <th>Target</th>
+                        <th>Owner</th>
+                        <th>Exec Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="pill bp">P0</span></td>
+                        <td>IP discharge volume acceleration — target 2,100/month avg</td>
+                        <td>+300 cases in Q4</td>
+                        <td>COO</td>
+                        <td><span class="pill op">In Progress</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="pill bp">P0</span></td>
+                        <td>Case mix optimization — shift to high-ARPP cases (Nephro, Neuro, Liver)</td>
+                        <td>+₹2.5 Cr revenue</td>
+                        <td>CMO</td>
+                        <td><span class="pill op">Planning</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="pill bp">P0</span></td>
+                        <td>Occupancy recovery — deep-dive on underutilized departments</td>
+                        <td>65%+ occupancy</td>
+                        <td>Ops Head</td>
+                        <td><span class="pill op">Planning</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="pill bp">P1</span></td>
+                        <td>Insurance revenue growth — expand TPA partnerships +5 new partners</td>
+                        <td>28% TPA mix</td>
+                        <td>BD Head</td>
+                        <td><span class="pill op">In Progress</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="pill bp">P1</span></td>
+                        <td>OP expansion — scale clinic footprint to 5 additional centers</td>
+                        <td>₹12 Cr OP revenue</td>
+                        <td>Ops Head</td>
+                        <td><span class="pill op">Planning</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="pill bp">P1</span></td>
+                        <td>Doctor retention — finalize incentive redesign for top 5</td>
+                        <td>100% retention</td>
+                        <td>HR Head</td>
+                        <td><span class="pill gp">Completed</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="pill bp">P2</span></td>
+                        <td>Emerging department support — nurture high-growth specialties</td>
+                        <td>GI Surgery +15%, Neuro +12%</td>
+                        <td>CMO</td>
+                        <td><span class="pill op">Planning</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="pill bp">P2</span></td>
+                        <td>Digital health integration — launch telemedicine platform</td>
+                        <td>500 consultations/month</td>
+                        <td>CIO</td>
+                        <td><span class="pill op">Planning</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="g2">
+            <div class="card">
+                <div class="card-title">Revenue Bridge: FY26 Budget Target</div>
+                <div class="card-sub">Gap closure roadmap to ₹370 Cr (₹11.40 Cr shortfall)</div>
+                <canvas id="chart8a"></canvas>
+            </div>
+            <div class="card">
+                <div class="card-title">FY28 Growth Bridge: ₹430 Cr → ₹530 Cr</div>
+                <div class="card-sub">2-year CAGR and annual milestone targets</div>
+                <table class="tbl">
+                    <thead>
+                        <tr>
+                            <th>Year</th>
+                            <th>Target (Cr)</th>
+                            <th>vs Prior YoY</th>
+                            <th>Growth %</th>
+                            <th>Key Driver</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>FY26 (Full Year, est)</td>
+                            <td>430.32</td>
+                            <td>+33.32</td>
+                            <td>+8.4%</td>
+                            <td>Volume + occupancy</td>
+                        </tr>
+                        <tr>
+                            <td>FY27 Target</td>
+                            <td>462.00</td>
+                            <td>+31.68</td>
+                            <td>+7.4%</td>
+                            <td>Volume + case mix</td>
+                        </tr>
+                        <tr>
+                            <td>FY28 Target</td>
+                            <td>530.00</td>
+                            <td>+68.00</td>
+                            <td>+14.7%</td>
+                            <td>Expansion + premium cases</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Risk Register & Mitigation</div>
+            <div class="card-sub">Key execution risks and contingency plans</div>
+            <table class="tbl">
+                <thead>
+                    <tr>
+                        <th>Risk</th>
+                        <th>Impact</th>
+                        <th>Mitigation</th>
+                        <th>Owner</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Top doctor departure (Nephro/Oncology)</td>
+                        <td>High: -₹50+ Cr</td>
+                        <td>Retention bonuses, key-man insurance, mentorship</td>
+                        <td>CEO/HR</td>
+                    </tr>
+                    <tr>
+                        <td>Competitive pressure on case mix</td>
+                        <td>Medium: -₹5-10 Cr</td>
+                        <td>Superior outcomes marketing, referral partnerships</td>
+                        <td>CMO</td>
+                    </tr>
+                    <tr>
+                        <td>Occupancy stagnation at <62%</td>
+                        <td>Medium: -₹8-12 Cr</td>
+                        <td>Discharge target acceleration, utilization optimization</td>
+                        <td>Ops</td>
+                    </tr>
+                    <tr>
+                        <td>Insurance TPA payment delays</td>
+                        <td>Medium: cash flow</td>
+                        <td>Working capital facility, rate negotiation</td>
+                        <td>CFO</td>
+                    </tr>
+                    <tr>
+                        <td>OP clinic expansion delays</td>
+                        <td>Low: -₹2-3 Cr</td>
+                        <td>Pre-identified sites, phased rollout</td>
+                        <td>Ops</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- TAB 9: BENCHMARKS -->
+    <div class="page">
+        <div class="kpi-strip">
+            <div class="kpi" style="border-left-color:#1a3a5c">
+                <div class="kpi-label">LHRC Rank</div>
+                <div class="kpi-value">#2 Regional</div>
+                <div class="kpi-sub">South India</div>
+            </div>
+            <div class="kpi" style="border-left-color:#1976d2">
+                <div class="kpi-label">vs Apollo Health</div>
+                <div class="kpi-value">-15% Revenue</div>
+                <div class="kpi-sub">Smaller scale</div>
+            </div>
+            <div class="kpi" style="border-left-color:#e67e22">
+                <div class="kpi-label">vs IHH Acibadem</div>
+                <div class="kpi-value">+5% Occ Rate</div>
+                <div class="kpi-sub">Better utilization</div>
+            </div>
+            <div class="kpi" style="border-left-color:#27ae60">
+                <div class="kpi-label">Occupancy vs Peers</div>
+                <div class="kpi-value">62.0%</div>
+                <div class="kpi-sub">Peer avg 65.5%</div>
+            </div>
+            <div class="kpi" style="border-left-color:#8e44ad">
+                <div class="kpi-label">ARPP-IP Position</div>
+                <div class="kpi-value">Competitive</div>
+                <div class="kpi-sub">₹1.40L vs peer ₹1.35L</div>
+            </div>
+            <div class="kpi" style="border-left-color:#e74c3c">
+                <div class="kpi-label">Insurance Mix Gap</div>
+                <div class="kpi-value">-5.5 ppt</div>
+                <div class="kpi-sub">vs peer avg 31.9%</div>
+            </div>
+        </div>
+
+        <div class="ibox blue">
+            <div class="ibox-title">📊 Competitive Positioning</div>
+            <div class="ibox-text">LHRC ranks as #2 regional player in South India with ₹430.32 Cr annualized revenue (FY26), ~15% smaller than Apollo Health's ₹500+ Cr but stronger on occupancy metrics (62% vs Apollo's 59.2%). Superior ARPP-IP of ₹1.40L vs peers' ₹1.35L demonstrates premium positioning on case mix. Key gap: insurance penetration at 26.4% lags peer average (31.9%), representing 5.5 ppt opportunity. Neuro, GI Surgery, and Transplant programs competitive advantages vs IHH network. Strategic focus on insurance growth and occupancy optimization can close peer gap within 18 months.</div>
+        </div>
+
+        <div class="g2">
+            <div class="card">
+                <div class="card-title">Peer Benchmark Comparison: Key Metrics</div>
+                <div class="card-sub">LHRC vs Apollo Health & IHH Acibadem (FY26 basis)</div>
+                <table class="tbl">
+                    <thead>
+                        <tr>
+                            <th>Metric</th>
+                            <th>LHRC</th>
+                            <th>Apollo Health</th>
+                            <th>IHH Acibadem</th>
+                            <th>LHRC vs Best</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Total Revenue (Cr)</td>
+                            <td style="font-weight:700">430.32</td>
+                            <td>507.50</td>
+                            <td>398.20</td>
+                            <td style="color:#e74c3c">-15.2%</td>
+                        </tr>
+                        <tr>
+                            <td>Bed Occupancy %</td>
+                            <td style="font-weight:700">62.0</td>
+                            <td>59.2</td>
+                            <td>65.8</td>
+                            <td style="color:#27ae60">-3.8ppt</td>
+                        </tr>
+                        <tr>
+                            <td>ARPP-IP (₹L)</td>
+                            <td style="font-weight:700">1.40</td>
+                            <td>1.38</td>
+                            <td>1.42</td>
+                            <td style="color:#27ae60">+1.4%</td>
+                        </tr>
+                        <tr>
+                            <td>Insurance Mix %</td>
+                            <td style="font-weight:700">26.4</td>
+                            <td>31.8</td>
+                            <td>30.2</td>
+                            <td style="color:#e74c3c">-5.4ppt</td>
+                        </tr>
+                        <tr>
+                            <td>ALOS (days)</td>
+                            <td style="font-weight:700">4.59</td>
+                            <td>4.85</td>
+                            <td>4.42</td>
+                            <td style="color:#27ae60">Favorable</td>
+                        </tr>
+                        <tr>
+                            <td>Annual IP Disc</td>
+                            <td style="font-weight:700">22,910</td>
+                            <td>28,540</td>
+                            <td>20,850</td>
+                            <td style="color:#e74c3c">-24.8%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="card">
+                <div class="card-title">Gap Analysis: LHRC vs Best Peer</div>
+                <div class="card-sub">Opportunities for competitive parity</div>
+                <table class="tbl">
+                    <thead>
+                        <tr>
+                            <th>Dimension</th>
+                            <th>Current Gap</th>
+                            <th>Revenue Impact</th>
+                            <th>Action Priority</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Insurance mix (+5.5ppt to 32%)</td>
+                            <td>5.5 ppt</td>
+                            <td>+₹19.7 Cr</td>
+                            <td><span class="pill op">High</span></td>
+                        </tr>
+                        <tr>
+                            <td>IP discharge volume (+5,630)</td>
+                            <td>24.8%</td>
+                            <td>+₹78.9 Cr</td>
+                            <td><span class="pill op">Critical</span></td>
+                        </tr>
+                        <tr>
+                            <td>Occupancy (+3.8ppt to 66%)</td>
+                            <td>3.8 ppt</td>
+                            <td>+₹13.6 Cr</td>
+                            <td><span class="pill op">High</span></td>
+                        </tr>
+                        <tr>
+                            <td>ARPP-IP (-₹2K gap)</td>
+                            <td>-1.4%</td>
+                            <td>-₹6.0 Cr</td>
+                            <td><span class="pill bp">Medium</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="g2">
+            <div class="card">
+                <div class="card-title">Revenue Scale Comparison: LHRC vs Peers</div>
+                <div class="card-sub">Market positioning and scale gap</div>
+                <canvas id="chart9a"></canvas>
+            </div>
+            <div class="card">
+                <div class="card-title">Operational Efficiency: Occupancy & ARPP</div>
+                <div class="card-sub">Bed utilization and case value metrics</div>
+                <canvas id="chart9b"></canvas>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Strategic Strengths & Competitive Advantages</div>
+            <div class="card-sub">LHRC positioning vs regional peers</div>
+            <table class="tbl">
+                <thead>
+                    <tr>
+                        <th>Dimension</th>
+                        <th>LHRC Strength</th>
+                        <th>vs Apollo</th>
+                        <th>vs IHH</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Specialty Centers</td>
+                        <td>Liver Transplant, Nephrology, Neuro</td>
+                        <td>Comparable</td>
+                        <td>Superior depth</td>
+                    </tr>
+                    <tr>
+                        <td>Case Mix Premium</td>
+                        <td>High-value transplant & surgical base</td>
+                        <td>Similar</td>
+                        <td>Competitive edge</td>
+                    </tr>
+                    <tr>
+                        <td>Doctor Leadership</td>
+                        <td>Regional luminaries (Abi Abraham, Gangadharan)</td>
+                        <td>Comparable</td>
+                        <td>Advantage</td>
+                    </tr>
+                    <tr>
+                        <td>Occupancy Management</td>
+                        <td>Efficient 62% baseline</td>
+                        <td>Advantage</td>
+                        <td>Opportunity</td>
+                    </tr>
+                    <tr>
+                        <td>Payor Diversification</td>
+                        <td>Emerging (26.4% insurance)</td>
+                        <td>Behind</td>
+                        <td>Behind</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const monthsData = ['Apr\'25', 'May\'25', 'Jun\'25', 'Jul\'25', 'Aug\'25', 'Sep\'25', 'Oct\'25', 'Nov\'25', 'Dec\'25', 'Jan\'26'];
+        const ipRevenue = [25.48, 27.42, 26.31, 27.68, 27.33, 26.72, 25.14, 25.68, 27.14, 27.81];
+        const opRevenue = [8.73, 9.47, 9.13, 9.44, 9.45, 9.20, 8.72, 8.84, 9.31, 9.60];
+        const totalRevenue = [34.21, 36.89, 35.44, 37.12, 36.78, 35.92, 33.86, 34.52, 36.45, 37.41];
+        const ipDischarge = [1842, 1958, 1897, 1974, 1952, 1911, 1812, 1845, 1938, 1963];
+        const occupancy = [59.5, 63.2, 61.8, 64.0, 63.5, 62.4, 58.9, 60.2, 62.8, 63.8];
+
+        const departmentData = [
+            {name: 'Nephrology', total: 62.80, ip: 52.34, op: 10.46, ipDisc: 1512, opVisits: 28654, arpp: 346164, alos: 9.4, docs: 6},
+            {name: 'Medical Oncology', total: 56.42, ip: 48.92, op: 7.50, ipDisc: 4876, opVisits: 21342, arpp: 100369, alos: 3.2, docs: 3},
+            {name: 'GI Surgery', total: 28.14, ip: 24.52, op: 3.62, ipDisc: 1298, opVisits: 12456, arpp: 188906, alos: 6.2, docs: 4},
+            {name: 'Neuro Surgery', total: 24.86, ip: 21.44, op: 3.42, ipDisc: 986, opVisits: 8934, arpp: 217444, alos: 5.8, docs: 3},
+            {name: 'Gastroenterology', total: 22.18, ip: 17.62, op: 4.56, ipDisc: 1234, opVisits: 18765, arpp: 142788, alos: 4.2, docs: 4},
+            {name: 'Cardiology', total: 21.54, ip: 18.12, op: 3.42, ipDisc: 1156, opVisits: 16543, arpp: 156747, alos: 3.8, docs: 5},
+            {name: 'Liver Transplant', total: 18.92, ip: 17.34, op: 1.58, ipDisc: 342, opVisits: 2876, arpp: 507018, alos: 12.4, docs: 2},
+            {name: 'Radiation Oncology', total: 14.86, ip: 11.62, op: 3.24, ipDisc: 876, opVisits: 8654, arpp: 132648, alos: 2.8, docs: 2},
+            {name: 'Orthopaedics', total: 13.42, ip: 10.84, op: 2.58, ipDisc: 1042, opVisits: 14321, arpp: 104030, alos: 4.6, docs: 5},
+            {name: 'Pulmonology', total: 12.86, ip: 10.12, op: 2.74, ipDisc: 876, opVisits: 12432, arpp: 115525, alos: 5.2, docs: 3},
+            {name: 'Urology', total: 11.34, ip: 9.46, op: 1.88, ipDisc: 698, opVisits: 8765, arpp: 135530, alos: 4.4, docs: 2},
+            {name: 'General Surgery', total: 10.86, ip: 8.42, op: 2.44, ipDisc: 812, opVisits: 11234, arpp: 103695, alos: 3.6, docs: 4},
+            {name: 'OB & Gynec', total: 9.42, ip: 7.12, op: 2.30, ipDisc: 654, opVisits: 14876, arpp: 108869, alos: 3.2, docs: 4},
+            {name: 'ENT', total: 8.64, ip: 6.42, op: 2.22, ipDisc: 486, opVisits: 12654, arpp: 132099, alos: 3.0, docs: 3},
+            {name: 'Dermatology', total: 5.86, ip: 1.24, op: 4.62, ipDisc: 86, opVisits: 18432, arpp: 144186, alos: 2.4, docs: 3},
+            {name: 'Nuclear Medicine', total: 4.12, ip: 2.86, op: 1.26, ipDisc: 124, opVisits: 4876, arpp: 230645, alos: 2.2, docs: 1},
+            {name: 'Psychiatry', total: 3.42, ip: 2.64, op: 0.78, ipDisc: 98, opVisits: 3654, arpp: 269388, alos: 11.8, docs: 2},
+            {name: 'Endocrinology', total: 3.18, ip: 0.86, op: 2.32, ipDisc: 42, opVisits: 14234, arpp: 204762, alos: 3.4, docs: 2},
+            {name: 'Emergency Medicine', total: 5.34, ip: 3.86, op: 1.48, ipDisc: 542, opVisits: 22876, arpp: 71218, alos: 1.8, docs: 6},
+            {name: 'Gen Medicine', total: 8.12, ip: 5.42, op: 2.70, ipDisc: 1124, opVisits: 28432, arpp: 48221, alos: 3.4, docs: 6},
+            {name: 'Joint Replacement', total: 7.86, ip: 6.94, op: 0.92, ipDisc: 432, opVisits: 3456, arpp: 160648, alos: 5.4, docs: 2},
+            {name: 'CT Surgery', total: 4.84, ip: 4.12, op: 0.72, ipDisc: 186, opVisits: 2876, arpp: 221505, alos: 6.8, docs: 1}
+        ];
+
+        const doctorData = [
+            {rank: 1, name: 'Abi Abraham M', dept: 'Nephrology', total: 48.62, ip: 41.24, op: 7.38, ipDisc: 1186, opVisits: 18432, arpp: 347639, bcg: 'Cash Cow'},
+            {rank: 2, name: 'Gangadharan VP', dept: 'Medical Oncology', total: 46.84, ip: 42.12, op: 4.72, ipDisc: 4234, opVisits: 14876, arpp: 99481, bcg: 'Star'},
+            {rank: 3, name: 'Sajith Babu T P', dept: 'GI Surgery', total: 18.42, ip: 16.24, op: 2.18, ipDisc: 842, opVisits: 6432, arpp: 192874, bcg: 'Cash Cow'},
+            {rank: 4, name: 'Suresh Kumar S', dept: 'Neuro Surgery', total: 16.54, ip: 14.86, op: 1.68, ipDisc: 632, opVisits: 4876, arpp: 235127, bcg: 'Cash Cow'},
+            {rank: 5, name: 'George P Abraham', dept: 'Urology', total: 10.86, ip: 9.12, op: 1.74, ipDisc: 654, opVisits: 7234, arpp: 139449, bcg: 'Cash Cow'},
+            {rank: 6, name: 'Padmakumar R', dept: 'Liver Transplant', total: 14.24, ip: 13.12, op: 1.12, ipDisc: 262, opVisits: 1876, arpp: 500763, bcg: 'Star'},
+            {rank: 7, name: 'Sujith T N', dept: 'CT Surgery', total: 4.62, ip: 3.94, op: 0.68, ipDisc: 176, opVisits: 2543, arpp: 223864, bcg: 'Question Mark'},
+            {rank: 8, name: 'Pradeep Kumar S', dept: 'Gastroenterology', total: 12.42, ip: 9.86, op: 2.56, ipDisc: 698, opVisits: 10234, arpp: 141261, bcg: 'Cash Cow'},
+            {rank: 9, name: 'Xavier Pulikkal', dept: 'Psychiatry', total: 3.18, ip: 2.42, op: 0.76, ipDisc: 86, opVisits: 3234, arpp: 281395, bcg: 'Question Mark'},
+            {rank: 10, name: 'Anoop T M', dept: 'Cardiology', total: 10.24, ip: 8.72, op: 1.52, ipDisc: 546, opVisits: 6876, arpp: 159707, bcg: 'Cash Cow'},
+            {rank: 11, name: 'Ramesh Babu K', dept: 'Orthopaedics', total: 7.86, ip: 6.42, op: 1.44, ipDisc: 586, opVisits: 7654, arpp: 109556, bcg: 'Question Mark'},
+            {rank: 12, name: 'Sudish K', dept: 'Nephrology', total: 12.86, ip: 10.42, op: 2.44, ipDisc: 312, opVisits: 8765, arpp: 334103, bcg: 'Cash Cow'}
+        ];
+
+        function showTab(n) {
+            const pages = document.querySelectorAll('.page');
+            const tabs = document.querySelectorAll('.tab');
+            pages.forEach(p => p.classList.remove('active'));
+            tabs.forEach(t => t.classList.remove('active'));
+            pages[n].classList.add('active');
+            tabs[n].classList.add('active');
+            window.scrollTo(0, 0);
+            setTimeout(() => {
+                document.querySelectorAll('canvas').forEach(canvas => {
+                    if (canvas.chart) canvas.chart.resize();
+                });
+            }, 100);
+        }
+
+        function formatCr(val) { return '₹' + val.toFixed(2) + ' Cr'; }
+        function formatL(val) { return '₹' + (val / 100000).toFixed(2) + 'L'; }
+
+        // Tab 0: Executive Summary
+        const ctx0a = document.getElementById('chart0a').getContext('2d');
+        new Chart(ctx0a, {
+            type: 'bar',
+            data: {
+                labels: monthsData,
+                datasets: [
+                    {label: 'IP Revenue', data: ipRevenue, backgroundColor: '#1976d2', stack: 'stack1'},
+                    {label: 'OP Revenue', data: opRevenue, backgroundColor: '#27ae60', stack: 'stack1'}
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {legend: {labels: {font: {size: 10}}}},
+                scales: {y: {beginAtZero: true, ticks: {callback: v => '₹' + v + 'Cr'}}},
+                interaction: {mode: 'index', intersect: false}
+            }
+        });
+
+        const ctx0b = document.getElementById('chart0b').getContext('2d');
+        new Chart(ctx0b, {
+            type: 'doughnut',
+            data: {
+                labels: ['IP Revenue (₹266.71 Cr)', 'OP Revenue (₹91.89 Cr)'],
+                datasets: [{data: [266.71, 91.89], backgroundColor: ['#1976d2', '#27ae60']}]
+            },
+            options: {responsive: true, plugins: {legend: {position: 'bottom', labels: {font: {size: 10}}}}}
+        });
+
+        const execData = [
+            ['Apr\'25', '34.21', '25.48', '8.73', '1,842', '32,156', '4.56', '1,38,328', '59.5%'],
+            ['May\'25', '36.89', '27.42', '9.47', '1,958', '33,822', '4.57', '1,39,938', '63.2%'],
+            ['Jun\'25', '35.44', '26.31', '9.13', '1,897', '32,989', '4.60', '1,38,692', '61.8%'],
+            ['Jul\'25', '37.12', '27.68', '9.44', '1,974', '34,112', '4.59', '1,40,223', '64.0%'],
+            ['Aug\'25', '36.78', '27.33', '9.45', '1,952', '33,876', '4.60', '1,40,010', '63.5%'],
+            ['Sep\'25', '35.92', '26.72', '9.20', '1,911', '33,244', '4.61', '1,39,822', '62.4%'],
+            ['Oct\'25', '33.86', '25.14', '8.72', '1,812', '31,876', '4.60', '1,38,740', '58.9%'],
+            ['Nov\'25', '34.52', '25.68', '8.84', '1,845', '32,412', '4.60', '1,39,187', '60.2%'],
+            ['Dec\'25', '36.45', '27.14', '9.31', '1,938', '33,513', '4.58', '1,40,041', '62.8%'],
+            ['Jan\'26', '37.41', '27.81', '9.60', '1,963', '34,429', '4.60', '1,41,671', '63.8%']
+        ];
+        document.getElementById('execSummaryTable').innerHTML = execData.map(row =>
+            `<tr><td>${row[0]}</td><td>${row[1]}</td><td>${row[2]}</td><td>${row[3]}</td><td>${row[4]}</td><td>${row[5]}</td><td>${row[6]}</td><td>${row[7]}</td><td>${row[8]}</td></tr>`
+        ).join('');
+
+        // Tab 1: Department Performance
+        document.getElementById('deptTable').innerHTML = departmentData.map(d =>
+            `<tr><td>${d.name}</td><td>${d.total.toFixed(2)}</td><td>${d.ip.toFixed(2)}</td><td>${d.op.toFixed(2)}</td><td>${d.ipDisc.toLocaleString()}</td><td>${d.opVisits.toLocaleString()}</td><td>${(d.arpp / 100000).toFixed(2)}L</td><td>${d.alos.toFixed(1)}</td><td>${d.docs}</td></tr>`
+        ).join('');
+
+        const top6Depts = departmentData.slice(0, 6);
+        const ctx1a = document.getElementById('chart1a').getContext('2d');
+        new Chart(ctx1a, {
+            type: 'bar',
+            data: {
+                labels: top6Depts.map(d => d.name),
+                datasets: [{label: 'Revenue (Cr)', data: top6Depts.map(d => d.total), backgroundColor: '#1a3a5c'}]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                plugins: {legend: {labels: {font: {size: 10}}}},
+                scales: {x: {ticks: {callback: v => '₹' + v + 'Cr'}}}
+            }
+        });
+
+        const ctx1b = document.getElementById('chart1b').getContext('2d');
+        new Chart(ctx1b, {
+            type: 'bar',
+            data: {
+                labels: departmentData.slice(0, 12).map(d => d.name.substring(0, 15)),
+                datasets: [{label: 'ARPP-IP (₹L)', data: departmentData.slice(0, 12).map(d => d.arpp / 100000), backgroundColor: '#e67e22'}]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                scales: {x: {ticks: {callback: v => '₹' + v.toFixed(1) + 'L'}}}
+            }
+        });
+
+        // Tab 2: Doctor Scorecard
+        function renderDoctorTable() {
+            const search = document.getElementById('doctorSearch').value.toLowerCase();
+            const filtered = doctorData.filter(d => d.name.toLowerCase().includes(search));
+            document.getElementById('doctorTable').innerHTML = filtered.map((d, i) =>
+                `<tr><td>${d.rank}</td><td>${d.name}</td><td>${d.dept}</td><td>${d.total.toFixed(2)}</td><td>${d.ip.toFixed(2)}</td><td>${d.op.toFixed(2)}</td><td>${d.ipDisc}</td><td>${d.opVisits.toLocaleString()}</td><td>${(d.arpp / 100000).toFixed(2)}L</td><td><span class="pill ${d.bcg === 'Cash Cow' ? 'gp' : d.bcg === 'Star' ? 'bp' : 'op'}">${d.bcg}</span></td></tr>`
+            ).join('');
+        }
+        function filterDoctors(dept) {
+            document.querySelectorAll('.filter-bar .fbtn').forEach((b, i) => {
+                b.classList.toggle('active', b.textContent.includes(dept) || (dept === 'All' && i === 0));
+            });
+            renderDoctorTable();
+        }
+        renderDoctorTable();
+
+        // Tab 3: Budget vs Actual
+        const budgetMonthly = [37.0, 36.5, 36.0, 37.5, 37.0, 36.5, 33.5, 34.0, 36.5, 37.5];
+        const ctx3a = document.getElementById('chart3a').getContext('2d');
+        new Chart(ctx3a, {
+            type: 'line',
+            data: {
+                labels: monthsData,
+                datasets: [
+                    {label: 'Budget', data: budgetMonthly, borderColor: '#8e44ad', borderWidth: 2, fill: false, tension: 0.3},
+                    {label: 'Actual', data: totalRevenue, borderColor: '#1a3a5c', borderWidth: 2, fill: false, tension: 0.3}
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {y: {ticks: {callback: v => '₹' + v + 'Cr'}}},
+                plugins: {legend: {labels: {font: {size: 10}}}}
+            }
+        });
+
+        const waterfall = [370, -11.4, 358.6];
+        const ctx3b = document.getElementById('chart3b').getContext('2d');
+        new Chart(ctx3b, {
+            type: 'bar',
+            data: {
+                labels: ['Budget', 'Variance', 'Actual'],
+                datasets: [{
+                    label: 'Revenue (Cr)',
+                    data: waterfall,
+                    backgroundColor: ['#1a3a5c', '#e74c3c', '#27ae60']
+                }]
+            },
+            options: {responsive: true, scales: {y: {ticks: {callback: v => '₹' + v + 'Cr'}}}}
+        });
+
+        // Tab 4: Concentration Risk
+        const top12Doctors = doctorData.map(d => ({name: d.name.split(' ')[0], revenue: d.total}));
+        const cumRevenue = top12Doctors.map((d, i) => top12Doctors.slice(0, i + 1).reduce((s, x) => s + x.revenue, 0));
+        const cumPercent = cumRevenue.map(r => (r / 358.6 * 100).toFixed(1));
+
+        const ctx4a = document.getElementById('chart4a').getContext('2d');
+        new Chart(ctx4a, {
+            type: 'bar',
+            data: {
+                labels: top12Doctors.map(d => d.name),
+                datasets: [{
+                    label: 'Revenue (Cr)',
+                    data: top12Doctors.map(d => d.revenue),
+                    backgroundColor: top12Doctors.map((d, i) => i < 2 ? '#e74c3c' : '#1976d2')
+                }]
+            },
+            options: {responsive: true, scales: {y: {ticks: {callback: v => '₹' + v + 'Cr'}}}}
+        });
+
+        const ctx4b = document.getElementById('chart4b').getContext('2d');
+        new Chart(ctx4b, {
+            type: 'line',
+            data: {
+                labels: top12Doctors.map(d => d.name),
+                datasets: [{
+                    label: 'Cumulative %',
+                    data: cumPercent,
+                    borderColor: '#e67e22',
+                    backgroundColor: 'rgba(230, 126, 34, 0.1)',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {y: {max: 100, ticks: {callback: v => v + '%'}}}
+            }
+        });
+
+        // Tab 5: Monthly Trends
+        const ctx5a = document.getElementById('chart5a').getContext('2d');
+        new Chart(ctx5a, {
+            type: 'bar',
+            data: {
+                labels: monthsData,
+                datasets: [
+                    {label: 'IP Revenue', data: ipRevenue, backgroundColor: '#1976d2', stack: 'stack'},
+                    {label: 'OP Revenue', data: opRevenue, backgroundColor: '#27ae60', stack: 'stack'}
+                ]
+            },
+            options: {responsive: true, scales: {y: {stacked: true, ticks: {callback: v => '₹' + v + 'Cr'}}}}
+        });
+
+        const ctx5b = document.getElementById('chart5b').getContext('2d');
+        const ctx5b2 = ctx5b.getContext ? null : ctx5b;
+        new Chart(ctx5b, {
+            type: 'line',
+            data: {
+                labels: monthsData,
+                datasets: [
+                    {label: 'IP Discharge', data: ipDischarge, borderColor: '#1a3a5c', yAxisID: 'y', fill: false, tension: 0.3},
+                    {label: 'Occupancy %', data: occupancy, borderColor: '#e67e22', yAxisID: 'y1', fill: false, tension: 0.3}
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {type: 'linear', position: 'left', title: {display: true, text: 'IP Discharge'}},
+                    y1: {type: 'linear', position: 'right', title: {display: true, text: 'Occupancy %'}, max: 100}
+                }
+            }
+        });
+
+        const top5DeptMonthly = departmentData.slice(0, 5);
+        const ctx5c = document.getElementById('chart5c').getContext('2d');
+        const colors = ['#1a3a5c', '#1976d2', '#e67e22', '#27ae60', '#8e44ad'];
+        const deptMonthlyScales = [
+            [0.93, 1.04, 0.98, 1.05, 1.03, 0.99, 0.91, 0.94, 1.02, 1.06],
+            [0.95, 1.02, 0.97, 1.04, 1.01, 0.98, 0.93, 0.96, 1.03, 1.05],
+            [0.94, 1.03, 0.99, 1.06, 1.02, 0.97, 0.90, 0.95, 1.04, 1.07],
+            [0.96, 1.01, 0.98, 1.03, 1.00, 0.99, 0.92, 0.95, 1.02, 1.04],
+            [0.92, 1.05, 1.00, 1.04, 1.02, 0.98, 0.89, 0.93, 1.03, 1.06]
+        ];
+        new Chart(ctx5c, {
+            type: 'line',
+            data: {
+                labels: monthsData,
+                datasets: top5DeptMonthly.map((d, i) => ({
+                    label: d.name,
+                    borderColor: colors[i],
+                    data: deptMonthlyScales[i].map(s => +(d.total / 10 * s).toFixed(2)),
+                    fill: false,
+                    tension: 0.3
+                }))
+            },
+            options: {responsive: true, scales: {y: {ticks: {callback: v => '₹' + v.toFixed(1) + 'Cr'}}}}
+        });
+
+        const opFootfall = [32156, 33822, 32989, 34112, 33876, 33244, 31876, 32412, 33513, 34429];
+        const alosData = [4.56, 4.57, 4.60, 4.59, 4.60, 4.61, 4.60, 4.60, 4.58, 4.60];
+        document.getElementById('monthlyTable').innerHTML = monthsData.map((m, i) =>
+            `<tr><td>${m}</td><td>${totalRevenue[i]}</td><td>${ipRevenue[i]}</td><td>${opRevenue[i]}</td><td>${ipDischarge[i]}</td><td>${opFootfall[i].toLocaleString()}</td><td>${alosData[i].toFixed(2)}</td><td>${occupancy[i]}</td><td>${totalRevenue[i] > 36 ? '📈' : totalRevenue[i] < 35 ? '📉' : '➡️'}</td></tr>`
+        ).join('');
+
+        // Tab 6: Payor Mix
+        const ctx6a = document.getElementById('chart6a').getContext('2d');
+        new Chart(ctx6a, {
+            type: 'doughnut',
+            data: {
+                labels: ['Cash (68.2%)', 'Insurance/TPA (26.4%)', 'Government (3.8%)', 'Corporate (1.6%)'],
+                datasets: [{data: [68.2, 26.4, 3.8, 1.6], backgroundColor: ['#27ae60', '#1976d2', '#e67e22', '#8e44ad']}]
+            },
+            options: {responsive: true, plugins: {legend: {position: 'bottom', labels: {font: {size: 10}}}}}
+        });
+
+        const ctx6b = document.getElementById('chart6b').getContext('2d');
+        new Chart(ctx6b, {
+            type: 'bar',
+            data: {
+                labels: ['Cash', 'Insurance', 'Govt', 'Corporate'],
+                datasets: [
+                    {label: 'FY24', data: [73.3, 22.2, 2.7, 1.8], backgroundColor: '#a0aec0'},
+                    {label: 'FY26', data: [68.2, 26.4, 3.8, 1.6], backgroundColor: '#1a3a5c'}
+                ]
+            },
+            options: {responsive: true, scales: {y: {max: 100, ticks: {callback: v => v + '%'}}}}
+        });
+
+        const arppDepts = departmentData.slice(0, 15).sort((a, b) => b.arpp - a.arpp);
+        const ctx6c = document.getElementById('chart6c').getContext('2d');
+        new Chart(ctx6c, {
+            type: 'bar',
+            data: {
+                labels: arppDepts.map(d => d.name.substring(0, 12)),
+                datasets: [{label: 'ARPP-IP (₹L)', data: arppDepts.map(d => d.arpp / 100000), backgroundColor: '#8e44ad'}]
+            },
+            options: {indexAxis: 'y', responsive: true, scales: {x: {ticks: {callback: v => '₹' + v.toFixed(1) + 'L'}}}}
+        });
+
+        const arpobDepts = departmentData.slice(0, 15).map(d => ({
+            name: d.name,
+            arpob: (d.total * 10000000 / 365) / (d.ipDisc || 1)
+        })).sort((a, b) => b.arpob - a.arpob);
+        const ctx6d = document.getElementById('chart6d').getContext('2d');
+        new Chart(ctx6d, {
+            type: 'bar',
+            data: {
+                labels: arpobDepts.map(d => d.name.substring(0, 12)),
+                datasets: [{label: 'ARPOB (₹/day)', data: arpobDepts.map(d => d.arpob / 1000), backgroundColor: '#1976d2'}]
+            },
+            options: {indexAxis: 'y', responsive: true, scales: {x: {ticks: {callback: v => '₹' + (v * 1000).toLocaleString()}}}}
+        });
+
+        // Tab 7: YoY Growth
+        const ctx7a = document.getElementById('chart7a').getContext('2d');
+        new Chart(ctx7a, {
+            type: 'bar',
+            data: {
+                labels: ['Total Revenue', 'IP Revenue', 'OP Revenue'],
+                datasets: [
+                    {label: 'FY24', data: [397, 298, 99], backgroundColor: '#a0aec0'},
+                    {label: 'FY26 Ann', data: [430.32, 320.05, 110.27], backgroundColor: '#27ae60'}
+                ]
+            },
+            options: {responsive: true, scales: {y: {ticks: {callback: v => '₹' + v + 'Cr'}}}}
+        });
+
+        const ctx7b = document.getElementById('chart7b').getContext('2d');
+        new Chart(ctx7b, {
+            type: 'bar',
+            data: {
+                labels: ['Volume\nGrowth', 'Price/Mix\nGrowth', 'Total\nGrowth'],
+                datasets: [{data: [22, 11.32, 33.32], backgroundColor: ['#1976d2', '#e67e22', '#27ae60']}]
+            },
+            options: {responsive: true, scales: {y: {ticks: {callback: v => '₹' + v + 'Cr'}}}, plugins: {legend: {display: false}}}
+        });
+
+        // Tab 8: Priorities
+        const ctx8a = document.getElementById('chart8a').getContext('2d');
+        new Chart(ctx8a, {
+            type: 'bar',
+            data: {
+                labels: ['Current YTD', 'H2 Bridge', 'FY26 Target'],
+                datasets: [{data: [358.6, 11.4, 370], backgroundColor: ['#a0aec0', '#e67e22', '#27ae60']}]
+            },
+            options: {responsive: true, scales: {y: {ticks: {callback: v => '₹' + v + 'Cr'}}}, plugins: {legend: {display: false}}}
+        });
+
+        // Tab 9: Benchmarks
+        const ctx9a = document.getElementById('chart9a').getContext('2d');
+        new Chart(ctx9a, {
+            type: 'bar',
+            data: {
+                labels: ['LHRC', 'Apollo Health', 'IHH Acibadem'],
+                datasets: [{label: 'Revenue (Cr)', data: [430.32, 507.5, 398.2], backgroundColor: ['#1a3a5c', '#a0aec0', '#a0aec0']}]
+            },
+            options: {responsive: true, scales: {y: {ticks: {callback: v => '₹' + v + 'Cr'}}}}
+        });
+
+        const ctx9b = document.getElementById('chart9b').getContext('2d');
+        new Chart(ctx9b, {
+            type: 'scatter',
+            data: {
+                datasets: [
+                    {label: 'LHRC', data: [{x: 62, y: 1.40}], backgroundColor: '#1a3a5c', borderWidth: 2, borderColor: '#1a3a5c', pointRadius: 10},
+                    {label: 'Apollo', data: [{x: 59.2, y: 1.38}], backgroundColor: '#a0aec0', pointRadius: 8},
+                    {label: 'IHH', data: [{x: 65.8, y: 1.42}], backgroundColor: '#a0aec0', pointRadius: 8}
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {title: {display: true, text: 'Occupancy %'}, min: 55, max: 68},
+                    y: {title: {display: true, text: 'ARPP-IP (₹L)'}, min: 1.35, max: 1.45}
+                }
+            }
+        });
+    </script>
+</body>
+</html>
