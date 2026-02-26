@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LHRC Board Dashboard — FY24-26 Consolidated Performance Intelligence</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',system-ui,sans-serif;background:#f8f9fb;color:#1a202c;font-size:13.5px}
+.header{background:linear-gradient(135deg,#0c1f33 0%,#1a3a5c 50%,#0d2847 100%);color:white;padding:18px 32px;display:flex;align-items:center;justify-content:space-between;position:relative;overflow:hidden}
+.header::before{content:'';position:absolute;top:-50%;right:-10%;width:40%;height:200%;background:radial-gradient(ellipse,rgba(255,255,255,0.03) 0%,transparent 70%);pointer-events:none}
+.header h1{font-size:1.15rem;font-weight:800;letter-spacing:-0.3px}
+.header p{font-size:0.68rem;opacity:0.55;margin-top:3px;font-weight:500}
+.hb{display:flex;gap:6px;flex-wrap:wrap}
+.badge{background:rgba(255,255,255,0.1);backdrop-filter:blur(4px);padding:4px 11px;border-radius:16px;font-size:0.65rem;font-weight:700;border:1px solid rgba(255,255,255,0.08)}
+.badge.g{background:rgba(39,174,96,0.25);border-color:rgba(39,174,96,0.3)}
+.badge.r{background:rgba(231,76,60,0.25);border-color:rgba(231,76,60,0.3)}
+.badge.o{background:rgba(230,126,34,0.25);border-color:rgba(230,126,34,0.3)}
+.tab-bar{background:white;border-bottom:2px solid #e8ecf1;padding:0 24px;display:flex;gap:0;overflow-x:auto;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
+.tab{padding:11px 15px;font-size:0.72rem;font-weight:700;color:#8896a8;cursor:pointer;border-bottom:2.5px solid transparent;transition:all 0.2s;white-space:nowrap;margin-bottom:-2px;letter-spacing:0.2px}
+.tab:hover{color:#1a3a5c;background:#f8fafc}
+.tab.active{color:#0c1f33;border-bottom-color:#e67e22;background:white}
+.page{display:none;padding:20px 28px;max-width:1520px;margin:0 auto}
+.page.active{display:block}
+.kpi-strip{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:16px}
+.kpi{background:white;border-radius:10px;padding:13px 15px;box-shadow:0 1px 4px rgba(0,0,0,0.05);border-left:3.5px solid;position:relative;overflow:hidden}
+.kpi::after{content:'';position:absolute;top:0;right:0;width:40px;height:100%;background:linear-gradient(90deg,transparent,rgba(0,0,0,0.01))}
+.kpi-label{font-size:0.58rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#8896a8}
+.kpi-value{font-size:1.25rem;font-weight:800;margin-top:3px;font-family:'JetBrains Mono','DM Sans',monospace;letter-spacing:-0.5px}
+.kpi-sub{font-size:0.6rem;color:#8896a8;margin-top:3px;font-weight:500}
+.kpi-delta{font-size:0.6rem;font-weight:700;margin-top:2px}
+.kpi-delta.up{color:#27ae60}.kpi-delta.dn{color:#e74c3c}.kpi-delta.flat{color:#e67e22}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.g21{display:grid;grid-template-columns:2fr 1fr;gap:12px}
+.g31{display:grid;grid-template-columns:3fr 1fr;gap:12px}
+.card{background:white;border-radius:10px;padding:16px 18px;box-shadow:0 1px 4px rgba(0,0,0,0.05);margin-bottom:12px}
+.card-title{font-size:0.78rem;font-weight:800;color:#1a202c;margin-bottom:2px;letter-spacing:-0.2px}
+.card-sub{font-size:0.62rem;color:#8896a8;margin-bottom:10px;font-weight:500}
+.tbl{width:100%;border-collapse:collapse;font-size:0.68rem;font-family:'JetBrains Mono','DM Sans',monospace}
+.tbl th{background:#f4f6f9;text-align:left;padding:7px 8px;font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.7px;color:#6b7c93;border-bottom:2px solid #e8ecf1;white-space:nowrap;font-family:'DM Sans',sans-serif}
+.tbl td{padding:6px 8px;border-bottom:1px solid #f0f3f6;color:#2d3748}
+.tbl tr:hover td{background:#f8fafc}
+.tbl tr.hl td{background:#fffbf0;font-weight:700}
+.tbl .r{text-align:right}
+.pill{display:inline-block;padding:2px 8px;border-radius:10px;font-size:0.58rem;font-weight:700}
+.pill.gp{background:#dcfce7;color:#166534}.pill.rp{background:#fee2e2;color:#991b1b}
+.pill.op{background:#fef3c7;color:#92400e}.pill.bp{background:#dbeafe;color:#1e40af}
+.pill.pp{background:#f3e8ff;color:#6b21a8}.pill.grey{background:#f1f5f9;color:#64748b}
+.ibox{border-radius:8px;padding:12px 15px;margin-bottom:12px;border-left:4px solid}
+.ibox.amber{background:#fffbf0;border-color:#f59e0b;}.ibox.amber .it{color:#92400e}
+.ibox.red{background:#fef2f2;border-color:#ef4444;}.ibox.red .it{color:#991b1b}
+.ibox.green{background:#f0fdf4;border-color:#22c55e;}.ibox.green .it{color:#166534}
+.ibox.blue{background:#eff6ff;border-color:#3b82f6;}.ibox.blue .it{color:#1e40af}
+.it{font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:4px}
+.ib{font-size:0.72rem;color:#4a5568;line-height:1.55}
+.sl{font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:#8896a8;margin:20px 0 10px;display:flex;align-items:center;gap:8px}
+.sl::after{content:'';flex:1;height:1px;background:#e8ecf1}
+.yr-tag{display:inline-block;padding:1px 6px;border-radius:4px;font-size:0.55rem;font-weight:700;font-family:'JetBrains Mono',monospace}
+.yr24{background:#e3f2fd;color:#1565c0}.yr25{background:#f3e5f5;color:#7b1fa2}.yr26{background:#e8f5e9;color:#2e7d32}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>VPS Lakeshore — Board Performance Intelligence</h1>
+    <p>Consolidated FY24-26 &nbsp;&middot;&nbsp; Kochi + Calicut &nbsp;&middot;&nbsp; FY26 = 10-month YTD (Apr 25 – Jan 26)</p>
+  </div>
+  <div class="hb">
+    <span class="badge g">ADR &#x20B9;1.21&rarr;1.47 Cr (+21%)</span>
+    <span class="badge g">ARPOB &#x20B9;32K&rarr;35K (+10%)</span>
+    <span class="badge g">Insurance 22%&rarr;26%</span>
+    <span class="badge o">Occupancy 54%&rarr;52%</span>
+    <span class="badge r">FY25 Budget 85.3%</span>
+  </div>
+</div>
+
+<div class="tab-bar">
+  <div class="tab active" onclick="ST('exec')">&#x1F4CA; Executive Summary</div>
+  <div class="tab" onclick="ST('revenue')">&#x1F4B0; Revenue Trajectory</div>
+  <div class="tab" onclick="ST('kpi')">&#x1F4D0; KPI Evolution</div>
+  <div class="tab" onclick="ST('dept')">&#x1F3E5; Department Deep-Dive</div>
+  <div class="tab" onclick="ST('doctor')">&#x1F468;&#x200D;&#x2695;&#xFE0F; Doctor Economics</div>
+  <div class="tab" onclick="ST('payor')">&#x1F4B3; Payor Transformation</div>
+  <div class="tab" onclick="ST('occ')">&#x1F6CF;&#xFE0F; Capacity & Throughput</div>
+  <div class="tab" onclick="ST('bench')">&#x1F3C6; Peer Benchmarks</div>
+  <div class="tab" onclick="ST('risk')">&#x26A0;&#xFE0F; Risk & Concentration</div>
+  <div class="tab" onclick="ST('strat')">&#x1F680; Strategic Roadmap</div>
+</div>
+
+<div id="pg-exec" class="page active">
+  <div class="kpi-strip">
+    <div class="kpi" style="border-color:#0c1f33"><div class="kpi-label">Revenue (FY26 Ann.)</div><div class="kpi-value" style="color:#0c1f33">&#x20B9;457 Cr</div><div class="kpi-sub">YTD &#x20B9;381 Cr (10m) &middot; FY25: &#x20B9;410 Cr</div><div class="kpi-delta up">&#x25B2; +11.6% vs FY25</div></div>
+    <div class="kpi" style="border-color:#e67e22"><div class="kpi-label">ADR (Daily Revenue)</div><div class="kpi-value" style="color:#e67e22">&#x20B9;1.47 Cr</div><div class="kpi-sub">FY25: &#x20B9;1.31 &middot; FY24: &#x20B9;1.21</div><div class="kpi-delta up">&#x25B2; +21.5% over 2 years</div></div>
+    <div class="kpi" style="border-color:#8e44ad"><div class="kpi-label">ARPOB (Bed Yield)</div><div class="kpi-value" style="color:#8e44ad">&#x20B9;35,188</div><div class="kpi-sub">FY25: &#x20B9;33,414 &middot; FY24: &#x20B9;31,898</div><div class="kpi-delta up">&#x25B2; +10.3% over 2 years</div></div>
+    <div class="kpi" style="border-color:#27ae60"><div class="kpi-label">Insurance Mix</div><div class="kpi-value" style="color:#27ae60">26%</div><div class="kpi-sub">FY25: 24% &middot; FY24: 22%</div><div class="kpi-delta up">&#x25B2; +3.8 ppt improvement</div></div>
+    <div class="kpi" style="border-color:#e74c3c"><div class="kpi-label">Occupancy</div><div class="kpi-value" style="color:#e74c3c">52%</div><div class="kpi-sub">FY25: 52% &middot; FY24: 54%</div><div class="kpi-delta dn">&#x25BC; -2.4 ppt vs FY24</div></div>
+    <div class="kpi" style="border-color:#1976d2"><div class="kpi-label">Intl Revenue</div><div class="kpi-value" style="color:#1976d2">9.2%</div><div class="kpi-sub">FY25: 7% &middot; FY24: 5%</div><div class="kpi-delta up">&#x25B2; +4.2 ppt — Gulf corridor</div></div>
+  </div>
+
+  <div class="ibox blue">
+    <div class="it">&#x1F50D; Board Summary — 3-Year Performance Trajectory</div>
+    <div class="ib"><strong>The hospital is on an inflection point.</strong> Revenue has grown from &#x20B9;397 Cr (FY24) to annualized ~&#x20B9;457 Cr (FY26), a <strong>15.1% 2-year CAGR</strong>. More importantly, the <strong>quality of revenue is improving</strong>: ARPOB up 10.3% (&#x20B9;32K&rarr;&#x20B9;35K), insurance penetration up 3.8 ppt (22%&rarr;26%), international revenue nearly doubled (5%&rarr;9.2%), and ALOS improved from 4.47 to 4.06 days. <strong>The challenge: occupancy has stagnated at 52%</strong> — 11 ppt below the 63% budget. Each 5 ppt occupancy gain = ~&#x20B9;13 Cr additional revenue at current ARPOB. Jan'26 ADR of &#x20B9;1.66 Cr (highest ever) signals strong momentum entering FY27.</div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Revenue Trajectory — FY24 to FY26 (&#x20B9; Crore)</div>
+      <div class="card-sub"><span class="yr-tag yr24">FY24</span> <span class="yr-tag yr25">FY25</span> <span class="yr-tag yr26">FY26 10m</span> &middot; Monthly IP + OP</div>
+      <div style="position:relative;height:280px"><canvas id="cRevTrend"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Year-on-Year Growth Bridge (&#x20B9; Crore)</div>
+      <div class="card-sub">What drove the revenue change each year</div>
+      <div style="position:relative;height:280px"><canvas id="cBridge"></canvas></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Consolidated KPI Scorecard — FY24 vs FY25 vs FY26</div>
+    <div class="card-sub">All FY26 figures are 10-month YTD (Apr'25–Jan'26). Annualized where noted.</div>
+    <table class="tbl">
+      <thead><tr><th>Metric</th><th class="r">FY24</th><th class="r">FY25</th><th class="r">FY26 YTD*</th><th class="r">FY26 Ann.</th><th class="r">&#x0394; FY24&rarr;26</th><th>Trend</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Total Revenue</strong> <span style="color:#8896a8;font-size:0.6rem">₹Cr</span></td><td class="r">397.2</td><td class="r">409.7</td><td class="r">381.1</td><td class="r" style="font-weight:700">457.0</td><td class="r"><span class="pill gp">▲ +15%</span></td><td>📈</td></tr>
+        <tr><td><strong>IP Revenue</strong> <span style="color:#8896a8;font-size:0.6rem">₹Cr</span></td><td class="r">298.0</td><td class="r">299.3</td><td class="r">263.9</td><td class="r" style="font-weight:700">317.0</td><td class="r"><span class="pill gp">▲ +6%</span></td><td>📈</td></tr>
+        <tr><td><strong>OP Revenue</strong> <span style="color:#8896a8;font-size:0.6rem">₹Cr</span></td><td class="r">99.2</td><td class="r">110.4</td><td class="r">102.8</td><td class="r" style="font-weight:700">123.0</td><td class="r"><span class="pill gp">▲ +24%</span></td><td>📈</td></tr>
+        <tr><td><strong>ADR</strong> <span style="color:#8896a8;font-size:0.6rem">₹Cr/day</span></td><td class="r">1.21</td><td class="r">1.31</td><td class="r">1.47</td><td class="r" style="font-weight:700">1.47</td><td class="r"><span class="pill gp">▲ +21%</span></td><td>📈</td></tr>
+        <tr><td><strong>IP Discharges</strong> <span style="color:#8896a8;font-size:0.6rem"></span></td><td class="r">20,932</td><td class="r">21,023</td><td class="r">18,476</td><td class="r" style="font-weight:700">22,171</td><td class="r"><span class="pill gp">▲ +6%</span></td><td>📈</td></tr>
+        <tr><td><strong>OP Visits</strong> <span style="color:#8896a8;font-size:0.6rem"></span></td><td class="r">371,866</td><td class="r">374,796</td><td class="r">328,984</td><td class="r" style="font-weight:700">394,781</td><td class="r"><span class="pill gp">▲ +6%</span></td><td>📈</td></tr>
+        <tr><td><strong>ARPP-IP</strong> <span style="color:#8896a8;font-size:0.6rem">₹</span></td><td class="r">142,600</td><td class="r">142,387</td><td class="r">142,822</td><td class="r" style="font-weight:700">142,822</td><td class="r"><span class="pill op">→ +0.2%</span></td><td>➡️</td></tr>
+        <tr><td><strong>ARPOB</strong> <span style="color:#8896a8;font-size:0.6rem">₹/day</span></td><td class="r">31,898</td><td class="r">33,414</td><td class="r">35,188</td><td class="r" style="font-weight:700">35,188</td><td class="r"><span class="pill gp">▲ +10%</span></td><td>📈</td></tr>
+        <tr><td><strong>ALOS</strong> <span style="color:#8896a8;font-size:0.6rem">days</span></td><td class="r">4.47</td><td class="r">4.3</td><td class="r">4.06</td><td class="r" style="font-weight:700">4.06</td><td class="r"><span class="pill gp">▲ -9%</span></td><td>📈</td></tr>
+        <tr><td><strong>Occupancy</strong> <span style="color:#8896a8;font-size:0.6rem">%</span></td><td class="r">54.4</td><td class="r">52.0</td><td class="r">52.0</td><td class="r" style="font-weight:700">52.0</td><td class="r"><span class="pill rp">▼ -2.4pp</span></td><td>📉</td></tr>
+        <tr><td><strong>Cash Payor</strong> <span style="color:#8896a8;font-size:0.6rem">%</span></td><td class="r">73.3</td><td class="r">70.0</td><td class="r">66.0</td><td class="r" style="font-weight:700">66.0</td><td class="r"><span class="pill gp">▲ -7.3pp</span></td><td>📈</td></tr>
+        <tr><td><strong>Insurance</strong> <span style="color:#8896a8;font-size:0.6rem">%</span></td><td class="r">22.2</td><td class="r">24.0</td><td class="r">26.0</td><td class="r" style="font-weight:700">26.0</td><td class="r"><span class="pill gp">▲ +3.8pp</span></td><td>📈</td></tr>
+        <tr><td><strong>Government</strong> <span style="color:#8896a8;font-size:0.6rem">%</span></td><td class="r">2.0</td><td class="r">3.5</td><td class="r">6</td><td class="r" style="font-weight:700">6</td><td class="r"><span class="pill gp">▲ +4pp</span></td><td>📈</td></tr>
+        <tr><td><strong>International</strong> <span style="color:#8896a8;font-size:0.6rem">%</span></td><td class="r">5</td><td class="r">7</td><td class="r">9.2</td><td class="r" style="font-weight:700">9.2</td><td class="r"><span class="pill gp">▲ +4.2pp</span></td><td>📈</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div id="pg-revenue" class="page">
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Monthly Total Revenue — 34-Month Overlay</div>
+      <div class="card-sub">FY24 (blue) vs FY25 (purple) vs FY26 (green) &middot; ₹ Crore per month</div>
+      <div style="position:relative;height:300px"><canvas id="cMonthOverlay"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">IP vs OP Revenue Split — Annual</div>
+      <div class="card-sub">OP share grew from 25% to 27% as outpatient services expanded</div>
+      <div style="position:relative;height:300px"><canvas id="cIPOP"></canvas></div>
+    </div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Average Daily Revenue (ADR) — Monthly Trend</div>
+      <div class="card-sub">Jan'26 ADR of ₹1.66 Cr is 37% above Apr'24. Structural revenue density improvement.</div>
+      <div style="position:relative;height:260px"><canvas id="cADR"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Revenue Seasonality Pattern</div>
+      <div class="card-sub">Indexed to annual average (100). Shows consistent Q1 weakness and Q3/Q4 strength.</div>
+      <div style="position:relative;height:260px"><canvas id="cSeason"></canvas></div>
+    </div>
+  </div>
+  <div class="ibox green">
+    <div class="it">&#x1F4A1; Revenue Intelligence</div>
+    <div class="ib"><strong>Jan 2026 (₹43.1 Cr) was the highest single-month revenue ever</strong>, driven by ADR ₹1.66 Cr — 37% above Apr 2024 baseline. The revenue trajectory shows consistent improvement with each successive year's curve sitting above the prior. <strong>Key structural drivers:</strong> (1) ARPOB improvement (+10% over 2 years), (2) OP revenue growth (+24% from ₹99→₹123 Cr annualized), (3) Insurance penetration driving higher-value cases. <strong>The risk:</strong> occupancy at 52% caps absolute growth — fixing this single metric would add ₹50-80 Cr annually.</div>
+  </div>
+</div>
+
+<div id="pg-kpi" class="page">
+  <div class="g3">
+    <div class="card">
+      <div class="card-title">ARPOB Trend (₹/bed/day)</div>
+      <div class="card-sub">Revenue per occupied bed — key monetisation metric</div>
+      <div style="position:relative;height:220px"><canvas id="cARPOB"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">ARPP-IP Trend (₹/patient)</div>
+      <div class="card-sub">Revenue per inpatient — case mix indicator</div>
+      <div style="position:relative;height:220px"><canvas id="cARPP"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">ALOS Trend (days)</div>
+      <div class="card-sub">Shorter = better throughput. Down 9% over 2 years.</div>
+      <div style="position:relative;height:220px"><canvas id="cALOS"></canvas></div>
+    </div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Revenue Yield Matrix — FY24 vs FY26</div>
+      <div class="card-sub">How the hospital is earning more from the same bed capacity</div>
+      <table class="tbl">
+        <thead><tr><th>Yield Metric</th><th class="r">FY24</th><th class="r">FY25</th><th class="r">FY26*</th><th class="r">&#x0394;</th></tr></thead>
+        <tbody>
+          <tr><td>Revenue per bed per day</td><td class="r">₹425</td><td class="r">₹457</td><td class="r">₹508</td><td class="r"><span class="pill gp">+20%</span></td></tr>
+          <tr><td>ARPOB (occupied bed)</td><td class="r">₹31,898</td><td class="r">₹33,414</td><td class="r">₹35,188</td><td class="r"><span class="pill gp">+10%</span></td></tr>
+          <tr><td>ARPP-IP</td><td class="r">₹1,42,600</td><td class="r">₹1,42,387</td><td class="r">₹1,42,822</td><td class="r"><span class="pill grey">Flat</span></td></tr>
+          <tr><td>ARPP-OP (Kochi)</td><td class="r">₹2,844</td><td class="r">₹3,091</td><td class="r">₹3,278</td><td class="r"><span class="pill gp">+15%</span></td></tr>
+          <tr><td>ADR</td><td class="r">₹1.21 Cr</td><td class="r">₹1.31 Cr</td><td class="r">₹1.47 Cr</td><td class="r"><span class="pill gp">+21%</span></td></tr>
+          <tr><td>ALOS</td><td class="r">4.47d</td><td class="r">4.3d</td><td class="r">4.06d</td><td class="r"><span class="pill gp">-9%</span></td></tr>
+          <tr><td>IP/OP Revenue Ratio</td><td class="r">75/25</td><td class="r">73/27</td><td class="r">72/28</td><td class="r"><span class="pill gp">Balanced</span></td></tr>
+          <tr class="hl"><td><strong>Implied Revenue at 65% Occ</strong></td><td class="r">₹496 Cr</td><td class="r">₹525 Cr</td><td class="r">₹563 Cr</td><td class="r"><span class="pill bp">Headroom</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title">Occupancy vs ARPOB — The Revenue Equation</div>
+      <div class="card-sub">Revenue = Beds × Occupancy × ARPOB. ARPOB improving, occupancy lagging.</div>
+      <div style="position:relative;height:280px"><canvas id="cOccARPOB"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<div id="pg-dept" class="page">
+  <div class="card">
+    <div class="card-title">Department Revenue Comparison — FY24 vs FY25 vs FY26 (₹ Crore)</div>
+    <div class="card-sub">FY26 is 10-month YTD. Sorted by FY25 full-year revenue. Color intensity = year.</div>
+    <div style="position:relative;height:420px"><canvas id="cDeptComp"></canvas></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Department Performance Scorecard — 3-Year View</div>
+    <div class="card-sub">Revenue in ₹ Crore. FY26* = 10-month YTD. Growth = FY25 vs FY24 full year.</div>
+    <table class="tbl">
+      <thead><tr><th>#</th><th>Department</th><th class="r">FY24</th><th class="r">FY25</th><th class="r">FY26*</th><th class="r">Growth</th><th class="r">ARPOB FY24</th><th class="r">ARPOB FY26</th><th class="r">ALOS FY26</th><th>Signal</th></tr></thead>
+      <tbody>
+        <tr class="hl"><td>1</td><td><strong>Nephrology</strong></td><td class="r">66.2</td><td class="r">55.0</td><td class="r">45.3</td><td class="r"><span class="pill rp">▼17%</span></td><td class="r">₹35,385</td><td class="r">₹36,929</td><td class="r">8.5d</td><td>🟡</td></tr>
+        <tr class="hl"><td>2</td><td><strong>Medical Oncology</strong></td><td class="r">54.9</td><td class="r">53.5</td><td class="r">53.2</td><td class="r"><span class="pill op">▼3%</span></td><td class="r">₹23,113</td><td class="r">₹32,714</td><td class="r">2.2d</td><td>🟢</td></tr>
+        <tr class="hl"><td>3</td><td><strong>Neuro Surgery</strong></td><td class="r">28.3</td><td class="r">31.9</td><td class="r">28.8</td><td class="r"><span class="pill gp">▲13%</span></td><td class="r">₹38,361</td><td class="r">₹43,438</td><td class="r">6.4d</td><td>🟢</td></tr>
+        <tr><td>4</td><td><strong>GI Surgery</strong></td><td class="r">26.2</td><td class="r">27.2</td><td class="r">22.4</td><td class="r"><span class="pill op">▲4%</span></td><td class="r">₹30,587</td><td class="r">₹35,072</td><td class="r">5.7d</td><td>🟡</td></tr>
+        <tr><td>5</td><td><strong>Surgical Oncology</strong></td><td class="r">22.7</td><td class="r">22.9</td><td class="r">10.7</td><td class="r"><span class="pill op">▲1%</span></td><td class="r">₹38,631</td><td class="r">₹35,328</td><td class="r">4.0d</td><td>🔴</td></tr>
+        <tr><td>6</td><td><strong>Gastroenterology</strong></td><td class="r">20.1</td><td class="r">22.8</td><td class="r">18.4</td><td class="r"><span class="pill gp">▲13%</span></td><td class="r">₹27,176</td><td class="r">₹28,285</td><td class="r">3.5d</td><td>🟡</td></tr>
+        <tr><td>7</td><td><strong>Cardiology</strong></td><td class="r">17.5</td><td class="r">22.5</td><td class="r">20.4</td><td class="r"><span class="pill gp">▲29%</span></td><td class="r">₹49,496</td><td class="r">₹49,396</td><td class="r">3.0d</td><td>🟢</td></tr>
+        <tr><td>8</td><td><strong>Urology</strong></td><td class="r">21.3</td><td class="r">21.6</td><td class="r">16.4</td><td class="r"><span class="pill op">▲1%</span></td><td class="r">₹47,635</td><td class="r">₹51,379</td><td class="r">3.2d</td><td>🟡</td></tr>
+        <tr><td>9</td><td><strong>Joint Replacement</strong></td><td class="r">16.4</td><td class="r">18.3</td><td class="r">21.1</td><td class="r"><span class="pill gp">▲11%</span></td><td class="r">₹71,066</td><td class="r">₹79,779</td><td class="r">4.0d</td><td>🟢</td></tr>
+        <tr><td>10</td><td><strong>Liver Care</strong></td><td class="r">13.8</td><td class="r">13.6</td><td class="r">9.7</td><td class="r"><span class="pill op">▼1%</span></td><td class="r">₹54,688</td><td class="r">₹41,012</td><td class="r">9.5d</td><td>🔴</td></tr>
+        <tr><td>11</td><td><strong>Min Invasive Surgery</strong></td><td class="r">13.3</td><td class="r">14.2</td><td class="r">12.5</td><td class="r"><span class="pill gp">▲7%</span></td><td class="r">₹63,184</td><td class="r">₹67,331</td><td class="r">2.7d</td><td>🟢</td></tr>
+        <tr><td>12</td><td><strong>Neurology</strong></td><td class="r">13.2</td><td class="r">12.8</td><td class="r">10.9</td><td class="r"><span class="pill op">▼4%</span></td><td class="r">₹21,714</td><td class="r">₹22,567</td><td class="r">4.2d</td><td>🟡</td></tr>
+        <tr><td>13</td><td><strong>General Medicine</strong></td><td class="r">9.8</td><td class="r">9.1</td><td class="r">7.5</td><td class="r"><span class="pill rp">▼6%</span></td><td class="r">₹14,009</td><td class="r">₹16,947</td><td class="r">4.7d</td><td>🟡</td></tr>
+        <tr><td>14</td><td><strong>Radiation Oncology</strong></td><td class="r">6.0</td><td class="r">5.3</td><td class="r">5.8</td><td class="r"><span class="pill rp">▼11%</span></td><td class="r">₹13,611</td><td class="r">₹18,603</td><td class="r">4.9d</td><td>🟢</td></tr>
+        <tr><td>15</td><td><strong>Head & Neck Oncology</strong></td><td class="r">0.0</td><td class="r">0.0</td><td class="r">8.7</td><td class="r"><span class="pill op">▼0%</span></td><td class="r">₹0</td><td class="r">₹54,682</td><td class="r">5.4d</td><td>🟢</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="ibox amber">
+    <div class="it">&#x1F50D; Department Signals</div>
+    <div class="ib"><strong>Winners:</strong> Cardiology (+29% FY24→25), Joint Replacement (+12%), Gastroenterology (+13%) — all showing volume + ARPOB growth. <strong>Concerning:</strong> Nephrology revenue dropped from ₹66→₹55 Cr (-17%) despite being the #1 department — Abi Abraham's reduced contribution is the driver. <strong>New entrant:</strong> Head & Neck Oncology (₹8.7 Cr in 10m FY26) is a cancer transformation signal. <strong>FY26 pace:</strong> Medical Oncology annualizing to ₹64 Cr (vs ₹54 Cr FY25) — the cancer specialization thesis is working.</div>
+  </div>
+</div>
+
+<div id="pg-doctor" class="page">
+  <div class="kpi-strip" style="grid-template-columns:repeat(5,1fr)">
+    <div class="kpi" style="border-color:#e74c3c"><div class="kpi-label">Top Doctor</div><div class="kpi-value" style="color:#e74c3c">₹52.9 Cr</div><div class="kpi-sub">Gangadharan VP &middot; 12.9% of FY25</div></div>
+    <div class="kpi" style="border-color:#e67e22"><div class="kpi-label">Top 2 Share</div><div class="kpi-value" style="color:#e67e22">20.7%</div><div class="kpi-sub">FY25 &middot; Down from 27.4% in FY24</div></div>
+    <div class="kpi" style="border-color:#8e44ad"><div class="kpi-label">Top 5 Share</div><div class="kpi-value" style="color:#8e44ad">33.7%</div><div class="kpi-sub">FY25 &middot; Down from 45.4% in FY24</div></div>
+    <div class="kpi" style="border-color:#27ae60"><div class="kpi-label">Concentration &#x0394;</div><div class="kpi-value" style="color:#27ae60">-11.7pp</div><div class="kpi-sub">Top 5 share improved FY24→FY25</div></div>
+    <div class="kpi" style="border-color:#1976d2"><div class="kpi-label">Biggest Change</div><div class="kpi-value" style="color:#1976d2">-41%</div><div class="kpi-sub">Abi Abraham: ₹54→₹32 Cr</div></div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Top 10 Doctors — Revenue Comparison FY24 vs FY25</div>
+      <div class="card-sub">Horizontal bars: blue=FY24, orange=FY25. Arrow shows direction of change.</div>
+      <div style="position:relative;height:340px"><canvas id="cDocComp"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Doctor Revenue Table — FY24 vs FY25</div>
+      <table class="tbl">
+        <thead><tr><th>#</th><th>Doctor</th><th>Department</th><th class="r">FY24 ₹Cr</th><th class="r">FY25 ₹Cr</th><th class="r">Change</th><th class="r">% of FY25</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td><strong>Gangadharan VP</strong></td><td>Medical Oncology</td><td class="r">54.6</td><td class="r">52.9</td><td class="r"><span class="pill rp">-3%</span></td><td class="r">12.9%</td></tr>
+          <tr><td>2</td><td><strong>Abi Abraham M</strong></td><td>Nephrology</td><td class="r">54.4</td><td class="r">31.9</td><td class="r"><span class="pill rp">-41%</span></td><td class="r">7.8%</td></tr>
+          <tr><td>3</td><td><strong>Sudish Karunakaran</strong></td><td>Neuro Surgery</td><td class="r">27.4</td><td class="r">23.4</td><td class="r"><span class="pill rp">-15%</span></td><td class="r">5.7%</td></tr>
+          <tr><td>4</td><td><strong>Ramesh H</strong></td><td>GI Surgery</td><td class="r">22.6</td><td class="r">16.9</td><td class="r"><span class="pill rp">-25%</span></td><td class="r">4.1%</td></tr>
+          <tr><td>5</td><td><strong>George P Abraham</strong></td><td>Urology</td><td class="r">21.3</td><td class="r">13.1</td><td class="r"><span class="pill rp">-38%</span></td><td class="r">3.2%</td></tr>
+          <tr><td>6</td><td><strong>Padmakumar R</strong></td><td>Min Invasive Surgery</td><td class="r">13.3</td><td class="r">12.5</td><td class="r"><span class="pill rp">-6%</span></td><td class="r">3.0%</td></tr>
+          <tr><td>7</td><td><strong>Jacob Varghese</strong></td><td>Joint Replacement</td><td class="r">12.2</td><td class="r">8.2</td><td class="r"><span class="pill rp">-33%</span></td><td class="r">2.0%</td></tr>
+          <tr><td>8</td><td><strong>Chitrathara K</strong></td><td>Surgical Oncology</td><td class="r">11.8</td><td class="r">10.7</td><td class="r"><span class="pill rp">-10%</span></td><td class="r">2.6%</td></tr>
+          <tr><td>9</td><td><strong>Fadl H Veerankutty</strong></td><td>Liver Care</td><td class="r">3.5</td><td class="r">9.5</td><td class="r"><span class="pill gp">+167%</span></td><td class="r">2.3%</td></tr>
+          <tr><td>10</td><td><strong>Shawn T Joseph</strong></td><td>Head & Neck Oncology</td><td class="r">10.9</td><td class="r">6.8</td><td class="r"><span class="pill rp">-38%</span></td><td class="r">1.7%</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="ibox red">
+    <div class="it">&#x1F6A8; Key-Person Risk Alert</div>
+    <div class="ib"><strong>Abi Abraham M's revenue dropped 41% (₹54.4→₹31.9 Cr)</strong> — the single largest revenue event in FY25. This drove Nephrology's overall decline. Despite this, hospital revenue still grew 3.1%, showing resilience. However, <strong>Gangadharan VP at ₹52.9 Cr (12.9%)</strong> remains the #1 key-person risk. The positive: concentration reduced from 45.4% to 33.7% for top 5 doctors — diversification is working. New entrants like Fadl Veerankutty (Liver Care: ₹3.6→₹9.5 Cr, +168%) are building depth.</div>
+  </div>
+</div>
+
+<div id="pg-payor" class="page">
+  <div class="kpi-strip" style="grid-template-columns:repeat(4,1fr)">
+    <div class="kpi" style="border-color:#0c1f33"><div class="kpi-label">Cash</div><div class="kpi-value" style="color:#0c1f33">66%</div><div class="kpi-sub">FY26 &middot; Down from 73% in FY24</div><div class="kpi-delta up">&#x25BC; -7.3pp (positive!)</div></div>
+    <div class="kpi" style="border-color:#e67e22"><div class="kpi-label">Insurance</div><div class="kpi-value" style="color:#e67e22">26%</div><div class="kpi-sub">FY26 &middot; Up from 22% in FY24</div><div class="kpi-delta up">&#x25B2; +3.8pp</div></div>
+    <div class="kpi" style="border-color:#27ae60"><div class="kpi-label">Government</div><div class="kpi-value" style="color:#27ae60">6%</div><div class="kpi-sub">FY26 &middot; Up from 2% in FY24</div><div class="kpi-delta up">&#x25B2; +4pp (ECHS)</div></div>
+    <div class="kpi" style="border-color:#1976d2"><div class="kpi-label">International</div><div class="kpi-value" style="color:#1976d2">9.2%</div><div class="kpi-sub">FY26 &middot; Up from 5% in FY24</div><div class="kpi-delta up">&#x25B2; +4.2pp — Gulf corridor</div></div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Payor Mix Evolution — FY24 to FY26</div>
+      <div class="card-sub">Cash declining, insurance + government growing — healthier revenue base</div>
+      <div style="position:relative;height:280px"><canvas id="cPayorEvo"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Insurance Revenue — Monthly Trend FY25 vs FY26</div>
+      <div class="card-sub">FY26 insurance consistently above FY25 — structural shift confirmed</div>
+      <div style="position:relative;height:280px"><canvas id="cInsMonth"></canvas></div>
+    </div>
+  </div>
+  <div class="ibox green">
+    <div class="it">&#x1F4B0; Payor Transformation Progress</div>
+    <div class="ib">The payor mix shift is the <strong>most structurally significant change</strong> in the 3-year trajectory. Cash dropped from 73.3% to 66% while insurance grew from 22.2% to 26% and government from 2% to 6%. This is <strong>exactly the playbook</strong> for premium positioning. Insurance patients typically have 15-25% higher ARPP and lower bad debt. Government (ECHS) provides volume stability. <strong>Next milestone:</strong> insurance at 30% by FY28 would match Aster Medcity and add ₹15-20 Cr at current volumes. International at 9.2% is ahead of most Kerala peers and validates the Gulf corridor strategy.</div>
+  </div>
+</div>
+
+<div id="pg-occ" class="page">
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Monthly Occupancy — 3-Year Overlay</div>
+      <div class="card-sub">Target: 63%. Actual: 52% average. The single biggest revenue gap.</div>
+      <div style="position:relative;height:300px"><canvas id="cOccTrend"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">IP Discharges — Monthly Trend</div>
+      <div class="card-sub">FY26 showing improvement: Jan'26 = 2,022 (highest ever)</div>
+      <div style="position:relative;height:300px"><canvas id="cDiscTrend"></canvas></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Capacity Utilisation Waterfall — Revenue Impact of Occupancy Gap</div>
+    <div class="card-sub">At ₹35,188 ARPOB and 470 beds, each 1% occupancy = ~₹6 Cr/year additional revenue</div>
+    <table class="tbl">
+      <thead><tr><th>Scenario</th><th class="r">Occupancy</th><th class="r">Bed Days/Year</th><th class="r">Revenue (₹Cr)</th><th class="r">vs Current</th></tr></thead>
+      <tbody>
+        <tr><td>Current FY26</td><td class="r">52%</td><td class="r">89,180</td><td class="r">₹457 Cr</td><td class="r">—</td></tr>
+        <tr><td>Budget Target</td><td class="r">63%</td><td class="r">108,045</td><td class="r">₹531 Cr</td><td class="r"><span class="pill gp">+₹74 Cr</span></td></tr>
+        <tr><td>Apollo Benchmark</td><td class="r">68%</td><td class="r">116,620</td><td class="r">₹567 Cr</td><td class="r"><span class="pill gp">+₹110 Cr</span></td></tr>
+        <tr class="hl"><td><strong>IHH Benchmark</strong></td><td class="r"><strong>72%</strong></td><td class="r"><strong>123,480</strong></td><td class="r"><strong>₹599 Cr</strong></td><td class="r"><span class="pill bp">+₹142 Cr</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div id="pg-bench" class="page">
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">ARPOB Benchmark — ₹/Occupied Bed/Day</div>
+      <div style="position:relative;height:260px"><canvas id="cBenchARPOB"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Occupancy Benchmark (%)</div>
+      <div style="position:relative;height:260px"><canvas id="cBenchOcc"></canvas></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Detailed Peer Benchmark — LHRC FY26 vs Industry</div>
+    <table class="tbl">
+      <thead><tr><th>Metric</th><th class="r">LHRC FY24</th><th class="r">LHRC FY26</th><th class="r">IHH India</th><th class="r">Apollo</th><th class="r">Aster Medcity</th><th>LHRC Gap</th></tr></thead>
+      <tbody>
+        <tr><td>ARPOB (₹/day)</td><td class="r">₹31,898</td><td class="r">₹35,188</td><td class="r">~₹47,100</td><td class="r">₹60,588</td><td class="r">~₹42,000</td><td><span class="pill rp">42% below Apollo</span></td></tr>
+        <tr><td>Occupancy</td><td class="r">54.4%</td><td class="r">52%</td><td class="r">72%</td><td class="r">68%</td><td class="r">65%</td><td><span class="pill rp">-16pp vs Apollo</span></td></tr>
+        <tr><td>ALOS (days)</td><td class="r">4.47</td><td class="r">4.06</td><td class="r">4.2</td><td class="r">3.32</td><td class="r">3.8</td><td><span class="pill op">0.7d above Apollo</span></td></tr>
+        <tr><td>Insurance %</td><td class="r">22%</td><td class="r">26%</td><td class="r">~35%</td><td class="r">45%</td><td class="r">~32%</td><td><span class="pill rp">-19pp vs Apollo</span></td></tr>
+        <tr><td>International %</td><td class="r">5%</td><td class="r">9.2%</td><td class="r">~25%</td><td class="r">~8%</td><td class="r">~12%</td><td><span class="pill gp">Above Apollo!</span></td></tr>
+        <tr class="hl"><td><strong>EBITDA Margin</strong></td><td class="r">~19%</td><td class="r">~20%</td><td class="r">18%</td><td class="r">24.6%</td><td class="r">~16%</td><td><span class="pill op">-4.6pp vs Apollo</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="ibox blue">
+    <div class="it">&#x1F3AF; Closing the Gap</div>
+    <div class="ib">LHRC's ARPOB improved 10% (₹32K→₹35K) but remains 42% below Apollo (₹61K). However, <strong>LHRC now leads Apollo on international revenue</strong> (9.2% vs ~8%). The 2 biggest gaps: (1) <strong>Occupancy</strong> — 52% vs 68%, worth ₹110 Cr if closed; (2) <strong>Insurance</strong> — 26% vs 45%, worth ₹15-25 Cr if halfway closed. ALOS improvement (4.47→4.06d) is closing the gap to IHH (4.2d) but still 0.7d above Apollo.</div>
+  </div>
+</div>
+
+<div id="pg-risk" class="page">
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Revenue Concentration — Top 5 Doctors Share</div>
+      <div class="card-sub">Declining concentration = improving resilience</div>
+      <div style="position:relative;height:280px"><canvas id="cConc"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Key-Person Revenue at Risk (₹ Crore)</div>
+      <div class="card-sub">Revenue attributed to single doctors with no backup</div>
+      <div style="position:relative;height:280px"><canvas id="cRisk"></canvas></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Risk Register — Board Level</div>
+    <table class="tbl">
+      <thead><tr><th>Risk</th><th>Current Exposure</th><th>Trend</th><th>Probability</th><th>Mitigation</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Key Person — Gangadharan VP</strong></td><td>₹52.9 Cr = 12.9% of FY25 revenue</td><td><span class="pill op">Stable</span></td><td><span class="pill rp">High</span></td><td>Recruit 2nd medical oncologist. Build team-based care model.</td></tr>
+        <tr><td><strong>Key Person — Abi Abraham M</strong></td><td>₹31.9 Cr (FY25) — dropped 41% from FY24</td><td><span class="pill rp">Declining</span></td><td><span class="pill rp">High</span></td><td>Already materialized. Jithin Kumar + Kartik Ganesh building Nephrology depth.</td></tr>
+        <tr><td><strong>Occupancy at 52%</strong></td><td>₹74 Cr revenue gap vs 63% target</td><td><span class="pill op">Flat</span></td><td><span class="pill rp">High</span></td><td>Marketing investment, insurance empanelment, OP-to-IP conversion protocols.</td></tr>
+        <tr><td><strong>Budget Underperformance</strong></td><td>FY25: 85.3% achievement (₹70.6 Cr gap)</td><td><span class="pill gp">Improving</span></td><td><span class="pill op">Medium</span></td><td>FY26 at 94.2% YTD — significant improvement in budget discipline.</td></tr>
+        <tr><td><strong>Cash Payor Concentration</strong></td><td>66% cash (down from 73%)</td><td><span class="pill gp">Improving</span></td><td><span class="pill op">Medium</span></td><td>Insurance growing steadily. Target 30% by FY28.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div id="pg-strat" class="page">
+  <div class="ibox blue">
+    <div class="it">&#x1F680; FY25 Baseline ₹410 Cr &rarr; FY28 Target ₹600 Cr (+46%) &nbsp;|&nbsp; Cancer Transformation Thesis</div>
+    <div class="ib">The 3-year trajectory confirms the strategic thesis: <strong>specialization drives premium revenue</strong>. Medical Oncology annualizing at ₹64 Cr in FY26 (vs ₹55 Cr FY24). Head & Neck Oncology (new) already at ₹8.7 Cr in 10m. Radiation Oncology up 9%. <strong>The cancer cluster (Med Onco + Surg Onco + Rad Onco + H&N Onco) = ₹78 Cr YTD</strong>, annualizing to ₹94 Cr — making cancer the single largest revenue vertical.</div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Revenue Bridge — FY25 to FY28 (₹ Crore)</div>
+      <div style="position:relative;height:280px"><canvas id="cStratBridge"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Cancer Cluster Revenue — FY24 to FY26</div>
+      <div class="card-sub">Medical Oncology + Surgical Oncology + Radiation Oncology + Head & Neck</div>
+      <div style="position:relative;height:280px"><canvas id="cCancer"></canvas></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Strategic Priorities — Board Action Items</div>
+    <table class="tbl">
+      <thead><tr><th>Priority</th><th>Initiative</th><th>3-Year Evidence</th><th>Revenue Potential</th><th>Timeline</th></tr></thead>
+      <tbody>
+        <tr><td><span class="pill rp">P1</span></td><td><strong>Occupancy from 52% to 63%</strong></td><td>Stagnant at 52% for 2 years despite revenue growth. Each 5pp = ₹37 Cr at ₹35K ARPOB.</td><td><span class="pill gp">+₹74 Cr</span></td><td>12-18m</td></tr>
+        <tr><td><span class="pill rp">P1</span></td><td><strong>Cancer Centre of Excellence</strong></td><td>Cancer cluster grew from ₹83 Cr to ₹94 Cr (ann). Tomotherapy + BMT pipeline. H&N Oncology = new vertical.</td><td><span class="pill gp">+₹30-50 Cr</span></td><td>6-18m</td></tr>
+        <tr><td><span class="pill op">P2</span></td><td><strong>Insurance to 30%</strong></td><td>22%→26% in 2 years. Structural shift confirmed. Need 10 more TPA empanelments.</td><td><span class="pill gp">+₹15-25 Cr</span></td><td>12m</td></tr>
+        <tr><td><span class="pill op">P2</span></td><td><strong>International to 15%</strong></td><td>5%→9.2% in 2 years. Gulf corridor working. VPS network synergy untapped.</td><td><span class="pill gp">+₹20-30 Cr</span></td><td>12-24m</td></tr>
+        <tr><td><span class="pill op">P2</span></td><td><strong>Nephrology Stabilisation</strong></td><td>₹66→₹55→₹45 Cr declining trajectory. Abi Abraham dependency reducing. Need volume recovery.</td><td><span class="pill bp">Protect ₹55 Cr</span></td><td>6-12m</td></tr>
+        <tr><td><span class="pill bp">P3</span></td><td><strong>ARPOB from ₹35K to ₹42K</strong></td><td>+10% over 2 years. Case mix upgrade through cancer + transplant specialization.</td><td><span class="pill gp">+₹25-35 Cr</span></td><td>18-24m</td></tr>
+        <tr><td><span class="pill bp">P3</span></td><td><strong>Doctor Recruitment — Reduce Concentration</strong></td><td>Top 5 share dropped from 45% to 34%. Need to continue with 2-3 senior hires per year.</td><td><span class="pill bp">Risk mitigation</span></td><td>Ongoing</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+Chart.defaults.responsive=true;
+Chart.defaults.maintainAspectRatio=false;
+Chart.defaults.font.family="'DM Sans',sans-serif";
+Chart.defaults.font.size=10;
+
+const MO=['Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar'];
+const N='#0c1f33',B='#1976d2',O='#e67e22',G='#27ae60',R='#e74c3c',P='#8e44ad',T='#00838f';
+
+function ST(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('pg-'+id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// Data
+const fy24ip=[26.51, 29.43, 25.59, 23.26, 25.72, 23.11, 22.43, 25.18, 24.31, 23.44, 23.85, 25.2];
+const fy24op=[7.16, 9.22, 8.18, 8.5, 8.21, 8.15, 8.29, 8.44, 7.89, 9.25, 8.29, 7.61];
+const fy25ip=[22.51, 26.12, 23.03, 25.54, 26.36, 23.13, 25.79, 26.62, 26.82, 26.45, 22.68, 24.28];
+const fy25op=[8.23, 9.15, 8.16, 9.86, 9.95, 8.69, 9.59, 9.53, 9.02, 10.33, 9.17, 8.66];
+const fy26ip=[22.93, 25.94, 22.94, 27.1, 28.08, 27.9, 27.61, 24.47, 26.55, 30.36];
+const fy26op=[9.63, 10.13, 9.2, 11.05, 11.07, 10.51, 10.49, 9.48, 10.04, 11.21];
+const fy24t=fy24ip.map((v,i)=>+(v+fy24op[i]).toFixed(2));
+const fy25t=fy25ip.map((v,i)=>+(v+fy25op[i]).toFixed(2));
+const fy26t=fy26ip.map((v,i)=>+(v+fy26op[i]).toFixed(2));
+const fy24disc=[1780, 2057, 1755, 1706, 1748, 1668, 1709, 1747, 1838, 1703, 1622, 1599];
+const fy25disc=[1576, 1733, 1520, 1935, 1961, 1768, 1818, 1798, 1719, 1847, 1642, 1706];
+const fy26disc=[1653, 1852, 1665, 1943, 1915, 1858, 1899, 1814, 1855, 2022];
+const fy24occ=[55.7, 63.5, 56.9, 48.9, 54.6, 53.4, 54.0, 56.1, 55.0, 50.7, 52.3, 49.8];
+const fy25occ=[46, 52, 47, 56, 58, 53, 56, 55, 53, 50, 52, 49];
+const fy26occ=[47, 49, 46, 55, 58, 56, 53, 51, 50, 57];
+
+// Tab 1: Revenue Trend (3 lines)
+new Chart(document.getElementById('cRevTrend'),{type:'line',data:{
+  labels:MO,
+  datasets:[
+    {label:'FY24',data:fy24t,borderColor:B,backgroundColor:'rgba(25,118,210,0.08)',fill:true,tension:0.35,pointRadius:3,borderWidth:2},
+    {label:'FY25',data:fy25t,borderColor:P,backgroundColor:'rgba(142,68,173,0.08)',fill:true,tension:0.35,pointRadius:3,borderWidth:2},
+    {label:'FY26',data:fy26t,borderColor:G,backgroundColor:'rgba(39,174,96,0.08)',fill:true,tension:0.35,pointRadius:4,borderWidth:2.5}
+  ]
+},options:{plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10}}},scales:{y:{ticks:{callback:v=>'₹'+v+'Cr',font:{size:9}},grid:{color:'#f0f3f6'}},x:{ticks:{font:{size:9}},grid:{display:false}}}}});
+
+// Bridge chart
+new Chart(document.getElementById('cBridge'),{type:'bar',data:{
+  labels:['FY24','IP Growth','OP Growth','FY25','Volume+Mix','ADR Effect','FY26 Ann.'],
+  datasets:[{data:[397.2,1.3,11.2,409.7,15,32,457],backgroundColor:[N,'rgba(39,174,96,0.7)','rgba(39,174,96,0.7)',P,'rgba(39,174,96,0.7)','rgba(39,174,96,0.7)',G],borderRadius:4}]
+},options:{plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>'₹'+v,font:{size:9}}},x:{ticks:{font:{size:8}}}}}});
+
+// Tab 2: Monthly overlay
+new Chart(document.getElementById('cMonthOverlay'),{type:'line',data:{
+  labels:MO,
+  datasets:[
+    {label:'FY24',data:fy24t,borderColor:B,tension:0.3,pointRadius:2,borderWidth:1.5,borderDash:[5,3]},
+    {label:'FY25',data:fy25t,borderColor:P,tension:0.3,pointRadius:2,borderWidth:1.5,borderDash:[3,2]},
+    {label:'FY26',data:fy26t,borderColor:G,tension:0.3,pointRadius:4,borderWidth:2.5}
+  ]
+},options:{plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10}}},scales:{y:{min:28,ticks:{callback:v=>'₹'+v+'Cr',font:{size:9}}},x:{ticks:{font:{size:9}}}}}});
+
+// IP/OP split
+new Chart(document.getElementById('cIPOP'),{type:'bar',data:{
+  labels:['FY24','FY25','FY26 Ann.'],
+  datasets:[
+    {label:'IP ₹Cr',data:[298,299.3,317],backgroundColor:N,borderRadius:3},
+    {label:'OP ₹Cr',data:[99.2,110.4,123],backgroundColor:O,borderRadius:3}
+  ]
+},options:{plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10}}},scales:{x:{stacked:true},y:{stacked:true,ticks:{callback:v=>'₹'+v,font:{size:9}}}}}});
+
+// ADR trend
+const adr24=fy24t.map((v,i)=>{const d=[30,31,30,31,31,30,31,30,31,31,28,31];return +(v/d[i]).toFixed(3)});
+const adr25=fy25t.map((v,i)=>{const d=[30,31,30,31,31,30,31,30,31,31,28,31];return +(v/d[i]).toFixed(3)});
+const adr26=fy26t.map((v,i)=>{const d=[30,31,30,31,31,30,31,30,31,31];return +(v/d[i]).toFixed(3)});
+new Chart(document.getElementById('cADR'),{type:'line',data:{
+  labels:MO,
+  datasets:[
+    {label:'FY24',data:adr24,borderColor:B,tension:0.3,pointRadius:2,borderWidth:1.5},
+    {label:'FY25',data:adr25,borderColor:P,tension:0.3,pointRadius:2,borderWidth:1.5},
+    {label:'FY26',data:adr26,borderColor:G,tension:0.3,pointRadius:4,borderWidth:2.5}
+  ]
+},options:{plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10}}},scales:{y:{ticks:{callback:v=>'₹'+v.toFixed(2)+'Cr',font:{size:9}}},x:{ticks:{font:{size:9}}}}}});
+
+// Seasonality
+const avg24=fy24t.reduce((a,b)=>a+b,0)/12;
+const avg25=fy25t.reduce((a,b)=>a+b,0)/12;
+const s24=fy24t.map(v=>+(v/avg24*100).toFixed(1));
+const s25=fy25t.map(v=>+(v/avg25*100).toFixed(1));
+new Chart(document.getElementById('cSeason'),{type:'radar',data:{
+  labels:MO,
+  datasets:[
+    {label:'FY24',data:s24,borderColor:B,backgroundColor:'rgba(25,118,210,0.1)',pointRadius:3},
+    {label:'FY25',data:s25,borderColor:P,backgroundColor:'rgba(142,68,173,0.1)',pointRadius:3}
+  ]
+},options:{plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10}}},scales:{r:{min:85,max:115,ticks:{font:{size:8}}}}}});
+
+// Tab 3: KPI charts
+const arpob_m=[31898,33414,35188];
+new Chart(document.getElementById('cARPOB'),{type:'bar',data:{
+  labels:['FY24','FY25','FY26*'],
+  datasets:[{data:arpob_m,backgroundColor:[B,P,G],borderRadius:6}]
+},options:{plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>'₹'+(v/1000)+'K',font:{size:9}},min:28000},x:{ticks:{font:{size:10}}}}}});
+
+new Chart(document.getElementById('cARPP'),{type:'bar',data:{
+  labels:['FY24','FY25','FY26*'],
+  datasets:[{data:[142600,142387,142822],backgroundColor:[B,P,G],borderRadius:6}]
+},options:{plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>'₹'+(v/1000)+'K',font:{size:9}},min:140000},x:{ticks:{font:{size:10}}}}}});
+
+new Chart(document.getElementById('cALOS'),{type:'bar',data:{
+  labels:['FY24','FY25','FY26*'],
+  datasets:[{data:[4.47,4.3,4.06],backgroundColor:[B,P,G],borderRadius:6}]
+},options:{plugins:{legend:{display:false}},scales:{y:{ticks:{font:{size:9}},min:3.5,max:5},x:{ticks:{font:{size:10}}}}}});
+
+// Occ vs ARPOB scatter
+new Chart(document.getElementById('cOccARPOB'),{type:'scatter',data:{
+  datasets:[
+    {label:'FY24 months',data:fy24occ.map((o,i)=>({x:o,y:fy24ip[i]*1e7/(fy24disc[i]*4.47)})),backgroundColor:'rgba(25,118,210,0.5)',pointRadius:5},
+    {label:'FY25 months',data:fy25occ.map((o,i)=>({x:o,y:fy25ip[i]*1e7/(fy25disc[i]*4.3)})),backgroundColor:'rgba(142,68,173,0.5)',pointRadius:5},
+    {label:'FY26 months',data:fy26occ.map((o,i)=>({x:o,y:fy26ip[i]*1e7/(fy26disc[i]*4.06)})),backgroundColor:'rgba(39,174,96,0.7)',pointRadius:7}
+  ]
+},options:{plugins:{legend:{position:'bottom',labels:{font:{size:9},boxWidth:8}}},scales:{x:{title:{display:true,text:'Occupancy %',font:{size:9}},min:40,max:70},y:{title:{display:true,text:'Implied ARPOB',font:{size:9}},ticks:{callback:v=>'₹'+(v/1000).toFixed(0)+'K',font:{size:8}}}}}});
+
+// Tab 4: Dept comparison
+const dNames=["Nephrology", "Medical Oncology", "Neuro Surgery", "GI Surgery", "Surgical Oncology", "Gastroenterology", "Cardiology", "Urology", "Joint Replacement", "Liver Care", "Min Invasive Surgery", "Neurology"];
+new Chart(document.getElementById('cDeptComp'),{type:'bar',data:{
+  labels:dNames,
+  datasets:[
+    {label:'FY24',data:[66.18, 54.91, 28.33, 26.17, 22.67, 20.1, 17.5, 21.3, 16.4, 13.82, 13.27, 13.25],backgroundColor:'rgba(25,118,210,0.7)',borderRadius:2},
+    {label:'FY25',data:[54.97, 53.51, 31.94, 27.19, 22.93, 22.76, 22.51, 21.59, 18.28, 13.64, 14.19, 12.76],backgroundColor:'rgba(142,68,173,0.7)',borderRadius:2},
+    {label:'FY26*',data:[45.27, 53.18, 28.84, 22.43, 10.7, 18.35, 20.41, 16.44, 21.11, 9.72, 12.46, 10.86],backgroundColor:'rgba(39,174,96,0.7)',borderRadius:2}
+  ]
+},options:{indexAxis:'y',plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10}}},scales:{x:{stacked:false,ticks:{callback:v=>'₹'+v+'Cr',font:{size:8}}},y:{ticks:{font:{size:8}}}}}});
+
+// Tab 5: Doctor comparison
+const docNames=["Gangadharan VP", "Abi Abraham M", "Sudish Karunakaran", "Ramesh H", "George P Abraham", "Padmakumar R", "Jacob Varghese", "Chitrathara K", "Fadl H Veerankutty", "Shawn T Joseph"];
+new Chart(document.getElementById('cDocComp'),{type:'bar',data:{
+  labels:docNames,
+  datasets:[
+    {label:'FY24',data:[54.64, 54.35, 27.41, 22.6, 21.3, 13.27, 12.21, 11.8, 3.55, 10.87],backgroundColor:'rgba(25,118,210,0.7)',borderRadius:3},
+    {label:'FY25',data:[52.89, 31.93, 23.37, 16.9, 13.14, 12.46, 8.15, 10.66, 9.49, 6.76],backgroundColor:'rgba(230,126,34,0.7)',borderRadius:3}
+  ]
+},options:{indexAxis:'y',plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10}}},scales:{x:{ticks:{callback:v=>'₹'+v+'Cr',font:{size:8}}},y:{ticks:{font:{size:8}}}}}});
+
+// Tab 6: Payor evolution
+new Chart(document.getElementById('cPayorEvo'),{type:'bar',data:{
+  labels:['FY24','FY25','FY26*'],
+  datasets:[
+    {label:'Cash',data:[73.3,70,66],backgroundColor:N,borderRadius:2},
+    {label:'Insurance',data:[22.2,24,26],backgroundColor:O,borderRadius:2},
+    {label:'Government',data:[2.0,3.5,6],backgroundColor:G,borderRadius:2},
+    {label:'Corporate',data:[2.5,2.5,3],backgroundColor:P,borderRadius:2}
+  ]
+},options:{plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10}}},scales:{x:{stacked:true},y:{stacked:true,max:105,ticks:{callback:v=>v+'%',font:{size:9}}}}}});
+
+// Insurance monthly
+const ins25=[7.58, 9.19, 8.37, 8.13, 7.96, 7.66, 7.2, 8.09, 8.59, 8.77, 7.47, 8.52];
+const ins26=[7.35, 8.92, 8.26, 9.63, 10.49, 10.34, 10.05, 8.87, 10.46, 11.65];
+new Chart(document.getElementById('cInsMonth'),{type:'line',data:{
+  labels:MO,
+  datasets:[
+    {label:'FY25',data:ins25,borderColor:P,tension:0.3,pointRadius:3,borderWidth:2},
+    {label:'FY26',data:ins26,borderColor:G,tension:0.3,pointRadius:4,borderWidth:2.5}
+  ]
+},options:{plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10}}},scales:{y:{ticks:{callback:v=>'₹'+v+'Cr',font:{size:9}}},x:{ticks:{font:{size:9}}}}}});
+
+// Tab 7: Occupancy trend
+new Chart(document.getElementById('cOccTrend'),{type:'line',data:{
+  labels:MO,
+  datasets:[
+    {label:'FY24',data:fy24occ,borderColor:B,tension:0.3,pointRadius:2,borderWidth:1.5},
+    {label:'FY25',data:fy25occ,borderColor:P,tension:0.3,pointRadius:2,borderWidth:1.5},
+    {label:'FY26',data:fy26occ,borderColor:G,tension:0.3,pointRadius:4,borderWidth:2.5},
+    {label:'Target 63%',data:Array(12).fill(63),borderColor:'rgba(231,76,60,0.4)',borderDash:[8,4],pointRadius:0,borderWidth:1.5}
+  ]
+},options:{plugins:{legend:{position:'bottom',labels:{font:{size:9},boxWidth:8}}},scales:{y:{min:35,max:70,ticks:{callback:v=>v+'%',font:{size:9}}},x:{ticks:{font:{size:9}}}}}});
+
+// Discharge trend
+new Chart(document.getElementById('cDiscTrend'),{type:'line',data:{
+  labels:MO,
+  datasets:[
+    {label:'FY24',data:fy24disc,borderColor:B,tension:0.3,pointRadius:2,borderWidth:1.5},
+    {label:'FY25',data:fy25disc,borderColor:P,tension:0.3,pointRadius:2,borderWidth:1.5},
+    {label:'FY26',data:fy26disc,borderColor:G,tension:0.3,pointRadius:4,borderWidth:2.5}
+  ]
+},options:{plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10}}},scales:{y:{ticks:{font:{size:9}}},x:{ticks:{font:{size:9}}}}}});
+
+// Tab 8: Benchmarks
+new Chart(document.getElementById('cBenchARPOB'),{type:'bar',data:{
+  labels:['LHRC FY24','LHRC FY26','Aster~','IHH India','Apollo'],
+  datasets:[{data:[31898,35188,42000,47100,60588],backgroundColor:[B,G,'#78909c',T,O],borderRadius:5}]
+},options:{plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>'₹'+(v/1000)+'K',font:{size:9}}},x:{ticks:{font:{size:9}}}}}});
+
+new Chart(document.getElementById('cBenchOcc'),{type:'bar',data:{
+  labels:['LHRC FY24','LHRC FY26','Aster~','Apollo','IHH India'],
+  datasets:[{data:[54.4,52,65,68,72],backgroundColor:[B,G,'#78909c',O,T],borderRadius:5}]
+},options:{plugins:{legend:{display:false}},scales:{y:{max:80,ticks:{callback:v=>v+'%',font:{size:9}}},x:{ticks:{font:{size:9}}}}}});
+
+// Tab 9: Concentration
+new Chart(document.getElementById('cConc'),{type:'bar',data:{
+  labels:['Top 1','Top 2','Top 5','Top 10'],
+  datasets:[
+    {label:'FY24',data:[13.7,27.4,45.4,57.6],backgroundColor:'rgba(25,118,210,0.6)',borderRadius:3},
+    {label:'FY25',data:[12.9,20.7,33.7,44.8],backgroundColor:'rgba(230,126,34,0.6)',borderRadius:3}
+  ]
+},options:{plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10}}},scales:{y:{max:65,ticks:{callback:v=>v+'%',font:{size:9}}},x:{ticks:{font:{size:9}}}}}});
+
+// Risk waterfall
+new Chart(document.getElementById('cRisk'),{type:'bar',data:{
+  labels:['Gangadharan VP','Abi Abraham M','Sudish K','Ramesh H','All Others'],
+  datasets:[
+    {label:'FY24',data:[54.6,54.4,27.4,22.6,238.2],backgroundColor:'rgba(25,118,210,0.5)',borderRadius:3},
+    {label:'FY25',data:[52.9,31.9,23.4,16.9,284.6],backgroundColor:'rgba(230,126,34,0.5)',borderRadius:3}
+  ]
+},options:{plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10}}},scales:{y:{ticks:{callback:v=>'₹'+v+'Cr',font:{size:9}}},x:{ticks:{font:{size:8}}}}}});
+
+// Tab 10: Strategic bridge
+new Chart(document.getElementById('cStratBridge'),{type:'bar',data:{
+  labels:['FY25\nBaseline','Occupancy\n+11pp','Cancer\nCentre','Insurance\nto 30%','International\nto 15%','ARPOB\nImprovement','FY28\nTarget'],
+  datasets:[{data:[410,74,40,20,25,31,600],backgroundColor:[N,'rgba(39,174,96,0.7)','rgba(39,174,96,0.7)','rgba(39,174,96,0.7)','rgba(39,174,96,0.7)','rgba(39,174,96,0.7)',G],borderRadius:5}]
+},options:{plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>'₹'+v+'Cr',font:{size:9}}},x:{ticks:{font:{size:7.5},maxRotation:0}}}}});
+
+// Cancer cluster
+new Chart(document.getElementById('cCancer'),{type:'bar',data:{
+  labels:['Med Onco','Surg Onco','Rad Onco','H&N Onco','Total Cancer'],
+  datasets:[
+    {label:'FY24',data:[54.9,22.7,6.0,0,83.6],backgroundColor:'rgba(25,118,210,0.6)',borderRadius:3},
+    {label:'FY25',data:[53.5,22.9,5.3,0,81.7],backgroundColor:'rgba(142,68,173,0.6)',borderRadius:3},
+    {label:'FY26 Ann.',data:[63.8,12.8,7.0,10.4,94.0],backgroundColor:'rgba(39,174,96,0.7)',borderRadius:3}
+  ]
+},options:{plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10}}},scales:{y:{ticks:{callback:v=>'₹'+v+'Cr',font:{size:9}}},x:{ticks:{font:{size:8}}}}}});
+
+</script>
+</body>
+</html>
