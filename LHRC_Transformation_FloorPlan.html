@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VPS Lakeshore — Transformation Blueprint</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: #0a0e1a;
+    color: #e0e4ef;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── Header ── */
+  .header {
+    text-align: center;
+    padding: 48px 24px 12px;
+  }
+  .header h1 {
+    font-size: 32px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #60a5fa, #a78bfa, #f472b6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.5px;
+  }
+  .header p {
+    margin-top: 8px;
+    color: #8892b0;
+    font-size: 15px;
+    font-weight: 400;
+  }
+
+  /* ── Toggle ── */
+  .toggle-wrap {
+    display: flex;
+    justify-content: center;
+    margin: 28px 0 8px;
+  }
+  .toggle-bar {
+    display: flex;
+    background: #151b2e;
+    border-radius: 14px;
+    padding: 5px;
+    gap: 4px;
+    border: 1px solid #1e2740;
+  }
+  .toggle-btn {
+    padding: 12px 32px;
+    border: none;
+    border-radius: 11px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.35s ease;
+    background: transparent;
+    color: #6b7394;
+  }
+  .toggle-btn.active {
+    background: linear-gradient(135deg, #1e3a5f, #2d1b4e);
+    color: #fff;
+    box-shadow: 0 4px 20px rgba(96, 165, 250, 0.15);
+  }
+
+  /* ── Phase indicator ── */
+  .phase-label {
+    text-align: center;
+    margin: 16px 0 4px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #8892b0;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: opacity 0.4s;
+  }
+
+  /* ── Main canvas area ── */
+  .canvas {
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    padding: 20px 40px 40px;
+    transition: all 0.5s ease;
+    flex-wrap: wrap;
+  }
+
+  /* ── Building column ── */
+  .building {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .building.hidden {
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
+    pointer-events: none;
+    width: 0;
+    overflow: hidden;
+    gap: 0;
+    padding: 0;
+    margin: 0;
+  }
+
+  .bldg-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    letter-spacing: 0.5px;
+  }
+  .bldg-subtitle {
+    font-size: 12px;
+    color: #6b7394;
+    margin-bottom: 16px;
+    font-weight: 400;
+  }
+
+  /* ── Floor row ── */
+  .floor {
+    display: flex;
+    align-items: stretch;
+    margin-bottom: 3px;
+    transition: all 0.4s ease;
+    cursor: pointer;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .floor:hover {
+    transform: scale(1.015);
+    box-shadow: 0 0 20px rgba(255,255,255,0.06);
+    z-index: 2;
+  }
+
+  .floor-label {
+    width: 56px;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: #c0c8e0;
+    background: #12162680;
+    border-right: 1px solid #1e274060;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+  }
+
+  .floor-block {
+    display: flex;
+    align-items: center;
+    padding: 8px 14px;
+    min-height: 48px;
+    width: 380px;
+    transition: background 0.5s ease, width 0.5s ease;
+    position: relative;
+  }
+  .floor-block .dept-name {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #fff;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.4);
+  }
+  .floor-block .dept-detail {
+    font-size: 10.5px;
+    color: rgba(255,255,255,0.7);
+    margin-top: 2px;
+  }
+  .floor-block .bed-count {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 10px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.85);
+    background: rgba(0,0,0,0.25);
+    padding: 3px 8px;
+    border-radius: 20px;
+  }
+
+  /* ── Color palette ── */
+  .c-er       { background: linear-gradient(135deg, #dc2626, #b91c1c); }
+  .c-icu      { background: linear-gradient(135deg, #ef4444, #dc2626); }
+  .c-ot       { background: linear-gradient(135deg, #f97316, #ea580c); }
+  .c-opd      { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+  .c-ward     { background: linear-gradient(135deg, #6366f1, #4f46e5); }
+  .c-diag     { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+  .c-admin    { background: linear-gradient(135deg, #64748b, #475569); }
+  .c-service  { background: linear-gradient(135deg, #374151, #1f2937); }
+  .c-parking  { background: linear-gradient(135deg, #1e293b, #0f172a); }
+  .c-suite    { background: linear-gradient(135deg, #a855f7, #9333ea); }
+  .c-onc-surg { background: linear-gradient(135deg, #e11d48, #be123c); }
+  .c-onc-med  { background: linear-gradient(135deg, #db2777, #be185d); }
+  .c-onc-rad  { background: linear-gradient(135deg, #c026d3, #a21caf); }
+  .c-onc-diag { background: linear-gradient(135deg, #9333ea, #7e22ce); }
+  .c-onc-day  { background: linear-gradient(135deg, #e879f9, #d946ef); }
+  .c-onc-pal  { background: linear-gradient(135deg, #f472b6, #ec4899); }
+  .c-onc-bmt  { background: linear-gradient(135deg, #fb7185, #f43f5e); }
+  .c-gen-opd  { background: linear-gradient(135deg, #0ea5e9, #0284c7); }
+  .c-gen-ward { background: linear-gradient(135deg, #06b6d4, #0891b2); }
+  .c-gen-ot   { background: linear-gradient(135deg, #14b8a6, #0d9488); }
+  .c-gen-icu  { background: linear-gradient(135deg, #10b981, #059669); }
+  .c-gen-er   { background: linear-gradient(135deg, #22c55e, #16a34a); }
+  .c-gen-diag { background: linear-gradient(135deg, #34d399, #10b981); }
+  .c-gen-suite{ background: linear-gradient(135deg, #2dd4bf, #14b8a6); }
+  .c-reno     { background: repeating-linear-gradient(45deg, #f59e0b22, #f59e0b22 4px, transparent 4px, transparent 8px), linear-gradient(135deg, #f59e0b, #d97706); }
+
+  /* ── Legend ── */
+  .legend-section {
+    padding: 8px 40px 40px;
+    display: flex;
+    justify-content: center;
+  }
+  .legend-box {
+    background: #111827;
+    border: 1px solid #1e2740;
+    border-radius: 12px;
+    padding: 20px 28px;
+    max-width: 900px;
+    width: 100%;
+  }
+  .legend-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #8892b0;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .legend-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .legend-swatch {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+  .legend-label {
+    font-size: 11.5px;
+    color: #a0a8c4;
+    font-weight: 500;
+  }
+
+  /* ── Stats bar ── */
+  .stats-bar {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    padding: 0 40px 8px;
+    flex-wrap: wrap;
+  }
+  .stat-card {
+    background: #111827;
+    border: 1px solid #1e2740;
+    border-radius: 10px;
+    padding: 16px 24px;
+    text-align: center;
+    min-width: 160px;
+    transition: all 0.4s;
+  }
+  .stat-val {
+    font-size: 26px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #60a5fa, #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .stat-label {
+    font-size: 11px;
+    color: #6b7394;
+    margin-top: 4px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* ── Arrow between buildings ── */
+  .arrow-col {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 8px;
+    transition: all 0.5s;
+  }
+  .arrow-col.hidden { opacity: 0; width: 0; }
+  .arrow-icon {
+    font-size: 36px;
+    color: #4f46e5;
+    animation: pulse-arrow 2s ease-in-out infinite;
+  }
+  .arrow-label {
+    font-size: 11px;
+    color: #6b7394;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+  }
+  @keyframes pulse-arrow {
+    0%, 100% { opacity: 0.5; transform: translateX(0); }
+    50% { opacity: 1; transform: translateX(4px); }
+  }
+
+  /* ── Renovation badge ── */
+  .reno-badge {
+    display: inline-block;
+    font-size: 9px;
+    font-weight: 700;
+    color: #fbbf24;
+    background: rgba(251,191,36,0.15);
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: 8px;
+    letter-spacing: 0.5px;
+    vertical-align: middle;
+  }
+
+  /* ── Tooltip ── */
+  .tooltip-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 100;
+    pointer-events: none;
+  }
+  .tooltip-overlay.active { display: block; }
+  .tooltip-box {
+    position: absolute;
+    background: #1a1f35;
+    border: 1px solid #2d3555;
+    border-radius: 10px;
+    padding: 16px 20px;
+    max-width: 320px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+    pointer-events: none;
+  }
+  .tooltip-box h4 {
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 6px;
+  }
+  .tooltip-box p {
+    font-size: 12px;
+    color: #a0a8c4;
+    line-height: 1.5;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 1100px) {
+    .canvas { gap: 30px; }
+    .floor-block { width: 300px; }
+  }
+  @media (max-width: 820px) {
+    .canvas { flex-direction: column; align-items: center; gap: 40px; }
+    .arrow-col { writing-mode: horizontal-tb; }
+    .arrow-label { writing-mode: horizontal-tb; }
+    .arrow-icon { transform: rotate(90deg); }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>VPS Lakeshore Hospital — Transformation Blueprint</h1>
+  <p>Kochi, Kerala &nbsp;|&nbsp; From Multi-Specialty Hospital to Complex Cancer Centre</p>
+</div>
+
+<!-- Toggle -->
+<div class="toggle-wrap">
+  <div class="toggle-bar">
+    <button class="toggle-btn active" onclick="setView('current')">Current Layout</button>
+    <button class="toggle-btn" onclick="setView('transition')">Transition View</button>
+    <button class="toggle-btn" onclick="setView('future')">Future State</button>
+  </div>
+</div>
+
+<div class="phase-label" id="phaseLabel">EXISTING MULTI-SPECIALTY HOSPITAL</div>
+
+<!-- Stats -->
+<div class="stats-bar" id="statsBar"></div>
+
+<!-- Buildings -->
+<div class="canvas" id="canvas"></div>
+
+<!-- Legend -->
+<div class="legend-section">
+  <div class="legend-box">
+    <div class="legend-title" id="legendTitle">Department Legend</div>
+    <div class="legend-grid" id="legendGrid"></div>
+  </div>
+</div>
+
+<!-- Tooltip -->
+<div class="tooltip-overlay" id="tooltipOverlay">
+  <div class="tooltip-box" id="tooltipBox"></div>
+</div>
+
+<script>
+// ── DATA ──
+const currentFloors = [
+  { label: "8F", dept: "Suite Rooms & VIP Wards", detail: "Premium patient rooms, attendant lounges", cls: "c-suite", beds: "18 beds", reno: true, tip: "Currently being renovated into luxury suite rooms. Budget: ₹12L." },
+  { label: "7F", dept: "ENT · Ophthalmology · Derma", detail: "Specialist OPDs and procedure rooms", cls: "c-opd", beds: "32 beds", tip: "Houses three specialty departments with dedicated consultation and minor procedure rooms." },
+  { label: "6F", dept: "Gynecology & Pediatrics", detail: "Maternity, NICU, pediatric wards", cls: "c-ward", beds: "40 beds", tip: "Full maternity services including labor rooms, NICU, and pediatric inpatient wards." },
+  { label: "5F", dept: "Orthopedics & Neurology", detail: "Specialty wards, neuro ICU", cls: "c-ward", beds: "38 beds", tip: "Combined orthopedic and neurology inpatient floor with dedicated neuro-ICU beds." },
+  { label: "4F", dept: "General Surgery & Urology", detail: "Surgical wards, pre/post-op", cls: "c-ward", beds: "42 beds", tip: "Surgical inpatient floor with pre-op holding, post-op recovery, and urology unit." },
+  { label: "3F", dept: "General Medicine & Cardiology", detail: "Medical wards, CCU, echo lab", cls: "c-ward", beds: "44 beds", tip: "Medicine and cardiology floor with coronary care unit and non-invasive cardiac diagnostics." },
+  { label: "2F", dept: "Operation Theatres & CSSD", detail: "8 OTs, recovery, sterilization", cls: "c-ot", beds: "8 OTs", tip: "Surgical complex with 8 operating theatres, post-anaesthesia care unit, and central sterile supply." },
+  { label: "1F", dept: "ICU Complex", detail: "Medical ICU, Surgical ICU, HDU", cls: "c-icu", beds: "30 beds", reno: true, tip: "Major renovation underway — upgrading to modern ICU standards. Budget: ₹2.25 Cr." },
+  { label: "GF", dept: "Casualty · OPD · Pharmacy · Reception", detail: "Emergency, Ortho OPD, Ultrasound, Central area", cls: "c-er", beds: "", reno: true, tip: "Multiple renovations: Casualty (₹3.80 Cr), Ortho OPD & Ultrasound (₹1.60 Cr), Central Cutout (₹34L), Porch & Front (₹1.40 Cr)." },
+  { label: "B1", dept: "Services & Utilities", detail: "HVAC, DG sets, medical gas plant, STP", cls: "c-service", beds: "", tip: "Building services including boiler plant, medical gas manifold, electrical panels. STP renovation tendered (₹37L)." },
+];
+
+const futureCCC = [
+  { label: "8F", dept: "Palliative Care & Rehabilitation", detail: "End-of-life care, pain management, physio", cls: "c-onc-pal", beds: "18 beds", tip: "Dedicated palliative oncology floor — pain management, psycho-oncology, physiotherapy, and family support." },
+  { label: "7F", dept: "Cancer Wards — Medical Oncology", detail: "Chemo inpatient, isolation rooms", cls: "c-onc-med", beds: "36 beds", tip: "Inpatient medical oncology with laminar flow isolation rooms for neutropenic patients." },
+  { label: "6F", dept: "Cancer Wards — Surgical Oncology", detail: "Post-surgical recovery, drains, monitoring", cls: "c-onc-surg", beds: "38 beds", tip: "Dedicated post-surgical oncology ward with enhanced monitoring and specialized nursing." },
+  { label: "5F", dept: "Precision Medicine & Genomics Lab", detail: "NGS, molecular pathology, tumor board", cls: "c-onc-diag", beds: "", tip: "State-of-the-art molecular diagnostics — next-gen sequencing, liquid biopsy, companion diagnostics, and integrated tumor board suite." },
+  { label: "4F", dept: "Radiation Oncology & Brachytherapy", detail: "Planning, simulation, treatment bays", cls: "c-onc-rad", beds: "4 bays", tip: "Radiation therapy floor with CT-sim, treatment planning, external beam bays, and brachytherapy suite." },
+  { label: "3F", dept: "Medical Oncology & Clinical Trials", detail: "Consultations, trial unit, pharmacy", cls: "c-onc-med", beds: "", tip: "Outpatient medical oncology, phase I–III clinical trial unit with dedicated oncology pharmacy." },
+  { label: "2F", dept: "Surgical Oncology OTs", detail: "6 OTs, robotic surgery, CSSD", cls: "c-onc-surg", beds: "6 OTs", tip: "Cancer-dedicated surgical complex with robotic-assisted surgery capability and onco-specific sterilization." },
+  { label: "1F", dept: "Cancer ICU & BMT Unit", detail: "Onco-critical care, bone marrow transplant", cls: "c-onc-bmt", beds: "24 beds", tip: "HEPA-filtered BMT unit (8 beds) + cancer ICU (16 beds) with isolation and laminar flow." },
+  { label: "GF", dept: "Cancer Screening & Day Care Chemo", detail: "Reception, screening, infusion centre", cls: "c-onc-day", beds: "30 chairs", tip: "Patient-friendly cancer reception, rapid screening suites, and 30-chair chemotherapy day care centre." },
+  { label: "B1", dept: "Linear Accelerator Vault", detail: "LINAC bunker, HDR room, physics lab", cls: "c-onc-rad", beds: "2 LINAC", tip: "Radiation-shielded vault housing 2 linear accelerators, HDR brachytherapy room, and medical physics laboratory." },
+];
+
+const futureGeneral = [
+  { label: "10F", dept: "Suite Rooms & VIP", detail: "Premium rooms, international patient wing", cls: "c-gen-suite", beds: "24 beds", tip: "Top-floor premium suite rooms with attendant facilities and international patient services." },
+  { label: "9F", dept: "Gynecology & Pediatric Wards", detail: "Maternity, NICU, pediatrics", cls: "c-gen-ward", beds: "44 beds", tip: "Full maternity and pediatric services relocated from main block." },
+  { label: "8F", dept: "Cardiology & Urology Wards", detail: "CCU, cath lab recovery, uro ward", cls: "c-gen-ward", beds: "44 beds", tip: "Cardiology inpatient with coronary care unit and urology ward." },
+  { label: "7F", dept: "Orthopedics & Neurology Wards", detail: "Joint replacement, neuro recovery", cls: "c-gen-ward", beds: "47 beds", tip: "Musculoskeletal and neurological inpatient care." },
+  { label: "6F", dept: "General Medicine Wards", detail: "Internal medicine, diabetology", cls: "c-gen-ward", beds: "46 beds", tip: "Core internal medicine floor with diabetology and endocrinology." },
+  { label: "5F", dept: "General Surgery Wards", detail: "Post-op, GI surgery, bariatric", cls: "c-gen-ward", beds: "44 beds", tip: "General and GI surgery inpatient floor." },
+  { label: "4F", dept: "ICU & HDU", detail: "Multi-specialty ICU, step-down", cls: "c-gen-icu", beds: "32 beds", tip: "Modern multi-specialty ICU and high-dependency step-down unit." },
+  { label: "3F", dept: "Operation Theatres & CSSD", detail: "10 OTs, hybrid OR, recovery", cls: "c-gen-ot", beds: "10 OTs", tip: "Expanded surgical complex with 10 OTs including a hybrid OR for cardiac/vascular procedures." },
+  { label: "2F", dept: "Diagnostics & Imaging", detail: "MRI, CT, X-ray, ultrasound, lab", cls: "c-gen-diag", beds: "", tip: "Comprehensive diagnostics centre — 3T MRI, 128-slice CT, digital X-ray, ultrasound, and central laboratory." },
+  { label: "1F", dept: "OPDs — All Specialties", detail: "Medicine, Cardio, Ortho, Neuro, ENT, Ophth", cls: "c-gen-opd", beds: "", tip: "Consolidated outpatient department for all non-oncology specialties." },
+  { label: "GF", dept: "Emergency & Reception · Pharmacy", detail: "24/7 ER, triage, pharmacy, registration", cls: "c-gen-er", beds: "", tip: "Modern emergency department with triage, resuscitation bays, and 24/7 pharmacy." },
+  { label: "B1", dept: "Services & Engineering", detail: "HVAC, DG, medical gas, water treatment", cls: "c-service", beds: "", tip: "Central building services and engineering plant rooms." },
+  { label: "B2", dept: "Parking", detail: "Multi-level covered parking", cls: "c-parking", beds: "200 cars", tip: "Basement parking for 200+ vehicles with EV charging stations." },
+];
+
+// ── RENDER ──
+let currentView = 'current';
+
+function renderBuilding(containerId, floors, title, subtitle) {
+  let html = `<div class="bldg-title">${title}</div><div class="bldg-subtitle">${subtitle}</div>`;
+  floors.forEach((f, i) => {
+    const renoTag = f.reno ? `<span class="reno-badge">RENOVATION</span>` : '';
+    const bedTag = f.beds ? `<span class="bed-count">${f.beds}</span>` : '';
+    html += `
+      <div class="floor" onmouseenter="showTip(event, '${f.dept.replace(/'/g,"\\'")}', '${(f.tip||'').replace(/'/g,"\\'")}')" onmouseleave="hideTip()">
+        <div class="floor-label">${f.label}</div>
+        <div class="floor-block ${f.cls}">
+          <div>
+            <div class="dept-name">${f.dept}${renoTag}</div>
+            <div class="dept-detail">${f.detail}</div>
+          </div>
+          ${bedTag}
+        </div>
+      </div>`;
+  });
+  return html;
+}
+
+function setView(view) {
+  currentView = view;
+  document.querySelectorAll('.toggle-btn').forEach((b, i) => {
+    b.classList.toggle('active', (view === 'current' && i === 0) || (view === 'transition' && i === 1) || (view === 'future' && i === 2));
+  });
+
+  const canvas = document.getElementById('canvas');
+  const phaseLabel = document.getElementById('phaseLabel');
+  const statsBar = document.getElementById('statsBar');
+
+  if (view === 'current') {
+    phaseLabel.textContent = 'EXISTING MULTI-SPECIALTY HOSPITAL';
+    canvas.innerHTML = `
+      <div class="building" id="bldgCurrent">
+        ${renderBuilding('current', currentFloors, 'Main Block', 'Existing Multi-Specialty Hospital · Est. 2004')}
+      </div>`;
+    statsBar.innerHTML = `
+      <div class="stat-card"><div class="stat-val">1</div><div class="stat-label">Building</div></div>
+      <div class="stat-card"><div class="stat-val">~244</div><div class="stat-label">Total Beds</div></div>
+      <div class="stat-card"><div class="stat-val">8</div><div class="stat-label">Operation Theatres</div></div>
+      <div class="stat-card"><div class="stat-val">₹15.6 Cr</div><div class="stat-label">Active Renovations</div></div>
+    `;
+    updateLegend('current');
+  }
+  else if (view === 'transition') {
+    phaseLabel.textContent = 'TRANSFORMATION — SPLITTING CANCER & GENERAL CARE';
+    canvas.innerHTML = `
+      <div class="building" id="bldgOld">
+        ${renderBuilding('old', currentFloors, 'Main Block (Current)', 'Multi-Specialty → Being Repurposed')}
+      </div>
+      <div class="arrow-col">
+        <div class="arrow-label">TRANSFORMS INTO</div>
+        <div class="arrow-icon">⟶</div>
+      </div>
+      <div class="building" id="bldgCCCPreview" style="opacity:0.7;">
+        ${renderBuilding('ccc', futureCCC, 'Main Block (Future)', 'Complex Cancer Centre')}
+      </div>
+      <div class="arrow-col">
+        <div class="arrow-label">NON-CANCER MOVES TO</div>
+        <div class="arrow-icon">⟶</div>
+      </div>
+      <div class="building" id="bldgGenPreview" style="opacity:0.7;">
+        ${renderBuilding('gen', futureGeneral, 'New Building (Future)', 'General Hospital · 10 Floors + 2 Basements')}
+      </div>
+    `;
+    statsBar.innerHTML = `
+      <div class="stat-card"><div class="stat-val">1 → 2</div><div class="stat-label">Buildings</div></div>
+      <div class="stat-card"><div class="stat-val">244 → 541</div><div class="stat-label">Total Beds</div></div>
+      <div class="stat-card"><div class="stat-val">8 → 16</div><div class="stat-label">Operation Theatres</div></div>
+      <div class="stat-card"><div class="stat-val">2 LINAC</div><div class="stat-label">Added Radiation</div></div>
+    `;
+    updateLegend('transition');
+  }
+  else {
+    phaseLabel.textContent = 'FUTURE STATE — TWO DEDICATED BUILDINGS';
+    canvas.innerHTML = `
+      <div class="building" id="bldgCCC">
+        ${renderBuilding('ccc', futureCCC, '🏥 Building A — Complex Cancer Centre', 'Main Block Repurposed · Comprehensive Oncology')}
+      </div>
+      <div class="arrow-col">
+        <div style="width:2px;height:80%;background:linear-gradient(to bottom,#4f46e5,transparent);border-radius:2px;"></div>
+      </div>
+      <div class="building" id="bldgGen">
+        ${renderBuilding('gen', futureGeneral, '🏗️ Building B — General Hospital', 'New Construction · 10F + 2B · ~300 Beds')}
+      </div>
+    `;
+    statsBar.innerHTML = `
+      <div class="stat-card"><div class="stat-val">2</div><div class="stat-label">Dedicated Buildings</div></div>
+      <div class="stat-card"><div class="stat-val">~146</div><div class="stat-label">Cancer Beds</div></div>
+      <div class="stat-card"><div class="stat-val">~281</div><div class="stat-label">General Beds</div></div>
+      <div class="stat-card"><div class="stat-val">16</div><div class="stat-label">Total OTs</div></div>
+      <div class="stat-card"><div class="stat-val">30</div><div class="stat-label">Chemo Chairs</div></div>
+    `;
+    updateLegend('future');
+  }
+}
+
+function updateLegend(view) {
+  const grid = document.getElementById('legendGrid');
+  const title = document.getElementById('legendTitle');
+  let items = [];
+  if (view === 'current') {
+    title.textContent = 'DEPARTMENT LEGEND — CURRENT';
+    items = [
+      { cls: 'c-er', label: 'Emergency / Casualty' },
+      { cls: 'c-icu', label: 'ICU / Critical Care' },
+      { cls: 'c-ot', label: 'Operation Theatres' },
+      { cls: 'c-opd', label: 'OPD / Specialist Clinics' },
+      { cls: 'c-ward', label: 'Inpatient Wards' },
+      { cls: 'c-suite', label: 'Suite / VIP Rooms' },
+      { cls: 'c-service', label: 'Services & Utilities' },
+      { cls: 'c-reno', label: 'Active Renovation' },
+    ];
+  } else {
+    title.textContent = 'DEPARTMENT LEGEND — FUTURE';
+    items = [
+      { cls: 'c-onc-surg', label: 'Surgical Oncology' },
+      { cls: 'c-onc-med', label: 'Medical Oncology' },
+      { cls: 'c-onc-rad', label: 'Radiation Oncology' },
+      { cls: 'c-onc-diag', label: 'Precision / Genomics' },
+      { cls: 'c-onc-day', label: 'Screening / Day Care' },
+      { cls: 'c-onc-bmt', label: 'BMT / Cancer ICU' },
+      { cls: 'c-onc-pal', label: 'Palliative Care' },
+      { cls: 'c-gen-er', label: 'General Emergency' },
+      { cls: 'c-gen-opd', label: 'General OPDs' },
+      { cls: 'c-gen-ward', label: 'General Wards' },
+      { cls: 'c-gen-ot', label: 'General OTs' },
+      { cls: 'c-gen-icu', label: 'General ICU' },
+      { cls: 'c-gen-diag', label: 'Diagnostics' },
+      { cls: 'c-gen-suite', label: 'Suite / VIP' },
+      { cls: 'c-service', label: 'Services' },
+      { cls: 'c-parking', label: 'Parking' },
+    ];
+  }
+  grid.innerHTML = items.map(i => `
+    <div class="legend-item">
+      <div class="legend-swatch ${i.cls}"></div>
+      <span class="legend-label">${i.label}</span>
+    </div>
+  `).join('');
+}
+
+// ── TOOLTIP ──
+function showTip(e, title, text) {
+  if (!text) return;
+  const overlay = document.getElementById('tooltipOverlay');
+  const box = document.getElementById('tooltipBox');
+  box.innerHTML = `<h4>${title}</h4><p>${text}</p>`;
+  overlay.classList.add('active');
+  const x = Math.min(e.clientX + 16, window.innerWidth - 340);
+  const y = Math.min(e.clientY - 10, window.innerHeight - 120);
+  box.style.left = x + 'px';
+  box.style.top = y + 'px';
+}
+function hideTip() {
+  document.getElementById('tooltipOverlay').classList.remove('active');
+}
+
+// ── INIT ──
+setView('current');
+</script>
+
+</body>
+</html>
