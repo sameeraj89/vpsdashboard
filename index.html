@@ -45,6 +45,8 @@ body {
 }
 .badge.orange { background: #e67e22; }
 .badge.green { background: #27ae60; }
+.badge.red { background: #e74c3c; }
+.badge.purple { background: #8e44ad; }
 
 .main {
   flex: 1;
@@ -106,6 +108,10 @@ body {
   background: #f0f4f8;
   color: #4a5568;
 }
+.tag.new {
+  background: #e74c3c;
+  color: white;
+}
 .card-cta {
   display: inline-flex;
   align-items: center;
@@ -120,7 +126,7 @@ body {
 .card.purple .card-cta { color: #8e44ad; }
 .card.red    .card-cta { color: #e74c3c; }
 .card.teal   .card-cta { color: #16a085; }
-.card-cta::after { content: '→'; }
+.card-cta::after { content: '\2192'; }
 
 .card-full { grid-column: 1 / -1; }
 
@@ -160,7 +166,8 @@ body {
   <p>Lakeshore Hospital &amp; Research Centre, Kochi &nbsp;&middot;&nbsp; Internal Use Only</p>
   <div style="margin-top:14px;">
     <span class="badge orange">FY24 – FY26</span>
-    <span class="badge green">8 Dashboards</span>
+    <span class="badge green">12 Dashboards</span>
+    <span class="badge red">2 New</span>
     <span class="badge">Confidential</span>
   </div>
 </div>
@@ -181,21 +188,52 @@ body {
   <div class="section-label">Strategy &amp; Transformation</div>
 
   <div class="card-grid">
-    <a class="card navy card-full" href="LHRC_Transformation_Scorecard.html">
+    <a class="card navy" href="LHRC_Transformation_Scorecard.html">
       <div class="card-icon">&#x1F3AF;</div>
       <div class="card-title">Transformation Scorecard</div>
-      <div class="card-year">FY26 Baseline → FY29 Target</div>
+      <div class="card-year">FY26 Baseline &rarr; FY29 Target</div>
       <div class="card-desc">
-        The 3-year strategic transformation plan. FY26 baseline KPIs versus FY29 targets across revenue (&#x20B9;500→&#x20B9;780 Cr), EBITDA, ARPOB (&#x20B9;49K→&#x20B9;70K), complex care mix, and &#x20B9;300 Cr capital deployment. Tracks phase milestones and readiness.
+        The 3-year strategic transformation plan. FY26 baseline KPIs versus FY29 targets across revenue (&#x20B9;500&rarr;&#x20B9;780 Cr), EBITDA, ARPOB (&#x20B9;49K&rarr;&#x20B9;70K), complex care mix, and &#x20B9;300 Cr capital deployment.
       </div>
       <div class="card-tags">
-        <span class="tag">Revenue: ₹500→₹780 Cr</span>
-        <span class="tag">ARPOB: ₹49K→₹70K</span>
+        <span class="tag">Revenue: &#x20B9;500&rarr;&#x20B9;780 Cr</span>
+        <span class="tag">ARPOB: &#x20B9;49K&rarr;&#x20B9;70K</span>
         <span class="tag">3-Phase Roadmap</span>
-        <span class="tag">Capex ₹300 Cr</span>
-        <span class="tag">+23% YoY Rev</span>
+        <span class="tag">Capex &#x20B9;300 Cr</span>
       </div>
       <span class="card-cta">Open Scorecard</span>
+    </a>
+
+    <a class="card red" href="LHRC_100Day_Efficiency_Plan.html">
+      <div class="card-icon">&#x26A1;</div>
+      <div class="card-title">100-Day Efficiency Transformation</div>
+      <div class="card-year">8 Tabs &middot; Revenue + Cost Levers &middot; Weekly Governance</div>
+      <div class="card-desc">
+        Comprehensive 100-day efficiency plan consolidating both revenue and cost levers. P&amp;L impact bridge, sprint tracker, 3-scenario financial model, risk register, and weekly governance cadence. Targets &#x20B9;18–28 Cr annualized EBITDA uplift.
+      </div>
+      <div class="card-tags">
+        <span class="tag new">New</span>
+        <span class="tag">9 Workstreams</span>
+        <span class="tag">&#x20B9;18–28 Cr Savings</span>
+        <span class="tag">3 Phases</span>
+        <span class="tag">Weekly Review</span>
+      </div>
+      <span class="card-cta">Open Plan</span>
+    </a>
+
+    <a class="card purple" href="LHRC_Transformation_FloorPlan.html">
+      <div class="card-icon">&#x1F3D7;&#xFE0F;</div>
+      <div class="card-title">Transformation Floor Plan</div>
+      <div class="card-year">Capacity &amp; Infrastructure</div>
+      <div class="card-desc">
+        Physical infrastructure and floor-level capacity planning for the hospital transformation. Bed allocation, department layout, and expansion roadmap.
+      </div>
+      <div class="card-tags">
+        <span class="tag">Infrastructure</span>
+        <span class="tag">Floor Layout</span>
+        <span class="tag">Capacity Plan</span>
+      </div>
+      <span class="card-cta">Open Floor Plan</span>
     </a>
   </div>
 
@@ -205,15 +243,15 @@ body {
   <div class="card-grid">
     <a class="card navy card-full" href="LHRC_Board_Dashboard_FY24_26.html">
       <div class="card-icon">&#x1F4CB;</div>
-      <div class="card-title">Board Performance Intelligence — FY24→FY26</div>
+      <div class="card-title">Board Performance Intelligence — FY24&rarr;FY26</div>
       <div class="card-year">3-Year Consolidated &middot; 10 Tabs</div>
       <div class="card-desc">
         Consolidated board-level view spanning FY24–FY26. Executive summary, revenue trajectory, KPI evolution, department deep-dive, doctor economics, payor transformation, capacity &amp; throughput, peer benchmarks, risk &amp; concentration analysis, and strategic roadmap.
       </div>
       <div class="card-tags">
-        <span class="tag">ADR ₹1.21→₹1.47 Cr (+21%)</span>
-        <span class="tag">ARPOB ₹32K→₹35K (+10%)</span>
-        <span class="tag">Insurance 22%→26%</span>
+        <span class="tag">ADR &#x20B9;1.21&rarr;&#x20B9;1.47 Cr (+21%)</span>
+        <span class="tag">ARPOB &#x20B9;32K&rarr;&#x20B9;35K (+10%)</span>
+        <span class="tag">Insurance 22%&rarr;26%</span>
         <span class="tag">Peer Benchmarks</span>
         <span class="tag">Strategic Roadmap</span>
       </div>
@@ -244,17 +282,55 @@ body {
     <a class="card red" href="LHRC_Cost_Analysis.html">
       <div class="card-icon">&#x1F52C;</div>
       <div class="card-title">Cost Intelligence &amp; FY27 Budget</div>
-      <div class="card-year">FY27 Budget Analytics &middot; 8 Tabs</div>
+      <div class="card-year">FY27 Budget Analytics &middot; 8 Tabs + 100-Day Plan</div>
       <div class="card-desc">
-        Deep-dive into cost structure, headcount economics, and FY27 budget build. Covers &#x20B9;202 Cr people cost, 2,589 FTEs, department-wise cost allocation, and margin levers.
+        Deep-dive into cost structure, headcount economics, and FY27 budget build. Covers &#x20B9;202 Cr people cost, 2,589 FTEs, department-wise cost allocation, margin levers, and an integrated 100-day efficiency plan tab.
       </div>
       <div class="card-tags">
-        <span class="tag">₹202 Cr People Cost</span>
+        <span class="tag">&#x20B9;202 Cr People Cost</span>
         <span class="tag">2,589 FTEs</span>
-        <span class="tag">₹130 Cr Capex</span>
+        <span class="tag">&#x20B9;130 Cr Capex</span>
         <span class="tag">People/Rev 36.7%</span>
       </div>
       <span class="card-cta">Open Analysis</span>
+    </a>
+
+    <a class="card green" href="LHRC_Revenue_Analysis_FY24_FY25_FY26.html">
+      <div class="card-icon">&#x1F4C8;</div>
+      <div class="card-title">Revenue Analytics — FY24 to FY26 Consolidated</div>
+      <div class="card-year">3-Year Revenue Trajectory</div>
+      <div class="card-desc">
+        Consolidated multi-year revenue analysis spanning FY24–FY26. Department-wise trends, revenue mix evolution, doctor contribution, payor shifts, and year-over-year growth tracking across the full period.
+      </div>
+      <div class="card-tags">
+        <span class="tag">FY24–FY26</span>
+        <span class="tag">Revenue Trends</span>
+        <span class="tag">Dept Breakdown</span>
+        <span class="tag">YoY Growth</span>
+      </div>
+      <span class="card-cta">Open Dashboard</span>
+    </a>
+  </div>
+
+  <!-- ===== CLINICAL DATA & RESEARCH ===== -->
+  <div class="section-label">Clinical Data &amp; Research</div>
+
+  <div class="card-grid">
+    <a class="card teal card-full" href="VPS_Lakeshore_Clinical_Data_Commons_v3.html">
+      <div class="card-icon">&#x1F9EC;</div>
+      <div class="card-title">Clinical Research Data Commons</div>
+      <div class="card-year">Multi-Domain &middot; Oncology, Cardiology, Nephrology, Neurology, Endocrinology, ICU</div>
+      <div class="card-desc">
+        Clinical research data commons platform covering 6 domains. Data architecture, access framework, comorbidity insights, and research-grade clinical datasets. Supports real-world evidence generation and cross-specialty analytics.
+      </div>
+      <div class="card-tags">
+        <span class="tag new">New</span>
+        <span class="tag">6 Clinical Domains</span>
+        <span class="tag">Data Architecture</span>
+        <span class="tag">Access Framework</span>
+        <span class="tag">Comorbidity Insights</span>
+      </div>
+      <span class="card-cta">Open Data Commons</span>
     </a>
   </div>
 
@@ -270,7 +346,7 @@ body {
         FY25 full-year revenue analysis by department, doctor, and payor. &#x20B9;410 Cr revenue across 40+ doctors, 21,023 IP discharges. Doctor MIS, concentration risk, and portfolio matrix.
       </div>
       <div class="card-tags">
-        <span class="tag">₹410 Cr Revenue</span>
+        <span class="tag">&#x20B9;410 Cr Revenue</span>
         <span class="tag">21,023 IP Discharges</span>
         <span class="tag">Top 2 = 20.7%</span>
         <span class="tag">Doctor MIS</span>
@@ -286,8 +362,8 @@ body {
         8-year consolidated P&amp;L trend analysis. Revenue trajectory, cost structure evolution, margin architecture, DuPont decomposition, cash flow, balance sheet quality, and CEO dashboard.
       </div>
       <div class="card-tags">
-        <span class="tag">₹228→₹408 Cr</span>
-        <span class="tag">EBITDA 8.8%→19.4%</span>
+        <span class="tag">&#x20B9;228&rarr;&#x20B9;408 Cr</span>
+        <span class="tag">EBITDA 8.8%&rarr;19.4%</span>
         <span class="tag">Debt-Free</span>
         <span class="tag">CAGR 8.6%</span>
       </div>
@@ -307,7 +383,7 @@ body {
         FY24 full-year BRM data. &#x20B9;397 Cr revenue, 115 doctors, 20,932 IP discharges. Includes department breakdown, doctor-level MIS, concentration risk analysis, peer benchmarks, and strategic priorities.
       </div>
       <div class="card-tags">
-        <span class="tag">₹397 Cr Revenue</span>
+        <span class="tag">&#x20B9;397 Cr Revenue</span>
         <span class="tag">115 Doctors</span>
         <span class="tag">20,932 Discharges</span>
         <span class="tag">Top 2 = 27.4%</span>
@@ -334,7 +410,7 @@ body {
 </div>
 
 <div class="footer">
-  VPS Lakeshore Hospital &amp; Research Centre &nbsp;&middot;&nbsp; Confidential — Internal Use Only &nbsp;&middot;&nbsp; February 2026
+  VPS Lakeshore Hospital &amp; Research Centre &nbsp;&middot;&nbsp; Confidential — Internal Use Only &nbsp;&middot;&nbsp; March 2026
 </div>
 
 </body>
