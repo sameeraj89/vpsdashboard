@@ -94,6 +94,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f0f4f8;color:#1a202
   <div class="tab" onclick="showTab('efficiency',this)">&#x1F4D0; Efficiency Ratios</div>
   <div class="tab" onclick="showTab('monthly',this)">&#x1F4C5; Monthly Phasing</div>
   <div class="tab" onclick="showTab('levers',this)">&#x2705; Cost Levers</div>
+  <div class="tab" onclick="showTab('100day',this)" style="color:#e74c3c;font-weight:800">&#x1F3AF; 100-Day Efficiency Plan</div>
 </div>
 
 <!-- ===== PAGE: OVERVIEW ===== -->
@@ -642,6 +643,286 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f0f4f8;color:#1a202
   </div>
 </div>
 
+<!-- ===== PAGE: 100-DAY EFFICIENCY PLAN ===== -->
+<div id="page-100day" class="page">
+
+  <div class="kpi-strip">
+    <div class="kpi" style="border-color:#e74c3c"><div class="kpi-label">Total Savings Target</div><div class="kpi-value" style="color:#e74c3c">&#x20B9;18-28 Cr</div><div class="kpi-sub">5.4-8.4% of &#x20B9;332 Cr cost base</div></div>
+    <div class="kpi" style="border-color:#27ae60"><div class="kpi-label">Phase 1 Quick Wins</div><div class="kpi-value" style="color:#27ae60">&#x20B9;4-7 Cr</div><div class="kpi-sub">Days 1-30 &middot; Immediate actions</div></div>
+    <div class="kpi" style="border-color:#e67e22"><div class="kpi-label">Phase 2 Structural</div><div class="kpi-value" style="color:#e67e22">&#x20B9;6-10 Cr</div><div class="kpi-sub">Days 31-60 &middot; Process reforms</div></div>
+    <div class="kpi" style="border-color:#8e44ad"><div class="kpi-label">Phase 3 Transform</div><div class="kpi-value" style="color:#8e44ad">&#x20B9;8-11 Cr</div><div class="kpi-sub">Days 61-100 &middot; Revenue leverage</div></div>
+    <div class="kpi" style="border-color:#1a3a5c"><div class="kpi-label">Target People/Rev</div><div class="kpi-value" style="color:#1a3a5c">34.0%</div><div class="kpi-sub">From 36.7% &middot; 270 bps improvement</div></div>
+    <div class="kpi" style="border-color:#00838f"><div class="kpi-label">Target Staff/Bed</div><div class="kpi-value" style="color:#00838f">3.3x</div><div class="kpi-sub">From 3.8x &middot; Benchmark aligned</div></div>
+  </div>
+
+  <div class="ibox red">
+    <div class="ibox-title">&#x1F6A8; 100-Day Mission: From Cost Management to Bare Efficiency</div>
+    <div class="ibox-text"><strong>This plan targets &#x20B9;18-28 Cr in annualized savings</strong> across three phases — quick wins (vendor consolidation, capex deferrals), structural reforms (doctor economics, staffing productivity), and transformation (ARPOB growth, operating leverage). The hospital is <strong>debt-free with &#x20B9;332 Cr cost base and 19.4% EBITDA margin</strong>. The goal is to reach 22-24% EBITDA while maintaining clinical transformation investments. Each phase has clear owners, weekly milestones, and measurable KPIs.</div>
+  </div>
+
+  <!-- TIMELINE VISUALIZATION -->
+  <div class="card">
+    <div class="card-title">100-Day Execution Timeline</div>
+    <div class="card-sub">3 phases &middot; 14 workstreams &middot; Weekly checkpoint rhythm</div>
+    <div style="position:relative;height:280px"><canvas id="timelineChart"></canvas></div>
+  </div>
+
+  <!-- PHASE 1 -->
+  <div class="slabel">Phase 1 — Days 1-30: Quick Wins &amp; Diagnostics (&#x20B9;4-7 Cr Savings)</div>
+
+  <div class="lever-card" style="border-color:#27ae60">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span class="lever-num" style="background:#27ae60">1</span><span style="font-weight:700;font-size:0.85rem">Outsource Vendor Consolidation &amp; Renegotiation</span><span class="pill gp" style="margin-left:auto">QUICK WIN</span><span style="font-size:0.7rem;color:#718096">&#x20B9;1.5-2.0 Cr &middot; Week 1-4</span></div>
+    <div class="g2">
+      <div>
+        <table class="tbl"><thead><tr><th>Action</th><th>Week</th><th>Expected Impact</th></tr></thead>
+        <tbody>
+          <tr><td>Audit all 5 vendor contracts &amp; benchmark rates</td><td>Week 1</td><td>Baseline established</td></tr>
+          <tr><td>Issue consolidated RFP for housekeeping (194 staff across 3 vendors)</td><td>Week 2</td><td>&#x20B9;11K/head spread identified</td></tr>
+          <tr><td>Negotiate volume discount — target &#x20B9;20K/head blended (from &#x20B9;22.5K avg)</td><td>Week 3</td><td>&#x20B9;58L annual savings</td></tr>
+          <tr><td>Consolidate to 2 vendors max, introduce penalty clauses for SLA breach</td><td>Week 4</td><td>&#x20B9;1.0-1.5 Cr savings locked</td></tr>
+          <tr><td>Add backup vendor for Utiz-dependent security/ward boy (175 staff)</td><td>Week 4</td><td>Risk mitigation + price pressure</td></tr>
+        </tbody></table>
+      </div>
+      <div>
+        <div class="ibox green" style="margin-bottom:8px">
+          <div class="ibox-title">Current State</div>
+          <div class="ibox-text">3 HK vendors: Naipunnya (&#x20B9;22.4K), Prof. Hospitality (&#x20B9;28.7K), Abad (&#x20B9;17.1K). Spread = &#x20B9;11K/head/month. Total outsource: &#x20B9;12.9 Cr for 416 staff.</div>
+        </div>
+        <div class="mini-grid">
+          <div class="mini-box"><div class="ml">Current Avg/Head</div><div class="mv" style="color:#e74c3c">&#x20B9;25.8K</div></div>
+          <div class="mini-box"><div class="ml">Target Avg/Head</div><div class="mv" style="color:#27ae60">&#x20B9;22.0K</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lever-card" style="border-color:#27ae60">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span class="lever-num" style="background:#27ae60">2</span><span style="font-weight:700;font-size:0.85rem">Immediate Capex Deferrals — Non-Clinical Items</span><span class="pill gp" style="margin-left:auto">QUICK WIN</span><span style="font-size:0.7rem;color:#718096">&#x20B9;2.0-3.5 Cr &middot; Week 1-2</span></div>
+    <div class="g2">
+      <div>
+        <table class="tbl"><thead><tr><th>Deferrable Item</th><th style="text-align:right">&#x20B9; Cr</th><th>Rationale</th></tr></thead>
+        <tbody>
+          <tr><td>Building painting &amp; walkway beautification</td><td style="text-align:right">2.20</td><td style="font-size:0.65rem;color:#718096">Cosmetic — no clinical impact</td></tr>
+          <tr><td>Vehicle purchase (Innova Hycross)</td><td style="text-align:right">0.70</td><td style="font-size:0.65rem;color:#718096">Lease or defer 6 months</td></tr>
+          <tr><td>Premium suite renovations</td><td style="text-align:right">0.60</td><td style="font-size:0.65rem;color:#718096">Revenue impact < 0.2% of total</td></tr>
+          <tr><td>Porch &amp; entrance redesign</td><td style="text-align:right">0.45</td><td style="font-size:0.65rem;color:#718096">Aesthetic improvement only</td></tr>
+          <tr class="top3"><td><strong>Total Deferrable</strong></td><td style="text-align:right"><strong>3.95</strong></td><td></td></tr>
+        </tbody></table>
+      </div>
+      <div style="font-size:0.73rem;color:#4a5568;line-height:1.7">
+        <strong>Protect all clinical capex (&#x20B9;99 Cr)</strong> — spine robotics, biplane cathlab, tomotherapy, and oncology equipment remain untouched. These are the transformation thesis.<br><br>
+        &#x2192; Freeze all non-clinical capex orders not yet committed<br>
+        &#x2192; Renegotiate payment terms on committed infrastructure items (extend from 30 to 90 days)<br>
+        &#x2192; Create capex release committee — weekly approvals required for items > &#x20B9;10L
+      </div>
+    </div>
+  </div>
+
+  <div class="lever-card" style="border-color:#27ae60">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span class="lever-num" style="background:#27ae60">3</span><span style="font-weight:700;font-size:0.85rem">Energy, Consumables &amp; Procurement Audit</span><span class="pill gp" style="margin-left:auto">QUICK WIN</span><span style="font-size:0.7rem;color:#718096">&#x20B9;0.5-1.5 Cr &middot; Week 2-4</span></div>
+    <div style="font-size:0.73rem;color:#4a5568;line-height:1.7">
+      &#x2192; Engage energy auditor for HVAC, lighting, and power optimization across 3 units<br>
+      &#x2192; Benchmark medical consumables pricing against GPO (group purchasing organization) rates<br>
+      &#x2192; Review pharmacy procurement margins — current pharmacy revenue &#x20B9;34 Cr, potential 2-3% margin improvement via formulary standardization<br>
+      &#x2192; Audit dietary/F&amp;B costs — 88 staff at &#x20B9;298L cost, benchmark against outsource (could save &#x20B9;50-80L)<br>
+      &#x2192; Implement just-in-time inventory for high-cost surgical consumables
+    </div>
+  </div>
+
+  <!-- PHASE 2 -->
+  <div class="slabel">Phase 2 — Days 31-60: Structural Reforms (&#x20B9;6-10 Cr Savings)</div>
+
+  <div class="lever-card" style="border-color:#e67e22">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span class="lever-num" style="background:#e67e22">4</span><span style="font-weight:700;font-size:0.85rem">Doctor Fee Restructuring — New Hire Model Overhaul</span><span class="pill op" style="margin-left:auto">HIGH IMPACT</span><span style="font-size:0.7rem;color:#718096">&#x20B9;2-4 Cr &middot; Week 5-8</span></div>
+    <div class="g2">
+      <div>
+        <table class="tbl"><thead><tr><th>Component</th><th>Current Model</th><th>Target Model</th></tr></thead>
+        <tbody>
+          <tr><td>Fixed:Variable ratio</td><td style="color:#e74c3c">78:22</td><td style="color:#27ae60">55:45</td></tr>
+          <tr><td>New hire fixed fee</td><td style="color:#e74c3c">&#x20B9;3.2L/mo avg</td><td style="color:#27ae60">&#x20B9;2.0L/mo + incentive</td></tr>
+          <tr><td>Incentive trigger</td><td>Revenue-based (2.68%)</td><td>EBITDA-linked + volume</td></tr>
+          <tr><td>Bottom-quartile review</td><td>No formal review</td><td>Annual performance gate</td></tr>
+        </tbody></table>
+      </div>
+      <div style="font-size:0.73rem;color:#4a5568;line-height:1.7">
+        <strong>Doctor cost = &#x20B9;99 Cr (49% of people cost).</strong> The structural problem: 61% is fixed professional fee (&#x20B9;61 Cr) with no revenue linkage.<br><br>
+        &#x2192; All 41 new FY27 hires on revised structure — saves &#x20B9;2-3 Cr vs old model<br>
+        &#x2192; Bottom-quartile consultant review (docs generating < &#x20B9;50L revenue against &#x20B9;3.2L/mo fee)<br>
+        &#x2192; Visiting consultant share (&#x20B9;8.3 Cr): cap at 8% for Calicut (from 10%)<br>
+        &#x2192; New incentive: EBITDA contribution bonus replaces revenue-only incentive
+      </div>
+    </div>
+  </div>
+
+  <div class="lever-card" style="border-color:#e67e22">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span class="lever-num" style="background:#e67e22">5</span><span style="font-weight:700;font-size:0.85rem">Staffing Productivity — Attrition-Based Right-Sizing</span><span class="pill op" style="margin-left:auto">HIGH IMPACT</span><span style="font-size:0.7rem;color:#718096">&#x20B9;3-4 Cr &middot; Week 5-8</span></div>
+    <div class="g2">
+      <div>
+        <table class="tbl"><thead><tr><th>Category</th><th>Current</th><th>Target</th><th>Reduction</th></tr></thead>
+        <tbody>
+          <tr><td>Staff/Bed overall</td><td>3.8x</td><td style="color:#27ae60">3.3x</td><td>~285 FTE</td></tr>
+          <tr><td>Admin staff</td><td>539</td><td style="color:#27ae60">430</td><td>109 via attrition</td></tr>
+          <tr><td>Non-clinical FTE</td><td>913 (42%)</td><td style="color:#27ae60">780 (36%)</td><td>133 over 12mo</td></tr>
+          <tr><td>Nursing/Bed</td><td>1.2x</td><td style="color:#27ae60">1.1x</td><td>57 via ICU consolidation</td></tr>
+        </tbody></table>
+      </div>
+      <div style="font-size:0.73rem;color:#4a5568;line-height:1.7">
+        &#x2192; <strong>Hiring freeze on non-clinical roles</strong> — natural attrition (~12-15% annually) will reduce 80-100 FTEs in 6 months<br>
+        &#x2192; Cross-train PCS, billing, MRD staff to create multi-skilled admin pool<br>
+        &#x2192; ICU consolidation (already in capex plan — &#x20B9;2.25 Cr) enables 15-20% nursing efficiency<br>
+        &#x2192; Shift-optimization study for nursing — eliminate overlap between 7am-3pm and 2pm-10pm shifts<br>
+        &#x2192; Oracle Health digitization roadmap to automate manual workflows (billing, MRD, scheduling)
+      </div>
+    </div>
+  </div>
+
+  <div class="lever-card" style="border-color:#e67e22">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span class="lever-num" style="background:#e67e22">6</span><span style="font-weight:700;font-size:0.85rem">Increment Rationalization &amp; Benefits Optimization</span><span class="pill op" style="margin-left:auto">MODERATE</span><span style="font-size:0.7rem;color:#718096">&#x20B9;1-2 Cr &middot; Week 6-8</span></div>
+    <div class="g2">
+      <div style="font-size:0.73rem;color:#4a5568;line-height:1.7">
+        Current increment budget: <strong>&#x20B9;10 Cr</strong> (Staff 8% + Doctor 10%). Benefits load: &#x20B9;6.45 Cr (12.5% of base).<br><br>
+        &#x2192; <strong>Performance-linked increments</strong>: top 30% get 10-12%, middle 50% get 6%, bottom 20% get 0-3%<br>
+        &#x2192; Cap doctor increment at 7% (from 10%) — saves &#x20B9;1.6 Cr on &#x20B9;61 Cr base<br>
+        &#x2192; Review exgratia (&#x20B9;81L) — convert to performance-linked discretionary bonus<br>
+        &#x2192; PL encashment (&#x20B9;21L) — encourage leave utilization vs. encashment<br>
+        &#x2192; Holiday compensation (&#x20B9;67L) — optimize shift scheduling to reduce comp-off accumulation
+      </div>
+      <div>
+        <div class="mini-grid">
+          <div class="mini-box"><div class="ml">Current Increment</div><div class="mv" style="color:#e74c3c">&#x20B9;10.0 Cr</div></div>
+          <div class="mini-box"><div class="ml">Target Increment</div><div class="mv" style="color:#27ae60">&#x20B9;8.2 Cr</div></div>
+          <div class="mini-box"><div class="ml">Staff @ 8%</div><div class="mv" style="color:#1a3a5c">&#x20B9;4.7 Cr</div></div>
+          <div class="mini-box"><div class="ml">Doctor @ 7%</div><div class="mv" style="color:#e67e22">&#x20B9;3.5 Cr</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHASE 3 -->
+  <div class="slabel">Phase 3 — Days 61-100: Transformation &amp; Revenue Leverage (&#x20B9;8-11 Cr EBITDA Impact)</div>
+
+  <div class="lever-card" style="border-color:#8e44ad">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span class="lever-num" style="background:#8e44ad">7</span><span style="font-weight:700;font-size:0.85rem">ARPOB Growth — Operating Leverage via Case Mix Shift</span><span class="pill pp" style="margin-left:auto">TRANSFORMATION</span><span style="font-size:0.7rem;color:#718096">&#x20B9;5-8 Cr EBITDA &middot; Week 9-14</span></div>
+    <div class="g2">
+      <div>
+        <table class="tbl"><thead><tr><th>Metric</th><th>Day 1</th><th>Day 100</th><th>FY29 Target</th></tr></thead>
+        <tbody>
+          <tr><td>ARPOB</td><td>&#x20B9;49K</td><td style="color:#27ae60">&#x20B9;53K</td><td style="color:#8e44ad">&#x20B9;70K</td></tr>
+          <tr><td>Occupancy</td><td>62%</td><td style="color:#27ae60">65%</td><td style="color:#8e44ad">72%</td></tr>
+          <tr><td>Complex care %</td><td>~18%</td><td style="color:#27ae60">22%</td><td style="color:#8e44ad">35%</td></tr>
+          <tr><td>Insurance mix</td><td>26%</td><td style="color:#27ae60">28%</td><td style="color:#8e44ad">35%</td></tr>
+        </tbody></table>
+      </div>
+      <div style="font-size:0.73rem;color:#4a5568;line-height:1.7">
+        <strong>Every &#x20B9;1K increase in ARPOB at 570 beds = &#x20B9;21 Cr incremental revenue.</strong> At 65% fixed costs, that's &#x20B9;7 Cr straight to EBITDA.<br><br>
+        &#x2192; Fast-track oncology OPD clinic launches — medical oncology, head &amp; neck (6 new docs hired)<br>
+        &#x2192; Spine robotics go-live preparation (&#x20B9;12 Cr investment) — first-mover in Kerala<br>
+        &#x2192; Insurance panel expansion — target 3 new TPA empanelments per month<br>
+        &#x2192; Package pricing redesign for complex procedures (15-20% ARPOB premium)
+      </div>
+    </div>
+  </div>
+
+  <div class="lever-card" style="border-color:#8e44ad">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span class="lever-num" style="background:#8e44ad">8</span><span style="font-weight:700;font-size:0.85rem">OPD-to-IPD Conversion &amp; Revenue Leakage Plug</span><span class="pill pp" style="margin-left:auto">REVENUE</span><span style="font-size:0.7rem;color:#718096">&#x20B9;2-3 Cr &middot; Week 9-14</span></div>
+    <div style="font-size:0.73rem;color:#4a5568;line-height:1.7">
+      OP revenue = &#x20B9;92 Cr (25.7% of total). IP revenue = &#x20B9;267 Cr (74.3%). A 1% improvement in OPD-to-IPD conversion = &#x20B9;3-4 Cr additional IP revenue.<br><br>
+      &#x2192; Audit OPD-to-IPD conversion rates by department — identify bottom performers<br>
+      &#x2192; Implement CRM-style patient follow-up for OP consultations recommending surgery/procedures<br>
+      &#x2192; Revenue leakage audit: unbilled services, missed charges, underpriced procedures<br>
+      &#x2192; Cross-referral incentive program between departments (e.g., ortho → physio → rehab)<br>
+      &#x2192; Reduce concentration risk: top 2 doctors = 20.7% of revenue — activate next 10 doctors with volume targets
+    </div>
+  </div>
+
+  <div class="lever-card" style="border-color:#8e44ad">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span class="lever-num" style="background:#8e44ad">9</span><span style="font-weight:700;font-size:0.85rem">Digital &amp; Process Automation — Oracle Health Foundation</span><span class="pill pp" style="margin-left:auto">ENABLER</span><span style="font-size:0.7rem;color:#718096">&#x20B9;1-2 Cr (Year 2) &middot; Week 10-14</span></div>
+    <div style="font-size:0.73rem;color:#4a5568;line-height:1.7">
+      IT capex budget: &#x20B9;5 Cr (network core switches &#x20B9;2.5 Cr as Oracle Health backbone). Process automation is the long-term efficiency lever.<br><br>
+      &#x2192; Finalize Oracle Health implementation roadmap — target billing &amp; scheduling modules first<br>
+      &#x2192; Digitize MRD workflows (3 outsourced MRD assistants + 50+ manual processes)<br>
+      &#x2192; Automate appointment scheduling, bed management, and discharge planning<br>
+      &#x2192; Patient self-service kiosks for registration (reduce PCS staff workload by 20-30%)<br>
+      &#x2192; Analytics dashboard for real-time bed occupancy, OT utilization, and revenue per doctor
+    </div>
+  </div>
+
+  <!-- SAVINGS WATERFALL -->
+  <div class="slabel">Savings Impact Summary</div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">100-Day Savings Waterfall (&#x20B9; Crore — Annualized)</div>
+      <div class="card-sub">Conservative to optimistic range &middot; Total: &#x20B9;18-28 Cr</div>
+      <div style="position:relative;height:320px"><canvas id="savingsWaterfall"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">EBITDA Margin Impact Trajectory</div>
+      <div class="card-sub">From 19.4% current to 22-24% target</div>
+      <div style="position:relative;height:320px"><canvas id="ebitdaChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- GOVERNANCE -->
+  <div class="slabel">Governance &amp; Accountability Framework</div>
+
+  <div class="card">
+    <div class="card-title">100-Day Execution Governance</div>
+    <div class="card-sub">Weekly cadence &middot; Named owners &middot; Board-level oversight</div>
+    <table class="tbl">
+      <thead><tr><th>Workstream</th><th>Owner</th><th>Weekly KPI</th><th>Day 30 Gate</th><th>Day 60 Gate</th><th>Day 100 Gate</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:600">Vendor Consolidation</td><td>Head - Admin/Procurement</td><td>Vendor meetings, RFP status</td><td><span class="pill gp">Contracts signed</span></td><td><span class="pill gp">Savings realized</span></td><td><span class="pill gp">&#x20B9;1.5 Cr locked</span></td></tr>
+        <tr><td style="font-weight:600">Capex Freeze</td><td>CFO + Engineering Head</td><td>PO approvals, deferrals</td><td><span class="pill gp">&#x20B9;3.5 Cr frozen</span></td><td><span class="pill bp">Committee active</span></td><td><span class="pill bp">Tracking rhythm</span></td></tr>
+        <tr><td style="font-weight:600">Doctor Economics</td><td>CEO + Medical Director</td><td>Contract reviews completed</td><td><span class="pill op">Model designed</span></td><td><span class="pill gp">New hires on new model</span></td><td><span class="pill gp">Bottom-Q reviewed</span></td></tr>
+        <tr><td style="font-weight:600">Staffing Productivity</td><td>CHRO + COO</td><td>Attrition fill rate, FTE count</td><td><span class="pill op">Freeze in place</span></td><td><span class="pill gp">50 FTE absorbed</span></td><td><span class="pill gp">100 FTE absorbed</span></td></tr>
+        <tr><td style="font-weight:600">Increment Reform</td><td>CHRO + CFO</td><td>Policy draft, approval</td><td><span class="pill op">Policy drafted</span></td><td><span class="pill gp">Board approved</span></td><td><span class="pill gp">Implemented</span></td></tr>
+        <tr><td style="font-weight:600">ARPOB Growth</td><td>CEO + Dept Heads</td><td>Complex case count, ARPP</td><td><span class="pill bp">Baseline set</span></td><td><span class="pill op">Clinics launched</span></td><td><span class="pill gp">&#x20B9;53K ARPOB</span></td></tr>
+        <tr><td style="font-weight:600">Revenue Leakage</td><td>Revenue Cycle Lead</td><td>Unbilled %, conversion rate</td><td><span class="pill bp">Audit complete</span></td><td><span class="pill op">Fixes deployed</span></td><td><span class="pill gp">1% conversion lift</span></td></tr>
+        <tr><td style="font-weight:600">Digital/Oracle Health</td><td>CIO + IT Head</td><td>Module go-live milestones</td><td><span class="pill bp">RFP finalized</span></td><td><span class="pill op">Phase 1 kick-off</span></td><td><span class="pill op">Billing live</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="g3">
+    <div class="card">
+      <div class="card-title">Weekly Cadence</div>
+      <div class="card-sub">Non-negotiable rhythm</div>
+      <div style="font-size:0.73rem;color:#4a5568;line-height:1.8;margin-top:6px">
+        <strong>Monday 8 AM</strong>: CEO war room — 8 workstream leads, 15 min each<br>
+        <strong>Wednesday 4 PM</strong>: CFO savings tracker — actuals vs targets<br>
+        <strong>Friday 5 PM</strong>: Board update — 1-page scorecard emailed<br>
+        <strong>Day 30</strong>: Phase 1 gate review — CEO + Board<br>
+        <strong>Day 60</strong>: Phase 2 gate review — full Board meeting<br>
+        <strong>Day 100</strong>: Transformation report — P&amp;L impact validated
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Risk Register</div>
+      <div class="card-sub">Top 5 execution risks</div>
+      <div style="font-size:0.73rem;color:#4a5568;line-height:1.8;margin-top:6px">
+        <span class="pill rp">HIGH</span> Doctor pushback on fee restructure<br>
+        <span class="pill rp">HIGH</span> Key person dependency (top 2 = 20.7% rev)<br>
+        <span class="pill op">MED</span> Staff morale during hiring freeze<br>
+        <span class="pill op">MED</span> Vendor transition quality disruption<br>
+        <span class="pill bp">LOW</span> Oracle Health implementation delays
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Success Metrics — Day 100</div>
+      <div class="card-sub">Board-reportable KPIs</div>
+      <div class="mini-grid" style="grid-template-columns:1fr">
+        <div class="mini-box"><div class="ml">EBITDA Margin</div><div class="mv" style="color:#27ae60">21-22%</div></div>
+        <div class="mini-box"><div class="ml">People/Revenue</div><div class="mv" style="color:#27ae60">35.5%</div></div>
+        <div class="mini-box"><div class="ml">Staff/Bed Ratio</div><div class="mv" style="color:#27ae60">3.5x</div></div>
+        <div class="mini-box"><div class="ml">ARPOB</div><div class="mv" style="color:#27ae60">&#x20B9;53K</div></div>
+        <div class="mini-box"><div class="ml">Annualized Savings</div><div class="mv" style="color:#27ae60">&#x20B9;18+ Cr</div></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
 </div><!-- end content wrapper -->
 
 <script>
@@ -814,6 +1095,39 @@ new Chart(document.getElementById('utilDonut'),{type:'doughnut',data:{
   labels:['New Capability ₹59.2Cr','End-of-Life Replace ₹22.8Cr','Failing/Upgrade ₹3.9Cr','Other ₹9.4Cr'],
   datasets:[{data:[59.2,22.8,3.9,9.4],backgroundColor:[GREEN,ORANGE,PURPLE,'#bdbdbd']}]
 },options:{plugins:{legend:{position:'right',labels:{font:{size:9},boxWidth:8}}}}});
+
+// ===== 100-DAY EFFICIENCY PLAN CHARTS =====
+
+// Timeline Gantt-style chart
+new Chart(document.getElementById('timelineChart'),{type:'bar',data:{
+  labels:['Vendor Consolidation','Capex Deferrals','Energy & Procurement Audit','Doctor Fee Restructuring','Staffing Productivity','Increment Rationalization','ARPOB Growth Initiatives','OPD-IPD Conversion','Digital/Oracle Health'],
+  datasets:[
+    {label:'Phase 1 (Days 1-30)',data:[30,14,21,0,0,0,0,0,0],backgroundColor:'rgba(39,174,96,0.8)',borderRadius:3},
+    {label:'Phase 2 (Days 31-60)',data:[0,0,0,28,28,21,0,0,0],backgroundColor:'rgba(230,126,34,0.8)',borderRadius:3},
+    {label:'Phase 3 (Days 61-100)',data:[0,0,0,0,0,0,40,40,35],backgroundColor:'rgba(142,68,173,0.8)',borderRadius:3}
+  ]
+},options:{indexAxis:'y',plugins:{legend:{position:'bottom',labels:{font:{size:9},boxWidth:10}}},scales:{x:{stacked:true,ticks:{callback:v=>'Day '+v,font:{size:9}},title:{display:true,text:'Duration (Days)',font:{size:9}},max:100},y:{stacked:true,ticks:{font:{size:8}}}}}});
+
+// Savings Waterfall
+new Chart(document.getElementById('savingsWaterfall'),{type:'bar',data:{
+  labels:['Vendor\nConsol.','Capex\nDefer','Energy &\nProcure','Doctor\nFee Restr.','Staffing\nProductiv.','Increment\nReform','ARPOB\nGrowth','Revenue\nLeakage','Total\nSavings'],
+  datasets:[
+    {label:'Conservative (₹ Cr)',data:[1.5,2.0,0.5,2.0,3.0,1.0,5.0,2.0,0],backgroundColor:'rgba(26,58,92,0.7)',borderRadius:3},
+    {label:'Optimistic (₹ Cr)',data:[0.5,1.5,1.0,2.0,1.0,1.0,3.0,1.0,0],backgroundColor:'rgba(39,174,96,0.5)',borderRadius:3}
+  ]
+},options:{plugins:{legend:{position:'bottom',labels:{font:{size:9},boxWidth:10}},tooltip:{callbacks:{label:function(ctx){
+  if(ctx.dataIndex===8)return '';
+  return ctx.dataset.label+': ₹'+ctx.raw+' Cr';
+}}}},scales:{x:{stacked:true,ticks:{font:{size:7}}},y:{stacked:true,ticks:{callback:v=>'₹'+v+'Cr',font:{size:9}}}}}});
+
+// EBITDA trajectory
+new Chart(document.getElementById('ebitdaChart'),{type:'line',data:{
+  labels:['FY18','FY19','FY20','FY21','FY22','FY23','FY24','FY25','FY26E','Day 100\nTarget','FY28E','FY29E'],
+  datasets:[
+    {label:'EBITDA %',data:[8.8,10.2,9.5,12.1,15.8,20.2,18.5,19.4,19.0,21.5,23.0,24.5],borderColor:GREEN,backgroundColor:'rgba(39,174,96,0.1)',fill:true,tension:0.3,pointRadius:4,pointBackgroundColor:[GREY,GREY,GREY,GREY,GREY,GREY,GREY,GREY,NAVY,RED,PURPLE,PURPLE]},
+    {label:'Target Floor',data:[null,null,null,null,null,null,null,null,19,20,22,24],borderColor:'rgba(231,76,60,0.4)',borderDash:[5,5],pointRadius:0,fill:false}
+  ]
+},options:{plugins:{legend:{position:'bottom',labels:{font:{size:9},boxWidth:10}}},scales:{x:{ticks:{font:{size:8}}},y:{ticks:{callback:v=>v+'%',font:{size:9}},min:5,max:28}}}});
 
 </script>
 </body>
