@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>VPS Lakeshore — Strategic Dashboards</title>
 
-<!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-MMR68PDD2K"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -13,8 +12,6 @@
   gtag('js', new Date());
   gtag('config', 'G-MMR68PDD2K');
 </script>
-<!-- End Google Analytics -->
-
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
@@ -47,6 +44,7 @@ body {
 .badge.green { background: #27ae60; }
 .badge.red { background: #e74c3c; }
 .badge.purple { background: #8e44ad; }
+.badge.gold { background: #d4af37; color: #1a202c; }
 
 .main {
   flex: 1;
@@ -94,6 +92,7 @@ body {
 .card.purple { border-top-color: #8e44ad; }
 .card.red    { border-top-color: #e74c3c; }
 .card.teal   { border-top-color: #16a085; }
+.card.gold   { border-top-color: #d4af37; }
 
 .card-icon { font-size: 1.8rem; margin-bottom: 12px; }
 .card-title { font-size: 0.95rem; font-weight: 800; color: #1a202c; margin-bottom: 5px; }
@@ -112,6 +111,10 @@ body {
   background: #e74c3c;
   color: white;
 }
+.tag.exec {
+  background: #d4af37;
+  color: #1a202c;
+}
 .card-cta {
   display: inline-flex;
   align-items: center;
@@ -126,6 +129,7 @@ body {
 .card.purple .card-cta { color: #8e44ad; }
 .card.red    .card-cta { color: #e74c3c; }
 .card.teal   .card-cta { color: #16a085; }
+.card.gold   .card-cta { color: #b58900; }
 .card-cta::after { content: '\2192'; }
 
 .card-full { grid-column: 1 / -1; }
@@ -166,8 +170,9 @@ body {
   <p>Lakeshore Hospital &amp; Research Centre, Kochi &nbsp;&middot;&nbsp; Internal Use Only</p>
   <div style="margin-top:14px;">
     <span class="badge orange">FY24 – FY26</span>
-    <span class="badge green">12 Dashboards</span>
-    <span class="badge red">2 New</span>
+    <span class="badge green">13 Dashboards</span>
+    <span class="badge red">3 New</span>
+    <span class="badge gold">Executive Access</span>
     <span class="badge">Confidential</span>
   </div>
 </div>
@@ -184,7 +189,27 @@ body {
     <div><div class="kpi-val" style="color:#e74c3c">8.6%</div><div class="kpi-lbl">8-Yr Rev CAGR</div></div>
   </div>
 
-  <!-- ===== STRATEGY & TRANSFORMATION ===== -->
+  <div class="section-label">Executive Office</div>
+
+  <div class="card-grid">
+    <a class="card gold card-full" href="LHRC_Chairman_Dashboard.html">
+      <div class="card-icon">&#x1F4BC;</div>
+      <div class="card-title">Chairman's Executive Dashboard</div>
+      <div class="card-year">2-Year Transformation Focus &middot; High-Level Strategy</div>
+      <div class="card-desc">
+        Top-tier strategic overview focusing on the 2-year transformation plan. Includes dual-campus execution (Complex Cancer Centre vs General Hospital), Phase 1-3 Capex milestones, bed expansion plans (244&rarr;541), critical risks (AERB approvals), and 30-day pending Board decisions (DOA, Org Structure). Targets optimized EBITDA of &#x20B9;149 Cr (25% margin).
+      </div>
+      <div class="card-tags">
+        <span class="tag new">New</span>
+        <span class="tag exec">Executive Priority</span>
+        <span class="tag">Target EBITDA: &#x20B9;149 Cr (25%)</span>
+        <span class="tag">Bed Expansion: 244&rarr;541</span>
+        <span class="tag">Dual-Campus Strategy</span>
+      </div>
+      <span class="card-cta">Open Chairman Dashboard</span>
+    </a>
+  </div>
+
   <div class="section-label">Strategy &amp; Transformation</div>
 
   <div class="card-grid">
@@ -237,7 +262,6 @@ body {
     </a>
   </div>
 
-  <!-- ===== BOARD & MULTI-YEAR ===== -->
   <div class="section-label">Board &amp; Multi-Year Intelligence</div>
 
   <div class="card-grid">
@@ -259,7 +283,6 @@ body {
     </a>
   </div>
 
-  <!-- ===== FY26 CURRENT YEAR ===== -->
   <div class="section-label">FY26 — Current Year</div>
 
   <div class="card-grid">
@@ -312,7 +335,6 @@ body {
     </a>
   </div>
 
-  <!-- ===== CLINICAL DATA & RESEARCH ===== -->
   <div class="section-label">Clinical Data &amp; Research</div>
 
   <div class="card-grid">
@@ -334,7 +356,6 @@ body {
     </a>
   </div>
 
-  <!-- ===== FY25 ===== -->
   <div class="section-label">FY25 — Prior Year</div>
 
   <div class="card-grid">
@@ -371,7 +392,6 @@ body {
     </a>
   </div>
 
-  <!-- ===== FY24 ===== -->
   <div class="section-label">FY24 — Base Year</div>
 
   <div class="card-grid">
