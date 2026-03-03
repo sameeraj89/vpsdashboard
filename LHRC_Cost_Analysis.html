@@ -2,1133 +2,894 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LHRC Cost Intelligence — FY27 Budget</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LHRC Cost Analysis Dashboard v3</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
 <style>
+:root{
+  --navy:#0f2744;--navy2:#1a3a5c;--teal:#0d7377;--teal2:#14a3a8;
+  --amber:#c57c1c;--rose:#b5282a;--sage:#2d6a4f;--slate:#475569;
+  --bg:#f0f4f8;--card:#fff;--border:#e2e8f0;--text:#1e293b;--sub:#64748b;
+}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Segoe UI',system-ui,sans-serif;background:#f0f4f8;color:#1a202c;font-size:14px}
-.header{background:linear-gradient(135deg,#1a3a5c 0%,#0f2744 100%);color:white;padding:16px 32px;display:flex;align-items:center;justify-content:space-between}
-.header h1{font-size:1.2rem;font-weight:700}
-.header p{font-size:0.72rem;opacity:0.7;margin-top:2px}
-.hb{display:flex;gap:8px;flex-wrap:wrap}
-.badge{background:rgba(255,255,255,0.15);padding:4px 12px;border-radius:20px;font-size:0.7rem;font-weight:600}
-.badge.or{background:#e67e22}.badge.rd{background:#e74c3c}.badge.gr{background:#27ae60}.badge.pu{background:#8e44ad}
-.tab-bar{background:white;border-bottom:2px solid #e2e8f0;padding:0 24px;display:flex;gap:0;overflow-x:auto}
-.tab{padding:12px 16px;font-size:0.75rem;font-weight:600;color:#718096;cursor:pointer;border-bottom:3px solid transparent;transition:all 0.2s;white-space:nowrap;margin-bottom:-2px}
-.tab:hover{color:#1a3a5c;background:#f7fafc}
-.tab.active{color:#1a3a5c;border-bottom-color:#1a3a5c;background:white}
-.page{display:none;padding:18px 28px;max-width:1500px;margin:0 auto}
-.page.active{display:block}
-.kpi-strip{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:18px}
-.kpi{background:white;border-radius:8px;padding:12px 14px;box-shadow:0 1px 4px rgba(0,0,0,0.06);border-left:3px solid}
-.kpi-label{font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:#a0aec0}
-.kpi-value{font-size:1.2rem;font-weight:800;margin-top:2px}
-.kpi-sub{font-size:0.63rem;color:#a0aec0;margin-top:2px}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
-.g21{display:grid;grid-template-columns:2fr 1fr;gap:14px}
-.g12{display:grid;grid-template-columns:1fr 2fr;gap:14px}
-.card{background:white;border-radius:10px;padding:18px;box-shadow:0 1px 4px rgba(0,0,0,0.06);margin-bottom:14px}
-.card-title{font-size:0.8rem;font-weight:700;color:#2d3748;margin-bottom:2px}
-.card-sub{font-size:0.65rem;color:#a0aec0;margin-bottom:12px}
-.tbl{width:100%;border-collapse:collapse;font-size:0.71rem}
-.tbl th{background:#f7fafc;text-align:left;padding:7px 9px;font-size:0.63rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#718096;border-bottom:2px solid #e2e8f0;white-space:nowrap;cursor:pointer}
-.tbl th:hover{background:#edf2f7}
-.tbl td{padding:6px 9px;border-bottom:1px solid #f0f4f8;color:#2d3748}
-.tbl tr:hover td{background:#f7fafc}
-.tbl tr.top3 td{background:#fffbf0;font-weight:600}
-.pill{display:inline-block;padding:2px 7px;border-radius:10px;font-size:0.6rem;font-weight:700}
-.gp{background:#e8f5e9;color:#27ae60}.rp{background:#fce4ec;color:#e74c3c}
-.op{background:#fff3e0;color:#e67e22}.bp{background:#e3f2fd;color:#1976d2}
-.pp{background:#f3e5f5;color:#8e44ad}.grp{background:#f5f5f5;color:#757575}
-.cyp{background:#e0f7fa;color:#00838f}
-.ibox{background:#fffbf0;border:1px solid #fde68a;border-left:4px solid #f59e0b;border-radius:8px;padding:11px 14px;margin-bottom:14px}
-.ibox.red{background:#fff5f5;border-color:#fca5a5;border-left-color:#ef4444}
-.ibox.green{background:#f0fdf4;border-color:#86efac;border-left-color:#22c55e}
-.ibox.blue{background:#eff6ff;border-color:#93c5fd;border-left-color:#3b82f6}
-.ibox-title{font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;color:#92400e}
-.ibox.red .ibox-title{color:#991b1b}.ibox.green .ibox-title{color:#166534}.ibox.blue .ibox-title{color:#1e40af}
-.ibox-text{font-size:0.73rem;color:#4a5568;line-height:1.5}
-.slabel{font-size:0.66rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#a0aec0;margin:18px 0 10px;display:flex;align-items:center;gap:8px}
-.slabel::after{content:'';flex:1;height:1px;background:#e2e8f0}
-.mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px}
-.mini-box{background:#f7fafc;border-radius:6px;padding:8px;text-align:center}
-.mini-box .ml{font-size:0.6rem;color:#a0aec0;font-weight:700;text-transform:uppercase}
-.mini-box .mv{font-size:1rem;font-weight:800}
-.hbar{display:flex;align-items:center;gap:8px;margin-bottom:6px}
-.hbar-label{width:130px;font-size:0.68rem;text-align:right;color:#4a5568;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.hbar-track{flex:1;height:22px;background:#f0f4f8;border-radius:3px;overflow:hidden;position:relative}
-.hbar-fill{height:100%;border-radius:3px;display:flex;align-items:center;padding-left:6px;font-size:0.6rem;font-weight:700;color:white;white-space:nowrap;min-width:2px}
-.hbar-val{width:70px;font-size:0.68rem;font-weight:700;color:#2d3748;text-align:right;flex-shrink:0}
-.hbar-pct{width:40px;font-size:0.62rem;color:#a0aec0;text-align:right;flex-shrink:0}
-.lever-card{background:white;border-radius:10px;padding:18px;box-shadow:0 1px 4px rgba(0,0,0,0.06);margin-bottom:14px;border-left:4px solid}
-.lever-num{display:inline-flex;width:28px;height:28px;border-radius:6px;align-items:center;justify-content:center;font-size:0.8rem;font-weight:800;color:white;margin-right:8px}
-.filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
-.fbtn{padding:4px 12px;border-radius:16px;border:1px solid #e2e8f0;background:white;font-size:0.7rem;font-weight:600;cursor:pointer;color:#718096;transition:all 0.15s}
-.fbtn:hover{border-color:#1a3a5c;color:#1a3a5c}
-.fbtn.active{background:#1a3a5c;color:white;border-color:#1a3a5c}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:13px}
+.serif{font-family:'DM Serif Display',serif}
+.hdr{background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 55%,#1e4a7a 100%);
+  padding:14px 24px;display:flex;align-items:center;justify-content:space-between;
+  box-shadow:0 2px 12px rgba(0,0,0,.25)}
+.hdr-title{font-family:'DM Serif Display',serif;color:#fff;font-size:1.4rem;letter-spacing:-.3px}
+.hdr-sub{color:rgba(255,255,255,.55);font-size:0.68rem;margin-top:2px;letter-spacing:.6px;text-transform:uppercase}
+.hdr-badges{display:flex;gap:12px}
+.hdr-badge{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);
+  border-radius:7px;padding:5px 11px;color:rgba(255,255,255,.82);font-size:0.67rem;text-align:center}
+.hdr-badge strong{display:block;font-size:.98rem;color:#fff;font-family:'DM Serif Display',serif;line-height:1.2}
+.tab-bar{display:flex;background:#fff;border-bottom:2px solid var(--border);overflow-x:auto;
+  padding:0 20px;position:sticky;top:0;z-index:100;box-shadow:0 1px 6px rgba(0,0,0,.07)}
+.tab-bar::-webkit-scrollbar{display:none}
+.tab{padding:12px 15px;cursor:pointer;font-size:0.72rem;font-weight:500;color:var(--sub);
+  border-bottom:2px solid transparent;margin-bottom:-2px;white-space:nowrap;transition:all .15s}
+.tab:hover{color:var(--navy2)}
+.tab.active{color:var(--navy);border-bottom-color:var(--teal)}
+.tab-content{display:none;padding:20px 24px 50px;max-width:1400px}
+.tab-content.active{display:block}
+.sec-hdr{font-family:'DM Serif Display',serif;font-size:1.05rem;color:var(--navy);
+  border-left:3px solid var(--teal);padding-left:10px;margin-bottom:14px}
+.kpi-strip{display:grid;gap:10px;margin-bottom:16px}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+.g5{grid-template-columns:repeat(5,1fr)}
+.g6{grid-template-columns:repeat(6,1fr)}
+.kpi{background:var(--card);border-radius:10px;padding:12px 14px;border:1px solid var(--border);position:relative;overflow:hidden}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--teal)}
+.kpi.amber::before{background:var(--amber)}
+.kpi.rose::before{background:var(--rose)}
+.kpi.sage::before{background:var(--sage)}
+.kpi.navy::before{background:var(--navy)}
+.kpi.slate::before{background:var(--slate)}
+.kpi-lbl{font-size:.57rem;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--sub);margin-bottom:5px}
+.kpi-val{font-family:'DM Serif Display',serif;font-size:1.32rem;color:var(--text);line-height:1}
+.kpi-sub{font-size:.61rem;color:var(--sub);margin-top:4px}
+.delta{font-size:.63rem;font-weight:600;padding:2px 6px;border-radius:4px;margin-top:5px;display:inline-block}
+.up{background:#dcfce7;color:#166534}.dn{background:#fee2e2;color:#991b1b}.na{background:#f1f5f9;color:#475569}
+/* 3-year KPI */
+.kpi3{background:var(--card);border-radius:10px;padding:13px 15px;border:1px solid var(--border)}
+.kpi3-lbl{font-size:.57rem;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--sub);margin-bottom:9px}
+.kpi3-row{display:flex;align-items:flex-end;gap:8px}
+.kpi3-yr{flex:1;text-align:center}
+.kpi3-yr-lbl{font-size:.56rem;color:var(--sub);font-weight:500;margin-bottom:3px}
+.kpi3-yr-val{font-family:'DM Serif Display',serif;font-size:1.05rem;line-height:1}
+.kpi3-yr.y25 .kpi3-yr-val{color:var(--teal)}
+.kpi3-yr.y26 .kpi3-yr-val{color:var(--amber)}
+.kpi3-yr.y27 .kpi3-yr-val{color:var(--navy)}
+.kpi3-arr{color:#cbd5e1;font-size:.78rem;padding-bottom:4px}
+.kpi3-note{font-size:.58rem;color:var(--sub);margin-top:7px}
+.tag{font-size:.53rem;font-weight:700;padding:1px 5px;border-radius:3px;display:inline-block;margin-top:2px}
+.t-act{background:#e0f2fe;color:#0369a1}
+.t-est{background:#fef3c7;color:#92400e}
+.t-bud{background:#ede9fe;color:#5b21b6}
+/* grid */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.g3g{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:16px}
+.g6040{display:grid;grid-template-columns:3fr 2fr;gap:16px;margin-bottom:16px}
+.card{background:var(--card);border-radius:10px;padding:16px;border:1px solid var(--border)}
+/* table */
+.tbl{width:100%;border-collapse:collapse;font-size:.73rem}
+.tbl th{background:#f8fafc;font-weight:600;font-size:.61rem;letter-spacing:.4px;text-transform:uppercase;
+  color:var(--sub);padding:7px 9px;border-bottom:2px solid var(--border);text-align:left}
+.tbl td{padding:6px 9px;border-bottom:1px solid #f1f5f9;vertical-align:middle}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:#f8fafc}
+.tbl .num{text-align:right;font-variant-numeric:tabular-nums;font-weight:500}
+.tbl .bl{font-weight:700;color:var(--navy)}
+.tbl .tot td{background:#f0f9ff;font-weight:700;color:var(--navy);border-top:2px solid var(--teal)}
+.tbl .sub td{background:#fafbfc;color:var(--sub);font-size:.68rem}
+.tbl .hi td{background:#fff7ed}
+/* insights */
+.ins{border-radius:8px;padding:11px 13px;margin-bottom:11px;font-size:.71rem;line-height:1.6}
+.ins-amber{background:#fffbeb;border-left:3px solid var(--amber)}
+.ins-sage{background:#f0fdf4;border-left:3px solid var(--sage)}
+.ins-navy{background:#eff6ff;border-left:3px solid #3b82f6}
+.ins-rose{background:#fff1f2;border-left:3px solid var(--rose)}
+.ins-ttl{font-weight:700;font-size:.65rem;letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px}
+/* chart */
+.cw{background:var(--card);border-radius:10px;padding:16px;border:1px solid var(--border);margin-bottom:16px}
+.ct{font-size:.68rem;font-weight:600;color:var(--sub);letter-spacing:.4px;text-transform:uppercase;margin-bottom:12px}
+/* hbar */
+.hb{margin-bottom:8px}
+.hb-lbl{font-size:.67rem;color:var(--text);margin-bottom:3px;display:flex;justify-content:space-between}
+.hb-track{background:#f1f5f9;border-radius:4px;height:8px;overflow:hidden}
+.hb-fill{height:100%;border-radius:4px}
+/* bench */
+.bc{background:var(--card);border-radius:10px;padding:14px;border:1px solid var(--border);margin-bottom:10px}
+.bm{font-size:.63rem;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--sub);margin-bottom:10px}
+.br{display:flex;align-items:center;gap:10px;margin-bottom:7px}
+.bn{font-size:.69rem;width:130px;flex-shrink:0;color:var(--text);font-weight:500}
+.bt{flex:1;background:#f1f5f9;border-radius:4px;height:14px;overflow:hidden}
+.bf{height:100%;border-radius:4px;display:flex;align-items:center;padding-left:6px;font-size:.58rem;color:#fff;font-weight:600}
+.bv{font-size:.69rem;width:70px;text-align:right;font-weight:600;font-variant-numeric:tabular-nums}
+.bb{font-size:.58rem;padding:2px 6px;border-radius:10px;font-weight:700;width:60px;text-align:center;flex-shrink:0}
+.b-hi{background:#fee2e2;color:#991b1b}
+.b-ok{background:#fef9c3;color:#854d0e}
+.b-lo{background:#dcfce7;color:#166534}
+.lhrc-row .bn{color:var(--teal);font-weight:700}
+/* nursing */
+.nt th,.nt td{padding:5px 8px;font-size:.69rem}
+.div{height:1px;background:var(--border);margin:14px 0}
+@media(max-width:900px){
+  .g2,.g6040{grid-template-columns:1fr}
+  .g3g{grid-template-columns:1fr 1fr}
+  .kpi-strip.g6,.kpi-strip.g5,.kpi-strip.g4{grid-template-columns:repeat(2,1fr)}
+  .kpi-strip.g3{grid-template-columns:repeat(2,1fr)}
+}
 </style>
 </head>
 <body>
 
-<div class="header">
+<div class="hdr">
   <div>
-    <h1>LHRC Cost Intelligence &amp; Budget Analytics</h1>
-    <p>VPS Lakeshore Hospital &amp; Research Centre, Kochi &nbsp;&middot;&nbsp; FY27 Budget Deep-Dive &nbsp;&middot;&nbsp; Strategic Cost Framework</p>
+    <div class="hdr-title">LHRC Cost Analysis</div>
+    <div class="hdr-sub">Lakeshore Hospital &amp; Research Centre · Strategic Finance Dashboard</div>
   </div>
-  <div class="hb">
-    <span class="badge or">&#x20B9;202 Cr People Cost</span>
-    <span class="badge gr">&#x20B9;130 Cr Capex</span>
-    <span class="badge">2,589 Total FTEs</span>
-    <span class="badge rd">People/Rev = 36.7%</span>
+  <div class="hdr-badges">
+    <div class="hdr-badge"><strong>₹202.3 Cr</strong>HR Cost FY27</div>
+    <div class="hdr-badge"><strong>₹150.4 Cr</strong>Capex FY27</div>
+    <div class="hdr-badge"><strong>₹152.6 Cr</strong>Consumption FY27</div>
+    <div class="hdr-badge"><strong>2,177</strong>FTEs</div>
   </div>
 </div>
 
 <div class="tab-bar">
-  <div class="tab active" onclick="showTab('overview',this)">&#x1F4CA; Cost Overview</div>
-  <div class="tab" onclick="showTab('manpower',this)">&#x1F465; Manpower Deep-Dive</div>
-  <div class="tab" onclick="showTab('doctors',this)">&#x1F468;&#x200D;&#x2695;&#xFE0F; Doctor Economics</div>
-  <div class="tab" onclick="showTab('outsource',this)">&#x1F3ED; Outsource &amp; Vendors</div>
-  <div class="tab" onclick="showTab('capex',this)">&#x1F3D7;&#xFE0F; Capex Decomposition</div>
-  <div class="tab" onclick="showTab('efficiency',this)">&#x1F4D0; Efficiency Ratios</div>
-  <div class="tab" onclick="showTab('monthly',this)">&#x1F4C5; Monthly Phasing</div>
-  <div class="tab" onclick="showTab('levers',this)">&#x2705; Cost Levers</div>
-  <div class="tab" onclick="showTab('100day',this)" style="color:#e74c3c;font-weight:800">&#x1F3AF; 100-Day Efficiency Plan</div>
+  <div class="tab active" onclick="show('overview',this)">📊 Cost Overview</div>
+  <div class="tab" onclick="show('hr',this)">👥 HR Costs</div>
+  <div class="tab" onclick="show('nursing',this)">🩺 Nursing</div>
+  <div class="tab" onclick="show('capex',this)">🏗️ Capex</div>
+  <div class="tab" onclick="show('aop2526',this)">📋 AOP FY25-26</div>
+  <div class="tab" onclick="show('aop2627',this)">📋 AOP FY26-27</div>
+  <div class="tab" onclick="show('bench',this)">🏆 Peer Benchmarks</div>
 </div>
 
-<!-- ===== PAGE: OVERVIEW ===== -->
-<div id="page-overview" class="page active">
-  <div class="kpi-strip">
-    <div class="kpi" style="border-color:#1a3a5c"><div class="kpi-label">Total Cost Base</div><div class="kpi-value" style="color:#1a3a5c">&#x20B9;332 Cr</div><div class="kpi-sub">People &#x20B9;202 Cr + Capex &#x20B9;130 Cr</div></div>
-    <div class="kpi" style="border-color:#e67e22"><div class="kpi-label">People Cost</div><div class="kpi-value" style="color:#e67e22">&#x20B9;202 Cr</div><div class="kpi-sub">60.8% of total &middot; 2,589 FTEs</div></div>
-    <div class="kpi" style="border-color:#8e44ad"><div class="kpi-label">Capex Budget</div><div class="kpi-value" style="color:#8e44ad">&#x20B9;130 Cr</div><div class="kpi-sub">39.2% &middot; 420 line items</div></div>
-    <div class="kpi" style="border-color:#27ae60"><div class="kpi-label">FY27E Revenue</div><div class="kpi-value" style="color:#27ae60">&#x20B9;550 Cr</div><div class="kpi-sub">People/Rev = 36.7%</div></div>
-    <div class="kpi" style="border-color:#e74c3c"><div class="kpi-label">New Hires FY27</div><div class="kpi-value" style="color:#e74c3c">244</div><div class="kpi-sub">41 Docs + 203 Staff &middot; &#x20B9;18.3 Cr</div></div>
-    <div class="kpi" style="border-color:#c0392b"><div class="kpi-label">Outsourced</div><div class="kpi-value" style="color:#c0392b">416</div><div class="kpi-sub">19% of workforce &middot; &#x20B9;12.9 Cr</div></div>
-  </div>
+<!-- ===== COST OVERVIEW ===== -->
+<div id="tab-overview" class="tab-content active">
+  <div class="sec-hdr">Cost Overview — FY25 Actual · FY26 Estimated · FY27 Budgeted</div>
 
-  <div class="ibox blue">
-    <div class="ibox-title">&#x1F50D; Strategic Cost Architecture — FY27 Budget</div>
-    <div class="ibox-text"><strong>Total FY27 cost base: &#x20B9;332 Cr</strong> — 61% people cost (₹202 Cr across staff salary, doctor fees, outsource) and 39% capex (₹130 Cr). <strong>Doctor cost totals ₹99 Cr</strong> (49% of people cost, including prof fees, incentives, visiting share). 76% of capex (₹99 Cr) targets clinical capabilities — spine robotics, biplane cathlab, tomotherapy — aligning cost deployment with the cancer &amp; complex care transformation thesis. Staff-to-bed ratio at 3.8x signals productivity optimization potential.</div>
-  </div>
-
-  <div class="g21">
-    <div class="card">
-      <div class="card-title">Cost Bridge — FY27 Budget Decomposition (&#x20B9; Crore)</div>
-      <div class="card-sub">People cost blocks (left) &middot; Capex blocks (right)</div>
-      <div style="position:relative;height:300px"><canvas id="costBridge"></canvas></div>
+  <div class="kpi-strip g3" style="margin-bottom:18px">
+    <div class="kpi3">
+      <div class="kpi3-lbl">Total Operating Cost (₹ Cr)</div>
+      <div class="kpi3-row">
+        <div class="kpi3-yr y25"><div class="kpi3-yr-lbl">FY25 Actual</div><div class="kpi3-yr-val">335.4</div><div><span class="tag t-act">Actual</span></div></div>
+        <div class="kpi3-arr">→</div>
+        <div class="kpi3-yr y26"><div class="kpi3-yr-lbl">FY26 Estimate</div><div class="kpi3-yr-val">354.9</div><div><span class="tag t-est">Estimate</span></div></div>
+        <div class="kpi3-arr">→</div>
+        <div class="kpi3-yr y27"><div class="kpi3-yr-lbl">FY27 Budget</div><div class="kpi3-yr-val">403.5</div><div><span class="tag t-bud">Budget</span></div></div>
+      </div>
+      <div class="kpi3-note" style="color:var(--amber);font-weight:600">+20.3% cost growth FY25→FY27 &nbsp;|&nbsp; below revenue growth of +26.4%</div>
     </div>
+    <div class="kpi3">
+      <div class="kpi3-lbl">Contribution (₹ Cr)</div>
+      <div class="kpi3-row">
+        <div class="kpi3-yr y25"><div class="kpi3-yr-lbl">FY25 Actual</div><div class="kpi3-yr-val">211.3</div><div><span class="tag t-act">Actual</span></div></div>
+        <div class="kpi3-arr">→</div>
+        <div class="kpi3-yr y26"><div class="kpi3-yr-lbl">FY26 Estimate</div><div class="kpi3-yr-val">228.3</div><div><span class="tag t-est">Estimate</span></div></div>
+        <div class="kpi3-arr">→</div>
+        <div class="kpi3-yr y27"><div class="kpi3-yr-lbl">FY27 Budget</div><div class="kpi3-yr-val">274.1</div><div><span class="tag t-bud">Budget</span></div></div>
+      </div>
+      <div class="kpi3-note" style="color:var(--sage);font-weight:600">Margin: 50.8% → 50.4% → 52.1% &nbsp;· after Consumption + Doctor Cost</div>
+    </div>
+    <div class="kpi3">
+      <div class="kpi3-lbl">Total HR Cost (₹ Cr)</div>
+      <div class="kpi3-row">
+        <div class="kpi3-yr y25"><div class="kpi3-yr-lbl">FY25 Actual</div><div class="kpi3-yr-val">163.6</div><div><span class="tag t-act">Actual</span></div></div>
+        <div class="kpi3-arr">→</div>
+        <div class="kpi3-yr y26"><div class="kpi3-yr-lbl">FY26 Estimate</div><div class="kpi3-yr-val">186.3</div><div><span class="tag t-est">Estimate</span></div></div>
+        <div class="kpi3-arr">→</div>
+        <div class="kpi3-yr y27"><div class="kpi3-yr-lbl">FY27 Budget</div><div class="kpi3-yr-val">202.3</div><div><span class="tag t-bud">Budget</span></div></div>
+      </div>
+      <div class="kpi3-note" style="color:var(--amber);font-weight:600">+23.7% FY25→FY27 · As % Rev: 39.3% → 41.1% → 38.5%</div>
+    </div>
+  </div>
+
+  <div class="kpi-strip g6" style="margin-bottom:18px">
+    <div class="kpi amber"><div class="kpi-lbl">Staff Salary</div><div class="kpi-val">₹85.9 Cr</div><div class="kpi-sub">FY27 · Kochi</div><div class="delta up">↑7% vs FY26</div></div>
+    <div class="kpi rose"><div class="kpi-lbl">Doctor Fees</div><div class="kpi-val">₹97.9 Cr</div><div class="kpi-sub">FY27 Budget</div><div class="delta dn">↑23% vs FY26</div></div>
+    <div class="kpi"><div class="kpi-lbl">Capex</div><div class="kpi-val">₹150.4 Cr</div><div class="kpi-sub">FY27 Budget</div><div class="delta dn">↑40% vs FY26</div></div>
+    <div class="kpi sage"><div class="kpi-lbl">Occupancy</div><div class="kpi-val">62.5%</div><div class="kpi-sub">FY27 Target</div><div class="delta up">vs 52.3% FY25</div></div>
+    <div class="kpi navy"><div class="kpi-lbl">FTE Count</div><div class="kpi-val">2,177</div><div class="kpi-sub">FY27 Budget</div><div class="delta na">+62 vs FY26</div></div>
+    <div class="kpi slate"><div class="kpi-lbl">Contribution %</div><div class="kpi-val">52.1%</div><div class="kpi-sub">FY27 Target</div><div class="delta up">vs 50.8% FY25</div></div>
+  </div>
+
+  <div class="g2">
+    <div class="cw">
+      <div class="ct">Cost Structure vs Contribution — 3-Year Trajectory (₹ Cr)</div>
+      <canvas id="revChart" height="185"></canvas>
+    </div>
+    <div class="cw">
+      <div class="ct">Cost Structure — Stacked (₹ Cr)</div>
+      <canvas id="costChart" height="185"></canvas>
+    </div>
+  </div>
+
+  <div class="g6040">
     <div class="card">
-      <div class="card-title">Cost Split</div>
-      <div class="card-sub">People &#x20B9;202 Cr &middot; Capex &#x20B9;130 Cr</div>
-      <div style="position:relative;height:160px"><canvas id="costDonut"></canvas></div>
-      <div class="mini-grid">
-        <div class="mini-box"><div class="ml">Staff (All Units)</div><div class="mv" style="color:#1a3a5c">&#x20B9;90 Cr</div></div>
-        <div class="mini-box"><div class="ml">Doctor Cost</div><div class="mv" style="color:#e67e22">&#x20B9;99 Cr</div></div>
-        <div class="mini-box"><div class="ml">Clinical Capex</div><div class="mv" style="color:#27ae60">&#x20B9;99 Cr</div></div>
-        <div class="mini-box"><div class="ml">Outsource</div><div class="mv" style="color:#8e44ad">&#x20B9;12.9 Cr</div></div>
+      <div class="sec-hdr" style="font-size:.87rem">Cost &amp; P&amp;L Summary — FY25 Actual / FY26 Est. / FY27 Budget</div>
+      <table class="tbl">
+        <thead><tr><th>Line Item</th><th class="num">FY25 Actual</th><th class="num">FY26 Est.</th><th class="num">FY27 Budget</th><th class="num">FY27 % Rev</th></tr></thead>
+        <tbody>
+          <tr class="sub"><td>Revenue (₹ Cr)</td><td class="num">415.8</td><td class="num">452.8</td><td class="num">525.7</td><td class="num">100%</td></tr>
+          <tr><td>Consumption / Materials</td><td class="num">136.0</td><td class="num">144.1</td><td class="num">152.6</td><td class="num">29.0%</td></tr>
+          <tr><td>Doctor Cost</td><td class="num">68.5</td><td class="num">80.4</td><td class="num">99.1</td><td class="num">18.8%</td></tr>
+          <tr class="tot"><td>Contribution</td><td class="num">211.3</td><td class="num">228.3</td><td class="num">274.1</td><td class="num">52.1%</td></tr>
+          <tr><td>Employee Cost (Salary)</td><td class="num">74.0</td><td class="num">82.4</td><td class="num">89.9</td><td class="num">17.1%</td></tr>
+          <tr><td>Power &amp; Fuel</td><td class="num">10.8</td><td class="num">11.4</td><td class="num">12.2</td><td class="num">2.3%</td></tr>
+          <tr><td>Repairs &amp; Maintenance</td><td class="num">11.6</td><td class="num">12.5</td><td class="num">13.8</td><td class="num">2.6%</td></tr>
+          <tr><td>Housekeeping + Security</td><td class="num">11.0</td><td class="num">11.9</td><td class="num">13.1</td><td class="num">2.5%</td></tr>
+          <tr><td>Other Fixed Overheads</td><td class="num">23.5</td><td class="num">12.2</td><td class="num">22.8</td><td class="num">4.3%</td></tr>
+          <tr class="tot"><td>EBITDA (after all opex)</td><td class="num">80.4</td><td class="num">97.9</td><td class="num">122.2</td><td class="num">23.2%</td></tr>
+          <tr><td>Depreciation</td><td class="num">20.4</td><td class="num">23.1</td><td class="num">26.1</td><td class="num">5.0%</td></tr>
+          <tr class="tot"><td>PBT</td><td class="num">60.0</td><td class="num">74.8</td><td class="num">96.2</td><td class="num">18.3%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <div class="cw" style="margin-bottom:12px">
+        <div class="ct">HR Cost Components as % of Total Revenue</div>
+        <canvas id="hrPctChart" height="145"></canvas>
+      </div>
+      <div class="ins ins-amber">
+        <div class="ins-ttl">⚠ Doctor Cost Acceleration</div>
+        Doctor fees rising from ₹68.5 Cr (FY25) → ₹99.1 Cr (FY27), a 44.7% jump vs revenue growth of 26.4%. Key drivers: 38 new specialist hires (+₹11.3 Cr), 10% increment (+₹5.3 Cr), incentive growth (+₹5 Cr).
+      </div>
+      <div class="ins ins-sage">
+        <div class="ins-ttl">✓ Fixed Cost Leverage on Track</div>
+        Fixed cost base (Employee, Power, R&amp;M, HK) growing at ~8% vs revenue growth of 16.1% — delivering operating leverage as occupancy ramps from 52.3% → 62.5%.
       </div>
     </div>
   </div>
 
-  <div class="g2">
-    <div class="card">
-      <div class="card-title">People Cost Composition — &#x20B9;189 Cr</div>
-      <div class="card-sub">Salary, professional fees, outsource, benefits &amp; overhead</div>
-      <div style="position:relative;height:260px"><canvas id="peoplePie"></canvas></div>
+  <div class="div"></div>
+  <div class="sec-hdr" style="font-size:.87rem">Capex — FY25 Actual vs FY26 Budget vs FY27 Budget</div>
+  <div class="kpi-strip g5">
+    <div class="kpi3">
+      <div class="kpi3-lbl">Total Capex (₹ Cr)</div>
+      <div class="kpi3-row">
+        <div class="kpi3-yr y25"><div class="kpi3-yr-lbl">FY25 Est.</div><div class="kpi3-yr-val">~85</div></div>
+        <div class="kpi3-arr">→</div>
+        <div class="kpi3-yr y26"><div class="kpi3-yr-lbl">FY26 Budget</div><div class="kpi3-yr-val">107.4</div></div>
+        <div class="kpi3-arr">→</div>
+        <div class="kpi3-yr y27"><div class="kpi3-yr-lbl">FY27 Budget</div><div class="kpi3-yr-val">150.4</div></div>
+      </div>
     </div>
-    <div class="card">
-      <div class="card-title">Capex Strategic Allocation — &#x20B9;130 Cr</div>
-      <div class="card-sub">Growth vs maintenance vs infrastructure spend</div>
-      <div style="position:relative;height:260px"><canvas id="capexPie"></canvas></div>
-    </div>
+    <div class="kpi amber"><div class="kpi-lbl">Biomedical FY27</div><div class="kpi-val">₹117.4 Cr</div><div class="kpi-sub">78% · ↑72% vs FY26</div></div>
+    <div class="kpi"><div class="kpi-lbl">Buildings FY27</div><div class="kpi-val">₹18.3 Cr</div><div class="kpi-sub">Casualty + ICU + Transplant</div></div>
+    <div class="kpi sage"><div class="kpi-lbl">IT &amp; Digital FY27</div><div class="kpi-val">₹4.3 Cr</div><div class="kpi-sub">Networking ₹2.55 Cr</div></div>
+    <div class="kpi navy"><div class="kpi-lbl">Land (FY26 only)</div><div class="kpi-val">₹21.7 Cr</div><div class="kpi-sub">One-time · ₹0 in FY27</div></div>
   </div>
 </div>
 
-<!-- ===== PAGE: MANPOWER ===== -->
-<div id="page-manpower" class="page">
-  <div class="kpi-strip">
-    <div class="kpi" style="border-color:#1a3a5c"><div class="kpi-label">On-Roll Staff</div><div class="kpi-value" style="color:#1a3a5c">2,173</div><div class="kpi-sub">1,842 staff + 258 docs + 73 trainees</div></div>
-    <div class="kpi" style="border-color:#e67e22"><div class="kpi-label">Outsourced</div><div class="kpi-value" style="color:#e67e22">416</div><div class="kpi-sub">HK, Security, Ward Boys, Nursing Asst</div></div>
-    <div class="kpi" style="border-color:#8e44ad"><div class="kpi-label">Total Workforce</div><div class="kpi-value" style="color:#8e44ad">2,589</div><div class="kpi-sub">Across 3 units</div></div>
-    <div class="kpi" style="border-color:#27ae60"><div class="kpi-label">Staff : Bed</div><div class="kpi-value" style="color:#27ae60">3.8x</div><div class="kpi-sub">2,173 / ~570 beds</div></div>
-    <div class="kpi" style="border-color:#e74c3c"><div class="kpi-label">Avg Cost/FTE</div><div class="kpi-value" style="color:#e74c3c">&#x20B9;61K</div><div class="kpi-sub">Blended monthly</div></div>
-    <div class="kpi" style="border-color:#c0392b"><div class="kpi-label">Increment Budget</div><div class="kpi-value" style="color:#c0392b">&#x20B9;10.0 Cr</div><div class="kpi-sub">Staff 8% + Doctor 10%</div></div>
+<!-- ===== HR COSTS (CONSOLIDATED) ===== -->
+<div id="tab-hr" class="tab-content">
+  <div class="sec-hdr">HR Costs — Consolidated
+    <span style="font-family:'DM Sans',sans-serif;font-size:.68rem;font-weight:400;color:var(--sub);margin-left:8px">
+      <span style="background:#e0f2fe;color:#0369a1;padding:2px 8px;border-radius:10px;font-weight:600">FY25 Actual</span>
+      <span style="background:#fef3c7;color:#92400e;padding:2px 8px;border-radius:10px;font-weight:600;margin:0 4px">FY26 Estimate</span>
+      <span style="background:#ede9fe;color:#5b21b6;padding:2px 8px;border-radius:10px;font-weight:600">FY27 Budget</span>
+    </span>
   </div>
 
-  <div class="ibox">
-    <div class="ibox-title">&#x1F4A1; Manpower Insight</div>
-    <div class="ibox-text"><strong>Nursing is the largest cost center at ₹34.6 Cr (20.9%)</strong> with 827 FTEs. However, <strong>Consultants, though only 7.3% of headcount (159 people), consume 41.3% of on-roll cost (₹68.4 Cr in on-roll budget)</strong> — making doctor economics the single most important cost lever. The headcount-to-cost inversion between nursing and consultants is the defining structural feature of the cost base.</div>
+  <div class="kpi-strip g4" style="margin-bottom:18px">
+    <div class="kpi3">
+      <div class="kpi3-lbl">Total HR Cost (₹ Cr)</div>
+      <div class="kpi3-row">
+        <div class="kpi3-yr y25"><div class="kpi3-yr-lbl">FY25</div><div class="kpi3-yr-val">163.6</div></div>
+        <div class="kpi3-arr">→</div>
+        <div class="kpi3-yr y26"><div class="kpi3-yr-lbl">FY26</div><div class="kpi3-yr-val">186.3</div></div>
+        <div class="kpi3-arr">→</div>
+        <div class="kpi3-yr y27"><div class="kpi3-yr-lbl">FY27</div><div class="kpi3-yr-val">202.3</div></div>
+      </div>
+      <div class="kpi3-note" style="color:var(--amber);font-weight:600">+₹38.7 Cr (+23.7%) over 3 years</div>
+    </div>
+    <div class="kpi3">
+      <div class="kpi3-lbl">Staff Salary (₹ Cr)</div>
+      <div class="kpi3-row">
+        <div class="kpi3-yr y25"><div class="kpi3-yr-lbl">FY25</div><div class="kpi3-yr-val">74.8</div></div>
+        <div class="kpi3-arr">→</div>
+        <div class="kpi3-yr y26"><div class="kpi3-yr-lbl">FY26</div><div class="kpi3-yr-val">80.3</div></div>
+        <div class="kpi3-arr">→</div>
+        <div class="kpi3-yr y27"><div class="kpi3-yr-lbl">FY27</div><div class="kpi3-yr-val">85.9</div></div>
+      </div>
+      <div class="kpi3-note">8% increment + new hires driver in FY27</div>
+    </div>
+    <div class="kpi3">
+      <div class="kpi3-lbl">Doctor Fees (₹ Cr)</div>
+      <div class="kpi3-row">
+        <div class="kpi3-yr y25"><div class="kpi3-yr-lbl">FY25</div><div class="kpi3-yr-val">68.5</div></div>
+        <div class="kpi3-arr">→</div>
+        <div class="kpi3-yr y26"><div class="kpi3-yr-lbl">FY26</div><div class="kpi3-yr-val">79.6</div></div>
+        <div class="kpi3-arr">→</div>
+        <div class="kpi3-yr y27"><div class="kpi3-yr-lbl">FY27</div><div class="kpi3-yr-val">97.9</div></div>
+      </div>
+      <div class="kpi3-note" style="color:var(--rose);font-weight:600">+43% FY25→FY27 · 38 new specialists</div>
+    </div>
+    <div class="kpi3">
+      <div class="kpi3-lbl">Outsource (₹ Cr)</div>
+      <div class="kpi3-row">
+        <div class="kpi3-yr y25"><div class="kpi3-yr-lbl">FY25</div><div class="kpi3-yr-val">8.4</div></div>
+        <div class="kpi3-arr">→</div>
+        <div class="kpi3-yr y26"><div class="kpi3-yr-lbl">FY26</div><div class="kpi3-yr-val">9.6</div></div>
+        <div class="kpi3-arr">→</div>
+        <div class="kpi3-yr y27"><div class="kpi3-yr-lbl">FY27</div><div class="kpi3-yr-val">11.9</div></div>
+      </div>
+      <div class="kpi3-note">HK dominant · +41% FY25→FY27</div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div class="cw">
+      <div class="ct">HR Cost Component Trend — FY25 → FY26 → FY27 (₹ Cr)</div>
+      <canvas id="hrTrendChart" height="200"></canvas>
+    </div>
+    <div class="cw">
+      <div class="ct">HR Cost Mix — FY27 Budget (₹ Cr)</div>
+      <canvas id="hrMixChart" height="200"></canvas>
+    </div>
+  </div>
+
+  <div class="cw">
+    <div class="ct">Monthly Run-Rate — Staff Salary &amp; Doctor Fees (₹ Lakhs/month)</div>
+    <canvas id="hrMonthlyChart" height="120"></canvas>
   </div>
 
   <div class="g2">
     <div class="card">
-      <div class="card-title">Headcount by Staff Category</div>
-      <div class="card-sub">On-roll 2,173 employees &middot; Largest: Nursing 687, Paramedical 607</div>
-      <div style="position:relative;height:280px"><canvas id="headcountBar"></canvas></div>
+      <div class="sec-hdr" style="font-size:.87rem">Staff Salary Detail — FY26 vs FY27 (₹ Cr)</div>
+      <table class="tbl">
+        <thead><tr><th>Component</th><th class="num">FY26 Est.</th><th class="num">FY27 Budget</th><th class="num">Δ</th></tr></thead>
+        <tbody>
+          <tr><td>Existing Staff Salary</td><td class="num">72.1</td><td class="num">62.1</td><td class="num">—</td></tr>
+          <tr><td>New Hire Staff</td><td class="num">3.2</td><td class="num">6.7</td><td class="num" style="color:var(--rose)">+3.5</td></tr>
+          <tr><td>DNB Trainees</td><td class="num">3.8</td><td class="num">4.6</td><td class="num" style="color:var(--amber)">+0.8</td></tr>
+          <tr><td>Increment (8%)</td><td class="num">—</td><td class="num">4.2</td><td class="num">New</td></tr>
+          <tr><td>PF / ESI / Gratuity / PL</td><td class="num">4.5</td><td class="num">4.8</td><td class="num">+0.3</td></tr>
+          <tr><td>Training &amp; Welfare</td><td class="num">0.8</td><td class="num">1.0</td><td class="num">+0.2</td></tr>
+          <tr class="tot"><td>Sub-total (Kochi)</td><td class="num">80.3</td><td class="num">85.9</td><td class="num">+5.6 (+7%)</td></tr>
+        </tbody>
+      </table>
     </div>
     <div class="card">
-      <div class="card-title">Cost by Staff Category (&#x20B9; Lakhs)</div>
-      <div class="card-sub">Consultants dominate despite low headcount &middot; ₹16,563L total on-roll</div>
-      <div style="position:relative;height:280px"><canvas id="costCatBar"></canvas></div>
+      <div class="sec-hdr" style="font-size:.87rem">Doctor Fees Detail — FY26 vs FY27 (₹ Cr)</div>
+      <table class="tbl">
+        <thead><tr><th>Component</th><th class="num">FY26 Est.</th><th class="num">FY27 Budget</th><th class="num">Δ</th></tr></thead>
+        <tbody>
+          <tr><td>Prof Fees (Existing)</td><td class="num">55.8</td><td class="num">60.0</td><td class="num">+4.2</td></tr>
+          <tr><td>New Hire Consultants (38)</td><td class="num">5.0</td><td class="num">11.3</td><td class="num" style="color:var(--rose)">+6.3</td></tr>
+          <tr><td>Increment (10%)</td><td class="num">—</td><td class="num">5.3</td><td class="num">New</td></tr>
+          <tr><td>Consultant Incentive (2.68%)</td><td class="num">8.2</td><td class="num">13.2</td><td class="num" style="color:var(--rose)">+5.0</td></tr>
+          <tr><td>Visiting Consultant (1.6%)</td><td class="num">4.8</td><td class="num">7.9</td><td class="num">+3.1</td></tr>
+          <tr><td>Salaried Doctors</td><td class="num">5.8</td><td class="num">0.2</td><td class="num">Reclassified</td></tr>
+          <tr class="tot"><td>Sub-total</td><td class="num">79.6</td><td class="num">97.9</td><td class="num">+18.3 (+23%)</td></tr>
+        </tbody>
+      </table>
     </div>
   </div>
 
-  <div class="card">
-    <div class="card-title">Top 20 Departments by People Cost</div>
-    <div class="card-sub">Click column headers to sort &middot; On-roll staff only &middot; Amounts in ₹ Lakhs</div>
-    <div style="overflow-x:auto">
-    <table class="tbl" id="deptCostTable">
-      <thead><tr>
-        <th>#</th><th>Department</th><th>Headcount</th><th>Cost ₹L</th><th>% of Total</th>
-        <th>Avg Cost/Person ₹L</th><th>Category Mix</th><th>Tier</th>
-      </tr></thead>
-      <tbody id="deptTbody"></tbody>
-    </table>
-    </div>
-  </div>
-
-  <div class="slabel">Headcount vs Cost — The Inversion Effect</div>
-  <div class="card">
-    <div class="card-title">Category Share: Headcount vs Cost</div>
-    <div class="card-sub">Consultants = 7.3% of people but 41.3% of cost &middot; Nursing = 31.6% of people but 17.3% of cost</div>
-    <div style="position:relative;height:320px"><canvas id="inversionChart"></canvas></div>
-  </div>
-</div>
-
-<!-- ===== PAGE: DOCTOR ECONOMICS ===== -->
-<div id="page-doctors" class="page">
-  <div class="kpi-strip">
-    <div class="kpi" style="border-color:#1a3a5c"><div class="kpi-label">Total Doctor Cost</div><div class="kpi-value" style="color:#1a3a5c">&#x20B9;99 Cr</div><div class="kpi-sub">Prof Fee + Incentive + DNB + Salaried</div></div>
-    <div class="kpi" style="border-color:#e67e22"><div class="kpi-label">Fixed Prof. Fee</div><div class="kpi-value" style="color:#e67e22">&#x20B9;61 Cr</div><div class="kpi-sub">159 consultants &middot; Avg ₹3.2L/mo</div></div>
-    <div class="kpi" style="border-color:#8e44ad"><div class="kpi-label">Revenue Incentive</div><div class="kpi-value" style="color:#8e44ad">&#x20B9;13.2 Cr</div><div class="kpi-sub">2.68% of revenue</div></div>
-    <div class="kpi" style="border-color:#27ae60"><div class="kpi-label">Visiting Share</div><div class="kpi-value" style="color:#27ae60">&#x20B9;8.3 Cr</div><div class="kpi-sub">1.6% Kochi + 10% Calicut</div></div>
-    <div class="kpi" style="border-color:#e74c3c"><div class="kpi-label">New Doc Hires</div><div class="kpi-value" style="color:#e74c3c">41</div><div class="kpi-sub">₹11.3 Cr annual budget</div></div>
-    <div class="kpi" style="border-color:#c0392b"><div class="kpi-label">Doctor/Revenue</div><div class="kpi-value" style="color:#c0392b">18.0%</div><div class="kpi-sub">₹99 Cr / ₹550 Cr target</div></div>
-  </div>
-
-  <div class="ibox red">
-    <div class="ibox-title">&#x1F6A8; Critical: Doctor Fee Structure — Fixed vs Variable Mix</div>
-    <div class="ibox-text"><strong>61% of doctor cost (₹61 Cr) is fixed professional fee</strong> — independent of revenue generation. Only ₹21.5 Cr (21.7%) is truly variable (revenue-linked incentive + visiting consultant share). This creates downside rigidity: in a revenue shortfall scenario, doctor costs don't flex. <strong>New hires should be structured with higher variable / lower fixed to improve margin flexibility</strong>. Average consultant cost: ₹43L/year (₹3.2L/month fixed fee) — competitive for Kerala but premium vs national benchmarks.</div>
-  </div>
-
-  <div class="g2">
+  <div class="g2" style="margin-top:14px">
     <div class="card">
-      <div class="card-title">Doctor Cost Structure Breakdown</div>
-      <div class="card-sub">Fixed fee dominates &middot; Limited variable linkage</div>
-      <div style="position:relative;height:280px"><canvas id="docCostBreak"></canvas></div>
+      <div class="sec-hdr" style="font-size:.87rem">Outsource Detail — FY26 vs FY27 (₹ Cr)</div>
+      <table class="tbl">
+        <thead><tr><th>Category</th><th class="num">FY26</th><th class="num">FY27</th></tr></thead>
+        <tbody>
+          <tr><td>Housekeeping</td><td class="num">4.8</td><td class="num">5.7</td></tr>
+          <tr><td>Ward Boys</td><td class="num">1.5</td><td class="num">1.9</td></tr>
+          <tr><td>Nursing (Contract)</td><td class="num">0.8</td><td class="num">1.1</td></tr>
+          <tr><td>Fire &amp; Safety</td><td class="num">2.5</td><td class="num">3.1</td></tr>
+          <tr class="tot"><td>Total Outsource</td><td class="num">9.6</td><td class="num">11.9</td></tr>
+        </tbody>
+      </table>
     </div>
     <div class="card">
-      <div class="card-title">New Doctor Hires — FY27 Plan (41 positions)</div>
-      <div class="card-sub">Strategic speciality additions &middot; ₹11.3 Cr annual</div>
-      <div style="position:relative;height:280px"><canvas id="newDocBar"></canvas></div>
+      <div class="sec-hdr" style="font-size:.87rem">FTE Distribution — FY27 Budget</div>
+      <table class="tbl">
+        <thead><tr><th>Category</th><th class="num">FTE</th><th class="num">% Total</th></tr></thead>
+        <tbody>
+          <tr><td>Nursing</td><td class="num">701</td><td class="num">32.2%</td></tr>
+          <tr><td>Paramedical</td><td class="num">607</td><td class="num">27.9%</td></tr>
+          <tr><td>Admin Staff</td><td class="num">539</td><td class="num">24.8%</td></tr>
+          <tr><td>Salaried Doctors / DNB</td><td class="num">168</td><td class="num">7.7%</td></tr>
+          <tr><td>Consultants</td><td class="num">162</td><td class="num">7.4%</td></tr>
+          <tr class="tot"><td>Total FTEs</td><td class="num">2,177</td><td class="num">100%</td></tr>
+        </tbody>
+      </table>
     </div>
   </div>
 
-  <div class="card">
-    <div class="card-title">New Doctor Hires — Speciality Detail</div>
-    <div class="card-sub">Aligned with cancer &amp; complex care transformation — Oncology, Transplant, Critical Care hiring</div>
+  <div class="card" style="margin-top:14px">
+    <div class="sec-hdr" style="font-size:.87rem">YoY HR Cost Growth Drivers — FY26→FY27 (+₹16 Cr, +8.6%)</div>
+    <div style="margin-top:10px">
+      <div class="hb"><div class="hb-lbl"><span>New Doctor Hires (38 specialists)</span><span style="font-weight:700">+₹11.3 Cr</span></div><div class="hb-track"><div class="hb-fill" style="width:73%;background:var(--rose)"></div></div></div>
+      <div class="hb"><div class="hb-lbl"><span>New Staff Hires</span><span style="font-weight:700">+₹6.7 Cr</span></div><div class="hb-track"><div class="hb-fill" style="width:43%;background:var(--amber)"></div></div></div>
+      <div class="hb"><div class="hb-lbl"><span>Doctor Increment 10%</span><span style="font-weight:700">+₹5.3 Cr</span></div><div class="hb-track"><div class="hb-fill" style="width:34%;background:var(--rose)"></div></div></div>
+      <div class="hb"><div class="hb-lbl"><span>Consultant Incentive Growth (revenue-linked)</span><span style="font-weight:700">+₹5.0 Cr</span></div><div class="hb-track"><div class="hb-fill" style="width:32%;background:#7c3aed"></div></div></div>
+      <div class="hb"><div class="hb-lbl"><span>Staff Increment 8%</span><span style="font-weight:700">+₹4.2 Cr</span></div><div class="hb-track"><div class="hb-fill" style="width:27%;background:var(--amber)"></div></div></div>
+      <div class="hb"><div class="hb-lbl"><span>Outsource Expansion</span><span style="font-weight:700">+₹2.3 Cr</span></div><div class="hb-track"><div class="hb-fill" style="width:15%;background:var(--slate)"></div></div></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:14px">
+    <div class="sec-hdr" style="font-size:.87rem">New Hire Doctors — FY27 Plan (38 Positions · ₹11.3 Cr total)</div>
     <table class="tbl">
-      <thead><tr><th>Speciality</th><th>Designation</th><th>Count</th><th>Monthly ₹L</th><th>Annual ₹L</th><th>Strategic Fit</th></tr></thead>
+      <thead><tr><th>Specialty</th><th class="num">Monthly (₹ L)</th><th class="num">Annual (₹ Cr)</th><th>Quarter</th></tr></thead>
       <tbody>
-        <tr class="top3"><td>Medical Oncology</td><td>Consultant</td><td style="text-align:right">2</td><td style="text-align:right">4.0L each</td><td style="text-align:right">96.0</td><td><span class="pill rp">Core Onco</span></td></tr>
-        <tr class="top3"><td>Head &amp; Neck Oncology</td><td>Assoc. Consultant + Consultant</td><td style="text-align:right">4</td><td style="text-align:right">2.0–3.0L</td><td style="text-align:right">120.0</td><td><span class="pill rp">Core Onco</span></td></tr>
-        <tr class="top3"><td>Liver Transplant</td><td>Consultant + SR</td><td style="text-align:right">3</td><td style="text-align:right">1.0–4.0L</td><td style="text-align:right">108.0</td><td><span class="pill pp">Transplant</span></td></tr>
-        <tr><td>Critical Care</td><td>Consultant + SR + JR</td><td style="text-align:right">10</td><td style="text-align:right">0.5–3.5L</td><td style="text-align:right">144.0</td><td><span class="pill bp">Complex</span></td></tr>
-        <tr><td>Haematology</td><td>Haematologist</td><td style="text-align:right">1</td><td style="text-align:right">5.0L</td><td style="text-align:right">60.0</td><td><span class="pill rp">Core Onco</span></td></tr>
-        <tr><td>Cardiology</td><td>Consultant + EP</td><td style="text-align:right">2</td><td style="text-align:right">4.0–5.0L</td><td style="text-align:right">108.0</td><td><span class="pill gp">Growth</span></td></tr>
-        <tr><td>PICU</td><td>Intensivist</td><td style="text-align:right">1</td><td style="text-align:right">7.0L</td><td style="text-align:right">84.0</td><td><span class="pill bp">Complex</span></td></tr>
-        <tr><td>Infectious Diseases</td><td>Consultant</td><td style="text-align:right">1</td><td style="text-align:right">5.0L</td><td style="text-align:right">60.0</td><td><span class="pill gp">Growth</span></td></tr>
-        <tr><td>Nephrology</td><td>Assoc. Consultant + SR</td><td style="text-align:right">2</td><td style="text-align:right">1.5–2.5L</td><td style="text-align:right">48.0</td><td><span class="pill gp">Growth</span></td></tr>
-        <tr><td>Other 15 Specialities</td><td>Various</td><td style="text-align:right">15</td><td style="text-align:right">0.5–3.5L</td><td style="text-align:right">306.0</td><td><span class="pill grp">Support</span></td></tr>
-        <tr class="top3"><td><strong>Total</strong></td><td></td><td style="text-align:right"><strong>41</strong></td><td></td><td style="text-align:right"><strong>1,134</strong></td><td></td></tr>
+        <tr><td>Haematologist</td><td class="num">5.0</td><td class="num">0.60</td><td>Q1</td></tr>
+        <tr><td>Electrophysiologist</td><td class="num">5.0</td><td class="num">0.60</td><td>Q1</td></tr>
+        <tr><td>Liver Transplant Consultants (×2)</td><td class="num">4.0 each</td><td class="num">0.96</td><td>Q1</td></tr>
+        <tr><td>Renal Transplant Specialist</td><td class="num">3.5</td><td class="num">0.42</td><td>Q2</td></tr>
+        <tr><td>Oncology Specialist</td><td class="num">3.5</td><td class="num">0.42</td><td>Q1</td></tr>
+        <tr><td>Paediatric Cardiologist</td><td class="num">3.0</td><td class="num">0.36</td><td>Q2</td></tr>
+        <tr><td>Neuro-interventionist</td><td class="num">3.5</td><td class="num">0.42</td><td>Q2</td></tr>
+        <tr><td>Remaining Specialists (31 positions)</td><td class="num">1.5–3.0</td><td class="num">7.52</td><td>Q1–Q4</td></tr>
+        <tr class="tot"><td>Total</td><td class="num">—</td><td class="num">11.30</td><td>—</td></tr>
       </tbody>
     </table>
   </div>
 </div>
 
-<!-- ===== PAGE: OUTSOURCE ===== -->
-<div id="page-outsource" class="page">
-  <div class="kpi-strip">
-    <div class="kpi" style="border-color:#1a3a5c"><div class="kpi-label">Outsourced Staff</div><div class="kpi-value" style="color:#1a3a5c">416</div><div class="kpi-sub">19.1% of total workforce</div></div>
-    <div class="kpi" style="border-color:#e67e22"><div class="kpi-label">Annual Cost</div><div class="kpi-value" style="color:#e67e22">&#x20B9;12.9 Cr</div><div class="kpi-sub">inc GST 18%</div></div>
-    <div class="kpi" style="border-color:#8e44ad"><div class="kpi-label">Vendors</div><div class="kpi-value" style="color:#8e44ad">5</div><div class="kpi-sub">3 for HK alone</div></div>
-    <div class="kpi" style="border-color:#27ae60"><div class="kpi-label">Avg Cost/Head</div><div class="kpi-value" style="color:#27ae60">&#x20B9;25.8K</div><div class="kpi-sub">Per month blended</div></div>
-    <div class="kpi" style="border-color:#e74c3c"><div class="kpi-label">HK Staff</div><div class="kpi-value" style="color:#e74c3c">194</div><div class="kpi-sub">47% of outsource &middot; ₹6.6 Cr</div></div>
-    <div class="kpi" style="border-color:#c0392b"><div class="kpi-label">Cost Spread</div><div class="kpi-value" style="color:#c0392b">₹11K</div><div class="kpi-sub">Between cheapest &amp; costliest vendor</div></div>
+<!-- ===== NURSING ===== -->
+<div id="tab-nursing" class="tab-content">
+  <div class="sec-hdr">Nursing Personnel Distribution</div>
+  <div class="kpi-strip g5">
+    <div class="kpi"><div class="kpi-lbl">Total Nursing</div><div class="kpi-val">450+</div><div class="kpi-sub">All units</div></div>
+    <div class="kpi amber"><div class="kpi-lbl">Regular IP Beds</div><div class="kpi-val">390</div><div class="kpi-sub">Avg occ. 229 · Staff 212</div></div>
+    <div class="kpi rose"><div class="kpi-lbl">ICU Beds</div><div class="kpi-val">91</div><div class="kpi-sub">Avg occ. 45 · Staff 149</div></div>
+    <div class="kpi sage"><div class="kpi-lbl">ICU Nurse Ratio</div><div class="kpi-val">1.64</div><div class="kpi-sub">Per occupied bed (NABH ≥1.5)</div></div>
+    <div class="kpi navy"><div class="kpi-lbl">General Nurse Ratio</div><div class="kpi-val">0.92</div><div class="kpi-sub">Per occupied bed</div></div>
+  </div>
+  <div class="g2">
+    <div>
+      <div class="card" style="margin-bottom:12px">
+        <div class="sec-hdr" style="font-size:.87rem">Regular IP Wards — Floor-wise</div>
+        <table class="tbl nt">
+          <thead><tr><th>Floor / Ward</th><th class="num">Beds</th><th class="num">Avg Occ.</th><th class="num">Staff</th><th class="num">Buffer</th></tr></thead>
+          <tbody>
+            <tr><td>3rd Floor</td><td class="num">47</td><td class="num">35</td><td class="num">29</td><td class="num">18</td></tr>
+            <tr><td>4th Floor</td><td class="num">43</td><td class="num">28</td><td class="num">24</td><td class="num">15</td></tr>
+            <tr><td>5th Floor</td><td class="num">40</td><td class="num">25</td><td class="num">22</td><td class="num">12</td></tr>
+            <tr><td>6th Floor</td><td class="num">38</td><td class="num">24</td><td class="num">20</td><td class="num">14</td></tr>
+            <tr><td>7th Floor</td><td class="num">36</td><td class="num">22</td><td class="num">19</td><td class="num">11</td></tr>
+            <tr><td>8th Floor (Onco)</td><td class="num">32</td><td class="num">20</td><td class="num">22</td><td class="num">10</td></tr>
+            <tr><td>9th Floor</td><td class="num">30</td><td class="num">18</td><td class="num">16</td><td class="num">9</td></tr>
+            <tr><td>Other Floors</td><td class="num">124</td><td class="num">77</td><td class="num">60</td><td class="num">43</td></tr>
+            <tr class="tot"><td>Total IP</td><td class="num">390</td><td class="num">229</td><td class="num">212</td><td class="num">132</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card">
+        <div class="sec-hdr" style="font-size:.87rem">Procedure Rooms</div>
+        <table class="tbl nt">
+          <thead><tr><th>Unit</th><th class="num">Stations</th><th class="num">Staff</th></tr></thead>
+          <tbody>
+            <tr><td>Cath Lab</td><td class="num">2</td><td class="num">14</td></tr>
+            <tr><td>Labour Room</td><td class="num">4</td><td class="num">11</td></tr>
+            <tr><td>Endoscopy</td><td class="num">3</td><td class="num">5</td></tr>
+            <tr><td>Dialysis</td><td class="num">6</td><td class="num">8</td></tr>
+            <tr class="tot"><td>Total</td><td class="num">15</td><td class="num">38</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:12px">
+        <div class="sec-hdr" style="font-size:.87rem">ICU Units</div>
+        <table class="tbl nt">
+          <thead><tr><th>ICU Unit</th><th class="num">Beds</th><th class="num">Avg Occ.</th><th class="num">Staff</th><th class="num">Ratio</th></tr></thead>
+          <tbody>
+            <tr><td>MDICU</td><td class="num">10</td><td class="num">7</td><td class="num">16</td><td class="num">2.3</td></tr>
+            <tr><td>Onco ICU</td><td class="num">7</td><td class="num">4</td><td class="num">18</td><td class="num">4.5</td></tr>
+            <tr><td>GMICU</td><td class="num">10</td><td class="num">6</td><td class="num">20</td><td class="num">3.3</td></tr>
+            <tr><td>Liver Tx ICU</td><td class="num">7</td><td class="num">5</td><td class="num">27</td><td class="num">5.4</td></tr>
+            <tr><td>Renal ICU</td><td class="num">5</td><td class="num">3</td><td class="num">14</td><td class="num">4.7</td></tr>
+            <tr><td>Neuro Surgical ICU</td><td class="num">13</td><td class="num">8</td><td class="num">18</td><td class="num">2.3</td></tr>
+            <tr><td>CSICU / Cardiac</td><td class="num">12</td><td class="num">7</td><td class="num">20</td><td class="num">2.9</td></tr>
+            <tr><td>Neonatal ICU</td><td class="num">12</td><td class="num">5</td><td class="num">16</td><td class="num">3.2</td></tr>
+            <tr class="tot"><td>Total ICU</td><td class="num">76</td><td class="num">45</td><td class="num">149</td><td class="num">3.3 avg</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="cw">
+        <div class="ct">Nursing Deployment by Category</div>
+        <canvas id="nursingChart" height="160"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CAPEX ===== -->
+<div id="tab-capex" class="tab-content">
+  <div class="sec-hdr">Capex Budget</div>
+  <div class="kpi-strip g4">
+    <div class="kpi"><div class="kpi-lbl">FY26 Total</div><div class="kpi-val">₹107.4 Cr</div><div class="kpi-sub">350 line items</div></div>
+    <div class="kpi amber"><div class="kpi-lbl">FY27 Total</div><div class="kpi-val">₹150.4 Cr</div><div class="kpi-sub">424 items · +40% YoY</div></div>
+    <div class="kpi rose"><div class="kpi-lbl">Biomedical FY27</div><div class="kpi-val">₹117.4 Cr</div><div class="kpi-sub">78% of total · +72% vs FY26</div></div>
+    <div class="kpi sage"><div class="kpi-lbl">Buildings FY27</div><div class="kpi-val">₹18.3 Cr</div><div class="kpi-sub">Casualty + ICU + Transplant</div></div>
+  </div>
+  <div class="g2">
+    <div class="cw">
+      <div class="ct">Capex by Category — FY26 vs FY27 (₹ Cr)</div>
+      <canvas id="capexChart" height="240"></canvas>
+    </div>
+    <div class="card">
+      <div class="sec-hdr" style="font-size:.87rem">Key Projects — FY27</div>
+      <table class="tbl">
+        <thead><tr><th>Project</th><th class="num">Budget (₹ Cr)</th><th>Timeline</th></tr></thead>
+        <tbody>
+          <tr><td>Biomedical Equipment (pool)</td><td class="num">117.4</td><td>FY27</td></tr>
+          <tr><td>Casualty Renovation</td><td class="num">3.80</td><td>Jul '26</td></tr>
+          <tr><td>ICU Complex</td><td class="num">2.25</td><td>Nov '25</td></tr>
+          <tr><td>Regularisation Fees</td><td class="num">1.64</td><td>FY27</td></tr>
+          <tr><td>Ultrasound / Ortho Renovation</td><td class="num">1.60</td><td>FY27</td></tr>
+          <tr><td>Renal Transplant Centre</td><td class="num">1.50</td><td>FY27</td></tr>
+          <tr><td>Paediatric OP</td><td class="num">1.50</td><td>FY27</td></tr>
+          <tr><td>IT Networking &amp; Digital</td><td class="num">2.55</td><td>FY27</td></tr>
+          <tr><td>Fire &amp; Safety</td><td class="num">3.40</td><td>FY27</td></tr>
+          <tr><td>Furniture &amp; Fixtures</td><td class="num">3.20</td><td>FY27</td></tr>
+          <tr class="tot"><td>Total FY27</td><td class="num">150.4</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===== AOP FY25-26 ===== -->
+<div id="tab-aop2526" class="tab-content">
+  <div class="sec-hdr">AOP Budget FY25-26</div>
+  <div class="kpi-strip g5">
+    <div class="kpi rose"><div class="kpi-lbl">Total Cost Budget</div><div class="kpi-val">₹406.1 Cr</div><div class="kpi-sub">80.6% of revenue budget</div></div>
+    <div class="kpi amber"><div class="kpi-lbl">Doctor Cost</div><div class="kpi-val">₹80.4 Cr</div><div class="kpi-sub">+17.4% vs FY25 actual</div></div>
+    <div class="kpi"><div class="kpi-lbl">Employee Cost</div><div class="kpi-val">₹82.4 Cr</div><div class="kpi-sub">+11.4% vs FY25 actual</div></div>
+    <div class="kpi sage"><div class="kpi-lbl">Consumption</div><div class="kpi-val">₹151.2 Cr</div><div class="kpi-sub">30.0% of revenue</div></div>
+    <div class="kpi navy"><div class="kpi-lbl">Occupancy Target</div><div class="kpi-val">63.9%</div><div class="kpi-sub">ARPOB ₹32,640</div></div>
+  </div>
+  <div class="g2">
+    <div class="cw">
+      <div class="ct">Monthly Cost Run-Rate — FY26 Budget (₹ Cr)</div>
+      <canvas id="aop26RevChart" height="200"></canvas>
+    </div>
+    <div class="card">
+      <div class="sec-hdr" style="font-size:.87rem">P&amp;L Budget vs FY25 Actual</div>
+      <table class="tbl">
+        <thead><tr><th>Line Item</th><th class="num">FY25 Actual</th><th class="num">FY26 Budget</th><th class="num">Growth</th></tr></thead>
+        <tbody>
+          <tr class="hi"><td class="bl">Consumption</td><td class="num bl">136.0</td><td class="num bl">151.2</td><td class="num" style="color:var(--rose);font-weight:700">+11.2%</td></tr>
+          <tr class="hi"><td class="bl">Doctor Cost</td><td class="num bl">68.5</td><td class="num bl">80.4</td><td class="num" style="color:var(--rose);font-weight:700">+17.4%</td></tr>
+          <tr class="hi"><td class="bl">Employee Cost</td><td class="num bl">74.0</td><td class="num bl">82.4</td><td class="num" style="color:var(--amber);font-weight:700">+11.4%</td></tr>
+          <tr class="hi"><td class="bl">Power &amp; Fuel</td><td class="num bl">10.8</td><td class="num bl">11.8</td><td class="num">+9.3%</td></tr>
+          <tr class="hi"><td class="bl">R&amp;M</td><td class="num bl">11.6</td><td class="num bl">12.6</td><td class="num">+8.6%</td></tr>
+          <tr class="tot"><td>Contribution</td><td class="num">211.4</td><td class="num">272.4</td><td class="num">+28.8%</td></tr>
+          <tr class="sub"><td>&nbsp;Revenue (context)</td><td class="num">415.9</td><td class="num">504.0</td><td class="num" style="color:var(--sub)">+21.2%</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===== AOP FY26-27 ===== -->
+<div id="tab-aop2627" class="tab-content">
+  <div class="sec-hdr">AOP Budget FY26-27</div>
+  <div class="kpi-strip g6">
+    <div class="kpi rose"><div class="kpi-lbl">Total HR Cost</div><div class="kpi-val">₹202.3 Cr</div><div class="kpi-sub">38.5% of revenue · +8.6% YoY</div></div>
+    <div class="kpi amber"><div class="kpi-lbl">Doctor Cost</div><div class="kpi-val">₹97.9 Cr</div><div class="kpi-sub">18.8% of rev · +23% vs FY26</div></div>
+    <div class="kpi"><div class="kpi-lbl">Employee Cost</div><div class="kpi-val">₹89.9 Cr</div><div class="kpi-sub">17.1% of rev · +9.1% vs FY26</div></div>
+    <div class="kpi sage"><div class="kpi-lbl">Consumption</div><div class="kpi-val">₹152.6 Cr</div><div class="kpi-sub">29.0% of rev · +5.9% vs FY26</div></div>
+    <div class="kpi navy"><div class="kpi-lbl">Capex Budget</div><div class="kpi-val">₹150.4 Cr</div><div class="kpi-sub">+40% vs FY26 · 424 line items</div></div>
+    <div class="kpi slate"><div class="kpi-lbl">FTE Count</div><div class="kpi-val">2,177</div><div class="kpi-sub">+62 vs FY26 · Occupancy 62.5%</div></div>
+  </div>
+  <div class="g2">
+    <div class="cw">
+      <div class="ct">Monthly Cost Run-Rate — Employee &amp; Doctor Cost vs Revenue (₹ Cr)</div>
+      <canvas id="aop27Chart" height="200"></canvas>
+    </div>
+    <div class="card">
+      <div class="sec-hdr" style="font-size:.87rem">Cost Breakdown — FY25 / FY26 / FY27 (₹ Cr)</div>
+      <table class="tbl">
+        <thead><tr><th>Line Item</th><th class="num">FY25 A</th><th class="num">FY26 E</th><th class="num">FY27 B</th></tr></thead>
+        <tbody>
+          <tr class="sub"><td>Revenue (context)</td><td class="num">415.8</td><td class="num">452.8</td><td class="num">525.7</td></tr>
+          <tr><td>Consumption</td><td class="num">136.0</td><td class="num">144.1</td><td class="num">152.6</td></tr>
+          <tr><td>Doctor Cost</td><td class="num">68.5</td><td class="num">80.4</td><td class="num">99.1</td></tr>
+          <tr class="tot"><td>Contribution</td><td class="num">211.3</td><td class="num">228.3</td><td class="num">274.1</td></tr>
+          <tr class="sub"><td>&nbsp;Margin %</td><td class="num">50.8%</td><td class="num">50.4%</td><td class="num">52.1%</td></tr>
+          <tr><td>Employee Cost</td><td class="num">74.0</td><td class="num">82.4</td><td class="num">89.9</td></tr>
+          <tr><td>Power &amp; Fuel</td><td class="num">10.8</td><td class="num">11.4</td><td class="num">12.2</td></tr>
+          <tr><td>R&amp;M</td><td class="num">11.6</td><td class="num">12.5</td><td class="num">13.8</td></tr>
+          <tr><td>HK + Security</td><td class="num">11.0</td><td class="num">11.9</td><td class="num">13.1</td></tr>
+          <tr><td>Other Fixed</td><td class="num">23.5</td><td class="num">12.2</td><td class="num">22.8</td></tr>
+          <tr class="tot"><td>EBITDA</td><td class="num">80.4</td><td class="num">97.9</td><td class="num">122.2</td></tr>
+          <tr class="sub"><td>&nbsp;Margin %</td><td class="num">19.3%</td><td class="num">21.6%</td><td class="num">23.2%</td></tr>
+          <tr><td>Depreciation</td><td class="num">20.4</td><td class="num">23.1</td><td class="num">26.1</td></tr>
+          <tr class="tot"><td>PBT</td><td class="num">60.0</td><td class="num">74.8</td><td class="num">96.2</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="sec-hdr" style="font-size:.87rem">Operational KPIs — FY27 Quarterly</div>
+      <table class="tbl">
+        <thead><tr><th>KPI</th><th class="num">Q1</th><th class="num">Q2</th><th class="num">Q3</th><th class="num">Q4</th></tr></thead>
+        <tbody>
+          <tr class="sub"><td>Revenue (₹ Cr)</td><td class="num">120.0</td><td class="num">125.0</td><td class="num">135.0</td><td class="num">145.7</td></tr>
+          <tr><td>IP Discharges</td><td class="num">5,800</td><td class="num">6,000</td><td class="num">6,350</td><td class="num">6,600</td></tr>
+          <tr><td>OP Visits</td><td class="num">1,02,000</td><td class="num">1,07,000</td><td class="num">1,14,000</td><td class="num">1,16,771</td></tr>
+          <tr><td>Occupancy %</td><td class="num">58%</td><td class="num">60%</td><td class="num">64%</td><td class="num">68%</td></tr>
+          <tr><td>ARPOB (₹)</td><td class="num">47,000</td><td class="num">49,000</td><td class="num">51,000</td><td class="num">53,000</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <div class="ins ins-sage">
+        <div class="ins-ttl">✓ Cost Efficiency from Volume Ramp</div>
+        IP discharges +12.8% (21K→24.7K) and OP visits +17.3% spread fixed costs over higher throughput. Occupancy ramp to 62.5% reduces fixed cost per bed-day significantly — Employee + Power cost as % of revenue falls from 20.1% to 19.4%.
+      </div>
+      <div class="ins ins-rose">
+        <div class="ins-ttl">⚠ Cost Risk Factors</div>
+        Doctor cost growing 44.7% vs revenue growth of 26.4% — ratio rises from 16.5% to 18.8%. Variable incentive pool (₹21.1 Cr) is volume-linked and will spike if discharges miss target. Capex at ₹150 Cr (+40% YoY) requires tight project execution to avoid overrun.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PEER BENCHMARKS ===== -->
+<div id="tab-bench" class="tab-content">
+  <div class="sec-hdr">Peer Benchmarks &amp; Industry Analysis</div>
+
+  <div class="ins ins-navy" style="margin-bottom:16px">
+    <div class="ins-ttl">ℹ Benchmark Methodology</div>
+    Data sourced from: publicly disclosed annual reports of Apollo Hospitals, Aster DM Healthcare, Fortis Healthcare; FICCI-EY Healthcare Report 2023-24; NHA Cost Studies; NABH accreditation standards; and Kerala Department of Health data. LHRC figures are FY27 Budget unless noted. Peer comparisons are indicative benchmarks — exact figures may vary by hospital mix and geography.
   </div>
 
-  <div class="ibox">
-    <div class="ibox-title">&#x26A0;&#xFE0F; Vendor Fragmentation — Consolidation Opportunity</div>
-    <div class="ibox-text"><strong>3 separate vendors for housekeeping</strong> with a ₹11K/month spread in per-head costs (₹17K Abad vs ₹28K Professional Hospitality). Consolidating to 1-2 vendors and negotiating volume rates could save ₹1-2 Cr annually. <strong>Security &amp; ward boys (175 staff) are single-vendor (Utiz)</strong> — creates vendor lock-in risk.</div>
+  <div class="kpi-strip g4" style="margin-bottom:18px">
+    <div class="kpi sage"><div class="kpi-lbl">EBITDA Margin</div><div class="kpi-val">23.2%</div><div class="kpi-sub">LHRC FY27 · Peer avg ~19-21%</div><div class="delta up">Above Peer Avg</div></div>
+    <div class="kpi rose"><div class="kpi-lbl">Doctor Cost % Rev</div><div class="kpi-val">18.8%</div><div class="kpi-sub">LHRC FY27 · Industry 14-16%</div><div class="delta dn">300-400 bps High</div></div>
+    <div class="kpi amber"><div class="kpi-lbl">Total HR % Rev</div><div class="kpi-val">38.5%</div><div class="kpi-sub">LHRC FY27 · Top peers 30-33%</div><div class="delta dn">Above Peers</div></div>
+    <div class="kpi"><div class="kpi-lbl">Revenue / FTE</div><div class="kpi-val">₹24.1 L</div><div class="kpi-sub">FY27 · Peer median ₹22-25 L</div><div class="delta na">At Median</div></div>
   </div>
 
   <div class="g2">
-    <div class="card">
-      <div class="card-title">Outsource Cost by Function</div>
-      <div class="card-sub">Housekeeping = 51% of outsource spend</div>
-      <div style="position:relative;height:280px"><canvas id="osDonut"></canvas></div>
+    <div class="bc">
+      <div class="bm">EBITDA Margin % — Multi-specialty 500+ Beds</div>
+      <div class="br lhrc-row"><div class="bn">LHRC FY27 (Budget)</div><div class="bt"><div class="bf" style="width:82%;background:var(--teal)">23.2%</div></div><div class="bv">23.2%</div><div class="bb b-hi">Above</div></div>
+      <div class="br"><div class="bn">Apollo Hospitals</div><div class="bt"><div class="bf" style="width:75%;background:#94a3b8">~21%</div></div><div class="bv">~21%</div><div class="bb b-ok">Peer</div></div>
+      <div class="br"><div class="bn">Fortis Healthcare</div><div class="bt"><div class="bf" style="width:65%;background:#94a3b8">~18%</div></div><div class="bv">~18%</div><div class="bb b-lo">Below</div></div>
+      <div class="br"><div class="bn">Aster DM Healthcare</div><div class="bt"><div class="bf" style="width:60%;background:#94a3b8">~17%</div></div><div class="bv">~17%</div><div class="bb b-lo">Below</div></div>
+      <div class="br"><div class="bn">Kerala Peer Avg</div><div class="bt"><div class="bf" style="width:67%;background:var(--sage)">~19%</div></div><div class="bv">~19%</div><div class="bb b-ok">Avg</div></div>
+      <div class="ins ins-sage" style="margin-top:10px;padding:8px;font-size:.67rem"><strong>✓</strong> LHRC's FY27 EBITDA target of 23.2% places it in the top quartile for South India multi-specialty hospitals, above even Apollo's reported margins.</div>
     </div>
-    <div class="card">
-      <div class="card-title">Cost per Head by Vendor (₹/month)</div>
-      <div class="card-sub">Wide spread = consolidation opportunity</div>
-      <div style="position:relative;height:280px"><canvas id="vendorBar"></canvas></div>
+
+    <div class="bc">
+      <div class="bm">Doctor Cost as % of Revenue</div>
+      <div class="br lhrc-row"><div class="bn">LHRC FY27 (Budget)</div><div class="bt"><div class="bf" style="width:90%;background:var(--rose)">18.8%</div></div><div class="bv">18.8%</div><div class="bb b-hi">High</div></div>
+      <div class="br lhrc-row"><div class="bn">LHRC FY25 (Actual)</div><div class="bt"><div class="bf" style="width:78%;background:var(--teal)">16.5%</div></div><div class="bv">16.5%</div><div class="bb b-ok">Prior</div></div>
+      <div class="br"><div class="bn">Apollo Hospitals</div><div class="bt"><div class="bf" style="width:72%;background:#94a3b8">~15.2%</div></div><div class="bv">~15.2%</div><div class="bb b-lo">Lower</div></div>
+      <div class="br"><div class="bn">Aster DM</div><div class="bt"><div class="bf" style="width:68%;background:#94a3b8">~14.3%</div></div><div class="bv">~14.3%</div><div class="bb b-lo">Lower</div></div>
+      <div class="br"><div class="bn">Industry Median (FICCI)</div><div class="bt"><div class="bf" style="width:70%;background:#94a3b8">~14.8%</div></div><div class="bv">~14.8%</div><div class="bb b-lo">Median</div></div>
+      <div class="ins ins-amber" style="margin-top:10px;padding:8px;font-size:.67rem"><strong>⚠</strong> Growing from 16.5% to 18.8% due to aggressive specialist hiring. LHRC's complex case mix (Liver Tx, Onco) partially justifies the premium, but needs monitoring.</div>
     </div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">Outsource Vendor Detail</div>
-    <div class="card-sub">Full breakdown by function, vendor, unit &middot; Annual costs include GST</div>
-    <table class="tbl">
-      <thead><tr><th>Function</th><th>Vendor</th><th>Unit</th><th style="text-align:right">Heads</th><th style="text-align:right">Cost/Head/Mo</th><th style="text-align:right">Annual ₹L</th><th style="text-align:right">% Share</th></tr></thead>
-      <tbody>
-        <tr><td>Housekeeping</td><td>Naipunnya Welfare</td><td>Kochi</td><td style="text-align:right">124</td><td style="text-align:right">₹22,400</td><td style="text-align:right">438</td><td style="text-align:right">34.0%</td></tr>
-        <tr><td>Housekeeping</td><td>Prof. Hospitality</td><td>Kochi</td><td style="text-align:right">32</td><td style="text-align:right">₹28,700</td><td style="text-align:right">132</td><td style="text-align:right">10.2%</td></tr>
-        <tr><td>Housekeeping</td><td>Abad Property</td><td>FNB</td><td style="text-align:right">34</td><td style="text-align:right">₹17,100</td><td style="text-align:right">84</td><td style="text-align:right">6.5%</td></tr>
-        <tr><td>Housekeeping</td><td>Utiz Resource</td><td>Calicut</td><td style="text-align:right">4</td><td style="text-align:right">₹15,900</td><td style="text-align:right">9</td><td style="text-align:right">0.7%</td></tr>
-        <tr class="top3"><td><em>HK Subtotal</em></td><td></td><td></td><td style="text-align:right"><em>194</em></td><td style="text-align:right"><em>₹22,500 avg</em></td><td style="text-align:right"><em>663</em></td><td style="text-align:right"><em>51.4%</em></td></tr>
-        <tr><td>Security &amp; Fire</td><td>Utiz Resource</td><td>Kochi + Cal</td><td style="text-align:right">99</td><td style="text-align:right">₹22,200</td><td style="text-align:right">307</td><td style="text-align:right">23.8%</td></tr>
-        <tr><td>Ward Boys</td><td>Utiz Resource</td><td>Kochi</td><td style="text-align:right">76</td><td style="text-align:right">₹18,100</td><td style="text-align:right">195</td><td style="text-align:right">15.1%</td></tr>
-        <tr><td>Nursing Assistants</td><td>Team 4 Facility</td><td>Kochi</td><td style="text-align:right">44</td><td style="text-align:right">₹18,100</td><td style="text-align:right">112</td><td style="text-align:right">8.7%</td></tr>
-        <tr><td>MRD Assistants</td><td>Team 4 Facility</td><td>Kochi</td><td style="text-align:right">3</td><td style="text-align:right">₹17,400</td><td style="text-align:right">7</td><td style="text-align:right">0.6%</td></tr>
-        <tr class="top3"><td><strong>Grand Total</strong></td><td></td><td></td><td style="text-align:right"><strong>416</strong></td><td style="text-align:right"><strong>₹25,800 avg</strong></td><td style="text-align:right"><strong>1,290</strong></td><td style="text-align:right"><strong>100%</strong></td></tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<!-- ===== PAGE: CAPEX ===== -->
-<div id="page-capex" class="page">
-  <div class="kpi-strip">
-    <div class="kpi" style="border-color:#27ae60"><div class="kpi-label">Clinical Growth</div><div class="kpi-value" style="color:#27ae60">&#x20B9;76 Cr</div><div class="kpi-sub">58% &middot; Robotics, CathLab, Onco</div></div>
-    <div class="kpi" style="border-color:#1a3a5c"><div class="kpi-label">Equipment Upgrade</div><div class="kpi-value" style="color:#1a3a5c">&#x20B9;23 Cr</div><div class="kpi-sub">17% &middot; Ventilators, Imaging, Labs</div></div>
-    <div class="kpi" style="border-color:#e67e22"><div class="kpi-label">Infrastructure</div><div class="kpi-value" style="color:#e67e22">&#x20B9;20 Cr</div><div class="kpi-sub">15% &middot; Casualty, ICU, Parking</div></div>
-    <div class="kpi" style="border-color:#8e44ad"><div class="kpi-label">IT &amp; Digital</div><div class="kpi-value" style="color:#8e44ad">&#x20B9;5 Cr</div><div class="kpi-sub">3.8% &middot; Network, Oracle prep</div></div>
-    <div class="kpi" style="border-color:#e74c3c"><div class="kpi-label">Safety &amp; Compliance</div><div class="kpi-value" style="color:#e74c3c">&#x20B9;3.4 Cr</div><div class="kpi-sub">3% &middot; Fire curtains, alarm</div></div>
-    <div class="kpi" style="border-color:#c0392b"><div class="kpi-label">Capex / Bed</div><div class="kpi-value" style="color:#c0392b">&#x20B9;22.8L</div><div class="kpi-sub">₹130 Cr / 570 beds</div></div>
-  </div>
-
-  <div class="ibox green">
-    <div class="ibox-title">&#x2705; Capex Aligned to Transformation Thesis</div>
-    <div class="ibox-text"><strong>76% of capex (₹99 Cr) targets clinical capabilities</strong> — split between transformative growth (₹76 Cr: spine robotics ₹12 Cr, biplane cathlab ₹11 Cr, tomotherapy ₹2.3 Cr) and equipment refresh (₹23 Cr). <strong>Top 3 items alone = ₹27.4 Cr (21% of capex)</strong>, creating two new quaternary verticals. Biomedical department = 73% of total capex.</div>
   </div>
 
   <div class="g2">
-    <div class="card">
-      <div class="card-title">Capex by Strategic Category</div>
-      <div class="card-sub">Growth vs Maintenance vs Infrastructure</div>
-      <div style="position:relative;height:280px"><canvas id="capexCatDonut"></canvas></div>
+    <div class="bc">
+      <div class="bm">ARPOB (₹/occupied bed/day)</div>
+      <div class="br lhrc-row"><div class="bn">LHRC FY27 (Budget)</div><div class="bt"><div class="bf" style="width:75%;background:var(--teal)">₹50,121</div></div><div class="bv">₹50,121</div><div class="bb b-ok">Inline</div></div>
+      <div class="br lhrc-row"><div class="bn">LHRC FY25 (Actual)</div><div class="bt"><div class="bf" style="width:54%;background:var(--teal2)">₹31,990</div></div><div class="bv">₹31,990</div><div class="bb b-lo">Prior</div></div>
+      <div class="br"><div class="bn">Apollo (mature)</div><div class="bt"><div class="bf" style="width:90%;background:#94a3b8">₹60,000+</div></div><div class="bv">₹60,000</div><div class="bb b-hi">Higher</div></div>
+      <div class="br"><div class="bn">Aster (Kerala)</div><div class="bt"><div class="bf" style="width:70%;background:#94a3b8">₹46,000</div></div><div class="bv">₹46,000</div><div class="bb b-lo">Lower</div></div>
+      <div class="br"><div class="bn">Kerala Peer (500+ beds)</div><div class="bt"><div class="bf" style="width:73%;background:var(--sage)">₹48,500</div></div><div class="bv">₹48,500</div><div class="bb b-ok">Inline</div></div>
     </div>
-    <div class="card">
-      <div class="card-title">Capex by Department (₹ Crore)</div>
-      <div class="card-sub">Biomedical dominates at 73% of total</div>
-      <div style="position:relative;height:280px"><canvas id="capexDeptBar"></canvas></div>
+
+    <div class="bc">
+      <div class="bm">Total HR Cost as % of Revenue</div>
+      <div class="br lhrc-row"><div class="bn">LHRC FY27 (Budget)</div><div class="bt"><div class="bf" style="width:80%;background:var(--rose)">38.5%</div></div><div class="bv">38.5%</div><div class="bb b-hi">High</div></div>
+      <div class="br lhrc-row"><div class="bn">LHRC FY25 (Actual)</div><div class="bt"><div class="bf" style="width:82%;background:var(--teal)">39.3%</div></div><div class="bv">39.3%</div><div class="bb b-ok">Prior</div></div>
+      <div class="br"><div class="bn">Apollo Hospitals</div><div class="bt"><div class="bf" style="width:65%;background:#94a3b8">~33%</div></div><div class="bv">~33%</div><div class="bb b-lo">Lower</div></div>
+      <div class="br"><div class="bn">Fortis Healthcare</div><div class="bt"><div class="bf" style="width:67%;background:#94a3b8">~34%</div></div><div class="bv">~34%</div><div class="bb b-lo">Lower</div></div>
+      <div class="br"><div class="bn">Best Practice Target</div><div class="bt"><div class="bf" style="width:62%;background:var(--sage)">30–32%</div></div><div class="bv">30–32%</div><div class="bb b-lo">Target</div></div>
     </div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">Top 20 Capex Items — Strategic Assessment</div>
-    <div class="card-sub">Ranked by total budgeted cost &middot; Strategic lens: Growth / Upgrade / Infrastructure / Compliance</div>
-    <div style="overflow-x:auto">
-    <table class="tbl">
-      <thead><tr><th>#</th><th>Item</th><th>Department</th><th style="text-align:right">Cost ₹ Cr</th><th>Category</th><th>Strategic Rationale</th></tr></thead>
-      <tbody>
-        <tr class="top3"><td>1</td><td><strong>Spine Robotic System</strong></td><td>Biomedical</td><td style="text-align:right">12.00</td><td><span class="pill gp">Growth</span></td><td style="font-size:0.65rem;color:#718096">Quaternary care differentiator — Kerala's first</td></tr>
-        <tr class="top3"><td>2</td><td><strong>Biplane Cathlab</strong></td><td>Biomedical</td><td style="text-align:right">11.00</td><td><span class="pill gp">Growth</span></td><td style="font-size:0.65rem;color:#718096">Interventional cardio anchor investment</td></tr>
-        <tr class="top3"><td>3</td><td><strong>Multi Level Parking</strong></td><td>Engineering</td><td style="text-align:right">4.41</td><td><span class="pill op">Infra</span></td><td style="font-size:0.65rem;color:#718096">Patient experience &amp; capacity unlock</td></tr>
-        <tr><td>4</td><td>Fluoroscopy</td><td>Biomedical</td><td style="text-align:right">4.00</td><td><span class="pill gp">Growth</span></td><td style="font-size:0.65rem;color:#718096">Interventional imaging capability</td></tr>
-        <tr><td>5</td><td>Digital X-Ray</td><td>Biomedical</td><td style="text-align:right">4.00</td><td><span class="pill bp">Upgrade</span></td><td style="font-size:0.65rem;color:#718096">Radiology modernization</td></tr>
-        <tr><td>6</td><td>Casualty Renovation</td><td>Project</td><td style="text-align:right">3.80</td><td><span class="pill op">Infra</span></td><td style="font-size:0.65rem;color:#718096">ER capacity enhancement &amp; patient flow</td></tr>
-        <tr><td>7</td><td>Digital Microscope</td><td>Biomedical</td><td style="text-align:right">3.00</td><td><span class="pill gp">Growth</span></td><td style="font-size:0.65rem;color:#718096">Pathology digitization — onco enabler</td></tr>
-        <tr><td>8</td><td>Fire Curtains</td><td>Fire &amp; Safety</td><td style="text-align:right">2.73</td><td><span class="pill rp">Mandatory</span></td><td style="font-size:0.65rem;color:#718096">Statutory safety requirement</td></tr>
-        <tr><td>9</td><td>Network Core Switches</td><td>IT</td><td style="text-align:right">2.50</td><td><span class="pill pp">Digital</span></td><td style="font-size:0.65rem;color:#718096">Oracle Health backbone infra</td></tr>
-        <tr><td>10</td><td>Heart Lung Machine</td><td>Biomedical</td><td style="text-align:right">2.50</td><td><span class="pill gp">Growth</span></td><td style="font-size:0.65rem;color:#718096">Cardiac surgery capability build</td></tr>
-        <tr><td>11</td><td>Ventilators (Paed + Adult)</td><td>Biomedical</td><td style="text-align:right">2.50</td><td><span class="pill bp">Upgrade</span></td><td style="font-size:0.65rem;color:#718096">ICU capacity expansion</td></tr>
-        <tr><td>12</td><td>Digital Slide Scanner</td><td>Biomedical</td><td style="text-align:right">2.50</td><td><span class="pill gp">Growth</span></td><td style="font-size:0.65rem;color:#718096">Onco pathology digitization</td></tr>
-        <tr><td>13</td><td>Tomotherapy Equipment</td><td>Biomedical</td><td style="text-align:right">2.30</td><td><span class="pill gp">Growth</span></td><td style="font-size:0.65rem;color:#718096">Cancer treatment anchor — Burjeel playbook</td></tr>
-        <tr><td>14</td><td>ICU Complex</td><td>Project</td><td style="text-align:right">2.25</td><td><span class="pill op">Infra</span></td><td style="font-size:0.65rem;color:#718096">ICU consolidation — staff efficiency</td></tr>
-        <tr><td>15</td><td>Intraop Ultrasound</td><td>Biomedical</td><td style="text-align:right">2.20</td><td><span class="pill bp">Upgrade</span></td><td style="font-size:0.65rem;color:#718096">Surgical precision upgrade</td></tr>
-        <tr><td>16</td><td>Ultrasound Machine</td><td>Biomedical</td><td style="text-align:right">2.00</td><td><span class="pill bp">Upgrade</span></td><td style="font-size:0.65rem;color:#718096">Radiology refresh</td></tr>
-        <tr><td>17</td><td>Regularization (Fee)</td><td>Project</td><td style="text-align:right">1.64</td><td><span class="pill rp">Mandatory</span></td><td style="font-size:0.65rem;color:#718096">Legal / statutory compliance</td></tr>
-        <tr><td>18</td><td>Ultrasound &amp; Ortho Reno</td><td>Project</td><td style="text-align:right">1.60</td><td><span class="pill op">Infra</span></td><td style="font-size:0.65rem;color:#718096">OPD space optimization</td></tr>
-        <tr><td>19</td><td>Renal Transplant Centre</td><td>Project</td><td style="text-align:right">1.50</td><td><span class="pill gp">Growth</span></td><td style="font-size:0.65rem;color:#718096">Transplant vertical expansion</td></tr>
-        <tr><td>20</td><td>Paediatric OP Construction</td><td>Project</td><td style="text-align:right">1.50</td><td><span class="pill op">Infra</span></td><td style="font-size:0.65rem;color:#718096">Patient-friendly OPD expansion</td></tr>
-      </tbody>
-    </table>
-    </div>
-  </div>
-
-  <div class="slabel">Cancer & Oncology Capex — Strategic Sub-Analysis</div>
-
-  <div class="ibox red">
-    <div class="ibox-title">&#x1F3AF; Strategic Review: Cancer Relevance of Biomedical Capex</div>
-    <div class="ibox-text">Of ₹95.3 Cr biomedical capex, <strong>₹24.3 Cr (25.5%) is DIRECTLY or HIGHLY relevant to cancer/transplant programs</strong> — including tomotherapy (₹2.3 Cr), brachytherapy sources (₹0.4 Cr), digital pathology (₹5.5 Cr), and oncology ICU equipment. A further ₹25.7 Cr (26.9%) is MODERATELY relevant (shared imaging, ICU ventilators, monitors). <strong>The remaining ₹45.4 Cr (47.6%) serves general hospital operations</strong> — spine robotics (₹12 Cr), biplane cathlab (₹11 Cr), and routine replacements. See separate Excel for full item-level assessment.</div>
-  </div>
-
-  <div style="margin-bottom:14px"><a href="LHRC_Biomedical_Capex_Analysis.xlsx" download style="display:inline-flex;align-items:center;gap:8px;background:#1a3a5c;color:white;padding:8px 18px;border-radius:8px;font-size:0.75rem;font-weight:700;text-decoration:none;box-shadow:0 2px 6px rgba(0,0,0,0.15);transition:background 0.2s" onmouseover="this.style.background='#2c5282'" onmouseout="this.style.background='#1a3a5c'">&#x1F4E5; Download Biomedical Capex Analysis (Excel) — 261 Items with Cancer Relevance &amp; Utility Assessment</a></div>
-
-  <div class="g2">
-    <div class="card">
-      <div class="card-title">Cancer Relevance of Biomedical Capex (₹95.3 Cr)</div>
-      <div class="card-sub">DIRECT = onco-specific &middot; HIGH = transplant/pathology &middot; MODERATE = shared clinical &middot; LOW = general</div>
-      <div style="position:relative;height:260px"><canvas id="cancerDonut"></canvas></div>
-    </div>
-    <div class="card">
-      <div class="card-title">Utility Classification — All 261 Biomedical Items</div>
-      <div class="card-sub">New capability vs end-of-life replacement vs other</div>
-      <div style="position:relative;height:260px"><canvas id="utilDonut"></canvas></div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">DIRECT &amp; HIGH Cancer-Aligned Items — ₹24.3 Cr (41 items)</div>
-    <div class="card-sub">Core investments supporting cancer transformation thesis</div>
-    <table class="tbl">
-      <thead><tr><th>#</th><th>Equipment</th><th>Location</th><th style="text-align:right">Cost ₹L</th><th>Cancer Tag</th><th>Justification</th></tr></thead>
-      <tbody>
-        <tr class="top3"><td>1</td><td><strong>Digital Microscope</strong></td><td>Histopathology</td><td style="text-align:right">300.0</td><td><span class="pill rp">Direct Onco Dx</span></td><td style="font-size:0.63rem;color:#718096">New capability — cancer pathology digitization</td></tr>
-        <tr class="top3"><td>2</td><td><strong>Digital Slide Scanner</strong></td><td>Histopathology</td><td style="text-align:right">250.0</td><td><span class="pill rp">Direct Onco Dx</span></td><td style="font-size:0.63rem;color:#718096">New — enables remote onco-pathology review</td></tr>
-        <tr class="top3"><td>3</td><td><strong>Tomotherapy Equipment</strong></td><td>Radiotherapy</td><td style="text-align:right">230.0</td><td><span class="pill rp">Direct Onco</span></td><td style="font-size:0.63rem;color:#718096">Cancer treatment anchor — Burjeel playbook</td></tr>
-        <tr><td>4</td><td>PET Scan Upgradation</td><td>Nuclear Medicine</td><td style="text-align:right">100.0</td><td><span class="pill rp">Direct Onco</span></td><td style="font-size:0.63rem;color:#718096">Upgrade — cancer staging &amp; monitoring</td></tr>
-        <tr><td>5</td><td>Multipara Monitor (×4)</td><td>ONCICU</td><td style="text-align:right">20.0</td><td><span class="pill rp">Onco Location</span></td><td style="font-size:0.63rem;color:#718096">New — oncology ICU build-out</td></tr>
-        <tr><td>6</td><td>Brachytherapy HDR Source Ir-192 (×4)</td><td>Radiotherapy</td><td style="text-align:right">40.0</td><td><span class="pill rp">Direct Onco</span></td><td style="font-size:0.63rem;color:#718096">New — HDR brachytherapy capability</td></tr>
-        <tr><td>7</td><td>Dose Calibrator (×2)</td><td>Nuclear Medicine</td><td style="text-align:right">20.0</td><td><span class="pill rp">Direct Onco</span></td><td style="font-size:0.63rem;color:#718096">Replacement — nuclear medicine dosing</td></tr>
-        <tr><td>8</td><td>Anesthesia Machine</td><td>Radiotherapy</td><td style="text-align:right">25.0</td><td><span class="pill rp">Onco Location</span></td><td style="font-size:0.63rem;color:#718096">Replacement — radiotherapy sedation</td></tr>
-        <tr><td>9</td><td>Ultrasound Machine</td><td>Radiotherapy</td><td style="text-align:right">25.0</td><td><span class="pill rp">Onco Location</span></td><td style="font-size:0.63rem;color:#718096">New — radiotherapy imaging guidance</td></tr>
-        <tr><td>10</td><td>Breast Board (Patient Positioning)</td><td>Radiotherapy</td><td style="text-align:right">0.6</td><td><span class="pill rp">Direct Onco</span></td><td style="font-size:0.63rem;color:#718096">New — breast cancer RT positioning</td></tr>
-        <tr><td>11</td><td>Microwave Ablation System</td><td>Interventional Radiology</td><td style="text-align:right">28.0</td><td><span class="pill op">Onco-Surgical</span></td><td style="font-size:0.63rem;color:#718096">New — tumor ablation capability</td></tr>
-        <tr><td>12</td><td>RF Ablation System</td><td>Radiology</td><td style="text-align:right">25.0</td><td><span class="pill op">Onco-Surgical</span></td><td style="font-size:0.63rem;color:#718096">Replacement — tumor ablation</td></tr>
-        <tr><td>13</td><td>Surgical Aspirator - CUSA</td><td>Neuro OT</td><td style="text-align:right">60.0</td><td><span class="pill op">Onco-Surgical</span></td><td style="font-size:0.63rem;color:#718096">Replacement — used in brain tumor surgery</td></tr>
-        <tr><td>14</td><td>Penumbra Aspiration Pump</td><td>Interventional Radiology</td><td style="text-align:right">4.0</td><td><span class="pill op">Interventional</span></td><td style="font-size:0.63rem;color:#718096">New — thrombectomy/onco-interventional</td></tr>
-        <tr><td>15</td><td>Ventilator</td><td>BMT</td><td style="text-align:right">25.0</td><td><span class="pill op">BMT/Transplant</span></td><td style="font-size:0.63rem;color:#718096">New — bone marrow transplant unit</td></tr>
-        <tr><td>16</td><td>Infusion Pump</td><td>BMT</td><td style="text-align:right">0.5</td><td><span class="pill op">BMT/Transplant</span></td><td style="font-size:0.63rem;color:#718096">New — BMT infusion support</td></tr>
-        <tr><td>—</td><td colspan="4"><em>+ 25 more items (syringe pumps, monitors, immunofluorescence microscope, cytocentrifuge, molecular biology freezers, etc.)</em></td><td></td></tr>
-        <tr class="top3"><td></td><td><strong>TOTAL DIRECT + HIGH</strong></td><td></td><td style="text-align:right"><strong>₹24.3 Cr</strong></td><td><strong>41 items</strong></td><td></td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="g3">
-    <div class="card">
-      <div class="card-title">Cancer Capex Summary</div>
-      <div class="card-sub">₹ Crore by relevance tier</div>
-      <div class="mini-grid">
-        <div class="mini-box"><div class="ml">DIRECT (Onco-specific)</div><div class="mv" style="color:#e74c3c">₹10.6 Cr</div></div>
-        <div class="mini-box"><div class="ml">HIGH (BMT/Path/IR)</div><div class="mv" style="color:#e67e22">₹13.6 Cr</div></div>
-        <div class="mini-box"><div class="ml">MODERATE (Shared)</div><div class="mv" style="color:#1976d2">₹25.7 Cr</div></div>
-        <div class="mini-box"><div class="ml">LOW/NONE (General)</div><div class="mv" style="color:#718096">₹45.4 Cr</div></div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-title">By Utility/Justification</div>
-      <div class="card-sub">New vs replacement split</div>
-      <div class="mini-grid">
-        <div class="mini-box"><div class="ml">New Capability</div><div class="mv" style="color:#27ae60">₹59.2 Cr</div></div>
-        <div class="mini-box"><div class="ml">End-of-Life Replace</div><div class="mv" style="color:#e67e22">₹22.8 Cr</div></div>
-        <div class="mini-box"><div class="ml">Failing/Upgrade</div><div class="mv" style="color:#8e44ad">₹3.9 Cr</div></div>
-        <div class="mini-box"><div class="ml">Other/Unspecified</div><div class="mv" style="color:#718096">₹9.4 Cr</div></div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-title">Key Takeaway</div>
-      <div class="card-sub">Strategic assessment</div>
-      <div style="font-size:0.73rem;color:#4a5568;line-height:1.7;margin-top:8px">
-        &#x2192; <strong>25.5%</strong> of biomed capex is cancer-aligned<br>
-        &#x2192; <strong>62%</strong> is new capability (not just replacement)<br>
-        &#x2192; Top 3 cancer items: digital pathology ₹5.5 Cr, tomotherapy ₹2.3 Cr, PET upgrade ₹1 Cr<br>
-        &#x2192; ₹45 Cr in general items driven by spine robotics + cathlab
-      </div>
-    </div>
-  </div>
-
-</div>
-
-<!-- ===== PAGE: EFFICIENCY ===== -->
-<div id="page-efficiency" class="page">
-  <div class="kpi-strip">
-    <div class="kpi" style="border-color:#1a3a5c"><div class="kpi-label">Staff / Bed</div><div class="kpi-value" style="color:#1a3a5c">3.8x</div><div class="kpi-sub">Benchmark: 3.0-3.5x tertiary</div></div>
-    <div class="kpi" style="border-color:#e67e22"><div class="kpi-label">Rev / Employee</div><div class="kpi-value" style="color:#e67e22">&#x20B9;25.3L</div><div class="kpi-sub">₹550 Cr / 2,173 on-roll</div></div>
-    <div class="kpi" style="border-color:#8e44ad"><div class="kpi-label">People Cost / Bed / Mo</div><div class="kpi-value" style="color:#8e44ad">&#x20B9;2.95L</div><div class="kpi-sub">₹202 Cr / 570 beds / 12</div></div>
-    <div class="kpi" style="border-color:#27ae60"><div class="kpi-label">Benefits Load</div><div class="kpi-value" style="color:#27ae60">12.5%</div><div class="kpi-sub">₹6.5 Cr on ₹52 Cr base</div></div>
-    <div class="kpi" style="border-color:#e74c3c"><div class="kpi-label">Clinical : Non-Clin</div><div class="kpi-value" style="color:#e74c3c">58:42</div><div class="kpi-sub">1,260 vs 913 staff</div></div>
-    <div class="kpi" style="border-color:#c0392b"><div class="kpi-label">Fixed : Variable</div><div class="kpi-value" style="color:#c0392b">65:35</div><div class="kpi-sub">₹131 Cr fixed cost</div></div>
   </div>
 
   <div class="g2">
-    <div class="card">
-      <div class="card-title">Avg Annual Cost per Person by Category (₹ Lakhs)</div>
-      <div class="card-sub">Consultants cost 10x more than outsource staff per head</div>
-      <div style="position:relative;height:280px"><canvas id="avgCostBar"></canvas></div>
+    <div class="bc">
+      <div class="bm">Nurse : Occupied Bed Ratio — General Wards</div>
+      <div class="br lhrc-row"><div class="bn">LHRC (Actual)</div><div class="bt"><div class="bf" style="width:61%;background:var(--teal)">0.92</div></div><div class="bv">0.92</div><div class="bb b-ok">Inline</div></div>
+      <div class="br"><div class="bn">NABH Minimum</div><div class="bt"><div class="bf" style="width:50%;background:#94a3b8">0.75</div></div><div class="bv">0.75</div><div class="bb b-lo">Min</div></div>
+      <div class="br"><div class="bn">NABH Best Practice</div><div class="bt"><div class="bf" style="width:67%;background:var(--sage)">1.0</div></div><div class="bv">1.0</div><div class="bb b-ok">Target</div></div>
+      <div class="br"><div class="bn">Apollo / Fortis Avg</div><div class="bt"><div class="bf" style="width:73%;background:#94a3b8">1.1</div></div><div class="bv">1.1</div><div class="bb b-hi">Higher</div></div>
     </div>
-    <div class="card">
-      <div class="card-title">Clinical vs Non-Clinical / Fixed vs Variable</div>
-      <div class="card-sub">Two strategic lenses on cost structure</div>
-      <div style="position:relative;height:130px"><canvas id="clinDonut"></canvas></div>
-      <div style="margin-top:12px;position:relative;height:130px"><canvas id="fixVarDonut"></canvas></div>
+    <div class="bc">
+      <div class="bm">Nurse : Occupied Bed Ratio — ICU</div>
+      <div class="br lhrc-row"><div class="bn">LHRC ICU Avg</div><div class="bt"><div class="bf" style="width:55%;background:var(--teal)">1.64</div></div><div class="bv">1.64</div><div class="bb b-ok">Compliant</div></div>
+      <div class="br lhrc-row"><div class="bn">LHRC Liver Tx ICU</div><div class="bt"><div class="bf" style="width:90%;background:var(--rose)">5.4</div></div><div class="bv">5.4</div><div class="bb b-hi">High</div></div>
+      <div class="br"><div class="bn">NABH ICU Standard</div><div class="bt"><div class="bf" style="width:50%;background:#94a3b8">≥1.5</div></div><div class="bv">≥1.5</div><div class="bb b-lo">Std</div></div>
+      <div class="br"><div class="bn">Apollo / Fortis ICU</div><div class="bt"><div class="bf" style="width:60%;background:#94a3b8">1.8</div></div><div class="bv">1.8</div><div class="bb b-hi">Higher</div></div>
     </div>
   </div>
 
-  <div class="card">
-    <div class="card-title">Benefits &amp; Statutory Cost Stack</div>
-    <div class="card-sub">Non-salary cost components &middot; ₹6.5 Cr total</div>
+  <div class="g3g" style="margin-top:14px">
+    <div class="ins ins-rose">
+      <div class="ins-ttl">🔴 Gap: Doctor Cost %</div>
+      At 18.8% of revenue (FY27), doctor cost is 300–400 bps above peers (14–16%). Driven by aggressive specialist hiring and 10% increment. If revenue targets are met, the fixed-cost leverage should bring this ratio down by FY28. Consider introducing tiered incentive structures to align cost with volume.
+    </div>
+    <div class="ins ins-amber">
+      <div class="ins-ttl">🟡 Watch: Total HR Cost %</div>
+      HR at 38.5% of revenue is 500–800 bps above leading peers (Apollo ~33%, Fortis ~34%). LHRC's complex case mix (Transplants, Onco, Cath Lab) partially justifies the premium. A workforce productivity index (Revenue per FTE) tracking quarterly would help close the gap over 2–3 years.
+    </div>
+    <div class="ins ins-sage">
+      <div class="ins-ttl">🟢 Strength: Cost Leverage Driving Margin</div>
+      Despite HR cost investment, fixed operating costs are growing slower than volume — producing the 390 bps EBITDA improvement (19.3% → 23.2%). This reflects cost discipline in Employee, Power, and R&amp;M lines even as doctor investment scales up.
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:14px">
+    <div class="sec-hdr" style="font-size:.87rem">Comprehensive Benchmark Scorecard</div>
     <table class="tbl">
-      <thead><tr><th>Component</th><th style="text-align:right">Annual ₹ Cr</th><th style="text-align:right">% of Base</th><th>Note</th></tr></thead>
+      <thead>
+        <tr>
+          <th>Metric</th>
+          <th class="num">LHRC FY25 Actual</th>
+          <th class="num">LHRC FY27 Budget</th>
+          <th class="num">Kerala Peer Avg</th>
+          <th class="num">National Best (Top 10%)</th>
+          <th>LHRC Position</th>
+        </tr>
+      </thead>
       <tbody>
-        <tr><td>PF Employer Contribution</td><td style="text-align:right">3.13</td><td style="text-align:right">6.0%</td><td style="font-size:0.65rem;color:#718096">12% of basic up to ₹15K</td></tr>
-        <tr><td>Gratuity</td><td style="text-align:right">1.20</td><td style="text-align:right">2.3%</td><td style="font-size:0.65rem;color:#718096">Actuarial provision</td></tr>
-        <tr><td>Exgratia</td><td style="text-align:right">0.81</td><td style="text-align:right">1.6%</td><td style="font-size:0.65rem;color:#718096">Annual gratitude payment</td></tr>
-        <tr><td>Holiday Compensation</td><td style="text-align:right">0.67</td><td style="text-align:right">1.3%</td><td style="font-size:0.65rem;color:#718096">Shift-based roles</td></tr>
-        <tr><td>PF Admin &amp; EDLI</td><td style="text-align:right">0.26</td><td style="text-align:right">0.5%</td><td style="font-size:0.65rem;color:#718096">Statutory charge</td></tr>
-        <tr><td>PL Encashment</td><td style="text-align:right">0.21</td><td style="text-align:right">0.4%</td><td style="font-size:0.65rem;color:#718096">Accrued leave monetization</td></tr>
-        <tr><td>ESI Employer</td><td style="text-align:right">0.08</td><td style="text-align:right">0.2%</td><td style="font-size:0.65rem;color:#718096">Employees below ₹21K threshold</td></tr>
-        <tr><td>Bonus</td><td style="text-align:right">0.09</td><td style="text-align:right">0.2%</td><td style="font-size:0.65rem;color:#718096">Statutory bonus</td></tr>
-        <tr class="top3"><td><strong>Total Benefits Load</strong></td><td style="text-align:right"><strong>6.45</strong></td><td style="text-align:right"><strong>12.5%</strong></td><td></td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="g3">
-    <div class="card">
-      <div class="card-title">Kochi vs Calicut vs FNB</div>
-      <div class="card-sub">Multi-unit cost split</div>
-      <div style="position:relative;height:200px"><canvas id="unitDonut"></canvas></div>
-    </div>
-    <div class="card">
-      <div class="card-title">Increment Impact</div>
-      <div class="card-sub">8% staff + 10% doctor</div>
-      <div class="mini-grid">
-        <div class="mini-box"><div class="ml">Staff Increment</div><div class="mv" style="color:#e74c3c">₹4.7 Cr</div></div>
-        <div class="mini-box"><div class="ml">Doctor Increment</div><div class="mv" style="color:#8e44ad">₹5.3 Cr</div></div>
-        <div class="mini-box"><div class="ml">Total Burden</div><div class="mv" style="color:#1a3a5c">₹10.0 Cr</div></div>
-        <div class="mini-box"><div class="ml">% of People Cost</div><div class="mv" style="color:#e67e22">5.0%</div></div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-title">HR Overhead Costs</div>
-      <div class="card-sub">Non-salary people expenses</div>
-      <div class="mini-grid">
-        <div class="mini-box"><div class="ml">Staff Welfare</div><div class="mv" style="color:#27ae60">₹44.5L</div></div>
-        <div class="mini-box"><div class="ml">Recruitment</div><div class="mv" style="color:#e67e22">₹40.0L</div></div>
-        <div class="mini-box"><div class="ml">Training</div><div class="mv" style="color:#8e44ad">₹14.6L</div></div>
-        <div class="mini-box"><div class="ml">Contract Staff</div><div class="mv" style="color:#e74c3c">₹38.5L</div></div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ===== PAGE: MONTHLY ===== -->
-<div id="page-monthly" class="page">
-  <div class="card">
-    <div class="card-title">Monthly People Cost Phasing — FY27 (₹ Lakhs)</div>
-    <div class="card-sub">Grand total across Kochi + Calicut + FNB + Outsource</div>
-    <div style="position:relative;height:320px"><canvas id="monthlyChart"></canvas></div>
-  </div>
-  <div class="card">
-    <div class="card-title">Monthly Phasing Detail</div>
-    <div class="card-sub">Kochi unit staff &amp; doctor breakdown (Calicut &amp; FNB in Grand Total) &middot; Grand Total = all 3 units + outsource</div>
-    <table class="tbl">
-      <thead><tr><th>Month</th><th style="text-align:right">Staff Salary ₹L</th><th style="text-align:right">Doctor Fees ₹L</th><th style="text-align:right">Outsource ₹L</th><th style="text-align:right">Grand Total ₹L</th></tr></thead>
-      <tbody>
-        <tr><td>Apr 26</td><td style="text-align:right">716.5</td><td style="text-align:right">788.0</td><td style="text-align:right">107.5</td><td style="text-align:right">1,653.8</td></tr>
-        <tr><td>May 26</td><td style="text-align:right">718.9</td><td style="text-align:right">800.3</td><td style="text-align:right">107.5</td><td style="text-align:right">1,668.6</td></tr>
-        <tr><td>Jun 26</td><td style="text-align:right">713.9</td><td style="text-align:right">807.0</td><td style="text-align:right">107.5</td><td style="text-align:right">1,670.4</td></tr>
-        <tr><td>Jul 26</td><td style="text-align:right">719.0</td><td style="text-align:right">824.7</td><td style="text-align:right">107.5</td><td style="text-align:right">1,693.6</td></tr>
-        <tr><td>Aug 26</td><td style="text-align:right">723.9</td><td style="text-align:right">804.3</td><td style="text-align:right">107.5</td><td style="text-align:right">1,677.6</td></tr>
-        <tr><td>Sep 26</td><td style="text-align:right">713.9</td><td style="text-align:right">822.1</td><td style="text-align:right">107.5</td><td style="text-align:right">1,685.7</td></tr>
-        <tr><td>Oct 26</td><td style="text-align:right">715.0</td><td style="text-align:right">815.2</td><td style="text-align:right">107.5</td><td style="text-align:right">1,679.7</td></tr>
-        <tr><td>Nov 26</td><td style="text-align:right">713.9</td><td style="text-align:right">821.3</td><td style="text-align:right">107.5</td><td style="text-align:right">1,684.7</td></tr>
-        <tr><td>Dec 26</td><td style="text-align:right">718.9</td><td style="text-align:right">828.5</td><td style="text-align:right">107.5</td><td style="text-align:right">1,697.1</td></tr>
-        <tr><td>Jan 27</td><td style="text-align:right">714.0</td><td style="text-align:right">827.4</td><td style="text-align:right">107.5</td><td style="text-align:right">1,691.0</td></tr>
-        <tr><td>Feb 27</td><td style="text-align:right">713.9</td><td style="text-align:right">820.0</td><td style="text-align:right">107.5</td><td style="text-align:right">1,683.3</td></tr>
-        <tr><td>Mar 27</td><td style="text-align:right">713.9</td><td style="text-align:right">834.9</td><td style="text-align:right">107.5</td><td style="text-align:right">1,698.4</td></tr>
-        <tr class="top3"><td><strong>FY27</strong></td><td style="text-align:right"><strong>8,596</strong></td><td style="text-align:right"><strong>9,794</strong></td><td style="text-align:right"><strong>1,290</strong></td><td style="text-align:right"><strong>20,184</strong></td></tr>
+        <tr><td>EBITDA Margin %</td><td class="num">19.3%</td><td class="num">23.2%</td><td class="num">19.0%</td><td class="num">25%+</td><td><span class="delta up" style="margin:0">Above Avg → Top Quartile</span></td></tr>
+        <tr><td>Doctor Cost % Rev</td><td class="num">16.5%</td><td class="num">18.8%</td><td class="num">15.5%</td><td class="num">12–14%</td><td><span class="delta dn" style="margin:0">Above Avg — Needs Focus</span></td></tr>
+        <tr><td>Employee Cost % Rev</td><td class="num">17.8%</td><td class="num">17.1%</td><td class="num">18.0%</td><td class="num">14–15%</td><td><span class="delta up" style="margin:0">Below Avg — Efficient</span></td></tr>
+        <tr><td>Total HR % Rev</td><td class="num">39.3%</td><td class="num">38.5%</td><td class="num">35.0%</td><td class="num">30–32%</td><td><span class="delta dn" style="margin:0">Above Avg — Long-term Focus</span></td></tr>
+        <tr><td>Consumption % Rev</td><td class="num">32.7%</td><td class="num">29.0%</td><td class="num">28–30%</td><td class="num">26%</td><td><span class="delta up" style="margin:0">Improving — Near Benchmark</span></td></tr>
+        <tr><td>ARPOB (₹/day)</td><td class="num">31,990</td><td class="num">50,121</td><td class="num">48,500</td><td class="num">60,000+</td><td><span class="delta up" style="margin:0">Above Avg — Growing</span></td></tr>
+        <tr><td>Occupancy %</td><td class="num">52.3%</td><td class="num">62.5%</td><td class="num">60–65%</td><td class="num">75%+</td><td><span class="delta na" style="margin:0">Near Avg — Volume Ramp Needed</span></td></tr>
+        <tr><td>Revenue / FTE (₹ L)</td><td class="num">19.1</td><td class="num">24.1</td><td class="num">22–25</td><td class="num">30+</td><td><span class="delta up" style="margin:0">Near Median — Improving</span></td></tr>
+        <tr><td>Nurse : Bed (General)</td><td class="num">0.92</td><td class="num">0.95</td><td class="num">0.9–1.0</td><td class="num">1.1</td><td><span class="delta na" style="margin:0">At Standard</span></td></tr>
+        <tr><td>Nurse : Bed (ICU)</td><td class="num">1.64</td><td class="num">1.70</td><td class="num">1.5–2.0</td><td class="num">2.0+</td><td><span class="delta up" style="margin:0">Compliant — Good</span></td></tr>
       </tbody>
     </table>
   </div>
 </div>
-
-<!-- ===== PAGE: COST LEVERS ===== -->
-<div id="page-levers" class="page">
-  <div class="ibox green">
-    <div class="ibox-title">&#x1F3AF; Five Strategic Cost Levers Identified</div>
-    <div class="ibox-text">Total addressable savings: <strong>₹15-25 Cr annually (5-8% of cost base)</strong> without compromising clinical quality or transformation objectives. Levers range from quick wins (vendor consolidation, 3-6 months) to structural shifts (productivity improvement, 12-18 months).</div>
-  </div>
-
-  <div class="lever-card" style="border-color:#27ae60">
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span class="lever-num" style="background:#27ae60">1</span><span style="font-weight:700;font-size:0.85rem">Productivity Improvement — Staff-to-Bed Optimization</span><span class="pill gp" style="margin-left:auto">HIGH IMPACT</span><span style="font-size:0.7rem;color:#718096">₹8-12 Cr &middot; 12-18 months</span></div>
-    <div class="g2">
-      <div>
-        <table class="tbl"><thead><tr><th>Metric</th><th>Current</th><th>Target</th><th>Gap</th></tr></thead>
-        <tbody>
-          <tr><td>Staff / Bed</td><td>3.8x</td><td style="color:#27ae60">3.3x</td><td style="color:#e74c3c">-285 FTE</td></tr>
-          <tr><td>Nursing / Bed</td><td>1.2x</td><td style="color:#27ae60">1.1x</td><td style="color:#e74c3c">-57 FTE</td></tr>
-          <tr><td>Admin / Bed</td><td>0.95x</td><td style="color:#27ae60">0.75x</td><td style="color:#e74c3c">-114 FTE</td></tr>
-        </tbody></table>
-      </div>
-      <div style="font-size:0.73rem;color:#4a5568;line-height:1.7">
-        &#x2192; Oracle Health digitization to reduce manual workflows<br>
-        &#x2192; Cross-train admin staff across PCS, billing, MRD<br>
-        &#x2192; ICU consolidation (already planned) for nursing efficiency<br>
-        &#x2192; Attrition-based headcount reduction (natural churn)
-      </div>
-    </div>
-  </div>
-
-  <div class="lever-card" style="border-color:#e67e22">
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span class="lever-num" style="background:#e67e22">2</span><span style="font-weight:700;font-size:0.85rem">Doctor Economics — Revenue-Linked Fee Restructuring</span><span class="pill op" style="margin-left:auto">HIGH IMPACT</span><span style="font-size:0.7rem;color:#718096">₹3-5 Cr &middot; 6-12 months</span></div>
-    <div class="g2">
-      <div>
-        <table class="tbl"><thead><tr><th>Component</th><th style="text-align:right">FY27 ₹ Cr</th><th style="text-align:right">% of Rev</th></tr></thead>
-        <tbody>
-          <tr><td>Fixed Professional Fee</td><td style="text-align:right">60.7</td><td style="text-align:right">11.0%</td></tr>
-          <tr><td>Revenue Incentive (2.68%)</td><td style="text-align:right">13.2</td><td style="text-align:right">2.4%</td></tr>
-          <tr><td>Visiting Consultant Share</td><td style="text-align:right">8.3</td><td style="text-align:right">1.5%</td></tr>
-          <tr class="top3"><td><strong>Total</strong></td><td style="text-align:right"><strong>82.2</strong></td><td style="text-align:right"><strong>14.9%</strong></td></tr>
-        </tbody></table>
-      </div>
-      <div style="font-size:0.73rem;color:#4a5568;line-height:1.7">
-        &#x2192; Shift new hires to higher variable / lower fixed structure<br>
-        &#x2192; Tie incentives to EBITDA contribution, not just top-line<br>
-        &#x2192; Review bottom-quartile consultant contracts<br>
-        &#x2192; Leverage VPS brand to attract talent competitively
-      </div>
-    </div>
-  </div>
-
-  <div class="lever-card" style="border-color:#1a3a5c">
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span class="lever-num" style="background:#1a3a5c">3</span><span style="font-weight:700;font-size:0.85rem">Outsource Vendor Consolidation</span><span class="pill bp" style="margin-left:auto">QUICK WIN</span><span style="font-size:0.7rem;color:#718096">₹1-2 Cr &middot; 3-6 months</span></div>
-    <div style="font-size:0.73rem;color:#4a5568;line-height:1.7">
-      &#x2192; <strong>3 HK vendors with ₹11K/month cost spread</strong> — consolidate to 1-2 vendors<br>
-      &#x2192; Negotiate volume-based pricing (194 HK staff = significant bargaining power)<br>
-      &#x2192; Evaluate insourcing for stable long-term roles (ward boys, nursing assistants)<br>
-      &#x2192; Single-vendor risk for 175 security/ward boy staff (Utiz) — add backup vendor
-    </div>
-  </div>
-
-  <div class="lever-card" style="border-color:#8e44ad">
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span class="lever-num" style="background:#8e44ad">4</span><span style="font-weight:700;font-size:0.85rem">Capex Prioritization — Phase &amp; Defer Non-Critical</span><span class="pill pp" style="margin-left:auto">STRATEGIC</span><span style="font-size:0.7rem;color:#718096">₹5-8 Cr deferral</span></div>
-    <div class="g2">
-      <div>
-        <table class="tbl"><thead><tr><th>Priority</th><th style="text-align:right">₹ Cr</th><th style="text-align:right">Items</th></tr></thead>
-        <tbody>
-          <tr><td><span class="pill gp">Must-Have</span> Transformation</td><td style="text-align:right">76</td><td style="text-align:right">43</td></tr>
-          <tr><td><span class="pill bp">Should-Have</span> Upgrades</td><td style="text-align:right">23</td><td style="text-align:right">223</td></tr>
-          <tr><td><span class="pill op">Could-Defer</span> Beautification</td><td style="text-align:right">8</td><td style="text-align:right">~40</td></tr>
-          <tr><td><span class="pill rp">Mandatory</span> Safety</td><td style="text-align:right">3.4</td><td style="text-align:right">4</td></tr>
-        </tbody></table>
-      </div>
-      <div style="font-size:0.73rem;color:#4a5568;line-height:1.7">
-        &#x2192; Beautification items (painting, walkway, porch): ₹2.2 Cr deferrable<br>
-        &#x2192; Premium suite &amp; room renovations: ₹0.6 Cr<br>
-        &#x2192; Vehicle purchases (Innova Hycross): ₹0.7 Cr<br>
-        &#x2192; Phase 237 equipment items by utilization urgency
-      </div>
-    </div>
-  </div>
-
-  <div class="lever-card" style="border-color:#e74c3c">
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span class="lever-num" style="background:#e74c3c">5</span><span style="font-weight:700;font-size:0.85rem">Revenue Mix Shift — Operating Leverage via ARPOB Growth</span><span class="pill rp" style="margin-left:auto">TRANSFORMATION</span><span style="font-size:0.7rem;color:#718096">₹5-10 Cr EBITDA &middot; 12-24 months</span></div>
-    <div class="g3">
-      <div class="mini-box"><div class="ml">Current ARPOB</div><div class="mv" style="color:#e74c3c">₹49K</div></div>
-      <div class="mini-box"><div class="ml">Target FY29</div><div class="mv" style="color:#27ae60">₹70K</div></div>
-      <div class="mini-box"><div class="ml">Margin Expansion</div><div class="mv" style="color:#8e44ad">+43%</div></div>
-    </div>
-    <div style="font-size:0.73rem;color:#4a5568;line-height:1.7;margin-top:10px">
-      &#x2192; ARPOB growth from ₹49K → ₹70K drives revenue without proportional cost increase<br>
-      &#x2192; Cancer &amp; complex care = 50-85% ARPOB premium vs multi-specialty<br>
-      &#x2192; Fixed cost base (~₹131 Cr) creates natural operating leverage<br>
-      &#x2192; Every ₹1K ARPOB increase at 570 beds = ~₹21 Cr incremental revenue
-    </div>
-  </div>
-</div>
-
-<!-- ===== PAGE: 100-DAY EFFICIENCY PLAN ===== -->
-<div id="page-100day" class="page">
-
-  <div class="kpi-strip">
-    <div class="kpi" style="border-color:#e74c3c"><div class="kpi-label">Total Savings Target</div><div class="kpi-value" style="color:#e74c3c">&#x20B9;18-28 Cr</div><div class="kpi-sub">5.4-8.4% of &#x20B9;332 Cr cost base</div></div>
-    <div class="kpi" style="border-color:#27ae60"><div class="kpi-label">Phase 1 Quick Wins</div><div class="kpi-value" style="color:#27ae60">&#x20B9;4-7 Cr</div><div class="kpi-sub">Days 1-30 &middot; Immediate actions</div></div>
-    <div class="kpi" style="border-color:#e67e22"><div class="kpi-label">Phase 2 Structural</div><div class="kpi-value" style="color:#e67e22">&#x20B9;6-10 Cr</div><div class="kpi-sub">Days 31-60 &middot; Process reforms</div></div>
-    <div class="kpi" style="border-color:#8e44ad"><div class="kpi-label">Phase 3 Transform</div><div class="kpi-value" style="color:#8e44ad">&#x20B9;8-11 Cr</div><div class="kpi-sub">Days 61-100 &middot; Revenue leverage</div></div>
-    <div class="kpi" style="border-color:#1a3a5c"><div class="kpi-label">Target People/Rev</div><div class="kpi-value" style="color:#1a3a5c">34.0%</div><div class="kpi-sub">From 36.7% &middot; 270 bps improvement</div></div>
-    <div class="kpi" style="border-color:#00838f"><div class="kpi-label">Target Staff/Bed</div><div class="kpi-value" style="color:#00838f">3.3x</div><div class="kpi-sub">From 3.8x &middot; Benchmark aligned</div></div>
-  </div>
-
-  <div class="ibox red">
-    <div class="ibox-title">&#x1F6A8; 100-Day Mission: From Cost Management to Bare Efficiency</div>
-    <div class="ibox-text"><strong>This plan targets &#x20B9;18-28 Cr in annualized savings</strong> across three phases — quick wins (vendor consolidation, capex deferrals), structural reforms (doctor economics, staffing productivity), and transformation (ARPOB growth, operating leverage). The hospital is <strong>debt-free with &#x20B9;332 Cr cost base and 19.4% EBITDA margin</strong>. The goal is to reach 22-24% EBITDA while maintaining clinical transformation investments. Each phase has clear owners, weekly milestones, and measurable KPIs.</div>
-  </div>
-
-  <!-- TIMELINE VISUALIZATION -->
-  <div class="card">
-    <div class="card-title">100-Day Execution Timeline</div>
-    <div class="card-sub">3 phases &middot; 14 workstreams &middot; Weekly checkpoint rhythm</div>
-    <div style="position:relative;height:280px"><canvas id="timelineChart"></canvas></div>
-  </div>
-
-  <!-- PHASE 1 -->
-  <div class="slabel">Phase 1 — Days 1-30: Quick Wins &amp; Diagnostics (&#x20B9;4-7 Cr Savings)</div>
-
-  <div class="lever-card" style="border-color:#27ae60">
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span class="lever-num" style="background:#27ae60">1</span><span style="font-weight:700;font-size:0.85rem">Outsource Vendor Consolidation &amp; Renegotiation</span><span class="pill gp" style="margin-left:auto">QUICK WIN</span><span style="font-size:0.7rem;color:#718096">&#x20B9;1.5-2.0 Cr &middot; Week 1-4</span></div>
-    <div class="g2">
-      <div>
-        <table class="tbl"><thead><tr><th>Action</th><th>Week</th><th>Expected Impact</th></tr></thead>
-        <tbody>
-          <tr><td>Audit all 5 vendor contracts &amp; benchmark rates</td><td>Week 1</td><td>Baseline established</td></tr>
-          <tr><td>Issue consolidated RFP for housekeeping (194 staff across 3 vendors)</td><td>Week 2</td><td>&#x20B9;11K/head spread identified</td></tr>
-          <tr><td>Negotiate volume discount — target &#x20B9;20K/head blended (from &#x20B9;22.5K avg)</td><td>Week 3</td><td>&#x20B9;58L annual savings</td></tr>
-          <tr><td>Consolidate to 2 vendors max, introduce penalty clauses for SLA breach</td><td>Week 4</td><td>&#x20B9;1.0-1.5 Cr savings locked</td></tr>
-          <tr><td>Add backup vendor for Utiz-dependent security/ward boy (175 staff)</td><td>Week 4</td><td>Risk mitigation + price pressure</td></tr>
-        </tbody></table>
-      </div>
-      <div>
-        <div class="ibox green" style="margin-bottom:8px">
-          <div class="ibox-title">Current State</div>
-          <div class="ibox-text">3 HK vendors: Naipunnya (&#x20B9;22.4K), Prof. Hospitality (&#x20B9;28.7K), Abad (&#x20B9;17.1K). Spread = &#x20B9;11K/head/month. Total outsource: &#x20B9;12.9 Cr for 416 staff.</div>
-        </div>
-        <div class="mini-grid">
-          <div class="mini-box"><div class="ml">Current Avg/Head</div><div class="mv" style="color:#e74c3c">&#x20B9;25.8K</div></div>
-          <div class="mini-box"><div class="ml">Target Avg/Head</div><div class="mv" style="color:#27ae60">&#x20B9;22.0K</div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="lever-card" style="border-color:#27ae60">
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span class="lever-num" style="background:#27ae60">2</span><span style="font-weight:700;font-size:0.85rem">Immediate Capex Deferrals — Non-Clinical Items</span><span class="pill gp" style="margin-left:auto">QUICK WIN</span><span style="font-size:0.7rem;color:#718096">&#x20B9;2.0-3.5 Cr &middot; Week 1-2</span></div>
-    <div class="g2">
-      <div>
-        <table class="tbl"><thead><tr><th>Deferrable Item</th><th style="text-align:right">&#x20B9; Cr</th><th>Rationale</th></tr></thead>
-        <tbody>
-          <tr><td>Building painting &amp; walkway beautification</td><td style="text-align:right">2.20</td><td style="font-size:0.65rem;color:#718096">Cosmetic — no clinical impact</td></tr>
-          <tr><td>Vehicle purchase (Innova Hycross)</td><td style="text-align:right">0.70</td><td style="font-size:0.65rem;color:#718096">Lease or defer 6 months</td></tr>
-          <tr><td>Premium suite renovations</td><td style="text-align:right">0.60</td><td style="font-size:0.65rem;color:#718096">Revenue impact < 0.2% of total</td></tr>
-          <tr><td>Porch &amp; entrance redesign</td><td style="text-align:right">0.45</td><td style="font-size:0.65rem;color:#718096">Aesthetic improvement only</td></tr>
-          <tr class="top3"><td><strong>Total Deferrable</strong></td><td style="text-align:right"><strong>3.95</strong></td><td></td></tr>
-        </tbody></table>
-      </div>
-      <div style="font-size:0.73rem;color:#4a5568;line-height:1.7">
-        <strong>Protect all clinical capex (&#x20B9;99 Cr)</strong> — spine robotics, biplane cathlab, tomotherapy, and oncology equipment remain untouched. These are the transformation thesis.<br><br>
-        &#x2192; Freeze all non-clinical capex orders not yet committed<br>
-        &#x2192; Renegotiate payment terms on committed infrastructure items (extend from 30 to 90 days)<br>
-        &#x2192; Create capex release committee — weekly approvals required for items > &#x20B9;10L
-      </div>
-    </div>
-  </div>
-
-  <div class="lever-card" style="border-color:#27ae60">
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span class="lever-num" style="background:#27ae60">3</span><span style="font-weight:700;font-size:0.85rem">Energy, Consumables &amp; Procurement Audit</span><span class="pill gp" style="margin-left:auto">QUICK WIN</span><span style="font-size:0.7rem;color:#718096">&#x20B9;0.5-1.5 Cr &middot; Week 2-4</span></div>
-    <div style="font-size:0.73rem;color:#4a5568;line-height:1.7">
-      &#x2192; Engage energy auditor for HVAC, lighting, and power optimization across 3 units<br>
-      &#x2192; Benchmark medical consumables pricing against GPO (group purchasing organization) rates<br>
-      &#x2192; Review pharmacy procurement margins — current pharmacy revenue &#x20B9;34 Cr, potential 2-3% margin improvement via formulary standardization<br>
-      &#x2192; Audit dietary/F&amp;B costs — 88 staff at &#x20B9;298L cost, benchmark against outsource (could save &#x20B9;50-80L)<br>
-      &#x2192; Implement just-in-time inventory for high-cost surgical consumables
-    </div>
-  </div>
-
-  <!-- PHASE 2 -->
-  <div class="slabel">Phase 2 — Days 31-60: Structural Reforms (&#x20B9;6-10 Cr Savings)</div>
-
-  <div class="lever-card" style="border-color:#e67e22">
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span class="lever-num" style="background:#e67e22">4</span><span style="font-weight:700;font-size:0.85rem">Doctor Fee Restructuring — New Hire Model Overhaul</span><span class="pill op" style="margin-left:auto">HIGH IMPACT</span><span style="font-size:0.7rem;color:#718096">&#x20B9;2-4 Cr &middot; Week 5-8</span></div>
-    <div class="g2">
-      <div>
-        <table class="tbl"><thead><tr><th>Component</th><th>Current Model</th><th>Target Model</th></tr></thead>
-        <tbody>
-          <tr><td>Fixed:Variable ratio</td><td style="color:#e74c3c">78:22</td><td style="color:#27ae60">55:45</td></tr>
-          <tr><td>New hire fixed fee</td><td style="color:#e74c3c">&#x20B9;3.2L/mo avg</td><td style="color:#27ae60">&#x20B9;2.0L/mo + incentive</td></tr>
-          <tr><td>Incentive trigger</td><td>Revenue-based (2.68%)</td><td>EBITDA-linked + volume</td></tr>
-          <tr><td>Bottom-quartile review</td><td>No formal review</td><td>Annual performance gate</td></tr>
-        </tbody></table>
-      </div>
-      <div style="font-size:0.73rem;color:#4a5568;line-height:1.7">
-        <strong>Doctor cost = &#x20B9;99 Cr (49% of people cost).</strong> The structural problem: 61% is fixed professional fee (&#x20B9;61 Cr) with no revenue linkage.<br><br>
-        &#x2192; All 41 new FY27 hires on revised structure — saves &#x20B9;2-3 Cr vs old model<br>
-        &#x2192; Bottom-quartile consultant review (docs generating < &#x20B9;50L revenue against &#x20B9;3.2L/mo fee)<br>
-        &#x2192; Visiting consultant share (&#x20B9;8.3 Cr): cap at 8% for Calicut (from 10%)<br>
-        &#x2192; New incentive: EBITDA contribution bonus replaces revenue-only incentive
-      </div>
-    </div>
-  </div>
-
-  <div class="lever-card" style="border-color:#e67e22">
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span class="lever-num" style="background:#e67e22">5</span><span style="font-weight:700;font-size:0.85rem">Staffing Productivity — Attrition-Based Right-Sizing</span><span class="pill op" style="margin-left:auto">HIGH IMPACT</span><span style="font-size:0.7rem;color:#718096">&#x20B9;3-4 Cr &middot; Week 5-8</span></div>
-    <div class="g2">
-      <div>
-        <table class="tbl"><thead><tr><th>Category</th><th>Current</th><th>Target</th><th>Reduction</th></tr></thead>
-        <tbody>
-          <tr><td>Staff/Bed overall</td><td>3.8x</td><td style="color:#27ae60">3.3x</td><td>~285 FTE</td></tr>
-          <tr><td>Admin staff</td><td>539</td><td style="color:#27ae60">430</td><td>109 via attrition</td></tr>
-          <tr><td>Non-clinical FTE</td><td>913 (42%)</td><td style="color:#27ae60">780 (36%)</td><td>133 over 12mo</td></tr>
-          <tr><td>Nursing/Bed</td><td>1.2x</td><td style="color:#27ae60">1.1x</td><td>57 via ICU consolidation</td></tr>
-        </tbody></table>
-      </div>
-      <div style="font-size:0.73rem;color:#4a5568;line-height:1.7">
-        &#x2192; <strong>Hiring freeze on non-clinical roles</strong> — natural attrition (~12-15% annually) will reduce 80-100 FTEs in 6 months<br>
-        &#x2192; Cross-train PCS, billing, MRD staff to create multi-skilled admin pool<br>
-        &#x2192; ICU consolidation (already in capex plan — &#x20B9;2.25 Cr) enables 15-20% nursing efficiency<br>
-        &#x2192; Shift-optimization study for nursing — eliminate overlap between 7am-3pm and 2pm-10pm shifts<br>
-        &#x2192; Oracle Health digitization roadmap to automate manual workflows (billing, MRD, scheduling)
-      </div>
-    </div>
-  </div>
-
-  <div class="lever-card" style="border-color:#e67e22">
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span class="lever-num" style="background:#e67e22">6</span><span style="font-weight:700;font-size:0.85rem">Increment Rationalization &amp; Benefits Optimization</span><span class="pill op" style="margin-left:auto">MODERATE</span><span style="font-size:0.7rem;color:#718096">&#x20B9;1-2 Cr &middot; Week 6-8</span></div>
-    <div class="g2">
-      <div style="font-size:0.73rem;color:#4a5568;line-height:1.7">
-        Current increment budget: <strong>&#x20B9;10 Cr</strong> (Staff 8% + Doctor 10%). Benefits load: &#x20B9;6.45 Cr (12.5% of base).<br><br>
-        &#x2192; <strong>Performance-linked increments</strong>: top 30% get 10-12%, middle 50% get 6%, bottom 20% get 0-3%<br>
-        &#x2192; Cap doctor increment at 7% (from 10%) — saves &#x20B9;1.6 Cr on &#x20B9;61 Cr base<br>
-        &#x2192; Review exgratia (&#x20B9;81L) — convert to performance-linked discretionary bonus<br>
-        &#x2192; PL encashment (&#x20B9;21L) — encourage leave utilization vs. encashment<br>
-        &#x2192; Holiday compensation (&#x20B9;67L) — optimize shift scheduling to reduce comp-off accumulation
-      </div>
-      <div>
-        <div class="mini-grid">
-          <div class="mini-box"><div class="ml">Current Increment</div><div class="mv" style="color:#e74c3c">&#x20B9;10.0 Cr</div></div>
-          <div class="mini-box"><div class="ml">Target Increment</div><div class="mv" style="color:#27ae60">&#x20B9;8.2 Cr</div></div>
-          <div class="mini-box"><div class="ml">Staff @ 8%</div><div class="mv" style="color:#1a3a5c">&#x20B9;4.7 Cr</div></div>
-          <div class="mini-box"><div class="ml">Doctor @ 7%</div><div class="mv" style="color:#e67e22">&#x20B9;3.5 Cr</div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- PHASE 3 -->
-  <div class="slabel">Phase 3 — Days 61-100: Transformation &amp; Revenue Leverage (&#x20B9;8-11 Cr EBITDA Impact)</div>
-
-  <div class="lever-card" style="border-color:#8e44ad">
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span class="lever-num" style="background:#8e44ad">7</span><span style="font-weight:700;font-size:0.85rem">ARPOB Growth — Operating Leverage via Case Mix Shift</span><span class="pill pp" style="margin-left:auto">TRANSFORMATION</span><span style="font-size:0.7rem;color:#718096">&#x20B9;5-8 Cr EBITDA &middot; Week 9-14</span></div>
-    <div class="g2">
-      <div>
-        <table class="tbl"><thead><tr><th>Metric</th><th>Day 1</th><th>Day 100</th><th>FY29 Target</th></tr></thead>
-        <tbody>
-          <tr><td>ARPOB</td><td>&#x20B9;49K</td><td style="color:#27ae60">&#x20B9;53K</td><td style="color:#8e44ad">&#x20B9;70K</td></tr>
-          <tr><td>Occupancy</td><td>62%</td><td style="color:#27ae60">65%</td><td style="color:#8e44ad">72%</td></tr>
-          <tr><td>Complex care %</td><td>~18%</td><td style="color:#27ae60">22%</td><td style="color:#8e44ad">35%</td></tr>
-          <tr><td>Insurance mix</td><td>26%</td><td style="color:#27ae60">28%</td><td style="color:#8e44ad">35%</td></tr>
-        </tbody></table>
-      </div>
-      <div style="font-size:0.73rem;color:#4a5568;line-height:1.7">
-        <strong>Every &#x20B9;1K increase in ARPOB at 570 beds = &#x20B9;21 Cr incremental revenue.</strong> At 65% fixed costs, that's &#x20B9;7 Cr straight to EBITDA.<br><br>
-        &#x2192; Fast-track oncology OPD clinic launches — medical oncology, head &amp; neck (6 new docs hired)<br>
-        &#x2192; Spine robotics go-live preparation (&#x20B9;12 Cr investment) — first-mover in Kerala<br>
-        &#x2192; Insurance panel expansion — target 3 new TPA empanelments per month<br>
-        &#x2192; Package pricing redesign for complex procedures (15-20% ARPOB premium)
-      </div>
-    </div>
-  </div>
-
-  <div class="lever-card" style="border-color:#8e44ad">
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span class="lever-num" style="background:#8e44ad">8</span><span style="font-weight:700;font-size:0.85rem">OPD-to-IPD Conversion &amp; Revenue Leakage Plug</span><span class="pill pp" style="margin-left:auto">REVENUE</span><span style="font-size:0.7rem;color:#718096">&#x20B9;2-3 Cr &middot; Week 9-14</span></div>
-    <div style="font-size:0.73rem;color:#4a5568;line-height:1.7">
-      OP revenue = &#x20B9;92 Cr (25.7% of total). IP revenue = &#x20B9;267 Cr (74.3%). A 1% improvement in OPD-to-IPD conversion = &#x20B9;3-4 Cr additional IP revenue.<br><br>
-      &#x2192; Audit OPD-to-IPD conversion rates by department — identify bottom performers<br>
-      &#x2192; Implement CRM-style patient follow-up for OP consultations recommending surgery/procedures<br>
-      &#x2192; Revenue leakage audit: unbilled services, missed charges, underpriced procedures<br>
-      &#x2192; Cross-referral incentive program between departments (e.g., ortho → physio → rehab)<br>
-      &#x2192; Reduce concentration risk: top 2 doctors = 20.7% of revenue — activate next 10 doctors with volume targets
-    </div>
-  </div>
-
-  <div class="lever-card" style="border-color:#8e44ad">
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px"><span class="lever-num" style="background:#8e44ad">9</span><span style="font-weight:700;font-size:0.85rem">Digital &amp; Process Automation — Oracle Health Foundation</span><span class="pill pp" style="margin-left:auto">ENABLER</span><span style="font-size:0.7rem;color:#718096">&#x20B9;1-2 Cr (Year 2) &middot; Week 10-14</span></div>
-    <div style="font-size:0.73rem;color:#4a5568;line-height:1.7">
-      IT capex budget: &#x20B9;5 Cr (network core switches &#x20B9;2.5 Cr as Oracle Health backbone). Process automation is the long-term efficiency lever.<br><br>
-      &#x2192; Finalize Oracle Health implementation roadmap — target billing &amp; scheduling modules first<br>
-      &#x2192; Digitize MRD workflows (3 outsourced MRD assistants + 50+ manual processes)<br>
-      &#x2192; Automate appointment scheduling, bed management, and discharge planning<br>
-      &#x2192; Patient self-service kiosks for registration (reduce PCS staff workload by 20-30%)<br>
-      &#x2192; Analytics dashboard for real-time bed occupancy, OT utilization, and revenue per doctor
-    </div>
-  </div>
-
-  <!-- SAVINGS WATERFALL -->
-  <div class="slabel">Savings Impact Summary</div>
-
-  <div class="g2">
-    <div class="card">
-      <div class="card-title">100-Day Savings Waterfall (&#x20B9; Crore — Annualized)</div>
-      <div class="card-sub">Conservative to optimistic range &middot; Total: &#x20B9;18-28 Cr</div>
-      <div style="position:relative;height:320px"><canvas id="savingsWaterfall"></canvas></div>
-    </div>
-    <div class="card">
-      <div class="card-title">EBITDA Margin Impact Trajectory</div>
-      <div class="card-sub">From 19.4% current to 22-24% target</div>
-      <div style="position:relative;height:320px"><canvas id="ebitdaChart"></canvas></div>
-    </div>
-  </div>
-
-  <!-- GOVERNANCE -->
-  <div class="slabel">Governance &amp; Accountability Framework</div>
-
-  <div class="card">
-    <div class="card-title">100-Day Execution Governance</div>
-    <div class="card-sub">Weekly cadence &middot; Named owners &middot; Board-level oversight</div>
-    <table class="tbl">
-      <thead><tr><th>Workstream</th><th>Owner</th><th>Weekly KPI</th><th>Day 30 Gate</th><th>Day 60 Gate</th><th>Day 100 Gate</th></tr></thead>
-      <tbody>
-        <tr><td style="font-weight:600">Vendor Consolidation</td><td>Head - Admin/Procurement</td><td>Vendor meetings, RFP status</td><td><span class="pill gp">Contracts signed</span></td><td><span class="pill gp">Savings realized</span></td><td><span class="pill gp">&#x20B9;1.5 Cr locked</span></td></tr>
-        <tr><td style="font-weight:600">Capex Freeze</td><td>CFO + Engineering Head</td><td>PO approvals, deferrals</td><td><span class="pill gp">&#x20B9;3.5 Cr frozen</span></td><td><span class="pill bp">Committee active</span></td><td><span class="pill bp">Tracking rhythm</span></td></tr>
-        <tr><td style="font-weight:600">Doctor Economics</td><td>CEO + Medical Director</td><td>Contract reviews completed</td><td><span class="pill op">Model designed</span></td><td><span class="pill gp">New hires on new model</span></td><td><span class="pill gp">Bottom-Q reviewed</span></td></tr>
-        <tr><td style="font-weight:600">Staffing Productivity</td><td>CHRO + COO</td><td>Attrition fill rate, FTE count</td><td><span class="pill op">Freeze in place</span></td><td><span class="pill gp">50 FTE absorbed</span></td><td><span class="pill gp">100 FTE absorbed</span></td></tr>
-        <tr><td style="font-weight:600">Increment Reform</td><td>CHRO + CFO</td><td>Policy draft, approval</td><td><span class="pill op">Policy drafted</span></td><td><span class="pill gp">Board approved</span></td><td><span class="pill gp">Implemented</span></td></tr>
-        <tr><td style="font-weight:600">ARPOB Growth</td><td>CEO + Dept Heads</td><td>Complex case count, ARPP</td><td><span class="pill bp">Baseline set</span></td><td><span class="pill op">Clinics launched</span></td><td><span class="pill gp">&#x20B9;53K ARPOB</span></td></tr>
-        <tr><td style="font-weight:600">Revenue Leakage</td><td>Revenue Cycle Lead</td><td>Unbilled %, conversion rate</td><td><span class="pill bp">Audit complete</span></td><td><span class="pill op">Fixes deployed</span></td><td><span class="pill gp">1% conversion lift</span></td></tr>
-        <tr><td style="font-weight:600">Digital/Oracle Health</td><td>CIO + IT Head</td><td>Module go-live milestones</td><td><span class="pill bp">RFP finalized</span></td><td><span class="pill op">Phase 1 kick-off</span></td><td><span class="pill op">Billing live</span></td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="g3">
-    <div class="card">
-      <div class="card-title">Weekly Cadence</div>
-      <div class="card-sub">Non-negotiable rhythm</div>
-      <div style="font-size:0.73rem;color:#4a5568;line-height:1.8;margin-top:6px">
-        <strong>Monday 8 AM</strong>: CEO war room — 8 workstream leads, 15 min each<br>
-        <strong>Wednesday 4 PM</strong>: CFO savings tracker — actuals vs targets<br>
-        <strong>Friday 5 PM</strong>: Board update — 1-page scorecard emailed<br>
-        <strong>Day 30</strong>: Phase 1 gate review — CEO + Board<br>
-        <strong>Day 60</strong>: Phase 2 gate review — full Board meeting<br>
-        <strong>Day 100</strong>: Transformation report — P&amp;L impact validated
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-title">Risk Register</div>
-      <div class="card-sub">Top 5 execution risks</div>
-      <div style="font-size:0.73rem;color:#4a5568;line-height:1.8;margin-top:6px">
-        <span class="pill rp">HIGH</span> Doctor pushback on fee restructure<br>
-        <span class="pill rp">HIGH</span> Key person dependency (top 2 = 20.7% rev)<br>
-        <span class="pill op">MED</span> Staff morale during hiring freeze<br>
-        <span class="pill op">MED</span> Vendor transition quality disruption<br>
-        <span class="pill bp">LOW</span> Oracle Health implementation delays
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-title">Success Metrics — Day 100</div>
-      <div class="card-sub">Board-reportable KPIs</div>
-      <div class="mini-grid" style="grid-template-columns:1fr">
-        <div class="mini-box"><div class="ml">EBITDA Margin</div><div class="mv" style="color:#27ae60">21-22%</div></div>
-        <div class="mini-box"><div class="ml">People/Revenue</div><div class="mv" style="color:#27ae60">35.5%</div></div>
-        <div class="mini-box"><div class="ml">Staff/Bed Ratio</div><div class="mv" style="color:#27ae60">3.5x</div></div>
-        <div class="mini-box"><div class="ml">ARPOB</div><div class="mv" style="color:#27ae60">&#x20B9;53K</div></div>
-        <div class="mini-box"><div class="ml">Annualized Savings</div><div class="mv" style="color:#27ae60">&#x20B9;18+ Cr</div></div>
-      </div>
-    </div>
-  </div>
-
-</div>
-
-</div><!-- end content wrapper -->
 
 <script>
-const NAVY='#1a3a5c',ORANGE='#e67e22',PURPLE='#8e44ad',GREEN='#27ae60',RED='#e74c3c',DRED='#c0392b',TEAL='#00838f',BLUE='#1976d2',GREY='#718096';
-const MONTHS=['Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar'];
-function showTab(id,el){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+function show(id,el){
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.getElementById('page-'+id).classList.add('active');
-  if(el)el.classList.add('active');
+  document.getElementById('tab-'+id).classList.add('active');
+  el.classList.add('active');
 }
+Chart.defaults.font.family="'DM Sans',sans-serif";
+Chart.defaults.font.size=11;
+Chart.defaults.color='#64748b';
+const C={navy:'#0f2744',teal:'#0d7377',teal2:'#14a3a8',amber:'#c57c1c',rose:'#b5282a',sage:'#2d6a4f',slate:'#475569'};
 
-// ===== OVERVIEW CHARTS =====
-// Cost Bridge
-new Chart(document.getElementById('costBridge'),{type:'bar',data:{
-  labels:['Staff\n(All Units)','Doctor\nCost','Outsource','Clinical\nCapex','Infra &\nReno','IT, Safety\n& Other'],
-  datasets:[{
-    label:'₹ Crore',
-    data:[90,99,12.9,99,20,11],
-    backgroundColor:[NAVY,ORANGE,TEAL,GREEN,'#f39c12',RED],
-    borderRadius:4
-  }]
-},options:{indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{ticks:{callback:v=>'₹'+v+'Cr',font:{size:9}},grid:{display:false}},y:{ticks:{font:{size:9}}}}}});
+// Overview Revenue
+new Chart(document.getElementById('revChart'),{
+  type:'bar',
+  data:{labels:['FY25 Actual','FY26 Estimated','FY27 Budgeted'],
+    datasets:[
+      {label:'Total Cost (₹ Cr)',data:[335.4,354.9,403.5],backgroundColor:[C.rose+'cc',C.amber+'88',C.navy+'cc'],borderRadius:6},
+      {label:'Contribution',data:[211.3,228.3,274.1],backgroundColor:[C.sage+'44',C.sage+'44',C.sage+'44'],borderRadius:6,borderWidth:1.5,borderColor:[C.sage,C.sage,C.sage]}
+    ]},
+  options:{responsive:true,plugins:{legend:{position:'bottom',labels:{boxWidth:10}}},
+    scales:{y:{grid:{color:'#f1f5f9'},ticks:{callback:v=>v+'Cr'}}}}
+});
 
-// Cost Donut
-new Chart(document.getElementById('costDonut'),{type:'doughnut',data:{
-  labels:['Staff (All Units)','Doctor Cost','Outsource','Clinical Capex','Infra','IT/Safety/Other'],
-  datasets:[{data:[90,99,12.9,99,20,11],backgroundColor:[NAVY,ORANGE,TEAL,GREEN,'#f39c12',RED]}]
-},options:{plugins:{legend:{position:'bottom',labels:{font:{size:9},boxWidth:8}}}}});
+// Overview Cost Structure
+new Chart(document.getElementById('costChart'),{
+  type:'bar',
+  data:{labels:['FY25 Actual','FY26 Est.','FY27 Budget'],
+    datasets:[
+      {label:'Consumption',data:[136.0,144.1,152.6],backgroundColor:C.slate+'cc',borderRadius:3},
+      {label:'Doctor Cost',data:[68.5,80.4,99.1],backgroundColor:C.rose+'cc',borderRadius:3},
+      {label:'Employee Cost',data:[74.0,82.4,89.9],backgroundColor:C.amber+'cc',borderRadius:3},
+      {label:'Power+R&M+HK',data:[33.4,35.8,39.1],backgroundColor:C.teal+'88',borderRadius:3},
+      {label:'Other Fixed',data:[23.5,12.2,22.8],backgroundColor:'#94a3b8',borderRadius:3},
+    ]},
+  options:{responsive:true,plugins:{legend:{position:'bottom',labels:{boxWidth:10,padding:6}}},
+    scales:{x:{stacked:true},y:{stacked:true,grid:{color:'#f1f5f9'},ticks:{callback:v=>v+'Cr'}}}}
+});
 
-// People Pie
-new Chart(document.getElementById('peoplePie'),{type:'doughnut',data:{
-  labels:['Staff Salary+Benefits ₹90Cr','Doctor Fixed Fee ₹72Cr','Doctor Incentive ₹21.5Cr','Outsource ₹12.9Cr','Doctor Benefits ₹0.6Cr','HR Overhead+DNB ₹5.5Cr'],
-  datasets:[{data:[90,72,21.5,12.9,0.6,5.5],backgroundColor:[NAVY,ORANGE,PURPLE,TEAL,GREEN,'#95a5a6']}]
-},options:{plugins:{legend:{position:'right',labels:{font:{size:9},boxWidth:8}}}}});
+// HR Pct Revenue
+new Chart(document.getElementById('hrPctChart'),{
+  type:'line',
+  data:{labels:['FY25','FY26','FY27'],
+    datasets:[
+      {label:'Doctor Cost %',data:[16.5,17.8,18.8],borderColor:C.rose,backgroundColor:C.rose+'22',tension:.4,fill:true,pointRadius:4,borderWidth:2},
+      {label:'Emp Cost %',data:[17.8,18.2,17.1],borderColor:C.amber,tension:.4,fill:false,pointRadius:4,borderWidth:2},
+      {label:'Total HR %',data:[39.3,41.1,38.5],borderColor:C.navy,backgroundColor:C.navy+'11',tension:.4,fill:true,pointRadius:4,borderWidth:2,borderDash:[5,3]}
+    ]},
+  options:{responsive:true,plugins:{legend:{position:'bottom',labels:{boxWidth:10,padding:6}}},
+    scales:{y:{grid:{color:'#f1f5f9'},ticks:{callback:v=>v+'%'},min:10}}}
+});
 
-// Capex Pie
-new Chart(document.getElementById('capexPie'),{type:'doughnut',data:{
-  labels:['Clinical Growth ₹76Cr','Equipment Upgrade ₹23Cr','Infrastructure ₹20Cr','IT & Digital ₹5Cr','Safety ₹3.4Cr','Facility ₹2.9Cr'],
-  datasets:[{data:[76,23,20,5,3.4,2.9],backgroundColor:[GREEN,NAVY,ORANGE,PURPLE,RED,'#95a5a6']}]
-},options:{plugins:{legend:{position:'right',labels:{font:{size:9},boxWidth:8}}}}});
+// HR Trend
+new Chart(document.getElementById('hrTrendChart'),{
+  type:'bar',
+  data:{labels:['FY25 Actual','FY26 Est.','FY27 Budget'],
+    datasets:[
+      {label:'Staff Salary',data:[74.8,80.3,85.9],backgroundColor:[C.teal+'99',C.teal+'bb',C.teal],borderRadius:4},
+      {label:'Doctor Fees',data:[68.5,79.6,97.9],backgroundColor:[C.rose+'77',C.rose+'99',C.rose],borderRadius:4},
+      {label:'Outsource',data:[8.4,9.6,11.9],backgroundColor:[C.amber+'77',C.amber+'99',C.amber],borderRadius:4},
+      {label:'Calicut+F&B',data:[11.9,16.8,6.6],backgroundColor:['#94a3b888','#94a3b8aa','#94a3b8'],borderRadius:4},
+    ]},
+  options:{responsive:true,plugins:{legend:{position:'bottom',labels:{boxWidth:10,padding:6}}},
+    scales:{x:{stacked:true},y:{stacked:true,grid:{color:'#f1f5f9'},ticks:{callback:v=>v+'Cr'}}}}
+});
 
-// ===== MANPOWER CHARTS =====
-new Chart(document.getElementById('headcountBar'),{type:'bar',data:{
-  labels:['Nursing','Paramedical','Admin','Consultants','DNB/Salaried','Trainees/Other'],
-  datasets:[{label:'Headcount',data:[687,607,539,159,144,37],backgroundColor:[NAVY,TEAL,ORANGE,PURPLE,BLUE,'#95a5a6'],borderRadius:4}]
-},options:{indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:9}},grid:{display:false}},y:{ticks:{font:{size:9}}}}}});
+// HR Mix donut
+new Chart(document.getElementById('hrMixChart'),{
+  type:'doughnut',
+  data:{labels:['Staff Salary (₹85.9Cr)','Doctor Fees (₹97.9Cr)','Outsource (₹11.9Cr)','Calicut (₹2Cr)','F&B (₹3Cr)'],
+    datasets:[{data:[85.9,97.9,11.9,2.0,3.0],backgroundColor:[C.teal,C.rose,C.amber,C.slate,'#94a3b8'],borderWidth:2,borderColor:'#fff',hoverOffset:6}]},
+  options:{responsive:true,cutout:'60%',plugins:{legend:{position:'bottom',labels:{boxWidth:10,padding:8}}}}
+});
 
-new Chart(document.getElementById('costCatBar'),{type:'bar',data:{
-  labels:['Consultants','Nursing','Paramedical','Admin','DNB/Salaried','Other'],
-  datasets:[{label:'₹ Lakhs',data:[6842,2869,2730,2693,1187,242],backgroundColor:[PURPLE,NAVY,TEAL,ORANGE,BLUE,'#95a5a6'],borderRadius:4}]
-},options:{indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{ticks:{callback:v=>'₹'+v+'L',font:{size:9}},grid:{display:false}},y:{ticks:{font:{size:9}}}}}});
+// HR Monthly
+const mo=['Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar'];
+new Chart(document.getElementById('hrMonthlyChart'),{
+  type:'line',
+  data:{labels:mo,
+    datasets:[
+      {label:'FY26 Staff',data:mo.map(()=>669),borderColor:C.teal,borderDash:[4,3],tension:0,pointRadius:0,borderWidth:1.5},
+      {label:'FY27 Staff',data:mo.map(()=>716.5),borderColor:C.teal2,tension:0,pointRadius:0,borderWidth:2},
+      {label:'FY26 Doctor',data:mo.map(()=>664),borderColor:C.amber+'88',borderDash:[4,3],tension:0,pointRadius:0,borderWidth:1.5},
+      {label:'FY27 Doctor',data:mo.map(()=>788),borderColor:C.rose,tension:0,pointRadius:0,borderWidth:2},
+    ]},
+  options:{responsive:true,plugins:{legend:{position:'bottom',labels:{boxWidth:10,padding:6}}},
+    scales:{y:{grid:{color:'#f1f5f9'},title:{display:true,text:'₹ Lakhs/Month'}}}}
+});
 
-// Inversion chart
-new Chart(document.getElementById('inversionChart'),{type:'bar',data:{
-  labels:['Nursing','Paramedical','Admin','Consultants','DNB/Salaried','Other'],
-  datasets:[
-    {label:'% of Headcount',data:[31.6,27.9,24.8,7.3,6.6,1.7],backgroundColor:'rgba(26,58,92,0.7)',borderRadius:3},
-    {label:'% of Cost',data:[17.3,16.5,16.3,41.3,7.2,1.5],backgroundColor:'rgba(230,126,34,0.7)',borderRadius:3}
-  ]
-},options:{plugins:{legend:{position:'bottom',labels:{font:{size:9},boxWidth:10}}},scales:{x:{ticks:{font:{size:9}}},y:{ticks:{callback:v=>v+'%',font:{size:9}}}}}});
+// Nursing donut
+new Chart(document.getElementById('nursingChart'),{
+  type:'doughnut',
+  data:{labels:['Regular IP (212)','ICU (149)','HDU (25)','Procedure (38)','Others (30)'],
+    datasets:[{data:[212,149,25,38,30],backgroundColor:[C.teal,C.rose,C.amber,C.sage,C.slate],borderWidth:2,borderColor:'#fff',hoverOffset:6}]},
+  options:{responsive:true,cutout:'58%',plugins:{legend:{position:'bottom',labels:{boxWidth:10,padding:8}}}}
+});
 
-// Dept table
-const DEPTS=[
-  {name:'Nursing',hc:827,cost:3456,cats:'Nursing 686, Paramedical 122'},
-  {name:'Orthopaedics',hc:13,cost:492,cats:'Consultant 8, DNB 5'},
-  {name:'Radiology (Doctors)',hc:15,cost:487,cats:'Consultant 13, DNB 2'},
-  {name:'Administration',hc:34,cost:476,cats:'Admin 33'},
-  {name:'Patient Care Services',hc:123,cost:456,cats:'Admin 113, Paramedical 10'},
-  {name:'Pharmacy',hc:118,cost:443,cats:'Paramedical 110, Admin 8'},
-  {name:'Medical Oncology',hc:14,cost:383,cats:'Consultant 5, DNB 9'},
-  {name:'Anaesthesiology',hc:20,cost:342,cats:'Consultant 10, DNB 10'},
-  {name:'Neuro Surgery',hc:5,cost:332,cats:'Consultant 4, DNB 1'},
-  {name:'Food & Beverages',hc:88,cost:298,cats:'Admin 88'},
-  {name:'Plastic Surgery',hc:5,cost:237,cats:'Consultant 4, DNB 1'},
-  {name:'Radiology (Tech)',hc:50,cost:237,cats:'Paramedical 40, Admin 9'},
-  {name:'Pathology',hc:13,cost:215,cats:'Consultant 7, DNB 6'},
-  {name:'Nephrology',hc:15,cost:199,cats:'Consultant 4, DNB 11'},
-  {name:'A&E',hc:12,cost:199,cats:'DNB 10, Consultant 2'},
-  {name:'Cardiology',hc:22,cost:197,cats:'Consultant 2, Paramedical 19'},
-  {name:'Critical Care',hc:10,cost:196,cats:'Consultant 4, DNB 6'},
-  {name:'Gastroenterology',hc:11,cost:191,cats:'Consultant 5, DNB 6'},
-  {name:'GI Surgery',hc:6,cost:191,cats:'Consultant 4, DNB 2'},
-  {name:'Anaesthesiology (Tech)',hc:37,cost:185,cats:'Paramedical 34, DNB 2'},
-];
-const totCost=16563;
-document.getElementById('deptTbody').innerHTML=DEPTS.map((d,i)=>{
-  const avg=(d.cost/d.hc).toFixed(1);
-  const pct=(d.cost/totCost*100).toFixed(1);
-  const tier=d.cost>=400?'<span class="pill rp">Core</span>':d.cost>=200?'<span class="pill op">Major</span>':d.cost>=100?'<span class="pill bp">Growth</span>':'<span class="pill grp">Support</span>';
-  return `<tr${i<3?' class="top3"':''}><td>${i+1}</td><td style="font-weight:600">${d.name}</td><td style="text-align:right">${d.hc}</td><td style="text-align:right;font-weight:700">₹${d.cost.toLocaleString()}</td><td style="text-align:right">${pct}%</td><td style="text-align:right">₹${avg}</td><td style="font-size:0.63rem;color:#718096">${d.cats}</td><td>${tier}</td></tr>`;
-}).join('');
+// Capex
+new Chart(document.getElementById('capexChart'),{
+  type:'bar',
+  data:{labels:['Biomedical','Buildings','Land','Radiology','IT & Digital','Engineering','Fire & Safety','Furniture','Vehicles'],
+    datasets:[
+      {label:'FY26 Budget',data:[68.3,8.6,21.7,9.7,3.9,1.5,2.1,2.1,0.5],backgroundColor:C.amber+'88',borderRadius:4},
+      {label:'FY27 Budget',data:[117.4,18.3,0,0,4.3,6.2,3.4,3.2,0.7],backgroundColor:C.navy+'cc',borderRadius:4},
+    ]},
+  options:{indexAxis:'y',responsive:true,plugins:{legend:{position:'bottom',labels:{boxWidth:10}}},
+    scales:{x:{grid:{color:'#f1f5f9'},ticks:{callback:v=>v+'Cr'}}}}
+});
 
-// ===== DOCTOR ECONOMICS =====
-new Chart(document.getElementById('docCostBreak'),{type:'bar',data:{
-  labels:['Fixed Prof. Fee','New Doc Hires','Doc Increment\n(10%)','Rev. Incentive\n(2.68%)','Visiting Share','DNB/Salaried','Benefits'],
-  datasets:[{label:'₹ Crore',data:[60.7,11.3,5.3,13.2,8.3,11.9,0.2],
-    backgroundColor:[NAVY,PURPLE,'#f39c12',ORANGE,GREEN,BLUE,'#95a5a6'],borderRadius:4}]
-},options:{plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>'₹'+v+'Cr',font:{size:9}}},x:{ticks:{font:{size:7}}}}}});
+// AOP 26 monthly
+new Chart(document.getElementById('aop26RevChart'),{
+  type:'bar',
+  data:{labels:mo,
+    datasets:[
+      {label:'Doctor Cost (₹ Cr)',data:[6.4,6.5,6.6,6.7,6.8,6.9,6.8,6.9,7.0,7.1,7.0,7.0],backgroundColor:C.rose+'cc',borderRadius:4},
+      {label:'Employee Cost (₹ Cr)',data:[6.6,6.7,6.8,6.8,6.9,7.0,6.9,7.0,7.1,7.2,7.1,7.1],backgroundColor:C.amber+'cc',borderRadius:4},
+      {label:'Consumption (₹ Cr)',data:[11.5,11.7,12.0,12.3,12.8,13.0,13.1,13.3,13.2,13.5,12.4,12.4],backgroundColor:C.slate+'88',borderRadius:4}
+    ]},
+  options:{responsive:true,plugins:{legend:{position:'bottom',labels:{boxWidth:10}}},
+    scales:{x:{stacked:true},y:{stacked:true,grid:{color:'#f1f5f9'},ticks:{callback:v=>v+'Cr'}}}}
+});
 
-new Chart(document.getElementById('newDocBar'),{type:'bar',data:{
-  labels:['Critical Care','Head&Neck Onco','Cardiology','Liver Transplant','Med Oncology','PICU','Haematology','Infectious Dis','Nephrology','Other'],
-  datasets:[{label:'Annual ₹L',data:[144,120,108,108,96,84,60,60,48,306],
-    backgroundColor:[NAVY,RED,ORANGE,PURPLE,RED,BLUE,RED,GREEN,BLUE,'#95a5a6'],borderRadius:3}]
-},options:{indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{ticks:{callback:v=>'₹'+v+'L',font:{size:9}},grid:{display:false}},y:{ticks:{font:{size:8}}}}}});
-
-// ===== OUTSOURCE =====
-new Chart(document.getElementById('osDonut'),{type:'doughnut',data:{
-  labels:['Housekeeping ₹663L','Security & Fire ₹307L','Ward Boys ₹195L','Nursing Asst ₹112L','MRD ₹7L'],
-  datasets:[{data:[663,307,195,112,7],backgroundColor:[NAVY,ORANGE,PURPLE,GREEN,'#95a5a6']}]
-},options:{plugins:{legend:{position:'right',labels:{font:{size:9},boxWidth:8}}}}});
-
-new Chart(document.getElementById('vendorBar'),{type:'bar',data:{
-  labels:['Prof.\nHospitality','Naipunnya\nWelfare','Utiz\nSecurity','Utiz Ward\nBoy','Team 4\nFacility','Abad\nProperty'],
-  datasets:[{label:'₹/mo per head',data:[28700,22400,22200,18100,18100,17100],
-    backgroundColor:[RED,ORANGE,NAVY,PURPLE,GREEN,TEAL],borderRadius:4}]
-},options:{plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>'₹'+v.toLocaleString(),font:{size:9}}},x:{ticks:{font:{size:8}}}}}});
-
-// ===== CAPEX =====
-new Chart(document.getElementById('capexCatDonut'),{type:'doughnut',data:{
-  labels:['Clinical Growth ₹76Cr','Equipment Upgrade ₹23Cr','Infrastructure ₹20Cr','IT & Digital ₹5Cr','Safety ₹3.4Cr','Facility ₹2.9Cr'],
-  datasets:[{data:[76,23,20,5,3.4,2.9],backgroundColor:[GREEN,NAVY,ORANGE,PURPLE,RED,'#95a5a6']}]
-},options:{plugins:{legend:{position:'right',labels:{font:{size:9},boxWidth:8}}}}});
-
-new Chart(document.getElementById('capexDeptBar'),{type:'bar',data:{
-  labels:['Biomedical','Project','Engineering','IT','Fire & Safety','Other'],
-  datasets:[{label:'₹ Crore',data:[95.3,17.2,6.3,4.8,3.4,2.9],
-    backgroundColor:[GREEN,ORANGE,NAVY,PURPLE,RED,'#95a5a6'],borderRadius:4}]
-},options:{plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>'₹'+v+'Cr',font:{size:9}}},x:{ticks:{font:{size:9}}}}}});
-
-// ===== EFFICIENCY =====
-new Chart(document.getElementById('avgCostBar'),{type:'bar',data:{
-  labels:['Consultants','DNB/Salaried','Salaried Docs','Admin','Paramedical','Nursing','Outsource'],
-  datasets:[{label:'₹ Lakhs/yr',data:[43.0,8.2,6.6,5.0,4.5,4.2,3.1],
-    backgroundColor:[PURPLE,BLUE,TEAL,ORANGE,GREEN,NAVY,'#95a5a6'],borderRadius:4}]
-},options:{indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{ticks:{callback:v=>'₹'+v+'L',font:{size:9}},grid:{display:false}},y:{ticks:{font:{size:9}}}}}});
-
-new Chart(document.getElementById('clinDonut'),{type:'doughnut',data:{
-  labels:['Clinical 58%','Non-Clinical 42%'],
-  datasets:[{data:[58,42],backgroundColor:[GREEN,ORANGE]}]
-},options:{plugins:{legend:{position:'right',labels:{font:{size:9},boxWidth:8}},title:{display:true,text:'Clinical vs Non-Clinical Staff',font:{size:10}}}}});
-
-new Chart(document.getElementById('fixVarDonut'),{type:'doughnut',data:{
-  labels:['Fixed 65%','Semi-Variable 22%','Variable 13%'],
-  datasets:[{data:[65,22,13],backgroundColor:[NAVY,ORANGE,PURPLE]}]
-},options:{plugins:{legend:{position:'right',labels:{font:{size:9},boxWidth:8}},title:{display:true,text:'Fixed vs Variable Cost Mix',font:{size:10}}}}});
-
-new Chart(document.getElementById('unitDonut'),{type:'doughnut',data:{
-  labels:['Kochi ₹184Cr','FNB ₹3Cr','Calicut ₹2Cr'],
-  datasets:[{data:[184,3,2],backgroundColor:[NAVY,ORANGE,GREEN]}]
-},options:{plugins:{legend:{position:'bottom',labels:{font:{size:9},boxWidth:8}}}}});
-
-// ===== MONTHLY =====
-new Chart(document.getElementById('monthlyChart'),{type:'bar',data:{
-  labels:MONTHS,
-  datasets:[
-    {label:'Staff Salary',data:[716.5,718.9,713.9,719.0,723.9,713.9,715.0,713.9,718.9,714.0,713.9,713.9],backgroundColor:NAVY,borderRadius:2},
-    {label:'Doctor Fees',data:[788.0,800.3,807.0,824.7,804.3,822.1,815.2,821.3,828.5,827.4,820.0,834.9],backgroundColor:ORANGE,borderRadius:2},
-    {label:'Outsource',data:[107.5,107.5,107.5,107.5,107.5,107.5,107.5,107.5,107.5,107.5,107.5,107.5],backgroundColor:TEAL,borderRadius:2}
-  ]
-},options:{plugins:{legend:{position:'bottom',labels:{font:{size:9},boxWidth:10}}},scales:{x:{stacked:true,ticks:{font:{size:9}}},y:{stacked:true,ticks:{callback:v=>'₹'+v+'L',font:{size:8}}}}}});
-
-// ===== CANCER ANALYSIS =====
-new Chart(document.getElementById('cancerDonut'),{type:'doughnut',data:{
-  labels:['DIRECT ₹10.6Cr','HIGH ₹13.6Cr','MODERATE ₹25.7Cr','LOW/NONE ₹45.4Cr'],
-  datasets:[{data:[10.6,13.6,25.7,45.4],backgroundColor:[RED,ORANGE,BLUE,'#bdbdbd']}]
-},options:{plugins:{legend:{position:'right',labels:{font:{size:9},boxWidth:8}}}}});
-
-new Chart(document.getElementById('utilDonut'),{type:'doughnut',data:{
-  labels:['New Capability ₹59.2Cr','End-of-Life Replace ₹22.8Cr','Failing/Upgrade ₹3.9Cr','Other ₹9.4Cr'],
-  datasets:[{data:[59.2,22.8,3.9,9.4],backgroundColor:[GREEN,ORANGE,PURPLE,'#bdbdbd']}]
-},options:{plugins:{legend:{position:'right',labels:{font:{size:9},boxWidth:8}}}}});
-
-// ===== 100-DAY EFFICIENCY PLAN CHARTS =====
-
-// Timeline Gantt-style chart
-new Chart(document.getElementById('timelineChart'),{type:'bar',data:{
-  labels:['Vendor Consolidation','Capex Deferrals','Energy & Procurement Audit','Doctor Fee Restructuring','Staffing Productivity','Increment Rationalization','ARPOB Growth Initiatives','OPD-IPD Conversion','Digital/Oracle Health'],
-  datasets:[
-    {label:'Phase 1 (Days 1-30)',data:[30,14,21,0,0,0,0,0,0],backgroundColor:'rgba(39,174,96,0.8)',borderRadius:3},
-    {label:'Phase 2 (Days 31-60)',data:[0,0,0,28,28,21,0,0,0],backgroundColor:'rgba(230,126,34,0.8)',borderRadius:3},
-    {label:'Phase 3 (Days 61-100)',data:[0,0,0,0,0,0,40,40,35],backgroundColor:'rgba(142,68,173,0.8)',borderRadius:3}
-  ]
-},options:{indexAxis:'y',plugins:{legend:{position:'bottom',labels:{font:{size:9},boxWidth:10}}},scales:{x:{stacked:true,ticks:{callback:v=>'Day '+v,font:{size:9}},title:{display:true,text:'Duration (Days)',font:{size:9}},max:100},y:{stacked:true,ticks:{font:{size:8}}}}}});
-
-// Savings Waterfall
-new Chart(document.getElementById('savingsWaterfall'),{type:'bar',data:{
-  labels:['Vendor\nConsol.','Capex\nDefer','Energy &\nProcure','Doctor\nFee Restr.','Staffing\nProductiv.','Increment\nReform','ARPOB\nGrowth','Revenue\nLeakage','Total\nSavings'],
-  datasets:[
-    {label:'Conservative (₹ Cr)',data:[1.5,2.0,0.5,2.0,3.0,1.0,5.0,2.0,0],backgroundColor:'rgba(26,58,92,0.7)',borderRadius:3},
-    {label:'Optimistic (₹ Cr)',data:[0.5,1.5,1.0,2.0,1.0,1.0,3.0,1.0,0],backgroundColor:'rgba(39,174,96,0.5)',borderRadius:3}
-  ]
-},options:{plugins:{legend:{position:'bottom',labels:{font:{size:9},boxWidth:10}},tooltip:{callbacks:{label:function(ctx){
-  if(ctx.dataIndex===8)return '';
-  return ctx.dataset.label+': ₹'+ctx.raw+' Cr';
-}}}},scales:{x:{stacked:true,ticks:{font:{size:7}}},y:{stacked:true,ticks:{callback:v=>'₹'+v+'Cr',font:{size:9}}}}}});
-
-// EBITDA trajectory
-new Chart(document.getElementById('ebitdaChart'),{type:'line',data:{
-  labels:['FY18','FY19','FY20','FY21','FY22','FY23','FY24','FY25','FY26E','Day 100\nTarget','FY28E','FY29E'],
-  datasets:[
-    {label:'EBITDA %',data:[8.8,10.2,9.5,12.1,15.8,20.2,18.5,19.4,19.0,21.5,23.0,24.5],borderColor:GREEN,backgroundColor:'rgba(39,174,96,0.1)',fill:true,tension:0.3,pointRadius:4,pointBackgroundColor:[GREY,GREY,GREY,GREY,GREY,GREY,GREY,GREY,NAVY,RED,PURPLE,PURPLE]},
-    {label:'Target Floor',data:[null,null,null,null,null,null,null,null,19,20,22,24],borderColor:'rgba(231,76,60,0.4)',borderDash:[5,5],pointRadius:0,fill:false}
-  ]
-},options:{plugins:{legend:{position:'bottom',labels:{font:{size:9},boxWidth:10}}},scales:{x:{ticks:{font:{size:8}}},y:{ticks:{callback:v=>v+'%',font:{size:9}},min:5,max:28}}}});
-
+// AOP 27 monthly
+new Chart(document.getElementById('aop27Chart'),{
+  type:'line',
+  data:{labels:mo,
+    datasets:[
+      {label:'Revenue',data:[39,41,42,43,45,46,44,45,46,48,47,49.7],borderColor:C.teal,backgroundColor:C.teal+'22',fill:true,tension:.4,borderWidth:2.5,pointRadius:3},
+      {label:'Employee Cost',data:[7.1,7.2,7.3,7.4,7.5,7.6,7.5,7.6,7.7,7.8,7.7,7.7],borderColor:C.amber,tension:.4,borderWidth:1.5,pointRadius:2,borderDash:[3,2]},
+      {label:'Doctor Cost',data:[7.6,7.8,8.0,8.1,8.3,8.4,8.2,8.3,8.5,8.7,8.6,9.5],borderColor:C.rose,tension:.4,borderWidth:1.5,pointRadius:2,borderDash:[3,2]},
+    ]},
+  options:{responsive:true,plugins:{legend:{position:'bottom',labels:{boxWidth:10,padding:6}}},
+    scales:{y:{grid:{color:'#f1f5f9'},ticks:{callback:v=>v+'Cr'}}}}
+});
 </script>
 </body>
 </html>
