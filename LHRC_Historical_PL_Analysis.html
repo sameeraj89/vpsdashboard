@@ -86,7 +86,6 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f0f4f8;color:#1a202
   <div class="tab" onclick="showTab('dupont',this)">&#x1F3DB;&#xFE0F; DuPont &amp; Returns</div>
   <div class="tab" onclick="showTab('cashflow',this)">&#x1F4B0; Cash &amp; Leverage</div>
   <div class="tab" onclick="showTab('balancesheet',this)">&#x1F4CB; Balance Sheet</div>
-  <div class="tab" onclick="showTab('ceoview',this)">&#x1F3AF; CEO Dashboard</div>
 </div>
 
 <!-- ===== DATA ===== -->
@@ -167,7 +166,7 @@ function showTab(name,el){
   if(!chartsInited.has(name)){chartsInited.add(name);initChartsFor(name);}
 }
 function initChartsFor(name){
-  const fn={snapshot:initSnapshot,revenue:initRevenue,coststructure:initCostStructure,margins:initMargins,costbehavior:initCostBehavior,dupont:initDuPont,cashflow:initCashFlow,balancesheet:initBalanceSheet,ceoview:initCEOView};
+  const fn={snapshot:initSnapshot,revenue:initRevenue,coststructure:initCostStructure,margins:initMargins,costbehavior:initCostBehavior,dupont:initDuPont,cashflow:initCashFlow,balancesheet:initBalanceSheet};
   if(fn[name])fn[name]();
 }
 function mkChart(id,type,data,opts={}){
@@ -181,17 +180,12 @@ window.addEventListener('DOMContentLoaded',()=>{chartsInited.add('snapshot');ini
 <!-- ===== PAGE: P&L SNAPSHOT ===== -->
 <div id="page-snapshot" class="page active">
   <div class="kpi-strip">
-    <div class="kpi" style="border-color:#1a3a5c"><div class="kpi-label">FY25 Revenue</div><div class="kpi-value" style="color:#1a3a5c">₹408 Cr</div><div class="kpi-sub">+2.9% YoY · 8-yr CAGR 8.6%</div></div>
-    <div class="kpi" style="border-color:#27ae60"><div class="kpi-label">FY25 EBITDA</div><div class="kpi-value" style="color:#27ae60">₹79.1 Cr</div><div class="kpi-sub">19.4% margin · ↓0.7pp YoY</div></div>
-    <div class="kpi" style="border-color:#e67e22"><div class="kpi-label">FY25 PAT</div><div class="kpi-value" style="color:#e67e22">₹39.1 Cr</div><div class="kpi-sub">9.6% margin · ↓10.9% YoY</div></div>
+    <div class="kpi" style="border-color:#1a3a5c"><div class="kpi-label">Revenue Growth</div><div class="kpi-value" style="color:#1a3a5c">₹228→₹408 Cr</div><div class="kpi-sub">FY18→FY25 · CAGR 8.6%</div></div>
+    <div class="kpi" style="border-color:#27ae60"><div class="kpi-label">EBITDA Growth</div><div class="kpi-value" style="color:#27ae60">₹20→₹79 Cr</div><div class="kpi-sub">FY18 8.8% → FY25 19.4% margin</div></div>
+    <div class="kpi" style="border-color:#e67e22"><div class="kpi-label">PAT Growth</div><div class="kpi-value" style="color:#e67e22">₹2.9→₹39.1 Cr</div><div class="kpi-sub">FY18→FY25 · CAGR 44.5%</div></div>
     <div class="kpi" style="border-color:#8e44ad"><div class="kpi-label">Peak EBITDA</div><div class="kpi-value" style="color:#8e44ad">₹107 Cr</div><div class="kpi-sub">FY23 · 25.6% margin</div></div>
-    <div class="kpi" style="border-color:#e74c3c"><div class="kpi-label">Margin Gap</div><div class="kpi-value" style="color:#e74c3c">-6.2pp</div><div class="kpi-sub">FY25 vs FY23 peak EBITDA%</div></div>
-    <div class="kpi" style="border-color:#16a085"><div class="kpi-label">ROE (FY25)</div><div class="kpi-value" style="color:#16a085">9.5%</div><div class="kpi-sub">Down from 16.3% at peak</div></div>
-  </div>
-
-  <div class="ibox red">
-    <div class="ibox-title">&#x1F6A8; Critical Finding: Revenue-Growth / Margin-Compression Trap</div>
-    <div class="ibox-text">Revenue has nearly doubled from FY18 (₹228 Cr) to FY25 (₹408 Cr), but EBITDA margin peaked in FY23 at 25.6% and has compressed to 19.4% — a 6.2pp decline in just 2 years. Costs are growing faster than revenue. The hospital crossed ₹400 Cr revenue but is earning less profit than it did at ₹420 Cr (FY23). <strong>This is the classic "growth without profitability" pattern that requires immediate cost intervention.</strong></div>
+    <div class="kpi" style="border-color:#e74c3c"><div class="kpi-label">Total Expenses Growth</div><div class="kpi-value" style="color:#e74c3c">₹211→₹337 Cr</div><div class="kpi-sub">FY18→FY25 · CAGR 6.9%</div></div>
+    <div class="kpi" style="border-color:#16a085"><div class="kpi-label">Debt Position</div><div class="kpi-value" style="color:#16a085">₹42→₹0 Cr</div><div class="kpi-sub">FY19 peak debt → Debt-free FY24</div></div>
   </div>
 
   <div class="card">
@@ -218,7 +212,7 @@ window.addEventListener('DOMContentLoaded',()=>{chartsInited.add('snapshot');ini
   <div class="g2">
     <div class="card">
       <div class="card-title">YoY Growth Rates — Revenue vs EBITDA vs PAT</div>
-      <div class="card-sub">Divergence between revenue growth and profit growth signals cost creep</div>
+      <div class="card-sub">Divergence between revenue growth and profit growth shows cost growth relative to revenue</div>
       <div style="position:relative;height:240px"><canvas id="snapshotGrowthLines"></canvas></div>
     </div>
     <div class="card">
@@ -348,17 +342,17 @@ function initSnapshot(){
 <!-- ===== PAGE: REVENUE DEEP-DIVE ===== -->
 <div id="page-revenue" class="page">
   <div class="kpi-strip">
-    <div class="kpi" style="border-color:#1a3a5c"><div class="kpi-label">FY25 Revenue</div><div class="kpi-value" style="color:#1a3a5c">₹40,752 L</div><div class="kpi-sub">₹407.5 Cr</div></div>
-    <div class="kpi" style="border-color:#27ae60"><div class="kpi-label">FY25 YoY Growth</div><div class="kpi-value" style="color:#27ae60">+2.9%</div><div class="kpi-sub">₹1,130L incremental</div></div>
-    <div class="kpi" style="border-color:#e67e22"><div class="kpi-label">FY18–FY25 CAGR</div><div class="kpi-value" style="color:#e67e22">8.6%</div><div class="kpi-sub">₹228 Cr → ₹408 Cr</div></div>
-    <div class="kpi" style="border-color:#e74c3c"><div class="kpi-label">COVID Trough</div><div class="kpi-value" style="color:#e74c3c">FY21</div><div class="kpi-sub">₹242 Cr · ↓20.5%</div></div>
-    <div class="kpi" style="border-color:#8e44ad"><div class="kpi-label">Peak Revenue</div><div class="kpi-value" style="color:#8e44ad">FY23</div><div class="kpi-sub">₹419 Cr · Revenge spend</div></div>
-    <div class="kpi" style="border-color:#16a085"><div class="kpi-label">Other Income %</div><div class="kpi-value" style="color:#16a085">2.0%</div><div class="kpi-sub">₹823L FY25 (treasury)</div></div>
+    <div class="kpi" style="border-color:#1a3a5c"><div class="kpi-label">Revenue FY18→FY25</div><div class="kpi-value" style="color:#1a3a5c">₹228→₹408 Cr</div><div class="kpi-sub">CAGR 8.6% over 7 years</div></div>
+    <div class="kpi" style="border-color:#27ae60"><div class="kpi-label">Pre-COVID CAGR</div><div class="kpi-value" style="color:#27ae60">15.5%</div><div class="kpi-sub">FY18–FY20 · ₹228→₹305 Cr</div></div>
+    <div class="kpi" style="border-color:#e67e22"><div class="kpi-label">FY21 Contraction</div><div class="kpi-value" style="color:#e67e22">−20.5%</div><div class="kpi-sub">₹305 Cr → ₹242 Cr</div></div>
+    <div class="kpi" style="border-color:#e74c3c"><div class="kpi-label">Post-COVID Recovery</div><div class="kpi-value" style="color:#e74c3c">₹242→₹419 Cr</div><div class="kpi-sub">FY21–FY23 · +73% in 2 years</div></div>
+    <div class="kpi" style="border-color:#8e44ad"><div class="kpi-label">FY24 Contraction</div><div class="kpi-value" style="color:#8e44ad">−5.5%</div><div class="kpi-sub">₹419 Cr → ₹396 Cr</div></div>
+    <div class="kpi" style="border-color:#16a085"><div class="kpi-label">Other Income Growth</div><div class="kpi-value" style="color:#16a085">₹2.5→₹8.2 Cr</div><div class="kpi-sub">FY18→FY25 · CAGR 18.6%</div></div>
   </div>
 
   <div class="ibox blue">
     <div class="ibox-title">Revenue Story in 3 Acts</div>
-    <div class="ibox-text"><strong>Act 1 (FY18–FY20):</strong> Steady organic growth at 15.5% CAGR, maturing from ₹228 Cr to ₹305 Cr — strong ramp-up phase. <strong>Act 2 (FY21):</strong> COVID shock — revenue cratered 20.5% to ₹242 Cr. <strong>Act 3 (FY22–FY25):</strong> V-shaped recovery peaking at ₹419 Cr in FY23, but then revenue <em>plateaued</em> — FY24 was actually negative (–5.5%) and FY25 shows only +2.9%. The hospital is struggling to break through the ₹420 Cr ceiling.</div>
+    <div class="ibox-text"><strong>Act 1 (FY18–FY20):</strong> Organic growth at a 15.5% CAGR, with revenue expanding from ₹228 Cr to ₹305 Cr. <strong>Act 2 (FY21):</strong> Revenue contracted 20.5% to ₹242 Cr, reflecting the broad disruption to elective and inpatient volumes during the pandemic. <strong>Act 3 (FY22–FY25):</strong> A sharp recovery brought revenue to ₹419 Cr by FY23 (+73% over two years). FY24 recorded a contraction of 5.5% to ₹396 Cr, followed by a partial recovery to ₹408 Cr in FY25 (+2.9%).</div>
   </div>
 
   <div class="g2">
@@ -431,15 +425,15 @@ function initRevenue(){
 <!-- ===== PAGE: COST STRUCTURE ===== -->
 <div id="page-coststructure" class="page">
   <div class="kpi-strip">
-    <div class="kpi" style="border-color:#e74c3c"><div class="kpi-label">Total Costs FY25</div><div class="kpi-value" style="color:#e74c3c">₹337 Cr</div><div class="kpi-sub">82.6% of revenue</div></div>
-    <div class="kpi" style="border-color:#1a3a5c"><div class="kpi-label">Material Cost %</div><div class="kpi-value" style="color:#1a3a5c">28.6%</div><div class="kpi-sub">₹117 Cr · Stable</div></div>
-    <div class="kpi" style="border-color:#e67e22"><div class="kpi-label">People Cost %</div><div class="kpi-value" style="color:#e67e22">36.7%</div><div class="kpi-sub">Payroll+Doctors ₹149 Cr</div></div>
-    <div class="kpi" style="border-color:#8e44ad"><div class="kpi-label">Mktg Cost % of Rev</div><div class="kpi-value" style="color:#8e44ad">1.7%</div><div class="kpi-sub">₹7 Cr · ↑49% YoY</div></div>
+    <div class="kpi" style="border-color:#e74c3c"><div class="kpi-label">Total Cost Growth</div><div class="kpi-value" style="color:#e74c3c">₹211→₹337 Cr</div><div class="kpi-sub">FY18→FY25 · CAGR 6.9%</div></div>
+    <div class="kpi" style="border-color:#1a3a5c"><div class="kpi-label">Material Cost %</div><div class="kpi-value" style="color:#1a3a5c">30.7%→28.6%</div><div class="kpi-sub">FY18→FY25 · −2.1pp</div></div>
+    <div class="kpi" style="border-color:#e67e22"><div class="kpi-label">People Cost %</div><div class="kpi-value" style="color:#e67e22">43.8%→36.7%</div><div class="kpi-sub">Payroll+Doctors FY18→FY25</div></div>
+    <div class="kpi" style="border-color:#8e44ad"><div class="kpi-label">Marketing Cost Growth</div><div class="kpi-value" style="color:#8e44ad">₹1.2→₹7.0 Cr</div><div class="kpi-sub">FY18→FY25 · CAGR 28.5%</div></div>
   </div>
 
   <div class="ibox">
-    <div class="ibox-title">&#x1F50D; Cost Structure Diagnosis</div>
-    <div class="ibox-text">The "big 3" cost heads — Materials (28.6%), Payroll (19.5%), and Doctor Costs (17.2%) — together consume 65.3% of revenue. The critical shift: Doctor cost has dropped from 18.1% in FY23 to 17.2% in FY25 (positive), but Payroll has climbed from 15.2% to 19.5% (negative). Net-net, people costs are rising. Marketing spend has nearly 6x'd from FY18 but is still modest at 1.7% — suggesting the hospital may be under-investing in growth.</div>
+    <div class="ibox-title">&#x1F50D; Cost Structure Overview</div>
+    <div class="ibox-text">The three largest cost heads — Materials (28.6%), Payroll (19.5%), and Doctor Costs (17.2%) — collectively accounted for 65.3% of FY25 revenue. Over the FY18–FY25 period, materials as a share of revenue declined from 30.7% to 28.6%, while payroll rose from 25.9% to 19.5% on a combined people-cost basis. Doctor costs as a percentage of revenue moved from 18.1% in FY23 to 17.2% in FY25. Marketing expenditure grew from ₹1.2 Cr in FY18 to ₹7.0 Cr in FY25, rising from 0.5% to 1.7% of revenue over the period.</div>
   </div>
 
   <div class="g2">
@@ -520,16 +514,16 @@ function initCostStructure(){
 <!-- ===== PAGE: MARGIN ARCHITECTURE ===== -->
 <div id="page-margins" class="page">
   <div class="kpi-strip">
-    <div class="kpi" style="border-color:#27ae60"><div class="kpi-label">EBITDA Margin</div><div class="kpi-value" style="color:#27ae60">19.4%</div><div class="kpi-sub">FY25 · Peak 25.6% (FY23)</div></div>
-    <div class="kpi" style="border-color:#1a3a5c"><div class="kpi-label">EBIT Margin</div><div class="kpi-value" style="color:#1a3a5c">13.0%</div><div class="kpi-sub">FY25 · Peak 20.2% (FY23)</div></div>
-    <div class="kpi" style="border-color:#e67e22"><div class="kpi-label">PBT Margin</div><div class="kpi-value" style="color:#e67e22">12.9%</div><div class="kpi-sub">Finance cost now negligible</div></div>
-    <div class="kpi" style="border-color:#8e44ad"><div class="kpi-label">PAT Margin</div><div class="kpi-value" style="color:#8e44ad">9.6%</div><div class="kpi-sub">Peak 13.7% (FY23)</div></div>
-    <div class="kpi" style="border-color:#e74c3c"><div class="kpi-label">Eff. Tax Rate</div><div class="kpi-value" style="color:#e74c3c">25.8%</div><div class="kpi-sub">Normalized from 30.2% FY23</div></div>
+    <div class="kpi" style="border-color:#27ae60"><div class="kpi-label">EBITDA Margin</div><div class="kpi-value" style="color:#27ae60">8.8%→19.4%</div><div class="kpi-sub">FY18→FY25 · Peak 25.6% FY23</div></div>
+    <div class="kpi" style="border-color:#1a3a5c"><div class="kpi-label">EBIT Margin</div><div class="kpi-value" style="color:#1a3a5c">2.9%→13.0%</div><div class="kpi-sub">FY18→FY25 · Peak 20.2% FY23</div></div>
+    <div class="kpi" style="border-color:#e67e22"><div class="kpi-label">PBT Margin</div><div class="kpi-value" style="color:#e67e22">1.8%→12.9%</div><div class="kpi-sub">FY18→FY25</div></div>
+    <div class="kpi" style="border-color:#8e44ad"><div class="kpi-label">PAT Margin</div><div class="kpi-value" style="color:#8e44ad">1.3%→9.6%</div><div class="kpi-sub">FY18→FY25 · Peak 13.7% FY23</div></div>
+    <div class="kpi" style="border-color:#e74c3c"><div class="kpi-label">Finance Cost</div><div class="kpi-value" style="color:#e74c3c">₹2.4→₹0.3 Cr</div><div class="kpi-sub">FY18→FY25 following debt repayment</div></div>
   </div>
 
   <div class="ibox">
-    <div class="ibox-title">&#x1F4D0; Margin Architecture: The Compression Story</div>
-    <div class="ibox-text">The hospital's margin expansion from FY18 (8.8%) to FY23 (25.6%) was one of the best in Indian hospitals — driven by post-COVID pent-up demand and operating leverage. But FY24–FY25 show a concerning reversal: EBITDA margin dropped 6.2pp. The silver lining: EBIT-to-PBT conversion is near-perfect at 99.4% (finance costs almost zero), meaning the margin compression is purely operational, not financial leverage.</div>
+    <div class="ibox-title">&#x1F4D0; Margin Architecture: FY18–FY25</div>
+    <div class="ibox-text">EBITDA margin expanded from 8.8% in FY18 to a peak of 25.6% in FY23, driven by volume recovery and operating leverage post-FY21. FY24 and FY25 recorded a reversal, with EBITDA margin declining 6.2pp from the FY23 peak to 19.4% in FY25. The EBIT-to-PBT conversion rate stood at 99.4% in FY25, with finance costs effectively eliminated following full debt repayment by FY24.</div>
   </div>
 
   <div class="g2">
@@ -606,7 +600,7 @@ function initMargins(){
 <div id="page-costbehavior" class="page">
   <div class="ibox blue">
     <div class="ibox-title">&#x2699;&#xFE0F; Fixed vs Variable Cost Behavior Analysis</div>
-    <div class="ibox-text">This analysis classifies costs by their behavior relative to revenue changes. A truly "variable" cost should move proportionally with revenue; a "fixed" cost stays constant regardless of volume. Hospital businesses typically have high operating leverage — large fixed cost base means small volume changes produce outsized profit swings. The FY21 COVID crash (revenue ↓20%) vs FY22 recovery (revenue ↑48%) provides a natural experiment.</div>
+    <div class="ibox-text">This analysis classifies costs by their behaviour relative to revenue changes. A variable cost moves proportionally with revenue; a fixed cost remains broadly stable regardless of volume. The FY21 contraction (revenue −20.5%) followed by FY22 recovery (revenue +48%) provides a natural test of cost flexibility across the cycle.</div>
   </div>
 
   <div class="g2">
@@ -664,7 +658,7 @@ function initCostBehavior(){
   costs.forEach(c=>{
     const ca=cagr(c.data[0],c.data[7],7),p18=pct(c.data[0],D.revenue[0]),p25=pct(c.data[7],D.revenue[7]),delta=p25-p18;
     const cls=delta>1?'rp':delta<-1?'gp':'op';
-    ht+=`<tr><td style="font-weight:600">${c.name}</td><td class="num">${c.data[0].toLocaleString()}</td><td class="num">${c.data[7].toLocaleString()}</td><td class="num"><span class="spark ${sparkClass(ca)}">${ca.toFixed(1)}%</span></td><td class="num">${p18.toFixed(1)}%</td><td class="num">${p25.toFixed(1)}%</td><td class="num"><span class="pill ${cls}">${delta>=0?'+':''}${delta.toFixed(1)}pp</span></td><td><span class="pill bp">${c.type}</span></td><td style="font-size:0.62rem;color:#a0aec0;max-width:160px">${ca>revCG+2?'Growing faster than revenue — needs control':'Tracking with or below revenue growth'}</td></tr>`;
+    ht+=`<tr><td style="font-weight:600">${c.name}</td><td class="num">${c.data[0].toLocaleString()}</td><td class="num">${c.data[7].toLocaleString()}</td><td class="num"><span class="spark ${sparkClass(ca)}">${ca.toFixed(1)}%</span></td><td class="num">${p18.toFixed(1)}%</td><td class="num">${p25.toFixed(1)}%</td><td class="num"><span class="pill ${cls}">${delta>=0?'+':''}${delta.toFixed(1)}pp</span></td><td><span class="pill bp">${c.type}</span></td><td style="font-size:0.62rem;color:#a0aec0;max-width:160px">${ca>revCG+2?'Growing faster than revenue — grew faster than revenue':'Tracking with or below revenue growth'}</td></tr>`;
   });
   ht+='</tbody>';document.getElementById('costBehaviorTable').innerHTML=ht;
 
@@ -683,14 +677,14 @@ function initCostBehavior(){
 <div id="page-dupont" class="page">
   <div class="ibox green">
     <div class="ibox-title">&#x1F3DB;&#xFE0F; DuPont Analysis — Decomposing Return on Equity</div>
-    <div class="ibox-text">ROE = Net Margin × Asset Turnover × Equity Multiplier. This decomposition reveals whether returns are driven by profitability, efficiency, or leverage. For LHRC, the hospital is almost entirely equity-funded (multiplier ~1.27x), so ROE is principally a function of margins and asset utilization.</div>
+    <div class="ibox-text">ROE = Net Margin × Asset Turnover × Equity Multiplier. This decomposition identifies whether returns were driven by profitability, asset efficiency, or financial leverage. LHRC was almost entirely equity-funded across the period (multiplier ~1.27x in FY25), making ROE principally a function of net margin and asset utilization.</div>
   </div>
 
   <div class="kpi-strip">
-    <div class="kpi" style="border-color:#27ae60"><div class="kpi-label">ROE FY25</div><div class="kpi-value" style="color:#27ae60">9.5%</div><div class="kpi-sub">= 9.6% × 0.78x × 1.27x</div></div>
-    <div class="kpi" style="border-color:#1a3a5c"><div class="kpi-label">ROA FY25</div><div class="kpi-value" style="color:#1a3a5c">7.5%</div><div class="kpi-sub">PAT/Avg Assets</div></div>
-    <div class="kpi" style="border-color:#e67e22"><div class="kpi-label">ROCE FY25</div><div class="kpi-value" style="color:#e67e22">12.6%</div><div class="kpi-sub">EBIT / Capital Employed</div></div>
-    <div class="kpi" style="border-color:#8e44ad"><div class="kpi-label">Asset Turnover</div><div class="kpi-value" style="color:#8e44ad">0.78x</div><div class="kpi-sub">Revenue / Avg Total Assets</div></div>
+    <div class="kpi" style="border-color:#27ae60"><div class="kpi-label">ROE</div><div class="kpi-value" style="color:#27ae60">1.0%→9.5%</div><div class="kpi-sub">FY18→FY25 · Peak 16.3% FY23</div></div>
+    <div class="kpi" style="border-color:#1a3a5c"><div class="kpi-label">ROA</div><div class="kpi-value" style="color:#1a3a5c">0.7%→7.5%</div><div class="kpi-sub">FY18→FY25 · PAT/Avg Assets</div></div>
+    <div class="kpi" style="border-color:#e67e22"><div class="kpi-label">ROCE</div><div class="kpi-value" style="color:#e67e22">2.3%→12.6%</div><div class="kpi-sub">FY18→FY25 · EBIT/Capital Employed</div></div>
+    <div class="kpi" style="border-color:#8e44ad"><div class="kpi-label">Asset Turnover</div><div class="kpi-value" style="color:#8e44ad">0.58→0.78x</div><div class="kpi-sub">FY18→FY25 · Revenue/Avg Assets</div></div>
   </div>
 
   <div class="g2">
@@ -750,22 +744,22 @@ function initDuPont(){
 <!-- ===== PAGE: CASH & LEVERAGE ===== -->
 <div id="page-cashflow" class="page">
   <div class="kpi-strip">
-    <div class="kpi" style="border-color:#27ae60"><div class="kpi-label">CFO FY25</div><div class="kpi-value" style="color:#27ae60">₹68.3 Cr</div><div class="kpi-sub">Best ever · ↑55% YoY</div></div>
-    <div class="kpi" style="border-color:#1a3a5c"><div class="kpi-label">FCF FY25</div><div class="kpi-value" style="color:#1a3a5c">₹45.6 Cr</div><div class="kpi-sub">CFO – Capex</div></div>
-    <div class="kpi" style="border-color:#16a085"><div class="kpi-label">Total Debt</div><div class="kpi-value" style="color:#16a085">₹0 Cr</div><div class="kpi-sub">Debt-free since FY24!</div></div>
-    <div class="kpi" style="border-color:#e67e22"><div class="kpi-label">Cash + Bank</div><div class="kpi-value" style="color:#e67e22">₹106 Cr</div><div class="kpi-sub">Cash ₹44Cr + FD ₹62Cr</div></div>
-    <div class="kpi" style="border-color:#8e44ad"><div class="kpi-label">Dividend FY25</div><div class="kpi-value" style="color:#8e44ad">₹17 Cr</div><div class="kpi-sub">43.5% payout ratio</div></div>
+    <div class="kpi" style="border-color:#27ae60"><div class="kpi-label">Cumulative CFO</div><div class="kpi-value" style="color:#27ae60">₹343 Cr</div><div class="kpi-sub">FY18–FY25 · 8 years</div></div>
+    <div class="kpi" style="border-color:#1a3a5c"><div class="kpi-label">CFO Range</div><div class="kpi-value" style="color:#1a3a5c">₹31–₹68 Cr</div><div class="kpi-sub">Annual operating cash flow</div></div>
+    <div class="kpi" style="border-color:#16a085"><div class="kpi-label">Debt Reduction</div><div class="kpi-value" style="color:#16a085">₹42→₹0 Cr</div><div class="kpi-sub">FY19 peak → Debt-free FY24</div></div>
+    <div class="kpi" style="border-color:#e67e22"><div class="kpi-label">Cash Accumulation</div><div class="kpi-value" style="color:#e67e22">₹8.7→₹106 Cr</div><div class="kpi-sub">FY18→FY25 · Cash + Bank FD</div></div>
+    <div class="kpi" style="border-color:#8e44ad"><div class="kpi-label">Cumulative Dividends</div><div class="kpi-value" style="color:#8e44ad">₹75 Cr</div><div class="kpi-sub">FY18–FY25 total paid</div></div>
   </div>
 
   <div class="ibox green">
-    <div class="ibox-title">&#x2705; Fortress Balance Sheet — Cash Machine Status Achieved</div>
-    <div class="ibox-text">LHRC is now debt-free with ₹106 Cr in cash/bank balances. The hospital generates ₹45–68 Cr of annual operating cash flow. After capex and dividends, it still accumulates cash. The strategic question is no longer "can we survive" but "what's the best use of excess cash — expansion, acquisitions, or higher shareholder returns?"</div>
+    <div class="ibox-title">&#x2705; Balance Sheet &amp; Cash Position — FY18–FY25</div>
+    <div class="ibox-text">LHRC reached a debt-free position by FY24, having reduced total borrowings from ₹42 Cr (FY19 peak) to zero. Cash and bank balances grew to ₹106 Cr by FY25, comprising ₹44 Cr in liquid cash and ₹62 Cr in fixed deposits. Operating cash flow ranged between ₹31 Cr and ₹68 Cr annually over the period, with free cash flow positive in each year following FY19.</div>
   </div>
 
   <div class="g2">
     <div class="card">
       <div class="card-title">Cash Flow from Operations, Investing &amp; Financing</div>
-      <div class="card-sub">CFO consistently positive — investing for growth</div>
+      <div class="card-sub">CFO positive across all years</div>
       <div style="position:relative;height:280px"><canvas id="cfTrend"></canvas></div>
     </div>
     <div class="card">
@@ -816,9 +810,9 @@ function initCashFlow(){
 <!-- ===== PAGE: BALANCE SHEET ===== -->
 <div id="page-balancesheet" class="page">
   <div class="kpi-strip">
-    <div class="kpi" style="border-color:#1a3a5c"><div class="kpi-label">Total Assets</div><div class="kpi-value" style="color:#1a3a5c">₹533 Cr</div><div class="kpi-sub">↑5% YoY</div></div>
-    <div class="kpi" style="border-color:#27ae60"><div class="kpi-label">Equity</div><div class="kpi-value" style="color:#27ae60">₹422 Cr</div><div class="kpi-sub">79.2% of assets</div></div>
-    <div class="kpi" style="border-color:#e67e22"><div class="kpi-label">Net Fixed Assets</div><div class="kpi-value" style="color:#e67e22">₹347 Cr</div><div class="kpi-sub">65.1% of assets — asset heavy</div></div>
+    <div class="kpi" style="border-color:#1a3a5c"><div class="kpi-label">Total Assets</div><div class="kpi-value" style="color:#1a3a5c">₹393→₹533 Cr</div><div class="kpi-sub">FY18→FY25 · CAGR 4.5%</div></div>
+    <div class="kpi" style="border-color:#27ae60"><div class="kpi-label">Equity</div><div class="kpi-value" style="color:#27ae60">₹279→₹422 Cr</div><div class="kpi-sub">FY18→FY25 · 79.2% of assets FY25</div></div>
+    <div class="kpi" style="border-color:#e67e22"><div class="kpi-label">Net Fixed Assets</div><div class="kpi-value" style="color:#e67e22">₹354→₹347 Cr</div><div class="kpi-sub">FY18→FY25 · PPE + CWIP</div></div>
     <div class="kpi" style="border-color:#e74c3c"><div class="kpi-label">Working Capital Days</div><div class="kpi-value" style="color:#e74c3c" id="wcDays">—</div><div class="kpi-sub">Trade Rec – Trade Pay cycle</div></div>
   </div>
 
@@ -876,102 +870,6 @@ function initBalanceSheet(){
 }
 </script>
 
-<!-- ===== PAGE: CEO DASHBOARD ===== -->
-<div id="page-ceoview" class="page">
-  <div class="ibox red">
-    <div class="ibox-title">&#x1F3AF; Board-Level Strategic Summary — FY25</div>
-    <div class="ibox-text">The hospital has <strong>3 strengths</strong> (debt-free, strong cash generation, revenue scale) and <strong>3 urgent concerns</strong> (margin compression, revenue plateau, rising cost intensity). The next 12–18 months will determine if LHRC can return to 22%+ EBITDA margins or if the FY23 peak was an anomaly driven by post-COVID tailwinds.</div>
-  </div>
-
-  <div class="slabel">HEADLINE METRICS — THE BIG PICTURE</div>
-  <div class="mini-grid" id="ceoMiniGrid"></div>
-
-  <div class="slabel">STRATEGIC SCORECARD</div>
-  <div class="card" id="ceoScorecard"></div>
-
-  <div class="slabel">THE 5 THINGS THE CEO SHOULD DO NOW</div>
-  <div class="g2">
-    <div class="card">
-      <div class="card-title" style="color:#e74c3c">&#x1F534; Immediate Actions (0–6 months)</div>
-      <div style="font-size:0.73rem;line-height:1.8;color:#4a5568">
-        <strong>1. Payroll Audit:</strong> Payroll has risen from 15.2% to 19.5% of revenue — a ₹17 Cr annual drag. Commission a headcount-to-productivity analysis across all departments.<br>
-        <strong>2. Revenue Recovery Plan:</strong> FY24 revenue actually declined 5.5%. Need a department-wise revenue acceleration playbook — especially for the top 5 departments that generate 70%+ of revenue.<br>
-        <strong>3. Receivables Tightening:</strong> Trade receivables jumped from ₹27 Cr to ₹34 Cr — receivable days creeping up. Implement stricter collection protocols for TPA/insurance.
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-title" style="color:#e67e22">&#x1F7E1; Medium-Term Priorities (6–18 months)</div>
-      <div style="font-size:0.73rem;line-height:1.8;color:#4a5568">
-        <strong>4. Capital Allocation Strategy:</strong> With ₹106 Cr cash and zero debt, the balance sheet is underleveraged. Explore: (a) capacity expansion (new beds/specialties), (b) acquisition of a smaller hospital/clinic chain, or (c) special dividend if no growth opportunities merit investment.<br>
-        <strong>5. Marketing ROI Analysis:</strong> Marketing spend went from ₹1.2 Cr to ₹7 Cr (6x increase), but revenue growth has stalled. Need to measure patient acquisition cost and channel effectiveness before further increases.
-      </div>
-    </div>
-  </div>
-
-  <div class="slabel">HISTORICAL PERFORMANCE MAP</div>
-  <div class="g2">
-    <div class="card">
-      <div class="card-title">Revenue vs EBITDA Margin Scatter</div>
-      <div class="card-sub">Each dot = one fiscal year · Size = PAT</div>
-      <div style="position:relative;height:300px"><canvas id="ceoScatter"></canvas></div>
-    </div>
-    <div class="card">
-      <div class="card-title">Year-over-Year Performance Heatmap</div>
-      <div style="overflow-x:auto"><table class="tbl" id="ceoHeatmap"></table></div>
-    </div>
-  </div>
-</div>
-
-<script>
-function initCEOView(){
-  const metrics=[
-    {label:'Revenue CAGR (8yr)',val:cagr(D.revenue[0],D.revenue[7],7).toFixed(1)+'%',sub:'FY18→FY25',c:'#1a3a5c'},
-    {label:'EBITDA CAGR (8yr)',val:cagr(D.ebitda[0],D.ebitda[7],7).toFixed(1)+'%',sub:'Outpacing revenue',c:'#27ae60'},
-    {label:'PAT CAGR (8yr)',val:cagr(D.pat[0],D.pat[7],7).toFixed(1)+'%',sub:'Compounding well',c:'#e67e22'},
-    {label:'Cumulative PAT (8yr)',val:'₹'+Math.round(D.pat.reduce((a,b)=>a+b,0)/100)+' Cr',sub:'Total profit generated',c:'#8e44ad'},
-    {label:'Cumulative Dividend',val:'₹'+Math.round(D.divPaid.reduce((a,b)=>a+b,0)/100)+' Cr',sub:'Returned to shareholders',c:'#d63384'},
-    {label:'Debt-Free Since',val:'FY24',sub:'Zero borrowings',c:'#16a085'},
-    {label:'Cash Pile',val:'₹'+(Math.round((D.cash[7]+D.bankBal[7])/100))+' Cr',sub:'Cash+FD on books',c:'#e67e22'},
-    {label:'Peak-to-Current Margin',val:'-6.2pp',sub:'EBITDA margin erosion',c:'#e74c3c'},
-  ];
-  document.getElementById('ceoMiniGrid').innerHTML=metrics.map(m=>`<div class="mini-card"><div class="mc-label">${m.label}</div><div class="mc-val" style="color:${m.c}">${m.val}</div><div class="mc-sub">${m.sub}</div></div>`).join('');
-
-  const scores=[
-    {area:'Revenue Growth',fy23:'A+',fy25:'C+',trend:'↓',comment:'Plateaued at ₹400Cr ceiling'},
-    {area:'EBITDA Margin',fy23:'A+',fy25:'B-',trend:'↓',comment:'19.4% vs 25.6% peak — 6.2pp erosion'},
-    {area:'Cash Generation',fy23:'A',fy25:'A+',trend:'↑',comment:'Record CFO ₹68 Cr'},
-    {area:'Balance Sheet',fy23:'A',fy25:'A+',trend:'↑',comment:'Debt-free, ₹106 Cr cash'},
-    {area:'Cost Discipline',fy23:'A',fy25:'C',trend:'↓',comment:'Payroll & marketing creeping up'},
-    {area:'Capital Efficiency',fy23:'A',fy25:'B',trend:'↓',comment:'ROE down from 16% to 9.5%'},
-    {area:'Shareholder Returns',fy23:'B+',fy25:'B+',trend:'→',comment:'Consistent dividends ~₹17 Cr/yr'},
-  ];
-  const gc=g=>g.startsWith('A')?'#27ae60':g.startsWith('B')?'#e67e22':g.startsWith('C')?'#c0392b':'#e74c3c';
-  document.getElementById('ceoScorecard').innerHTML=`<div class="card-title">Strategic Scorecard — FY23 vs FY25</div><div class="card-sub">Letter grades based on peer benchmarks and internal trajectory</div>
-    <table class="tbl"><thead><tr><th>Area</th><th class="num">FY23</th><th class="num">FY25</th><th class="num">Trend</th><th>Commentary</th></tr></thead>
-    <tbody>${scores.map(s=>`<tr><td style="font-weight:700">${s.area}</td><td class="num" style="color:${gc(s.fy23)};font-weight:700">${s.fy23}</td><td class="num" style="color:${gc(s.fy25)};font-weight:700">${s.fy25}</td><td class="num">${s.trend==='↑'?'<span class="spark up">↑</span>':s.trend==='↓'?'<span class="spark dn">↓</span>':'<span class="spark flat">→</span>'}</td><td style="font-size:0.65rem;color:#a0aec0">${s.comment}</td></tr>`).join('')}</tbody></table>`;
-
-  const scatterData=FY.map((_,i)=>({x:D.revenue[i]/100,y:pct(D.ebitda[i],D.revenue[i]),r:Math.max(4,D.pat[i]/500)}));
-  mkChart('ceoScatter','bubble',{datasets:[{label:'FY Performance',data:scatterData,
-    backgroundColor:FY.map((_,i)=>i===7?'rgba(231,76,60,0.6)':i===5?'rgba(39,174,96,0.6)':'rgba(26,58,92,0.35)'),
-    borderColor:FY.map((_,i)=>i===7?'#e74c3c':i===5?'#27ae60':'#1a3a5c'),borderWidth:2}]
-  },{plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${FY[ctx.dataIndex]}: Rev ₹${ctx.raw.x.toFixed(0)}Cr, EBITDA ${ctx.raw.y.toFixed(1)}%`}}},
-    scales:{x:{title:{display:true,text:'Revenue (₹ Cr)',color:'#718096'},ticks:{callback:v=>'₹'+v+'Cr'},grid:{color:'#f0f4f8'}},y:{title:{display:true,text:'EBITDA Margin %',color:'#718096'},ticks:{callback:v=>v+'%'},grid:{color:'#f0f4f8'}}}
-  });
-
-  const heatMetrics=[
-    {name:'Revenue Growth %',data:FY.map((_,i)=>yoy(D.revenue,i))},
-    {name:'EBITDA Margin %',data:D.ebitda.map((v,i)=>pct(v,D.revenue[i]))},
-    {name:'PAT Margin %',data:D.pat.map((v,i)=>pct(v,D.revenue[i]))},
-    {name:'ROE %',data:D.pat.map((v,i)=>{const ae=i===0?D.equity[0]:(D.equity[i]+D.equity[i-1])/2;return pct(v,ae);})},
-    {name:'CFO/Revenue %',data:D.cfOps.map((v,i)=>pct(v,D.revenue[i]))},
-    {name:'Debt/Equity %',data:FY.map((_,i)=>((D.ncBorrow[i]+D.cBorrow[i])/D.equity[i]*100))}
-  ];
-  const hc=(v,n)=>{if(v===null)return'color:#a0aec0';if(n.includes('Debt'))return v<5?'color:#27ae60':'color:#e74c3c';return v>15?'color:#27ae60':v>5?'color:#e67e22':v>0?'color:#c0392b':'color:#e74c3c'};
-  let hh='<thead><tr><th>Metric</th>';FY.forEach(f=>hh+=`<th class="num">${f}</th>`);hh+='</tr></thead><tbody>';
-  heatMetrics.forEach(m=>{hh+=`<tr><td style="font-weight:600">${m.name}</td>`;m.data.forEach(v=>{hh+=`<td class="num" style="${hc(v,m.name)};font-weight:600">${v===null?'—':v.toFixed(1)+'%'}</td>`;});hh+='</tr>';});
-  hh+='</tbody>';document.getElementById('ceoHeatmap').innerHTML=hh;
-}
-</script>
 
 </body>
 </html>
