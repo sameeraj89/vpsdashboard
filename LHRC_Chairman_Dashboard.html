@@ -96,7 +96,7 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f4f6f9;color:#
 .ldesc{font-size:0.65rem;color:#4a5568;line-height:1.65;margin-top:2px}
 .ltags{display:flex;gap:4px;flex-wrap:wrap;margin-top:5px}
 .pill{display:inline-block;padding:2px 7px;border-radius:4px;font-size:0.57rem;font-weight:700}
-.pg{background:#e8f5e9;color:#2e7d32}.po{background:#fff3e0;color:#e65100}.pb{background:#e3f2fd;color:#1565c0}.pr{background:#fce4ec;color:#c62828}.pn{background:#e8edf3;color:#1a3a5c}.pt{background:#e0f2f1;color:#00695c}
+.pg{background:#e8f5e9;color:#2e7d32}.po{background:#fff3e0;color:#e65100}.pb{background:#e3f2fd;color:#1565c0}.pr{background:#fce4ec;color:#c62828}.pn{background:#e8edf3;color:#1a3a5c}.pt{background:#e0f2f1;color:#00695c}.pp{background:#f3e8ff;color:#6b21a8}
 
 /* ── TOTAL BOX ── */
 .tbox{border-radius:7px;padding:10px 14px;margin-top:4px;display:flex;align-items:center;justify-content:space-between}
@@ -156,7 +156,10 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f4f6f9;color:#
 
 @media(max-width:1100px){.ks-7{grid-template-columns:repeat(4,1fr)}.ks-6{grid-template-columns:repeat(3,1fr)}.m4{grid-template-columns:repeat(2,1fr)}.g2,.g3,.g21,.g12,.g-hist,.g-lev{grid-template-columns:1fr}}
 @media(max-width:700px){.ks-7,.ks-6,.ks-5,.ks-4{grid-template-columns:repeat(2,1fr)}}
+
+
 </style>
+
 </head>
 <body>
 
@@ -524,6 +527,7 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f4f6f9;color:#
       </div>
     </div>
   </div>
+</div>
 
 <!-- ══════════════════════════════════════════════════════════════════
      TAB 2: CAPEX TRANSFORMATION
@@ -1065,8 +1069,10 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f4f6f9;color:#
   </table>
 </div>
 
+
 <!-- ══════════════════════════════ FOOTER ══════════════════════════════ -->
 <div class="footer">VPS Lakeshore Hospital &amp; Research Centre &nbsp;&middot;&nbsp; Chairman Dashboard &nbsp;&middot;&nbsp; FY26 Review &amp; FY27 Value Creation Plan &nbsp;&middot;&nbsp; Confidential — Board Use Only &nbsp;&middot;&nbsp; March 2026</div>
+
 
 <!-- ══════════════════════════════ SCRIPTS ══════════════════════════════ -->
 <script>
@@ -1079,6 +1085,7 @@ function showTab(id,el){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('page-'+id).classList.add('active');
   if(el)el.classList.add('active');
+  if(id==='transformation' && typeof fp_setView==='function') fp_setView('current');
 }
 
 // ── Revenue & EBITDA bar+line ──
@@ -1115,6 +1122,7 @@ new Chart(document.getElementById('volumeChart'),{
     ctx.restore();
   }}]
 });
+
 
 // ── Revenue History ──
 new Chart(document.getElementById('revHistChart'),{
