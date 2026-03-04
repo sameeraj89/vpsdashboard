@@ -208,6 +208,25 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f4f6f9;color:#
 @media(max-width:700px){.ks-7,.ks-6,.ks-5,.ks-4{grid-template-columns:repeat(2,1fr)}}
 
 
+
+/* ── FLOOR PLAN TABLES — synced row heights ── */
+.floor-table { border-spacing: 0; }
+.floor-table td, .floor-table th { vertical-align: middle; line-height: 1.4; }
+/* Each floor row has a fixed min-height so both tables align visually */
+.floor-table tr.fr-10 td, .floor-table tr.fr-10 th { min-height: 30px; height: 30px; }
+.floor-table tr.fr-9  td, .floor-table tr.fr-9  th { min-height: 30px; height: 30px; }
+.floor-table tr.fr-8  td, .floor-table tr.fr-8  th { min-height: 30px; height: 30px; }
+.floor-table tr.fr-7  td, .floor-table tr.fr-7  th { min-height: 30px; height: 30px; }
+.floor-table tr.fr-6  td, .floor-table tr.fr-6  th { min-height: 30px; height: 30px; }
+.floor-table tr.fr-5  td, .floor-table tr.fr-5  th { min-height: 30px; height: 30px; }
+.floor-table tr.fr-4  td, .floor-table tr.fr-4  th { min-height: 30px; height: 30px; }
+.floor-table tr.fr-3  td, .floor-table tr.fr-3  th { min-height: 34px; height: 34px; }
+.floor-table tr.fr-2  td, .floor-table tr.fr-2  th { min-height: 30px; height: 30px; }
+.floor-table tr.fr-1  td, .floor-table tr.fr-1  th { min-height: 34px; height: 34px; }
+.floor-table tr.fr-gf td, .floor-table tr.fr-gf th { min-height: 34px; height: 34px; }
+.floor-table tr.fr-b1 td, .floor-table tr.fr-b1 th { min-height: 30px; height: 30px; }
+.floor-table tr.fr-b2 td, .floor-table tr.fr-b2 th { min-height: 30px; height: 30px; }
+
 </style>
 
 </head>
@@ -223,8 +242,7 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f4f6f9;color:#
       <span class="hbadge hb-gr">FY27 BC &#x20B9;525.7 Cr</span>
       <span class="hbadge hb-bl">EBITDA &#x20B9;99 Cr &#x2192; &#x20B9;149 Cr (UC)</span>
       <span class="hbadge hb-pu">Margin 22% &#x2192; 25.8%</span>
-      <span class="hbadge hb-rd">2-Building Strategy</span>
-      <span class="hbadge hb-tl">541 Beds (Future State)</span>
+      <span class="hbadge hb-rd">Infra Transformation</span>
     </div>
   </div>
   <div class="header-right">Executive Dashboard<br>April 2026<br>Confidential</div>
@@ -237,7 +255,7 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f4f6f9;color:#
   <div class="tab" onclick="showTab('revenue',this)">&#x1F4C8; Revenue Levers</div>
   <div class="tab" onclick="showTab('cost',this)">&#x2702;&#xFE0F; Cost Levers</div>
   <div class="tab" onclick="showTab('enablers',this)">&#x26A1; Enablers</div>
-  <div class="tab" onclick="showTab('nextsteps',this)">&#x1F3C3; Immediate Next Steps</div>
+  <div class="tab" onclick="showTab('nextsteps',this)">&#x1F4C5; Next 12 Month Plan</div>
 </div>
 
 <!-- ══════════════════════════════════════════════════════════════════
@@ -930,157 +948,473 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f4f6f9;color:#
 
 <div id="page-capex" class="page">
 
-  <!-- Phase Stats -->
-  <div class="mrow m4" style="margin-bottom:14px">
-    <div class="mbox" style="border-left-color:#e74c3c">
-      <div class="ml">Total Buildings (Future)</div>
-      <div class="mv" style="color:#e74c3c">2</div>
-      <div class="ms">1 Cancer Centre + 1 General Hospital</div>
-      <div class="md" style="color:#718096">Currently 1 building</div>
-    </div>
+  <!-- ── CAPEX KPI Strip ──────────────────────────────────────── -->
+  <div class="mrow m4" style="margin-bottom:16px">
     <div class="mbox" style="border-left-color:#e67e22">
-      <div class="ml">Total Beds (Future State)</div>
-      <div class="mv" style="color:#e67e22">541</div>
-      <div class="ms">~146 cancer + ~281 general + 114 expansion</div>
-      
-    </div>
-    <div class="mbox" style="border-left-color:#27ae60">
-      <div class="ml">Total OTs (Future State)</div>
-      <div class="mv" style="color:#27ae60">16</div>
-      <div class="ms">6 onco OTs + 10 general OTs</div>
-      <div class="md" style="color:#718096">Currently 8 OTs</div>
+      <div class="ml">AOP Capex Budget FY27</div>
+      <div class="mv" style="color:#e67e22">₹150 Cr</div>
+      <div class="ms">Approved Annual Operating Plan budget</div>
+      <div class="md" style="color:#27ae60">Plant & Machinery dominant (₹102.8 Cr)</div>
     </div>
     <div class="mbox" style="border-left-color:#8e44ad">
-      <div class="ml">Active Renovations (Now)</div>
-      <div class="mv" style="color:#8e44ad">&#x20B9;15.6 Cr</div>
-      <div class="ms">ICU, Suites, Casualty, OPDs underway</div>
-      <div class="md" style="color:#718096">2 LINAC machines added</div>
+      <div class="ml">Active Renovations (FY26)</div>
+      <div class="mv" style="color:#8e44ad">₹7.36 Cr</div>
+      <div class="ms">ICU, Emergency, Ortho, Porch, Engineering underway</div>
+      <div class="md" style="color:#718096">₹736 L across 6 renovation workstreams</div>
+    </div>
+    <div class="mbox" style="border-left-color:#db2777">
+      <div class="ml">2-Building Future State</div>
+      <div class="mv" style="color:#db2777">Old + New</div>
+      <div class="ms">Old Bldg → Oncology Centre · New Bldg → General Hosp</div>
+      <div class="md" style="color:#718096">New building under design/planning</div>
+    </div>
+    <div class="mbox" style="border-left-color:#16a34a">
+      <div class="ml">Total Capex Estimate (FY27 AOP)</div>
+      <div class="mv" style="color:#16a34a">₹129.8 Cr</div>
+      <div class="ms">Budgeted in AOP · Gap to ₹150 Cr = ₹20.2 Cr headroom</div>
+      <div class="md" style="color:#e67e22">+ Active reno carry-over ₹7.36 Cr</div>
     </div>
   </div>
 
-  <!-- Phase 1: Current Renovations -->
-  <div class="slabel">&#x1F6A7;&nbsp; Phase 1 — Active Renovations (FY26) · &#x20B9;15.6 Cr In Progress</div>
-  <div class="capex-phase" style="background:#fff8f0;border:1px solid #fed7aa">
-    <div class="phase-header">
-      <span class="phase-badge" style="background:#e67e22">PHASE 1</span>
-      <div>
-        <div class="phase-title">Main Block Renovation — FY26 Active Projects</div>
-        <div class="phase-sub">Upgrading existing multi-specialty hospital ahead of cancer centre conversion</div>
+  <!-- ── Capex Budget Breakdown ─────────────────────────────── -->
+  <div class="slabel">💰&nbsp; AOP Capex Allocation FY27 — ₹150 Cr Planned · Category Breakdown</div>
+  <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:14px;margin-bottom:16px">
+
+    <!-- Capex waterfall / bar breakdown -->
+    <div class="card">
+      <div class="ct">Capex Budget FY27 — Category Breakdown &nbsp;<span class="pill pg">₹150 Cr AOP</span></div>
+      <div class="cs">AOP approved ₹150 Cr · FY27 budgeted ₹129.8 Cr · Headroom ₹20.2 Cr available for infra acceleration</div>
+
+      <!-- Category breakdown bars -->
+      <div style="display:flex;flex-direction:column;gap:7px;margin-top:10px">
+        <!-- Plant & Machinery -->
+        <div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:3px">
+            <span style="font-size:0.68rem;font-weight:700;color:#1a202c">🔬 Plant & Machinery (Clinical Equipment)</span>
+            <span style="font-size:0.72rem;font-weight:800;color:#e67e22;font-family:'IBM Plex Mono',monospace">₹102.8 Cr</span>
+          </div>
+          <div style="background:#f0f4f8;border-radius:4px;height:12px">
+            <div style="background:#e67e22;border-radius:4px;height:12px;width:79%"></div>
+          </div>
+          <div style="font-size:0.59rem;color:#718096;margin-top:2px">LINAC machines, Spine Robotics, Cath Lab, Oncology equipment · 79% of total</div>
+        </div>
+        <!-- Buildings -->
+        <div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:3px">
+            <span style="font-size:0.68rem;font-weight:700;color:#1a202c">🏗️ Buildings & Civil Works (Renovation)</span>
+            <span style="font-size:0.72rem;font-weight:800;color:#db2777;font-family:'IBM Plex Mono',monospace">₹18.3 Cr</span>
+          </div>
+          <div style="background:#f0f4f8;border-radius:4px;height:12px">
+            <div style="background:#db2777;border-radius:4px;height:12px;width:14%"></div>
+          </div>
+          <div style="font-size:0.59rem;color:#718096;margin-top:2px">ICU, Emergency, Ortho & Ultrasound renovations, floor conversions · 14% of total</div>
+        </div>
+        <!-- IT -->
+        <div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:3px">
+            <span style="font-size:0.68rem;font-weight:700;color:#1a202c">💻 IT & Digital Infrastructure</span>
+            <span style="font-size:0.72rem;font-weight:800;color:#2980b9;font-family:'IBM Plex Mono',monospace">₹4.3 Cr</span>
+          </div>
+          <div style="background:#f0f4f8;border-radius:4px;height:12px">
+            <div style="background:#2980b9;border-radius:4px;height:12px;width:3.3%"></div>
+          </div>
+          <div style="font-size:0.59rem;color:#718096;margin-top:2px">HIS/ERP, Computers, network infrastructure · 3.3% of total</div>
+        </div>
+        <!-- Furniture -->
+        <div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:3px">
+            <span style="font-size:0.68rem;font-weight:700;color:#1a202c">🛏️ Furniture & Fixtures</span>
+            <span style="font-size:0.72rem;font-weight:800;color:#16a34a;font-family:'IBM Plex Mono',monospace">₹3.2 Cr</span>
+          </div>
+          <div style="background:#f0f4f8;border-radius:4px;height:12px">
+            <div style="background:#16a34a;border-radius:4px;height:12px;width:2.5%"></div>
+          </div>
+          <div style="font-size:0.59rem;color:#718096;margin-top:2px">Beds, ward furniture, OPD fit-outs · 2.5%</div>
+        </div>
+        <!-- Others -->
+        <div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:3px">
+            <span style="font-size:0.68rem;font-weight:700;color:#1a202c">🚗 Vehicles + Intangibles + Other</span>
+            <span style="font-size:0.72rem;font-weight:800;color:#718096;font-family:'IBM Plex Mono',monospace">₹1.3 Cr</span>
+          </div>
+          <div style="background:#f0f4f8;border-radius:4px;height:12px">
+            <div style="background:#718096;border-radius:4px;height:12px;width:1%"></div>
+          </div>
+          <div style="font-size:0.59rem;color:#718096;margin-top:2px">Ambulances, software licenses · 1%</div>
+        </div>
+      </div>
+
+      <!-- AOP vs Budget reconciliation -->
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:12px;padding-top:10px;border-top:1px solid #e2e8f0">
+        <div style="background:#fff8f0;border-radius:6px;padding:8px 10px;text-align:center">
+          <div style="font-size:0.56rem;font-weight:800;text-transform:uppercase;color:#e67e22;letter-spacing:0.5px">AOP Approved</div>
+          <div style="font-size:1.05rem;font-weight:800;color:#e67e22;font-family:'IBM Plex Mono',monospace">₹150 Cr</div>
+          <div style="font-size:0.57rem;color:#718096">Board-approved ceiling</div>
+        </div>
+        <div style="background:#f0fdf4;border-radius:6px;padding:8px 10px;text-align:center">
+          <div style="font-size:0.56rem;font-weight:800;text-transform:uppercase;color:#16a34a;letter-spacing:0.5px">FY27 Budgeted</div>
+          <div style="font-size:1.05rem;font-weight:800;color:#16a34a;font-family:'IBM Plex Mono',monospace">₹129.8 Cr</div>
+          <div style="font-size:0.57rem;color:#718096">Bottom-up AOP budget</div>
+        </div>
+        <div style="background:#eff6ff;border-radius:6px;padding:8px 10px;text-align:center">
+          <div style="font-size:0.56rem;font-weight:800;text-transform:uppercase;color:#2980b9;letter-spacing:0.5px">Headroom</div>
+          <div style="font-size:1.05rem;font-weight:800;color:#2980b9;font-family:'IBM Plex Mono',monospace">₹20.2 Cr</div>
+          <div style="font-size:0.57rem;color:#718096">Available for infra acceleration</div>
+        </div>
       </div>
     </div>
-    <div class="capex-items">
-      <div class="ci" style="border-left-color:#e74c3c">
-        <div class="ci-name">&#x1F6A8; ICU Complex Upgrade</div>
-        <div class="ci-val" style="color:#e74c3c">&#x20B9;2.25 Cr</div>
-        <div class="ci-sub">1F · Modern ICU standards · In progress</div>
+
+    <!-- Active Renovations FY26 -->
+    <div class="card">
+      <div class="ct">Active Renovations — FY26 In-Progress &nbsp;<span class="pill po">₹7.36 Cr</span></div>
+      <div class="cs">Source: Capex Budget FY25-26 · Renovation category items only · All figures as budgeted</div>
+      <div style="display:flex;flex-direction:column;gap:5px;margin-top:10px">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;background:#fff8f0;border-radius:6px;border-left:3px solid #e74c3c">
+          <div>
+            <div style="font-size:0.68rem;font-weight:700;color:#1a202c">🚨 ICU Complex Upgrade</div>
+            <div style="font-size:0.58rem;color:#718096">Project dept · ICU Complex + Central Cutout reno</div>
+          </div>
+          <span style="font-size:0.75rem;font-weight:800;color:#e74c3c;font-family:'IBM Plex Mono',monospace">₹1.37 Cr</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;background:#fff8f0;border-radius:6px;border-left:3px solid #e67e22">
+          <div>
+            <div style="font-size:0.68rem;font-weight:700;color:#1a202c">🏥 Emergency Department Renovation</div>
+            <div style="font-size:0.58rem;color:#718096">Project dept · GF · Full emergency dept upgrade</div>
+          </div>
+          <span style="font-size:0.75rem;font-weight:800;color:#e67e22;font-family:'IBM Plex Mono',monospace">₹3.20 Cr</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;background:#eff6ff;border-radius:6px;border-left:3px solid #2980b9">
+          <div>
+            <div style="font-size:0.68rem;font-weight:700;color:#1a202c">🦴 Ortho Dept Renovation + Ultrasound</div>
+            <div style="font-size:0.58rem;color:#718096">Project dept · Ortho dept reno ₹77L + Ultrasound ₹40L</div>
+          </div>
+          <span style="font-size:0.75rem;font-weight:800;color:#2980b9;font-family:'IBM Plex Mono',monospace">₹1.17 Cr</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;background:#f0fdf4;border-radius:6px;border-left:3px solid #16a34a">
+          <div>
+            <div style="font-size:0.68rem;font-weight:700;color:#1a202c">🚪 Porch, Patient Waiting & Billing Area</div>
+            <div style="font-size:0.58rem;color:#718096">Project dept · Porch ₹30L + Patient waiting ₹18L + IP billing ₹9L</div>
+          </div>
+          <span style="font-size:0.75rem;font-weight:800;color:#16a34a;font-family:'IBM Plex Mono',monospace">₹0.57 Cr</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;background:#f7fafc;border-radius:6px;border-left:3px solid #718096">
+          <div>
+            <div style="font-size:0.68rem;font-weight:700;color:#1a202c">🏗️ Roads, Doors & Cutout Works</div>
+            <div style="font-size:0.58rem;color:#718096">Project dept · Road/walkway ₹19L + Auto doors ₹4L + Cutout platform ₹4L</div>
+          </div>
+          <span style="font-size:0.75rem;font-weight:800;color:#718096;font-family:'IBM Plex Mono',monospace">₹0.27 Cr</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;background:#f0fdf4;border-radius:6px;border-left:3px solid #00838f">
+          <div>
+            <div style="font-size:0.68rem;font-weight:700;color:#1a202c">⚙️ Engineering Services</div>
+            <div style="font-size:0.58rem;color:#718096">Engineering dept · STP ₹37L + AHU AC ₹30L + Flush/cistern ₹12L + O₂ plant AC ₹3L</div>
+          </div>
+          <span style="font-size:0.75rem;font-weight:800;color:#00838f;font-family:'IBM Plex Mono',monospace">₹0.82 Cr</span>
+        </div>
       </div>
-      <div class="ci" style="border-left-color:#e67e22">
-        <div class="ci-name">&#x1F3E5; Casualty Renovation</div>
-        <div class="ci-val" style="color:#e67e22">&#x20B9;3.80 Cr</div>
-        <div class="ci-sub">GF · Emergency dept upgrade · Active</div>
-      </div>
-      <div class="ci" style="border-left-color:#8e44ad">
-        <div class="ci-name">&#x1F6CF; Suite Rooms &amp; VIP</div>
-        <div class="ci-val" style="color:#8e44ad">&#x20B9;1.20 Cr</div>
-        <div class="ci-sub">8F · Premium luxury suite renovation</div>
-      </div>
-      <div class="ci" style="border-left-color:#2980b9">
-        <div class="ci-name">&#x1F3E5; Ortho OPD &amp; Ultrasound</div>
-        <div class="ci-val" style="color:#2980b9">&#x20B9;1.60 Cr</div>
-        <div class="ci-sub">GF · Specialist OPD expansion</div>
-      </div>
-      <div class="ci" style="border-left-color:#27ae60">
-        <div class="ci-name">&#x1F6AA; Porch &amp; Front Area</div>
-        <div class="ci-val" style="color:#27ae60">&#x20B9;1.40 Cr</div>
-        <div class="ci-sub">GF · Patient-facing entrance upgrade</div>
-      </div>
-      <div class="ci" style="border-left-color:#00838f">
-        <div class="ci-name">&#x2699;&#xFE0F; STP &amp; Services</div>
-        <div class="ci-val" style="color:#00838f">&#x20B9;0.37 Cr</div>
-        <div class="ci-sub">B1 · Sewage treatment plant · Tendered</div>
-      </div>
-      <div class="ci" style="border-left-color:#1a3a5c">
-        <div class="ci-name">&#x1F4A1; Central Cutout</div>
-        <div class="ci-val" style="color:#1a3a5c">&#x20B9;0.34 Cr</div>
-        <div class="ci-sub">GF · Central area redesign</div>
-      </div>
-      <div class="ci" style="border-left-color:#e74c3c">
-        <div class="ci-name">&#x1F52C; Spine Robotics</div>
-        <div class="ci-val" style="color:#e74c3c">&#x20B9;12 Cr</div>
-        <div class="ci-sub">Kerala's first · Clinical capex protected</div>
-      </div>
-      <div class="ci" style="border-left-color:#f39c12">
-        <div class="ci-name">&#x1F3E5; Other Clinical Capex</div>
-        <div class="ci-val" style="color:#f39c12">&#x20B9;87 Cr</div>
-        <div class="ci-sub">Equipment, Oncology, Cathlab etc.</div>
+      <div style="background:#fef9c3;border-radius:6px;padding:8px 10px;margin-top:10px;border:1px solid #fde68a">
+        <div style="font-size:0.6rem;font-weight:800;color:#92400e;text-transform:uppercase;letter-spacing:0.5px">⚠️ Carry-over Note</div>
+        <div style="font-size:0.63rem;color:#4a5568;margin-top:2px;line-height:1.5">FY26 active renovations (₹7.36 Cr) will carry into FY27. Together with ₹129.8 Cr AOP budget, total demand is ~₹137.2 Cr — within the ₹150 Cr AOP ceiling with ₹12.8 Cr headroom.</div>
       </div>
     </div>
   </div>
 
-  <!-- Phase 2: Cancer Centre Conversion -->
-  <div class="slabel">&#x1F3AF;&nbsp; Phase 2 — Main Block &#x2192; Complex Cancer Centre (FY27)</div>
-  <div class="capex-phase" style="background:#fff0f6;border:1px solid #f9a8d4">
-    <div class="phase-header">
-      <span class="phase-badge" style="background:#db2777">PHASE 2</span>
-      <div>
-        <div class="phase-title">Building A — Comprehensive Oncology Centre (8 floors repurposed)</div>
-        <div class="phase-sub">Existing main block transformed into Kerala's first dedicated complex cancer hospital</div>
+  <!-- ── INFRA TRANSFORMATION: CURRENT vs FUTURE STATE ─────── -->
+  <div class="slabel">🏛️&nbsp; Infra Transformation — Current State vs Future Vision</div>
+
+  <div class="card" style="margin-bottom:16px;padding:0;overflow:hidden">
+    <!-- Unified header row -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid #e2e8f0">
+      <div style="display:flex;align-items:center;gap:10px;padding:14px 18px;border-right:1px solid #e2e8f0;border-top:3px solid #e74c3c">
+        <span style="background:#e74c3c;color:white;padding:4px 12px;border-radius:5px;font-size:0.65rem;font-weight:800;letter-spacing:0.5px;flex-shrink:0">CURRENT STATE</span>
+        <div>
+          <div style="font-size:0.78rem;font-weight:700;color:#1a202c">2-Building Campus — Mixed Multi-Specialty</div>
+          <div style="font-size:0.6rem;color:#a0aec0">Old Building (Main Hospital) + New Building (Specialty Annex)</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:14px 18px;border-top:3px solid #16a34a">
+        <span style="background:#16a34a;color:white;padding:4px 12px;border-radius:5px;font-size:0.65rem;font-weight:800;letter-spacing:0.5px;flex-shrink:0">FUTURE STATE</span>
+        <div>
+          <div style="font-size:0.78rem;font-weight:700;color:#1a202c">Dedicated 2-Building Clinical Campus</div>
+          <div style="font-size:0.6rem;color:#a0aec0">Old Building → IP Wards + OT/ICU · New Building → Specialty Centres</div>
+        </div>
       </div>
     </div>
-    <div class="capex-items">
-      <div class="ci" style="border-left-color:#db2777"><div class="ci-name">8F · Palliative &amp; Rehab</div><div class="ci-val" style="color:#db2777">18 Beds</div><div class="ci-sub">Pain mgmt, psycho-oncology, physio</div></div>
-      <div class="ci" style="border-left-color:#be185d"><div class="ci-name">7F · Medical Oncology Wards</div><div class="ci-val" style="color:#be185d">36 Beds</div><div class="ci-sub">Chemo inpatient, isolation rooms</div></div>
-      <div class="ci" style="border-left-color:#e11d48"><div class="ci-name">6F · Surgical Oncology Wards</div><div class="ci-val" style="color:#e11d48">38 Beds</div><div class="ci-sub">Post-surgical recovery, monitoring</div></div>
-      <div class="ci" style="border-left-color:#9333ea"><div class="ci-name">5F · Precision Medicine &amp; Genomics</div><div class="ci-val" style="color:#9333ea">NGS Lab</div><div class="ci-sub">Next-gen sequencing, liquid biopsy</div></div>
-      <div class="ci" style="border-left-color:#c026d3"><div class="ci-name">4F · Radiation Oncology</div><div class="ci-val" style="color:#c026d3">4 Bays</div><div class="ci-sub">CT-sim, external beam, brachytherapy</div></div>
-      <div class="ci" style="border-left-color:#be185d"><div class="ci-name">3F · Med Onco &amp; Clinical Trials</div><div class="ci-val" style="color:#be185d">OPD</div><div class="ci-sub">Phase I–III trial unit, onco pharmacy</div></div>
-      <div class="ci" style="border-left-color:#e11d48"><div class="ci-name">2F · Surgical Oncology OTs</div><div class="ci-val" style="color:#e11d48">6 OTs</div><div class="ci-sub">Robotic surgery, cancer-dedicated CSSD</div></div>
-      <div class="ci" style="border-left-color:#f43f5e"><div class="ci-name">1F · Cancer ICU &amp; BMT</div><div class="ci-val" style="color:#f43f5e">24 Beds</div><div class="ci-sub">BMT unit (8) + Cancer ICU (16), HEPA</div></div>
-      <div class="ci" style="border-left-color:#d946ef"><div class="ci-name">GF · Cancer Screening &amp; Day Care</div><div class="ci-val" style="color:#d946ef">30 Chairs</div><div class="ci-sub">Reception, rapid screening, chemo day care</div></div>
-      <div class="ci" style="border-left-color:#c026d3"><div class="ci-name">B1 · LINAC Vault</div><div class="ci-val" style="color:#c026d3">2 LINAC</div><div class="ci-sub">Radiation bunker, HDR room, physics lab</div></div>
+
+    <!-- Unified floor table — both states side by side, perfectly aligned -->
+    <table style="width:100%;border-collapse:collapse;font-size:0.61rem;table-layout:fixed">
+      <colgroup>
+        <!-- Current state: floor label | old bldg | new bldg -->
+        <col style="width:36px">
+        <col style="width:calc(25% - 18px)">
+        <col style="width:calc(25% - 18px)">
+        <!-- divider -->
+        <col style="width:1px">
+        <!-- Future state: floor label | old bldg | new bldg -->
+        <col style="width:36px">
+        <col style="width:calc(25% - 18px)">
+        <col style="width:calc(25% - 18px)">
+      </colgroup>
+      <thead>
+        <tr style="background:#1a3a5c;color:white">
+          <th style="padding:5px 8px;font-weight:700;font-size:0.57rem;text-transform:uppercase;text-align:left;border-right:1px solid #2d4f70">Fl.</th>
+          <th style="padding:5px 8px;font-weight:700;font-size:0.57rem;text-transform:uppercase;text-align:left;border-right:1px solid #2d4f70">Old Building</th>
+          <th style="padding:5px 8px;font-weight:700;font-size:0.57rem;text-transform:uppercase;text-align:left;border-right:2px solid #e2e8f0">New Building</th>
+          <td style="background:#e2e8f0;padding:0"></td>
+          <th style="padding:5px 8px;font-weight:700;font-size:0.57rem;text-transform:uppercase;text-align:left;border-right:1px solid #2d4f70">Fl.</th>
+          <th style="padding:5px 8px;font-weight:700;font-size:0.57rem;text-transform:uppercase;text-align:left;border-right:1px solid #2d4f70">Old Building</th>
+          <th style="padding:5px 8px;font-weight:700;font-size:0.57rem;text-transform:uppercase;text-align:left">New Building</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- 10F -->
+        <tr style="border-bottom:1px solid #f0f4f8">
+          <td style="padding:5px 8px;font-weight:700;color:#a0aec0;background:#f7fafc;border-right:1px solid #f0f4f8">10F</td>
+          <td style="padding:5px 8px;color:#a0aec0;background:#f7fafc;border-right:1px solid #f0f4f8">IP Beds (wards)</td>
+          <td style="padding:5px 8px;color:#a0aec0;background:#f7fafc;border-right:2px solid #e2e8f0">IP Beds (wards)</td>
+          <td style="background:#e2e8f0;padding:0"></td>
+          <td style="padding:5px 8px;font-weight:700;color:#6b21a8;background:#f3e8ff;border-right:1px solid #f0f4f8">10F</td>
+          <td style="padding:5px 8px;color:#2e7d32;background:#e8f5e9;border-right:1px solid #f0f4f8">🛏️ IP Beds</td>
+          <td style="padding:5px 8px;color:#6b21a8;background:#f3e8ff">🔬 Clinical Research</td>
+        </tr>
+        <!-- 9F -->
+        <tr style="border-bottom:1px solid #f0f4f8">
+          <td style="padding:5px 8px;font-weight:700;color:#a0aec0;background:#f7fafc;border-right:1px solid #f0f4f8">9F</td>
+          <td style="padding:5px 8px;color:#a0aec0;background:#f7fafc;border-right:1px solid #f0f4f8">IP Beds (wards)</td>
+          <td style="padding:5px 8px;color:#a0aec0;background:#f7fafc;border-right:2px solid #e2e8f0">IP Beds (wards)</td>
+          <td style="background:#e2e8f0;padding:0"></td>
+          <td style="padding:5px 8px;font-weight:700;color:#c62828;background:#fce4ec;border-right:1px solid #f0f4f8">9F</td>
+          <td style="padding:5px 8px;color:#2e7d32;background:#e8f5e9;border-right:1px solid #f0f4f8">🛏️ IP Beds</td>
+          <td style="padding:5px 8px;color:#c62828;background:#fce4ec">🦠 BMT · OPDs</td>
+        </tr>
+        <!-- 8F -->
+        <tr style="border-bottom:1px solid #f0f4f8">
+          <td style="padding:5px 8px;font-weight:700;color:#a0aec0;background:#f7fafc;border-right:1px solid #f0f4f8">8F</td>
+          <td style="padding:5px 8px;color:#a0aec0;background:#f7fafc;border-right:1px solid #f0f4f8">IP Beds (wards)</td>
+          <td style="padding:5px 8px;color:#a0aec0;background:#f7fafc;border-right:2px solid #e2e8f0">IP Beds (wards)</td>
+          <td style="background:#e2e8f0;padding:0"></td>
+          <td style="padding:5px 8px;font-weight:700;color:#c62828;background:#fce4ec;border-right:1px solid #f0f4f8">8F</td>
+          <td style="padding:5px 8px;color:#2e7d32;background:#e8f5e9;border-right:1px solid #f0f4f8">🛏️ IP Beds</td>
+          <td style="padding:5px 8px;color:#c62828;background:#fce4ec">👶 Mother &amp; Child</td>
+        </tr>
+        <!-- 7F -->
+        <tr style="border-bottom:1px solid #f0f4f8">
+          <td style="padding:5px 8px;font-weight:700;color:#a0aec0;background:#f7fafc;border-right:1px solid #f0f4f8">7F</td>
+          <td style="padding:5px 8px;color:#a0aec0;background:#f7fafc;border-right:1px solid #f0f4f8">IP Beds (wards)</td>
+          <td style="padding:5px 8px;color:#a0aec0;background:#f7fafc;border-right:2px solid #e2e8f0">IP Beds (wards)</td>
+          <td style="background:#e2e8f0;padding:0"></td>
+          <td style="padding:5px 8px;font-weight:700;color:#00695c;background:#e0f2f1;border-right:1px solid #f0f4f8">7F</td>
+          <td style="padding:5px 8px;color:#2e7d32;background:#e8f5e9;border-right:1px solid #f0f4f8">🛏️ IP Beds</td>
+          <td style="padding:5px 8px;color:#00695c;background:#e0f2f1">🦴 Ortho &amp; ICUs</td>
+        </tr>
+        <!-- 6F -->
+        <tr style="border-bottom:1px solid #f0f4f8">
+          <td style="padding:5px 8px;font-weight:700;color:#718096;background:#fafbfc;border-right:1px solid #f0f4f8">6F</td>
+          <td style="padding:5px 8px;color:#718096;background:#fafbfc;border-right:1px solid #f0f4f8">IP Beds</td>
+          <td style="padding:5px 8px;color:#718096;background:#fafbfc;border-right:2px solid #e2e8f0">ICU (Gastro, MD) · IP Beds</td>
+          <td style="background:#e2e8f0;padding:0"></td>
+          <td style="padding:5px 8px;font-weight:700;color:#6b21a8;background:#f3e8ff;border-right:1px solid #f0f4f8">6F</td>
+          <td style="padding:5px 8px;color:#2e7d32;background:#e8f5e9;border-right:1px solid #f0f4f8">🛏️ IP Beds</td>
+          <td style="padding:5px 8px;color:#6b21a8;background:#f3e8ff">🫘 Nephrology &amp; Dialysis</td>
+        </tr>
+        <!-- 5F -->
+        <tr style="border-bottom:1px solid #f0f4f8">
+          <td style="padding:5px 8px;font-weight:700;color:#718096;background:#fafbfc;border-right:1px solid #f0f4f8">5F</td>
+          <td style="padding:5px 8px;color:#718096;background:#fafbfc;border-right:1px solid #f0f4f8">IP Beds</td>
+          <td style="padding:5px 8px;color:#2e7d32;background:#e8f5e9;border-right:2px solid #e2e8f0">Gastro Sciences · Liver OPD</td>
+          <td style="background:#e2e8f0;padding:0"></td>
+          <td style="padding:5px 8px;font-weight:700;color:#2e7d32;background:#e8f5e9;border-right:1px solid #f0f4f8">5F</td>
+          <td style="padding:5px 8px;color:#2e7d32;background:#e8f5e9;border-right:1px solid #f0f4f8">🛏️ IP Beds</td>
+          <td style="padding:5px 8px;color:#2e7d32;background:#e8f5e9">🔬 Gastro Sciences · Liver OPD</td>
+        </tr>
+        <!-- 4F -->
+        <tr style="border-bottom:1px solid #f0f4f8">
+          <td style="padding:5px 8px;font-weight:700;color:#718096;background:#fafbfc;border-right:1px solid #f0f4f8">4F</td>
+          <td style="padding:5px 8px;color:#718096;background:#fafbfc;border-right:1px solid #f0f4f8">IP Beds</td>
+          <td style="padding:5px 8px;color:#1565c0;background:#e3f2fd;border-right:2px solid #e2e8f0">Cardiology</td>
+          <td style="background:#e2e8f0;padding:0"></td>
+          <td style="padding:5px 8px;font-weight:700;color:#1565c0;background:#e3f2fd;border-right:1px solid #f0f4f8">4F</td>
+          <td style="padding:5px 8px;color:#2e7d32;background:#e8f5e9;border-right:1px solid #f0f4f8">🛏️ IP Beds</td>
+          <td style="padding:5px 8px;color:#1565c0;background:#e3f2fd">❤️ Cardiac Sciences</td>
+        </tr>
+        <!-- 3F -->
+        <tr style="border-bottom:1px solid #f0f4f8">
+          <td style="padding:5px 8px;font-weight:700;color:#718096;background:#fafbfc;border-right:1px solid #f0f4f8">3F</td>
+          <td style="padding:5px 8px;color:#718096;background:#fafbfc;border-right:1px solid #f0f4f8">OPDs · IP Beds</td>
+          <td style="padding:5px 8px;color:#c62828;background:#fce4ec;border-right:2px solid #e2e8f0">Head &amp; Neck · Health Check · ENT · Foot &amp; Ankle</td>
+          <td style="background:#e2e8f0;padding:0"></td>
+          <td style="padding:5px 8px;font-weight:700;color:#1a3a5c;background:#e8edf3;border-right:1px solid #f0f4f8">3F</td>
+          <td style="padding:5px 8px;color:#2e7d32;background:#e8f5e9;border-right:1px solid #f0f4f8">🛏️ IP Beds</td>
+          <td style="padding:5px 8px;color:#1a3a5c;background:#e8edf3">🧠 Neurosciences · ENT · Head &amp; Neck</td>
+        </tr>
+        <!-- 2F -->
+        <tr style="border-bottom:1px solid #f0f4f8">
+          <td style="padding:5px 8px;font-weight:700;color:#c62828;background:#fce4ec;border-right:1px solid #f0f4f8">2F</td>
+          <td style="padding:5px 8px;color:#c62828;background:#fce4ec;border-right:1px solid #f0f4f8">OPD · IP Beds · ICUs</td>
+          <td style="padding:5px 8px;color:#c62828;background:#fce4ec;border-right:2px solid #e2e8f0">Medical Oncology · Chemo Daycare</td>
+          <td style="background:#e2e8f0;padding:0"></td>
+          <td style="padding:5px 8px;font-weight:700;color:#2e7d32;background:#e8f5e9;border-right:1px solid #f0f4f8">2F</td>
+          <td style="padding:5px 8px;color:#2e7d32;background:#e8f5e9;border-right:1px solid #f0f4f8">🛏️ IP Beds</td>
+          <td style="padding:5px 8px;color:#c62828;background:#fce4ec">🧪 Medical Oncology · Chemo Daycare</td>
+        </tr>
+        <!-- 1F -->
+        <tr style="border-bottom:1px solid #f0f4f8">
+          <td style="padding:5px 8px;font-weight:700;color:#c62828;background:#fce4ec;border-right:1px solid #f0f4f8">1F</td>
+          <td style="padding:5px 8px;color:#c62828;font-weight:600;background:#fce4ec;border-right:1px solid #f0f4f8">OPD · 12 OTs · ICU</td>
+          <td style="padding:5px 8px;color:#718096;background:#fafbfc;border-right:2px solid #e2e8f0">Café</td>
+          <td style="background:#e2e8f0;padding:0"></td>
+          <td style="padding:5px 8px;font-weight:700;color:#c62828;background:#fce4ec;border-right:1px solid #f0f4f8">1F</td>
+          <td style="padding:5px 8px;color:#c62828;font-weight:700;background:#fce4ec;border-right:1px solid #f0f4f8">🔪 OT · ICU · CSSD · Admin (mezz)</td>
+          <td style="padding:5px 8px;color:#718096;background:#fafbfc">Café</td>
+        </tr>
+        <!-- GF -->
+        <tr style="border-bottom:1px solid #f0f4f8">
+          <td style="padding:5px 8px;font-weight:700;color:#e67e22;background:#fff8f0;border-right:1px solid #f0f4f8">GF</td>
+          <td style="padding:5px 8px;color:#c05621;background:#fff8f0;border-right:1px solid #f0f4f8">Radiology · OPD (Neuro/Ortho) · Pharmacy · Reception</td>
+          <td style="padding:5px 8px;color:#c05621;background:#fff8f0;border-right:2px solid #e2e8f0">PET · Reception · Billing · ER</td>
+          <td style="background:#e2e8f0;padding:0"></td>
+          <td style="padding:5px 8px;font-weight:700;color:#e67e22;background:#fff8f0;border-right:1px solid #f0f4f8">GF</td>
+          <td style="padding:5px 8px;color:#c05621;background:#fff8f0;border-right:1px solid #f0f4f8">Radiology · OPD (General) · Pharmacy · Reception · Billing</td>
+          <td style="padding:5px 8px;color:#c05621;background:#fff8f0">PET · Reception · Billing · OPDs</td>
+        </tr>
+        <!-- B1 -->
+        <tr style="border-bottom:1px solid #e2e8f0">
+          <td style="padding:5px 8px;font-weight:700;color:#718096;background:#f0f4f8;border-right:1px solid #e2e8f0">B1</td>
+          <td style="padding:5px 8px;color:#a0aec0;font-style:italic;background:#f0f4f8;border-right:1px solid #e2e8f0">—</td>
+          <td style="padding:5px 8px;color:#1a3a5c;background:#e8edf3;border-right:2px solid #e2e8f0">OPD · Quality · Insurance back office</td>
+          <td style="background:#e2e8f0;padding:0"></td>
+          <td style="padding:5px 8px;font-weight:700;color:#718096;background:#f0f4f8;border-right:1px solid #e2e8f0">B1</td>
+          <td style="padding:5px 8px;color:#a0aec0;font-style:italic;background:#f0f4f8;border-right:1px solid #e2e8f0">—</td>
+          <td style="padding:5px 8px;color:#2e7d32;background:#e8f5e9">🧪 Lab · Back Office · Admin · Rehab &amp; Physio</td>
+        </tr>
+        <!-- B2 -->
+        <tr>
+          <td style="padding:5px 8px;font-weight:700;color:#718096;background:#f0f4f8;border-right:1px solid #e2e8f0">B2</td>
+          <td style="padding:5px 8px;color:#a0aec0;font-style:italic;background:#f0f4f8;border-right:1px solid #e2e8f0">—</td>
+          <td style="padding:5px 8px;color:#c62828;background:#fce4ec;border-right:2px solid #e2e8f0">🔬 Radiation · MRD</td>
+          <td style="background:#e2e8f0;padding:0"></td>
+          <td style="padding:5px 8px;font-weight:700;color:#718096;background:#f0f4f8;border-right:1px solid #e2e8f0">B2</td>
+          <td style="padding:5px 8px;color:#a0aec0;font-style:italic;background:#f0f4f8;border-right:1px solid #e2e8f0">—</td>
+          <td style="padding:5px 8px;color:#c62828;font-weight:600;background:#fce4ec">🔬 Radiation (incl. 3rd LINAC) · MRD</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Bottom summary row -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;border-top:1px solid #e2e8f0">
+      <div style="background:#fce4ec;padding:10px 14px;border-right:1px solid #e2e8f0">
+        <div style="font-size:0.6rem;font-weight:800;color:#c62828;text-transform:uppercase;letter-spacing:0.5px">⚠️ Current Constraints</div>
+        <div style="font-size:0.62rem;color:#4a5568;margin-top:3px;line-height:1.6">Mixed use with no clinical zoning · Oncology scattered · OTs and ICU sharing floor with OPDs · No dedicated cancer pathway · No research space</div>
+      </div>
+      <div style="background:#e8f5e9;padding:10px 14px">
+        <div style="font-size:0.6rem;font-weight:800;color:#2e7d32;text-transform:uppercase;letter-spacing:0.5px">✅ Future State Advantages</div>
+        <div style="font-size:0.62rem;color:#4a5568;margin-top:3px;line-height:1.6">Old building: full IP wards + dedicated OT/ICU/CSSD on 1F · New building: specialty floors by discipline · 3rd LINAC · BMT unit · Clinical Research floor · Clear patient pathways</div>
+      </div>
     </div>
   </div>
 
-  <!-- Phase 3: New General Hospital -->
-  <div class="slabel">&#x1F3D7;&#xFE0F;&nbsp; Phase 3 — New General Hospital Building B (FY27–FY28)</div>
-  <div class="capex-phase" style="background:#f0fdf4;border:1px solid #86efac">
-    <div class="phase-header">
-      <span class="phase-badge" style="background:#16a34a">PHASE 3</span>
-      <div>
-        <div class="phase-title">Building B — New General Hospital (10F + 2 Basements) · New Construction</div>
-        <div class="phase-sub">All non-oncology care moves to new building · ~281 beds · Modern infrastructure · Target FY28 completion</div>
+  <!-- ── Key Transformation Callouts ──────────────────────── -->
+  <div class="slabel">⚡&nbsp; Key Infrastructure Changes — What Moves Where</div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px">
+
+    <div style="background:white;border-radius:8px;padding:12px 13px;box-shadow:0 1px 3px rgba(0,0,0,0.06);border-top:3px solid #c62828">
+      <div style="font-size:0.62rem;font-weight:800;text-transform:uppercase;color:#c62828;letter-spacing:0.5px;margin-bottom:6px">🔬 Radiation Expansion</div>
+      <div style="font-size:0.68rem;color:#4a5568;line-height:1.6">New Building B2: 3rd LINAC added to existing 2 machines · HDR room · Physics lab · Expands oncology capacity without displacing other services</div>
+      <div style="margin-top:6px"><span class="pill pr">High Priority</span></div>
+    </div>
+
+    <div style="background:white;border-radius:8px;padding:12px 13px;box-shadow:0 1px 3px rgba(0,0,0,0.06);border-top:3px solid #16a34a">
+      <div style="font-size:0.62rem;font-weight:800;text-transform:uppercase;color:#16a34a;letter-spacing:0.5px;margin-bottom:6px">🧪 Lab & Diagnostics Move</div>
+      <div style="font-size:0.68rem;color:#4a5568;line-height:1.6">Lab moves to New Building B1 alongside Rehab & Physio · Frees up space in old building for more IP beds · Admin consolidated with back office</div>
+      <div style="margin-top:6px"><span class="pill pg">Efficiency Gain</span></div>
+    </div>
+
+    <div style="background:white;border-radius:8px;padding:12px 13px;box-shadow:0 1px 3px rgba(0,0,0,0.06);border-top:3px solid #6b21a8">
+      <div style="font-size:0.62rem;font-weight:800;text-transform:uppercase;color:#6b21a8;letter-spacing:0.5px;margin-bottom:6px">🦠 BMT Unit on 9F New Block</div>
+      <div style="font-size:0.68rem;color:#4a5568;line-height:1.6">BMT dedicated floor (9F New Building) with OPDs · Currently no standalone BMT floor · Enables Kerala's first comprehensive bone marrow transplant programme</div>
+      <div style="margin-top:6px"><span class="pill pp">New Capability</span></div>
+    </div>
+
+    <div style="background:white;border-radius:8px;padding:12px 13px;box-shadow:0 1px 3px rgba(0,0,0,0.06);border-top:3px solid #1565c0">
+      <div style="font-size:0.62rem;font-weight:800;text-transform:uppercase;color:#1565c0;letter-spacing:0.5px;margin-bottom:6px">🔬 Clinical Research Floor</div>
+      <div style="font-size:0.68rem;color:#4a5568;line-height:1.6">10F New Building dedicated to Clinical Research · Enables Phase I–III trials · Supports Burjeel Group's research ambitions · Differentiates from regional competition</div>
+      <div style="margin-top:6px"><span class="pill pb">Strategic Differentiator</span></div>
+    </div>
+
+  </div>
+
+  <!-- ── Capex Phasing Summary ──────────────────────────── -->
+  <div class="slabel">📅&nbsp; Capex Phasing — From Active Renovations to Full Transformation</div>
+  <div class="ibox blue" style="margin-bottom:10px">
+    <div class="ibox-title">💡 Capex Investment Logic — ₹150 Cr AOP Ceiling with Clear ROI</div>
+    <div class="ibox-text">The ₹150 Cr AOP capex is predominantly clinical (Plant & Machinery ₹102.8 Cr = 79%) — equipment that directly generates revenue. Building renovation (₹18.3 Cr) focuses on converting the old building to an efficient IP+OT layout. The infra transformation is not a speculative greenfield build but a <strong>repurposing of existing assets</strong> toward higher-value clinical use. The 3rd LINAC, BMT capability, and clinical research floor are the three highest-ROI infrastructure investments that underpin the revenue upside case.</div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+
+    <div class="capex-phase" style="background:#fff8f0;border:1px solid #fed7aa">
+      <div class="phase-header">
+        <span class="phase-badge" style="background:#e67e22">FY26 NOW</span>
+        <div>
+          <div class="phase-title">Active Renovations — ₹7.36 Cr In Progress</div>
+          <div class="phase-sub">ICU · Emergency · Ortho · Porch · Engineering Services</div>
+        </div>
+      </div>
+      <div style="font-size:0.63rem;color:#4a5568;line-height:1.7;margin-top:4px">
+        <div>✅ ICU Complex Upgrade incl. Central Cutout (₹1.37 Cr)</div>
+        <div>✅ Emergency Department Renovation (₹3.20 Cr)</div>
+        <div>✅ Ortho Dept + Ultrasound (₹1.17 Cr)</div>
+        <div>✅ Porch, Patient Waiting & IP Billing Area (₹0.57 Cr)</div>
+        <div>✅ Roads, Doors & Cutout Works (₹0.27 Cr)</div>
+        <div>✅ Engineering Services — STP, AHU, Cisterns (₹0.82 Cr)</div>
+        <div style="margin-top:6px;font-weight:700;color:#e67e22">→ Will complete / carry into Q1 FY27</div>
       </div>
     </div>
-    <div class="capex-items">
-      <div class="ci" style="border-left-color:#2dd4bf"><div class="ci-name">10F · Suite &amp; VIP Rooms</div><div class="ci-val" style="color:#2dd4bf">24 Beds</div><div class="ci-sub">International patient wing</div></div>
-      <div class="ci" style="border-left-color:#06b6d4"><div class="ci-name">9F · Gynae &amp; Pediatrics</div><div class="ci-val" style="color:#06b6d4">44 Beds</div><div class="ci-sub">Maternity, NICU, pediatric wards</div></div>
-      <div class="ci" style="border-left-color:#0891b2"><div class="ci-name">8F · Cardio &amp; Urology</div><div class="ci-val" style="color:#0891b2">44 Beds</div><div class="ci-sub">CCU, cath lab recovery, uro ward</div></div>
-      <div class="ci" style="border-left-color:#4f46e5"><div class="ci-name">7F · Ortho &amp; Neurology</div><div class="ci-val" style="color:#4f46e5">47 Beds</div><div class="ci-sub">Joint replacement, neuro recovery</div></div>
-      <div class="ci" style="border-left-color:#06b6d4"><div class="ci-name">6F · General Medicine</div><div class="ci-val" style="color:#06b6d4">46 Beds</div><div class="ci-sub">Internal medicine, diabetology</div></div>
-      <div class="ci" style="border-left-color:#0891b2"><div class="ci-name">5F · General Surgery</div><div class="ci-val" style="color:#0891b2">44 Beds</div><div class="ci-sub">Post-op, GI surgery, bariatric</div></div>
-      <div class="ci" style="border-left-color:#059669"><div class="ci-name">4F · ICU &amp; HDU</div><div class="ci-val" style="color:#059669">32 Beds</div><div class="ci-sub">Multi-specialty ICU, step-down</div></div>
-      <div class="ci" style="border-left-color:#0d9488"><div class="ci-name">3F · Operation Theatres</div><div class="ci-val" style="color:#0d9488">10 OTs</div><div class="ci-sub">Hybrid OR, 10 OTs, CSSD</div></div>
-      <div class="ci" style="border-left-color:#10b981"><div class="ci-name">2F · Diagnostics &amp; Imaging</div><div class="ci-val" style="color:#10b981">Full Suite</div><div class="ci-sub">3T MRI, 128-slice CT, digital X-ray</div></div>
-      <div class="ci" style="border-left-color:#0284c7"><div class="ci-name">1F · All Specialty OPDs</div><div class="ci-val" style="color:#0284c7">12 Specs</div><div class="ci-sub">Medicine, Cardio, Ortho, Neuro, ENT</div></div>
-      <div class="ci" style="border-left-color:#16a34a"><div class="ci-name">GF · Emergency &amp; Pharmacy</div><div class="ci-val" style="color:#16a34a">24/7 ER</div><div class="ci-sub">Triage, resuscitation, pharmacy</div></div>
-      <div class="ci" style="border-left-color:#1f2937"><div class="ci-name">B1+B2 · Parking</div><div class="ci-val" style="color:#1f2937">200+ Cars</div><div class="ci-sub">EV charging, multi-level covered</div></div>
+
+    <div class="capex-phase" style="background:#f0fdf4;border:1px solid #86efac">
+      <div class="phase-header">
+        <span class="phase-badge" style="background:#16a34a">FY27 AOP</span>
+        <div>
+          <div class="phase-title">Clinical Equipment + Floor Reorg — ₹129.8 Cr</div>
+          <div class="phase-sub">Plant & Machinery dominant · Building conversions start</div>
+        </div>
+      </div>
+      <div style="font-size:0.63rem;color:#4a5568;line-height:1.7;margin-top:4px">
+        <div>🔬 Clinical Equipment & LINAC infrastructure (₹102.8 Cr)</div>
+        <div>🏗️ Old Building floor conversions to IP beds (₹18.3 Cr)</div>
+        <div>💻 IT/Digital + HIS (₹4.3 Cr)</div>
+        <div>🛏️ Furniture, vehicles, intangibles (₹4.4 Cr)</div>
+        <div style="margin-top:6px;font-weight:700;color:#16a34a">→ Within ₹150 Cr AOP · ₹20.2 Cr headroom</div>
+      </div>
     </div>
+
+    <div class="capex-phase" style="background:#fff0f6;border:1px solid #f9a8d4">
+      <div class="phase-header">
+        <span class="phase-badge" style="background:#db2777">FY28+ VISION</span>
+        <div>
+          <div class="phase-title">Full 2-Building Transformation</div>
+          <div class="phase-sub">3rd LINAC · BMT · Clinical Research · New Building complete</div>
+        </div>
+      </div>
+      <div style="font-size:0.63rem;color:#4a5568;line-height:1.7;margin-top:4px">
+        <div>🦠 BMT Unit (9F New Building) — dedicated programme</div>
+        <div>🔬 3rd LINAC (B2 New Building) — radiation expansion</div>
+        <div>🧪 Clinical Research Floor (10F) — trials programme</div>
+        <div>🧬 Nephrology/Dialysis hub (6F) — spoke network</div>
+        <div style="margin-top:6px;font-weight:700;color:#db2777">→ Full Board capex plan required FY27 Q1</div>
+      </div>
+    </div>
+
   </div>
+
 </div>
+
+
 
 <!-- ══════════════════════════════════════════════════════════════════
      TAB 3: REVENUE LEVERS
 ══════════════════════════════════════════════════════════════════ -->
 <div id="page-revenue" class="page">
-
-  <div class="slabel">&#x1F4B0;&nbsp; Revenue Growth — FY27 BC Foundation &amp; UC Drivers</div>
-  <div class="kpi-strip ks-5">
-    <div class="kpi" style="border-top-color:#e67e22"><div class="kl">Rev Growth FY27 Base Case (BC)</div><div class="kv" style="color:#e67e22">+16%</div><div class="kg g-up">&#x20B9;452.8 → &#x20B9;525.7 Cr</div><div class="ks2">FY26E → FY27</div></div>
-    <div class="kpi" style="border-top-color:#27ae60"><div class="kl">ARPOB Target FY27</div><div class="kv" style="color:#27ae60">&#x20B9;36.2K</div><div class="kg g-up">&#x25B2; +8.3% vs FY26E &#x20B9;33.4K</div><div class="ks2">IP blended ARPOB/day</div></div>
-    <div class="kpi" style="border-top-color:#2980b9"><div class="kl">Target Occupancy FY27</div><div class="kv" style="color:#2980b9">62%</div><div class="kg g-up">&#x25B2; from 53% FY26E</div><div class="ks2">+9 ppt significant jump</div></div>
-    <div class="kpi" style="border-top-color:#8e44ad"><div class="kl">OP Visits Target FY27</div><div class="kv" style="color:#8e44ad">4,39,771</div><div class="kg g-up">&#x25B2; +13% vs FY26E</div><div class="ks2">3,90,805 in FY26E</div></div>
-    <div class="kpi" style="border-top-color:#00838f"><div class="kl">IP Discharge Target FY27</div><div class="kv" style="color:#00838f">24,750</div><div class="kg g-up">&#x25B2; +13% vs FY26E</div><div class="ks2">21,939 in FY26E</div></div>
-  </div>
 
   <div class="ibox blue">
     <div class="ibox-title">&#x1F4A1; Revenue Strategy — Operating Leverage is the Prize</div>
@@ -1233,21 +1567,25 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f4f6f9;color:#
     <div><span class="en-num" style="background:#8e44ad">3</span></div>
     <div class="en-title">Capex Details for Expansion → Infrastructure by FY28 (Circled Priority)</div>
     <div class="en-desc">
-      The building expansion — both the Cancer Centre conversion and new General Hospital construction — requires a fully costed, approved, and financed capex plan. This is the single largest value-driver for FY28–FY30 and must be locked in FY27.
+      The infrastructure transformation — repurposing both existing buildings into dedicated clinical zones — requires a fully costed, approved, and phased capex plan. The FY27 AOP budget of ₹150 Cr (budgeted ₹129.8 Cr + ₹7.36 Cr active FY26 carry-over) is the first tranche. The FY28 expansion builds on this foundation.
       <br><br>
-      <strong>▸ Cancer Centre Conversion Capex:</strong> Detailed floor-by-floor budgets for LINAC vault (&#x20B9;15–20 Cr), Radiation Oncology (&#x20B9;25 Cr), BMT Unit (&#x20B9;12 Cr), Genomics Lab (&#x20B9;8 Cr). Total Cancer Centre fit-out: est. &#x20B9;80–100 Cr.
+      <strong>▸ FY27 AOP Capex (₹150 Cr ceiling, ₹129.8 Cr budgeted):</strong> Plant &amp; Machinery ₹102.8 Cr (79%) — clinical equipment directly generating revenue. Buildings &amp; Civil ₹18.3 Cr — renovation of Old Building floors 1–2 for OT/ICU/CSSD consolidation. IT ₹4.3 Cr, Furniture ₹3.2 Cr, Vehicles ₹0.67 Cr, Intangibles ₹0.58 Cr.
       <br><br>
-      <strong>▸ New General Hospital (Building B):</strong> 10F + 2B construction. Full structural, MEP, and fit-out plan. Estimated &#x20B9;180–220 Cr over 24 months. Financing plan (internal vs debt) to be decided by Board Q1 FY27.
+      <strong>▸ 3rd LINAC — New Building B2 (High Priority FY27–28):</strong> Addition of 3rd linear accelerator in the existing radiation vault (New Building basement B2). AERB (Atomic Energy Regulatory Board) approval takes 12–18 months — application must be submitted in Q1 FY27. Estimated cost: ₹15–20 Cr for vault modification + equipment.
       <br><br>
-      <strong>▸ Medical Equipment List:</strong> Comprehensive equipment schedule by floor and specialty. Vendor shortlisting, import duty planning, installation timelines. Avoid last-minute procurement delays.
+      <strong>▸ BMT Unit — New Building 9F (FY28):</strong> Dedicated Bone Marrow Transplant floor. Clean-room fit-out, HEPA filtration, dedicated nursing station. Estimated ₹10–15 Cr fit-out. Requires Haematonc consultant on-board first.
       <br><br>
-      <strong>▸ Regulatory &amp; Licensing:</strong> AERB (Atomic Energy Regulatory Board) approvals for LINAC. NABH accreditation roadmap for new building. Fire NOC, environmental clearances.
+      <strong>▸ Clinical Research Floor — New Building 10F (FY28+):</strong> Clinical trial infrastructure, genomics lab, data management. Estimated ₹8–12 Cr. Requires tie-up with research institutions and ethics committee setup.
+      <br><br>
+      <strong>▸ Old Building Conversion — OT/ICU/CSSD on 1F:</strong> Consolidate 12 OTs and ICU onto dedicated 1F surgical zone. Remove mixed OPD/OT/ICU layout. Covered under FY27 Buildings capex (₹18.3 Cr) and active FY26 renovations (₹7.36 Cr carry-over).
+      <br><br>
+      <strong>▸ Regulatory &amp; Licensing:</strong> AERB approvals for 3rd LINAC. NABH accreditation for new clinical floors. Fire NOC for any structural changes.
     </div>
     <div class="en-tags">
       <span class="pill pp">Priority: CRITICAL</span>
       <span class="pill po">Board Approval: Q1 FY27</span>
       <span class="pill pn">Owner: COO + CFO + CEO + Board</span>
-      <span class="pill pg">Target FY28 Completion</span>
+      <span class="pill pg">FY27 AOP ₹150 Cr · FY28 Expansion</span>
     </div>
   </div>
 
@@ -1279,7 +1617,7 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f4f6f9;color:#
     <tbody>
 
       <tr>
-        <td><span class="priority-dot rag-r"></span><strong>2</strong></td>
+        <td><span class="priority-dot rag-r"></span><strong>1</strong></td>
         <td><strong>Initiate staffing rationalisation — Nursing &amp; Pharmacy first</strong><br><span style="font-size:0.62rem;color:#718096">Nursing: 630 &#x2192; 569. Pharmacy: 93 &#x2192; 50. Natural attrition + redeployment plan</span></td>
         <td><span class="pill" style="background:#eff6ff;color:#2980b9">Cost</span></td>
         <td>CHRO + Dept Heads</td>
@@ -1287,7 +1625,7 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f4f6f9;color:#
         <td style="font-size:0.63rem;color:#718096">HR data-backed. ₹6.19 Cr already identified. ICU reorganisation, barcode scanning in pharmacy. Ongoing throughout FY27.</td>
       </tr>
       <tr>
-        <td><span class="priority-dot rag-r"></span><strong>3</strong></td>
+        <td><span class="priority-dot rag-r"></span><strong>2</strong></td>
         <td><strong>Rate revision exercise — identify feasible rate increases</strong><br><span style="font-size:0.62rem;color:#718096">Strategic rate revisions across OP consultations, procedures, packages</span></td>
         <td><span class="pill" style="background:#f0fdf4;color:#27ae60">Revenue</span></td>
         <td>CMO + CFO</td>
@@ -1295,7 +1633,7 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f4f6f9;color:#
         <td style="font-size:0.63rem;color:#718096">Quick ARPOB lever. No capital required. Benchmark vs peer hospitals in Kerala and South India.</td>
       </tr>
       <tr>
-        <td><span class="priority-dot rag-r"></span><strong>4</strong></td>
+        <td><span class="priority-dot rag-r"></span><strong>3</strong></td>
         <td><strong>Onboard 1 new specialist — Phase 1 clinical capability addition</strong><br><span style="font-size:0.62rem;color:#718096">First high-value specialist joining in Phase 1. Further specialists to be added in Phases 2 and 3 as infrastructure readiness allows</span></td>
         <td><span class="pill" style="background:#f0fdf4;color:#27ae60">Revenue</span></td>
         <td>Medical Director + COO</td>
@@ -1304,7 +1642,7 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f4f6f9;color:#
       </tr>
 
       <tr>
-        <td><span class="priority-dot rag-r"></span><strong>5</strong></td>
+        <td><span class="priority-dot rag-r"></span><strong>4</strong></td>
         <td><strong>Referral strengthening — activate key referral channels</strong><br><span style="font-size:0.62rem;color:#718096">Structured outreach to GP network, specialist referrers, and institutional partners. Dedicated liaison and pipeline tracking.</span></td>
         <td><span class="pill" style="background:#f0fdf4;color:#27ae60">Revenue</span></td>
         <td>COO + Marketing Head</td>
@@ -1312,12 +1650,12 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f4f6f9;color:#
         <td style="font-size:0.63rem;color:#718096">No capital required. High potential to drive IP volume through formalised referral relationships and monthly coordination cadence.</td>
       </tr>
       <tr>
-        <td><span class="priority-dot rag-r"></span><strong>6</strong></td>
-        <td><strong>Present consolidated Board pack — Capex, Cancer Centre &amp; IT plan</strong><br><span style="font-size:0.62rem;color:#718096">Full capex plan (Building B), floor-by-floor cancer centre conversion, HIS/ERP cost-benefit &amp; vendor shortlist</span></td>
+        <td><span class="priority-dot rag-r"></span><strong>5</strong></td>
+        <td><strong>Present consolidated Board pack — Capex, Infra Transformation &amp; IT plan</strong><br><span style="font-size:0.62rem;color:#718096">Full FY27 capex plan (₹150 Cr), infra transformation floor-by-floor roadmap, 3rd LINAC AERB timeline, HIS/ERP cost-benefit &amp; vendor shortlist</span></td>
         <td><span class="pill" style="background:#edf2f7;color:#1a3a5c">Board</span></td>
         <td>CFO + CIO + CEO</td>
         <td><span class="pill pb">Approval</span></td>
-        <td style="font-size:0.63rem;color:#718096">AERB approval takes 12–18 months — must start immediately. Building B contractor selection cannot begin without Board sign-off.</td>
+        <td style="font-size:0.63rem;color:#718096">AERB approval takes 12–18 months — must start immediately. 3rd LINAC is the highest-ROI infrastructure investment and requires Board sign-off to proceed.</td>
       </tr>
     </tbody>
   </table>
@@ -1337,7 +1675,7 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f4f6f9;color:#
     </thead>
     <tbody>
       <tr>
-        <td><span class="priority-dot rag-a"></span><strong>8</strong></td>
+        <td><span class="priority-dot rag-a"></span><strong>6</strong></td>
         <td><strong>Vendor consolidation &amp; procurement rationalisation</strong><br><span style="font-size:0.62rem;color:#718096">Top 3 consumable suppliers, single pharmacy distributor, 6-month bulk contracts</span></td>
         <td><span class="pill" style="background:#eff6ff;color:#2980b9">Cost</span></td>
         <td>Admin / Supply Chain</td>
@@ -1345,7 +1683,7 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f4f6f9;color:#
         <td style="font-size:0.63rem;color:#718096">Complement to Material Cost programme. Single distributor reduces leakage. Implant benchmarking vs peers.</td>
       </tr>
       <tr>
-        <td><span class="priority-dot rag-a"></span><strong>9</strong></td>
+        <td><span class="priority-dot rag-a"></span><strong>7</strong></td>
         <td><strong>Material Cost Rationalisation programme launch</strong><br><span style="font-size:0.62rem;color:#718096">Rate contracts, credit period discounts, BOQ standardisation for major surgeries, formulary &amp; wastage control</span></td>
         <td><span class="pill" style="background:#eff6ff;color:#2980b9">Cost</span></td>
         <td>CFO + Pharmacy Head</td>
@@ -1353,7 +1691,7 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f4f6f9;color:#
         <td style="font-size:0.63rem;color:#718096">COGS target: 28.5% &#x2192; 26.5% of revenue. 3-level authorised formulary. Wastage / cut-strip reduction. Inventory optimisation.</td>
       </tr>
       <tr>
-        <td><span class="priority-dot rag-a"></span><strong>10</strong></td>
+        <td><span class="priority-dot rag-a"></span><strong>8</strong></td>
         <td><strong>TPA renegotiation — top 5 insurers + 3 new TPA agreements</strong><br><span style="font-size:0.62rem;color:#718096">Renegotiate package rates, onboard 3 new TPAs to grow insurance mix 26% &#x2192; 30%</span></td>
         <td><span class="pill" style="background:#f0fdf4;color:#27ae60">Revenue</span></td>
         <td>CFO + Billing Head</td>
@@ -1361,7 +1699,7 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f4f6f9;color:#
         <td style="font-size:0.63rem;color:#718096">Reduces bad debt. Better collection efficiency. Higher insurance mix = more predictable revenue.</td>
       </tr>
       <tr>
-        <td><span class="priority-dot rag-a"></span><strong>11</strong></td>
+        <td><span class="priority-dot rag-a"></span><strong>9</strong></td>
         <td><strong>North Kerala &amp; border district referral programme</strong><br><span style="font-size:0.62rem;color:#718096">Dedicated outreach to Malappuram, Kozhikode border districts. Referral doctor portal live.</span></td>
         <td><span class="pill" style="background:#f0fdf4;color:#27ae60">Revenue</span></td>
         <td>COO + Marketing</td>
@@ -1369,7 +1707,7 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f4f6f9;color:#
         <td style="font-size:0.63rem;color:#718096">Telemedicine follow-ups converting to IP. Targets 62% &#x2192; 68% occupancy pathway.</td>
       </tr>
       <tr>
-        <td><span class="priority-dot rag-a"></span><strong>12</strong></td>
+        <td><span class="priority-dot rag-a"></span><strong>10</strong></td>
         <td><strong>Cancer Centre floor-by-floor conversion begins — Phase 2</strong><br><span style="font-size:0.62rem;color:#718096">Main block floors 6–8 conversion to surgical oncology, medical oncology wards and palliative</span></td>
         <td><span class="pill" style="background:#edf2f7;color:#1a3a5c">Capex</span></td>
         <td>CFO + Medical Director + Infra</td>
@@ -1377,7 +1715,7 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f4f6f9;color:#
         <td style="font-size:0.63rem;color:#718096">Post Board approval in May. AERB application for LINAC submitted. LINAC vault construction begins Q3.</td>
       </tr>
       <tr>
-        <td><span class="priority-dot rag-a"></span><strong>13</strong></td>
+        <td><span class="priority-dot rag-a"></span><strong>11</strong></td>
         <td><strong>HIS / ERP vendor selected &amp; implementation kick-off</strong><br><span style="font-size:0.62rem;color:#718096">Post Board approval of cost-benefit analysis. Vendor shortlisted, implementation roadmap signed off</span></td>
         <td><span class="pill" style="background:#edf2f7;color:#1a3a5c">IT</span></td>
         <td>CIO + CEO</td>
@@ -1385,7 +1723,7 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f4f6f9;color:#
         <td style="font-size:0.63rem;color:#718096">Revenue cycle accuracy. OP&#x2192;IP conversion tracking. Doctor billing visibility. ERP covers finance, supply chain, HR.</td>
       </tr>
       <tr>
-        <td><span class="priority-dot rag-a"></span><strong>14</strong></td>
+        <td><span class="priority-dot rag-a"></span><strong>12</strong></td>
         <td><strong>Utilities optimisation — solar &amp; HVAC initiatives</strong><br><span style="font-size:0.62rem;color:#718096">Solar rooftop Phase 1 (500 KW), HVAC IoT sensors, LED retrofit in clinical zones</span></td>
         <td><span class="pill" style="background:#eff6ff;color:#2980b9">Cost</span></td>
         <td>Facilities Head + CFO</td>
@@ -1410,7 +1748,7 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f4f6f9;color:#
     </thead>
     <tbody>
       <tr>
-        <td><span class="priority-dot rag-g"></span><strong>15</strong></td>
+        <td><span class="priority-dot rag-g"></span><strong>13</strong></td>
         <td><strong>New specialist doctors onboarded — Complex Cases &amp; IR</strong><br><span style="font-size:0.62rem;color:#718096">Recruitment of additional high-value specialists in complex care and IR as Phase 2 infrastructure comes online</span></td>
         <td><span class="pill" style="background:#f0fdf4;color:#27ae60">Revenue</span></td>
         <td>Medical Director + CEO</td>
@@ -1418,7 +1756,7 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f4f6f9;color:#
         <td style="font-size:0.63rem;color:#718096">Medium-term lever. Doctors need OT space and support teams which depend on cancer centre conversion progress. Drives 85%+ ARPOB premium cases.</td>
       </tr>
       <tr>
-        <td><span class="priority-dot rag-g"></span><strong>16</strong></td>
+        <td><span class="priority-dot rag-g"></span><strong>14</strong></td>
         <td><strong>Interventional Radiology services launched</strong><br><span style="font-size:0.62rem;color:#718096">Dedicated IR suite, trained team, referral pathway from oncology and vascular</span></td>
         <td><span class="pill" style="background:#f0fdf4;color:#27ae60">Revenue</span></td>
         <td>Radiology Head + CFO</td>
@@ -1426,7 +1764,7 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f4f6f9;color:#
         <td style="font-size:0.63rem;color:#718096">High-value clinical expansion. Complements oncology and complex surgical workload.</td>
       </tr>
       <tr>
-        <td><span class="priority-dot rag-g"></span><strong>17</strong></td>
+        <td><span class="priority-dot rag-g"></span><strong>15</strong></td>
         <td><strong>International patient programme</strong><br><span style="font-size:0.62rem;color:#718096">Dedicated international patient desk, facilitator partnerships and GCC direct engagement</span></td>
         <td><span class="pill" style="background:#f0fdf4;color:#27ae60">Revenue</span></td>
         <td>COO + Marketing</td>
@@ -1434,7 +1772,7 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f4f6f9;color:#
         <td style="font-size:0.63rem;color:#718096">International revenue target: 12% of mix (from 9.2% FY26E). Higher ARPOB and payor quality.</td>
       </tr>
       <tr>
-        <td><span class="priority-dot rag-g"></span><strong>18</strong></td>
+        <td><span class="priority-dot rag-g"></span><strong>16</strong></td>
         <td><strong>HIS Phase 1 go-live — billing &amp; revenue cycle</strong><br><span style="font-size:0.62rem;color:#718096">Oracle Health or selected HIS live for revenue cycle management, billing integration, doctor dashboards</span></td>
         <td><span class="pill" style="background:#edf2f7;color:#1a3a5c">IT</span></td>
         <td>CIO</td>
@@ -1442,20 +1780,20 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f4f6f9;color:#
         <td style="font-size:0.63rem;color:#718096">Revenue leakage fix. ARPOB tracking accuracy. Doctor billing visibility. Drives revenue cycle improvement into FY28.</td>
       </tr>
       <tr>
-        <td><span class="priority-dot rag-g"></span><strong>19</strong></td>
-        <td><strong>Building B — architect &amp; contractor finalised, foundation begins</strong><br><span style="font-size:0.62rem;color:#718096">New General Hospital: 10F + 2B. Full structural, MEP and fit-out plan submitted</span></td>
+        <td><span class="priority-dot rag-g"></span><strong>17</strong></td>
+        <td><strong>3rd LINAC AERB application submitted &amp; infra transformation milestones on track</strong><br><span style="font-size:0.62rem;color:#718096">AERB application for 3rd LINAC filed (B2 New Building) · Old Building 1F OT/ICU/CSSD conversion progressing · BMT floor (9F) and Clinical Research floor (10F) design finalised</span></td>
         <td><span class="pill" style="background:#edf2f7;color:#1a3a5c">Capex</span></td>
-        <td>CFO + Chairman</td>
-        <td><span class="pill pb">FY28–29</span></td>
-        <td style="font-size:0.63rem;color:#718096">Critical path for FY28 bed expansion. Every 1 month delay = 1 month delay in 541-bed target completion.</td>
+        <td>CFO + Chairman + Medical Director</td>
+        <td><span class="pill pb">FY28</span></td>
+        <td style="font-size:0.63rem;color:#718096">AERB approval takes 12–18 months — filing by Q2 FY27 is critical. Old Building conversion is the foundation for OT capacity expansion in FY28.</td>
       </tr>
       <tr>
-        <td><span class="priority-dot rag-g"></span><strong>20</strong></td>
+        <td><span class="priority-dot rag-g"></span><strong>18</strong></td>
         <td><strong>FY27 year-end review — UC vs BC scorecard</strong><br><span style="font-size:0.62rem;color:#718096">Full year P&amp;L review: revenue, EBITDA, ARPOB, occupancy vs FY27 BC and UC targets</span></td>
         <td><span class="pill" style="background:#edf2f7;color:#1a3a5c">Board</span></td>
         <td>CFO + CEO + Chairman</td>
         <td><span class="pill pb">FY28 Plan</span></td>
-        <td style="font-size:0.63rem;color:#718096">Set FY28 AOP. Assess UC achievement. Determine capex prioritisation for Building B and cancer centre completion.</td>
+        <td style="font-size:0.63rem;color:#718096">Set FY28 AOP. Assess UC achievement. Determine capex prioritisation for 3rd LINAC, BMT unit, Clinical Research floor and Old Building conversion completion.</td>
       </tr>
     </tbody>
   </table>
