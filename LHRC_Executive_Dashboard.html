@@ -17,9 +17,9 @@ new Chart(document.getElementById('specialtyAOPChart'),{
   data:{
     labels:specLabels,
     datasets:[
-      {label:'FY26E',data:specFY26,backgroundColor:'rgba(226,232,240,0.85)',borderRadius:2,barPercentage:0.72,categoryPercentage:0.7},
-      {label:'FY27 BC',data:specBC,backgroundColor:specColors.map(c=>c+'bb'),borderColor:specColors,borderWidth:1,borderRadius:2,barPercentage:0.72,categoryPercentage:0.7},
-      {label:'FY27 UC',data:specUC,backgroundColor:'rgba(230,126,34,0.55)',borderColor:'#e67e22',borderWidth:1.5,borderRadius:2,barPercentage:0.72,categoryPercentage:0.7}
+      {label:'FY26E',data:specFY26,backgroundColor:'rgba(226,232,240,0.85)',borderColor:'#cbd5e0',borderWidth:1,borderRadius:2,barPercentage:0.72,categoryPercentage:0.7},
+      {label:'FY27 BC (AOP)',data:specBC,backgroundColor:'rgba(39,174,96,0.85)',borderColor:'#27ae60',borderWidth:1,borderRadius:2,barPercentage:0.72,categoryPercentage:0.7},
+      {label:'FY27 UC',data:specUC,backgroundColor:'rgba(230,126,34,0.88)',borderColor:'#e67e22',borderWidth:1,borderRadius:2,barPercentage:0.72,categoryPercentage:0.7}
     ]
   },
   options:{
@@ -423,7 +423,7 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f4f6f9;color:#
           <div style="display:flex;flex-direction:column;gap:3px">
             <div style="display:flex;justify-content:space-between;font-size:0.61rem"><span style="color:#4a5568">Procurement &amp; Vendor Optimisation</span><span style="font-weight:700;color:#2980b9">+&#x20B9;7 Cr</span></div>
             <div style="display:flex;justify-content:space-between;font-size:0.61rem"><span style="color:#4a5568">Manpower Rationalisation &amp; PLCs</span><span style="font-weight:700;color:#2980b9">+&#x20B9;11 Cr</span></div>
-            <div style="display:flex;justify-content:space-between;font-size:0.61rem"><span style="color:#4a5568">Other Costs (Power / Mktg / Group)</span><span style="font-weight:700;color:#2980b9">+&#x20B9;2 Cr</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:0.61rem"><span style="color:#4a5568">Other Costs (Power / Mktg / Overhead)</span><span style="font-weight:700;color:#2980b9">+&#x20B9;2 Cr</span></div>
           </div>
         </div>
       </div>
@@ -493,26 +493,26 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f4f6f9;color:#
           <span style="font-size:0.68rem;font-weight:700;color:#2980b9">+&#x20B9;20 Cr EBITDA above Base Case</span>
         </div>
         <div style="display:flex;flex-direction:column;gap:6px">
-          <div style="background:#eff6ff;border-left:3px solid #2980b9;border-radius:0 6px 6px 0;padding:7px 10px;display:flex;justify-content:space-between;align-items:flex-start">
+          <div style="background:#eff6ff;border-left:3px solid #1a3a5c;border-radius:0 6px 6px 0;padding:7px 10px;display:flex;justify-content:space-between;align-items:flex-start">
             <div>
-              <div style="font-size:0.69rem;font-weight:700;color:#1a202c">Staffing Rationalisation</div>
-              <div style="font-size:0.6rem;color:#4a5568;margin-top:2px">1,624 non-doc staff &middot; &#x20B9;63 Cr payroll &middot; Nursing 630&#x2192;569 &middot; Pharmacy 93&#x2192;50 &middot; PCS 97&#x2192;80</div>
+              <div style="font-size:0.69rem;font-weight:700;color:#1a202c">① Staff Rationalisation — Dept Norms &amp; Doctor PLCs</div>
+              <div style="font-size:0.6rem;color:#4a5568;margin-top:2px">1,624 non-doc staff &middot; &#x20B9;63 Cr payroll &middot; Nursing 630&#x2192;569 &middot; Pharmacy 93&#x2192;50 &middot; PCS 97&#x2192;80 &middot; Doctor realignment to PLCs</div>
             </div>
-            <span style="font-size:0.65rem;font-weight:800;color:#2980b9;white-space:nowrap;margin-left:8px">+&#x20B9;11 Cr</span>
+            <span style="font-size:0.65rem;font-weight:800;color:#1a3a5c;white-space:nowrap;margin-left:8px">+&#x20B9;11 Cr</span>
           </div>
           <div style="background:#eff6ff;border-left:3px solid #2980b9;border-radius:0 6px 6px 0;padding:7px 10px;display:flex;justify-content:space-between;align-items:flex-start">
             <div>
-              <div style="font-size:0.69rem;font-weight:700;color:#1a202c">Procurement &amp; Vendor Optimisation</div>
-              <div style="font-size:0.6rem;color:#4a5568;margin-top:2px">COGS 28.5%&#x2192;26.5% &middot; Rate contracts &middot; Credit period discounts &middot; BOQ standardisation &middot; Formulary &amp; wastage control &middot; Vendor consolidation &middot; Implant benchmarking</div>
+              <div style="font-size:0.69rem;font-weight:700;color:#1a202c">② Procurement &amp; Vendor Optimisation — COGS 28.5%→26.5%</div>
+              <div style="font-size:0.6rem;color:#4a5568;margin-top:2px">Vendor renegotiation &middot; credit period &middot; better inventory &middot; standard BOQs for procedures &amp; pharmacy &rarr; <em>200 bps COGS reduction</em></div>
             </div>
             <span style="font-size:0.65rem;font-weight:800;color:#2980b9;white-space:nowrap;margin-left:8px">+&#x20B9;7 Cr</span>
           </div>
-          <div style="background:#eff6ff;border-left:3px solid #2980b9;border-radius:0 6px 6px 0;padding:7px 10px;display:flex;justify-content:space-between;align-items:flex-start">
+          <div style="background:#eff6ff;border-left:3px solid #00838f;border-radius:0 6px 6px 0;padding:7px 10px;display:flex;justify-content:space-between;align-items:flex-start">
             <div>
-              <div style="font-size:0.69rem;font-weight:700;color:#1a202c">Utilities + Doctor Fee Restructuring</div>
-              <div style="font-size:0.6rem;color:#4a5568;margin-top:2px">Solar &middot; HVAC &middot; LED retrofit &middot; Performance-linked MG for new hires</div>
+              <div style="font-size:0.69rem;font-weight:700;color:#1a202c">③ Other Cost Optimisation — Power, Marketing &amp; Overhead</div>
+              <div style="font-size:0.6rem;color:#4a5568;margin-top:2px">Solar + HVAC + LED retrofit &middot; marketing mix to performance digital &middot; overhead allocation review &rarr; <em>other cost % ↓</em></div>
             </div>
-            <span style="font-size:0.65rem;font-weight:800;color:#2980b9;white-space:nowrap;margin-left:8px">+&#x20B9;2 Cr</span>
+            <span style="font-size:0.65rem;font-weight:800;color:#00838f;white-space:nowrap;margin-left:8px">+&#x20B9;2 Cr</span>
           </div>
         </div>
         <div style="display:flex;justify-content:flex-end;margin-top:8px;padding-top:8px;border-top:1px solid #dbeafe">
@@ -594,12 +594,7 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f4f6f9;color:#
         
         <div style="display:flex;align-items:center;gap:5px;font-size:0.62rem;color:#27ae60;font-weight:700"><div style="width:16px;height:4px;background:#27ae60;border-radius:2px"></div>FY27 BC (AOP)</div>
         <div style="display:flex;align-items:center;gap:5px;font-size:0.62rem;color:#e67e22;font-weight:700"><div style="width:16px;height:4px;background:#e67e22;border-radius:2px"></div>FY27 UC</div>
-        <div style="margin-left:8px;display:flex;gap:10px;flex-wrap:wrap">
-          <span style="font-size:0.58rem;display:flex;align-items:center;gap:3px"><span style="width:7px;height:7px;border-radius:50%;background:#dc2626;display:inline-block"></span>Oncology</span>
-          <span style="font-size:0.58rem;display:flex;align-items:center;gap:3px"><span style="width:7px;height:7px;border-radius:50%;background:#1a3a5c;display:inline-block"></span>High ARPOB</span>
-          <span style="font-size:0.58rem;display:flex;align-items:center;gap:3px"><span style="width:7px;height:7px;border-radius:50%;background:#0891b2;display:inline-block"></span>Volume</span>
-          <span style="font-size:0.58rem;display:flex;align-items:center;gap:3px"><span style="width:7px;height:7px;border-radius:50%;background:#7c3aed;display:inline-block"></span>OP-heavy</span>
-        </div>
+
       </div>
     </div>
 
@@ -1168,12 +1163,12 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f4f6f9;color:#
     </div>
     <div>
       <div class="lever" style="border-left-color:#00838f">
-        <div class="lhd"><span class="lnum" style="background:#00838f">3</span><span class="ltitle">Other Cost Optimisation — Power, Marketing &amp; Group</span><span class="lval" style="color:#00838f">+&#x20B9;2 Cr</span></div>
+        <div class="lhd"><span class="lnum" style="background:#00838f">3</span><span class="ltitle">Other Cost Optimisation — Power, Marketing &amp; Overhead</span><span class="lval" style="color:#00838f">+&#x20B9;2 Cr</span></div>
         <div class="ldesc">
           Other costs budgeted ₹7,024L (+10.8% vs FY26E). Three sub-levers:<br><br>
           ▸ <strong>Power / Utilities:</strong> Solar rooftop Phase 1 (500 KW, &lt;24 month payback), HVAC IoT optimisation, LED retrofit in clinical zones — target 15% energy cost reduction · <em>saves ₹1 Cr</em><br>
           ▸ <strong>Marketing rationalisation:</strong> Shift from traditional media spend to performance-based digital &amp; referral marketing; redirect budget toward doctor outreach and satellite clinic activation · <em>saves ₹0.5 Cr</em><br>
-          ▸ <strong>Group cost allocation:</strong> Review group-level shared service charges and central overhead allocations for appropriateness; negotiate rebased allocation for FY27 · <em>saves ₹0.5 Cr</em>
+          ▸ <strong>Overhead allocation:</strong> Review overhead / shared service charges and central overhead allocations for appropriateness; negotiate rebased overhead charges for FY27 · <em>saves ₹0.5 Cr</em>
         </div>
         <div class="ltags"><span class="pill po">Medium Impact</span><span class="pill pb">Q2–Q4 — CFO / Facilities / CMO</span><span class="pill pn">→ Other cost % ↓</span></div>
       </div>
@@ -1534,7 +1529,7 @@ new Chart(document.getElementById('ebitdaHistChart'),{
       tooltip:{callbacks:{label:c=>'₹'+c.raw+' Cr  |  Margin: '+['25.6%','18.5%','19.4%','21.8%','21.7%','25.8%'][c.dataIndex]}}
     },
     scales:{
-      y:{min:50,ticks:{callback:v=>'₹'+v,font:{size:9}},grid:{color:'#f0f4f8'}},
+      y:{min:50,max:175,ticks:{callback:v=>'₹'+v,font:{size:9}},grid:{color:'#f0f4f8'}},
       x:{grid:{display:false},ticks:{font:{size:9}}}
     }
   },
@@ -1548,7 +1543,7 @@ new Chart(document.getElementById('ebitdaHistChart'),{
     vals.forEach((v,i)=>{
       const xp=x.getPixelForValue(i), yp=y.getPixelForValue(v);
       // growth label above bar
-      if(g[i]){ctx.fillStyle=cols[i];ctx.font='bold 9px IBM Plex Sans';ctx.textAlign='center';ctx.fillText(g[i],xp,yp-7);}
+      if(g[i]){ctx.fillStyle=cols[i];ctx.font='bold 9px IBM Plex Sans';ctx.textAlign='center';ctx.fillText(g[i],xp,yp-12);}
       // margin % inside bar
       const barH=y.getPixelForValue(0)-yp;
       if(barH>22){ctx.fillStyle='rgba(255,255,255,0.9)';ctx.font='bold 8.5px IBM Plex Mono';ctx.textAlign='center';ctx.fillText(margins[i],xp,yp+barH/2+3);}
@@ -1591,21 +1586,23 @@ new Chart(document.getElementById('specialtyAOPChart'),{
       {
         label:'FY26E',
         data:[64.05, 53.13, 33.74, 25.04, 27.02, 23.81, 22.09, 19.29, 14.99, 12.09, 12.62, 11.56, 11.15, 10.67, 9.02, 8.02, 7.69, 7.73, 6.48, 7.11],
-        backgroundColor:'rgba(226,232,240,0.8)',
+        backgroundColor:'rgba(226,232,240,0.85)',
+        borderColor:'#cbd5e0',
+        borderWidth:1,
         borderRadius:3,barPercentage:0.7,categoryPercentage:0.75
       },
       {
         label:'FY27 BC',
         data:[73.14, 60.17, 38.08, 30.24, 29.81, 27.27, 24.55, 21.34, 17.27, 13.91, 13.72, 12.76, 12.12, 11.77, 9.93, 8.71, 8.63, 8.53, 8.11, 7.78],
-        backgroundColor:["#dc2626", "#1a3a5c", "#1a3a5c", "#1a3a5c", "#0891b2", "#1a3a5c", "#0891b2", "#0891b2", "#1a3a5c", "#1a3a5c", "#7c3aed", "#1a3a5c", "#dc2626", "#dc2626", "#0891b2", "#0891b2", "#0891b2", "#0891b2", "#7c3aed", "#dc2626"].map(c=>c+'cc'),
-        borderColor:["#dc2626", "#1a3a5c", "#1a3a5c", "#1a3a5c", "#0891b2", "#1a3a5c", "#0891b2", "#0891b2", "#1a3a5c", "#1a3a5c", "#7c3aed", "#1a3a5c", "#dc2626", "#dc2626", "#0891b2", "#0891b2", "#0891b2", "#0891b2", "#7c3aed", "#dc2626"],
+        backgroundColor:'rgba(39,174,96,0.85)',
+        borderColor:'#27ae60',
         borderWidth:1,
         borderRadius:3,barPercentage:0.7,categoryPercentage:0.75
       },
       {
         label:'FY27 UC',
         data:[91.42, 66.19, 42.65, 32.66, 32.79, 30.0, 27.01, 23.05, 19.0, 14.74, 14.82, 14.67, 14.54, 15.89, 10.43, 9.23, 9.23, 9.13, 8.68, 9.34],
-        backgroundColor:'rgba(230,126,34,0.7)',
+        backgroundColor:'rgba(230,126,34,0.88)',
         borderColor:'#e67e22',
         borderWidth:1,
         borderRadius:3,barPercentage:0.7,categoryPercentage:0.75
