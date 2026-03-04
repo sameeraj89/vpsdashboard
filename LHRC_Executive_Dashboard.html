@@ -1,0 +1,1631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LHRC — Executive Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js">
+// ── Specialty AOP Revenue Chart ──
+const specLabels = ["Medical Oncology","Nephrology","Neuro Surgery","Joint Repl. & Sports","GI Surgery","Cardiology","Gastroenterology","Urology","Min. Invasive Surg.","Foot & Ankle","Neurology","Liver Care","Surgical Oncology","Head & Neck Onco.","General Medicine","OB & Gynec.","Pediatrics","Orthopedics","Pulmonology","Radiation Oncology"];
+const specFY26   = [64.0,53.1,33.7,25.0,27.0,23.8,22.1,19.3,15.0,12.1,12.6,11.6,11.2,10.7,9.0,8.0,7.7,7.7,6.5,7.1];
+const specBC     = [73.1,60.2,38.1,30.2,29.8,27.3,24.6,21.3,17.3,13.9,13.7,12.8,12.1,11.8,9.9,8.7,8.6,8.5,8.1,7.8];
+const specUC     = [80.0,69.5,44.5,33.5,34.5,30.0,27.0,23.5,19.0,15.3,15.0,14.0,13.5,20.5,10.8,9.5,9.4,9.4,9.0,9.2];
+const specColors = ["#dc2626","#1a3a5c","#1a3a5c","#1a3a5c","#0891b2","#1a3a5c","#0891b2","#0891b2","#1a3a5c","#1a3a5c","#7c3aed","#1a3a5c","#dc2626","#dc2626","#0891b2","#0891b2","#0891b2","#0891b2","#7c3aed","#dc2626"];
+
+new Chart(document.getElementById('specialtyAOPChart'),{
+  type:'bar',
+  data:{
+    labels:specLabels,
+    datasets:[
+      {label:'FY26E',data:specFY26,backgroundColor:'rgba(226,232,240,0.85)',borderRadius:2,barPercentage:0.72,categoryPercentage:0.7},
+      {label:'FY27 BC',data:specBC,backgroundColor:specColors.map(c=>c+'bb'),borderColor:specColors,borderWidth:1,borderRadius:2,barPercentage:0.72,categoryPercentage:0.7},
+      {label:'FY27 UC',data:specUC,backgroundColor:'rgba(230,126,34,0.55)',borderColor:'#e67e22',borderWidth:1.5,borderRadius:2,barPercentage:0.72,categoryPercentage:0.7}
+    ]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{
+      legend:{display:true,position:'top',labels:{boxWidth:10,font:{size:10},padding:12}},
+      tooltip:{callbacks:{
+        label:c=>{
+          const pct=c.datasetIndex===0?'':c.datasetIndex===1?' (BC)':' (UC)';
+          return '₹'+c.raw.toFixed(1)+' Cr'+pct;
+        }
+      }}
+    },
+    scales:{
+      y:{beginAtZero:true,ticks:{callback:v=>'₹'+v,font:{size:9}},grid:{color:'#f0f4f8'}},
+      x:{grid:{display:false},ticks:{font:{size:8},maxRotation:38,minRotation:28}}
+    }
+  },
+  plugins:[{id:'growthLabel',afterDatasetsDraw(chart){
+    const{ctx,scales:{x,y}}=chart;
+    ctx.save();
+    specUC.forEach((v,i)=>{
+      const g=((v-specFY26[i])/specFY26[i]*100).toFixed(0);
+      const meta=chart.getDatasetMeta(2);
+      if(!meta.data[i])return;
+      const xp=meta.data[i].x;
+      const yp=y.getPixelForValue(v);
+      ctx.fillStyle='#e67e22';ctx.font='bold 7.5px IBM Plex Sans';ctx.textAlign='center';
+      ctx.fillText('+'+g+'%',xp,yp-5);
+    });
+    ctx.restore();
+  }}]
+});
+
+</script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f4f6f9;color:#1a202c;font-size:13px}
+
+/* ── HEADER ── */
+.header{background:linear-gradient(135deg,#0d2137 0%,#1a3a5c 60%,#1e4976 100%);color:white;padding:18px 36px 16px;display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:3px solid #e67e22}
+.header-left h1{font-size:1.4rem;font-weight:700;letter-spacing:-0.3px}
+.header-left p{font-size:0.7rem;opacity:0.6;margin-top:3px}
+.header-badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+.hbadge{padding:3px 10px;border-radius:4px;font-size:0.65rem;font-weight:600;font-family:'IBM Plex Mono',monospace}
+.hb-or{background:#e67e22;color:white}.hb-gr{background:#27ae60;color:white}.hb-bl{background:#2980b9;color:white}.hb-pu{background:#8e44ad;color:white}.hb-rd{background:#c0392b;color:white}.hb-tl{background:#00838f;color:white}
+.header-right{text-align:right;opacity:0.45;font-size:0.62rem;line-height:1.9;white-space:nowrap;flex-shrink:0;font-family:'IBM Plex Mono',monospace}
+
+/* ── TABS ── */
+.tab-bar{background:white;border-bottom:2px solid #e2e8f0;padding:0 28px;display:flex;gap:0;overflow-x:auto;box-shadow:0 1px 3px rgba(0,0,0,0.05)}
+.tab{padding:13px 18px;font-size:0.72rem;font-weight:600;color:#718096;cursor:pointer;border-bottom:3px solid transparent;transition:all 0.2s;white-space:nowrap;margin-bottom:-2px;font-family:'IBM Plex Sans',sans-serif}
+.tab:hover{color:#1a3a5c;background:#f7fafc}
+.tab.active{color:#1a3a5c;border-bottom-color:#e67e22;background:white;font-weight:700}
+.page{display:none;padding:20px 28px;max-width:1600px;margin:0 auto}
+.page.active{display:block}
+
+/* ── SECTION LABELS ── */
+.slabel{font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:1.4px;color:#a0aec0;margin:20px 0 10px;display:flex;align-items:center;gap:8px}
+.slabel::after{content:'';flex:1;height:1px;background:#e2e8f0}
+.slabel:first-child{margin-top:0}
+
+/* ── KPI STRIP ── */
+.kpi-strip{display:grid;gap:10px;margin-bottom:12px}
+.ks-7{grid-template-columns:repeat(7,1fr)}.ks-6{grid-template-columns:repeat(6,1fr)}.ks-5{grid-template-columns:repeat(5,1fr)}.ks-4{grid-template-columns:repeat(4,1fr)}.ks-3{grid-template-columns:repeat(3,1fr)}
+
+.kpi{background:white;border-radius:8px;padding:12px 13px;box-shadow:0 1px 3px rgba(0,0,0,0.06);border-top:3px solid}
+.kpi .kl{font-size:0.57rem;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:#a0aec0;margin-bottom:3px}
+.kpi .kv{font-size:1.18rem;font-weight:700;line-height:1.1;font-family:'IBM Plex Mono',monospace}
+.kpi .kg{font-size:0.6rem;font-weight:600;margin-top:3px}.kpi .ks2{font-size:0.58rem;color:#a0aec0;margin-top:1px}
+.g-up{color:#27ae60}.g-dn{color:#e74c3c}.g-nt{color:#e67e22}
+
+/* ── METRIC BOXES ── */
+.mrow{display:grid;gap:10px;margin-bottom:10px}
+.m4{grid-template-columns:repeat(4,1fr)}.m3{grid-template-columns:repeat(3,1fr)}.m2{grid-template-columns:repeat(2,1fr)}
+.mbox{background:white;border-radius:8px;padding:14px 14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);border-left:4px solid #e2e8f0}
+.mbox .ml{font-size:0.57rem;font-weight:700;text-transform:uppercase;letter-spacing:0.7px;color:#a0aec0;margin-bottom:6px}
+.mbox .mv{font-size:1.28rem;font-weight:700;line-height:1;font-family:'IBM Plex Mono',monospace}
+.mbox .ms{font-size:0.62rem;color:#718096;margin-top:4px;line-height:1.4}
+.mbox .md{font-size:0.62rem;font-weight:600;margin-top:5px}
+
+/* ── CARD ── */
+.card{background:white;border-radius:8px;padding:16px 18px;box-shadow:0 1px 4px rgba(0,0,0,0.06)}
+.card .ct{font-size:0.75rem;font-weight:700;color:#1a202c;margin-bottom:2px}
+.card .cs{font-size:0.61rem;color:#a0aec0;margin-bottom:11px}
+
+/* ── GRIDS ── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.g21{display:grid;grid-template-columns:1fr 1.15fr;gap:14px}
+.g12{display:grid;grid-template-columns:1.15fr 1fr;gap:14px}
+.g-hist{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.g-lev{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+/* ── PROFITABILITY TABLE ── */
+.ptable{width:100%;border-collapse:collapse;font-size:0.7rem}
+.ptable th{background:#f7fafc;color:#718096;font-weight:700;font-size:0.59rem;text-transform:uppercase;letter-spacing:0.5px;padding:7px 9px;border-bottom:2px solid #e2e8f0;text-align:right}
+.ptable th:first-child{text-align:left}
+.ptable td{padding:6px 9px;border-bottom:1px solid #f0f4f8;color:#2d3748;text-align:right;font-family:'IBM Plex Mono',monospace;font-size:0.68rem}
+.ptable td:first-child{text-align:left;font-family:'IBM Plex Sans',sans-serif;font-size:0.7rem;color:#4a5568}
+.ptable tr:hover td{background:#fafbfc}
+.ptable tr.bold td{font-weight:700;color:#1a202c;background:#f7fafc}
+.ptable tr.ebitda-row td{font-weight:800;color:#1a3a5c;background:#edf2f7}
+.ptable td.up{color:#27ae60;font-weight:700}.ptable td.dn{color:#e74c3c;font-weight:700}
+
+/* ── WATERFALL LEGEND ── */
+.wfleg{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+.wfli{display:flex;align-items:center;gap:5px;font-size:0.61rem;color:#718096}
+.wfld{width:9px;height:9px;border-radius:2px;flex-shrink:0}
+.wf-foot{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid #e2e8f0;border-radius:7px;overflow:hidden;margin-top:10px}
+.wff{padding:9px 10px;text-align:center;border-right:1px solid #e2e8f0}
+.wff:last-child{border-right:none}
+.wffl{font-size:0.57rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#a0aec0}
+.wffv{font-size:0.95rem;font-weight:700;margin-top:2px;font-family:'IBM Plex Mono',monospace}
+.wffs{font-size:0.58rem;color:#718096;margin-top:1px}
+
+/* ── LEVER CARDS ── */
+.lever{background:white;border-radius:8px;padding:13px 15px;box-shadow:0 1px 3px rgba(0,0,0,0.06);border-left:4px solid;margin-bottom:8px}
+.lhd{display:flex;align-items:center;gap:7px;margin-bottom:4px}
+.lnum{width:21px;height:21px;border-radius:5px;display:inline-flex;align-items:center;justify-content:center;color:white;font-size:0.66rem;font-weight:700;flex-shrink:0}
+.ltitle{font-size:0.73rem;font-weight:700;flex:1;line-height:1.2}
+.lval{font-size:0.82rem;font-weight:700;white-space:nowrap;font-family:'IBM Plex Mono',monospace}
+.ldesc{font-size:0.65rem;color:#4a5568;line-height:1.65;margin-top:2px}
+.ltags{display:flex;gap:4px;flex-wrap:wrap;margin-top:5px}
+.pill{display:inline-block;padding:2px 7px;border-radius:4px;font-size:0.57rem;font-weight:700}
+.pg{background:#e8f5e9;color:#2e7d32}.po{background:#fff3e0;color:#e65100}.pb{background:#e3f2fd;color:#1565c0}.pr{background:#fce4ec;color:#c62828}.pn{background:#e8edf3;color:#1a3a5c}.pt{background:#e0f2f1;color:#00695c}.pp{background:#f3e8ff;color:#6b21a8}
+
+/* ── TOTAL BOX ── */
+.tbox{border-radius:7px;padding:10px 14px;margin-top:4px;display:flex;align-items:center;justify-content:space-between}
+.tbl{font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:1px}
+.tsub{font-size:0.61rem;color:#4a5568}
+.tval{font-size:1.25rem;font-weight:700;font-family:'IBM Plex Mono',monospace}
+
+/* ── INFO BOX ── */
+.ibox{border-radius:7px;padding:9px 13px;margin-bottom:11px;border-left:4px solid}
+.ibox.amber{background:#fffbf0;border-color:#f59e0b}.ibox.green{background:#f0fdf4;border-color:#22c55e}.ibox.blue{background:#eff6ff;border-color:#3b82f6}.ibox.navy{background:#edf2f7;border-color:#1a3a5c}
+.ibox-title{font-size:0.63rem;font-weight:800;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:3px}
+.ibox.amber .ibox-title{color:#92400e}.ibox.green .ibox-title{color:#166534}.ibox.blue .ibox-title{color:#1e40af}.ibox.navy .ibox-title{color:#1a3a5c}
+.ibox-text{font-size:0.69rem;color:#4a5568;line-height:1.6}
+
+/* ── SUMMARY BAND ── */
+.sum-band{background:linear-gradient(135deg,#1a3a5c,#0d2137);border-radius:10px;padding:16px 22px;display:flex;align-items:center;justify-content:space-around;flex-wrap:wrap;gap:0;margin-top:6px}
+.sb-item{text-align:center;padding:4px 10px}
+.sb-v{font-size:1.05rem;font-weight:700;font-family:'IBM Plex Mono',monospace}
+.sb-l{font-size:0.55rem;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:rgba(255,255,255,0.4);margin-top:2px}
+.sb-div{width:1px;height:36px;background:rgba(255,255,255,0.1);flex-shrink:0}
+
+/* ── ENABLERS ── */
+.enabler-card{background:white;border-radius:8px;padding:16px 18px;box-shadow:0 1px 4px rgba(0,0,0,0.06);border-top:3px solid;margin-bottom:10px}
+.en-num{display:inline-flex;width:28px;height:28px;border-radius:7px;align-items:center;justify-content:center;font-size:0.78rem;font-weight:800;color:white;margin-bottom:8px}
+.en-title{font-size:0.82rem;font-weight:700;margin-bottom:4px}
+.en-desc{font-size:0.68rem;color:#4a5568;line-height:1.7}
+.en-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+
+/* ── NEXT STEPS TABLE ── */
+.ns-table{width:100%;border-collapse:collapse;font-size:0.7rem}
+.ns-table th{background:#1a3a5c;color:white;font-weight:700;font-size:0.6rem;text-transform:uppercase;letter-spacing:0.6px;padding:9px 10px;text-align:left}
+.ns-table td{padding:8px 10px;border-bottom:1px solid #f0f4f8;vertical-align:top}
+.ns-table tr:hover td{background:#f7fafc}
+.ns-table tr:last-child td{border-bottom:none}
+.priority-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;vertical-align:middle}
+.rag-r{background:#e74c3c}.rag-a{background:#f39c12}.rag-g{background:#27ae60}
+.status-pill{display:inline-block;padding:2px 8px;border-radius:4px;font-size:0.58rem;font-weight:700}
+.sp-immediate{background:#fce4ec;color:#c0392b}.sp-q1{background:#fff3e0;color:#e67e22}.sp-q2{background:#e3f2fd;color:#1565c0}.sp-ongoing{background:#e8f5e9;color:#2e7d32}
+
+/* ── CAPEX TRANSFORM ── */
+.capex-phase{border-radius:8px;padding:14px 16px;margin-bottom:10px}
+.phase-header{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.phase-badge{padding:4px 10px;border-radius:4px;font-size:0.65rem;font-weight:700;color:white}
+.phase-title{font-size:0.82rem;font-weight:700}
+.phase-sub{font-size:0.63rem;color:#718096;margin-top:1px}
+.capex-items{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+.ci{background:white;border-radius:6px;padding:10px 12px;border-left:3px solid}
+.ci-name{font-size:0.67rem;font-weight:700;margin-bottom:2px}
+.ci-val{font-size:1rem;font-weight:700;font-family:'IBM Plex Mono',monospace}
+.ci-sub{font-size:0.59rem;color:#718096;margin-top:2px}
+
+/* ── FLOOR PLAN embed ── */
+.fp-embed{border-radius:8px;overflow:hidden;border:1px solid #e2e8f0;background:#0a0e1a}
+
+/* ── FOOTER ── */
+.footer{background:#1a3a5c;color:rgba(255,255,255,0.3);text-align:center;padding:11px;font-size:0.58rem;margin-top:20px;font-family:'IBM Plex Mono',monospace}
+
+@media(max-width:1100px){.ks-7{grid-template-columns:repeat(4,1fr)}.ks-6{grid-template-columns:repeat(3,1fr)}.m4{grid-template-columns:repeat(2,1fr)}.g2,.g3,.g21,.g12,.g-hist,.g-lev{grid-template-columns:1fr}}
+@media(max-width:700px){.ks-7,.ks-6,.ks-5,.ks-4{grid-template-columns:repeat(2,1fr)}}
+
+
+</style>
+
+</head>
+<body>
+
+<!-- ══════════════════════════════ HEADER ══════════════════════════════ -->
+<div class="header">
+  <div class="header-left">
+    <h1>LHRC — Executive Dashboard</h1>
+    <p>VPS Lakeshore Hospital &amp; Research Centre, Kochi &nbsp;&middot;&nbsp; Strategic Overview FY26 Performance &amp; FY27 BC Budget &nbsp;&middot;&nbsp; Confidential</p>
+    <div class="header-badges">
+      <span class="hbadge hb-or">FY26E Rev &#x20B9;452.8 Cr</span>
+      <span class="hbadge hb-gr">FY27 BC &#x20B9;525.7 Cr</span>
+      <span class="hbadge hb-bl">EBITDA &#x20B9;99 Cr &#x2192; &#x20B9;149 Cr (UC)</span>
+      <span class="hbadge hb-pu">Margin 22% &#x2192; 25.8%</span>
+      <span class="hbadge hb-rd">2-Building Strategy</span>
+      <span class="hbadge hb-tl">541 Beds (Future State)</span>
+    </div>
+  </div>
+  <div class="header-right">Executive Dashboard<br>April 2026<br>Confidential</div>
+</div>
+
+<!-- ══════════════════════════════ TABS ══════════════════════════════ -->
+<div class="tab-bar">
+  <div class="tab active" onclick="showTab('overview',this)">&#x1F3AF; Overview</div>
+  <div class="tab" onclick="showTab('capex',this)">&#x1F3D7;&#xFE0F; Capex Transformation</div>
+  <div class="tab" onclick="showTab('revenue',this)">&#x1F4C8; Revenue Levers</div>
+  <div class="tab" onclick="showTab('cost',this)">&#x2702;&#xFE0F; Cost Levers</div>
+  <div class="tab" onclick="showTab('enablers',this)">&#x26A1; Enablers</div>
+  <div class="tab" onclick="showTab('nextsteps',this)">&#x1F3C3; Immediate Next Steps</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     TAB 1: OVERVIEW
+══════════════════════════════════════════════════════════════════ -->
+<div id="page-overview" class="page active">
+
+<!-- ── Legend row ─────────────────────────────────── -->
+  <div style="display:flex;align-items:center;gap:18px;margin-bottom:12px;padding:8px 14px;background:#f7fafc;border-radius:8px;border:1px solid #e2e8f0">
+    <span style="font-size:0.62rem;font-weight:700;color:#718096;text-transform:uppercase;letter-spacing:0.8px">Comparing:</span>
+    <span style="display:flex;align-items:center;gap:5px;font-size:0.68rem;font-weight:600;color:#718096">
+      <span style="width:10px;height:10px;border-radius:2px;background:#718096;display:inline-block"></span>FY26E (Current Year Forecast)
+    </span>
+    <span style="display:flex;align-items:center;gap:5px;font-size:0.68rem;font-weight:600;color:#27ae60">
+      <span style="width:10px;height:10px;border-radius:2px;background:#27ae60;display:inline-block"></span>FY27 Base Case (BC)
+    </span>
+    <span style="display:flex;align-items:center;gap:5px;font-size:0.68rem;font-weight:600;color:#e67e22">
+      <span style="width:10px;height:10px;border-radius:2px;background:#e67e22;display:inline-block"></span>FY27 Upside Case (UC) — Revenue Levers + Cost Actions
+    </span>
+  </div>
+
+  <!-- ── KPI Strip ────────────────────────────────────── -->
+  <div class="kpi-strip ks-5" style="margin-bottom:16px">
+
+    <div class="kpi" style="border-top-color:#1a3a5c">
+      <div class="kl">Total Revenue</div>
+      <div style="margin-top:6px;display:flex;flex-direction:column;gap:4px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline">
+          <span style="font-size:0.72rem;font-weight:700;color:#718096;font-family:'IBM Plex Mono',monospace">&#x20B9;452.8 Cr</span>
+          <span style="font-size:0.58rem;color:#a0aec0;background:#f7fafc;padding:1px 5px;border-radius:3px">FY26E</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline">
+          <span style="font-size:0.88rem;font-weight:800;color:#27ae60;font-family:'IBM Plex Mono',monospace">&#x20B9;525.7 Cr</span>
+          <span style="font-size:0.58rem;font-weight:700;color:#27ae60;background:#f0fdf4;padding:1px 5px;border-radius:3px">+16% BC</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline">
+          <span style="font-size:1.0rem;font-weight:800;color:#e67e22;font-family:'IBM Plex Mono',monospace">&#x20B9;575 Cr</span>
+          <span style="font-size:0.58rem;font-weight:700;color:#e67e22;background:#fff8f0;padding:1px 5px;border-radius:3px">+27% UC</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="kpi" style="border-top-color:#2980b9">
+      <div class="kl">EBITDA</div>
+      <div style="margin-top:6px;display:flex;flex-direction:column;gap:4px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline">
+          <span style="font-size:0.72rem;font-weight:700;color:#718096;font-family:'IBM Plex Mono',monospace">&#x20B9;98.8 Cr</span>
+          <span style="font-size:0.58rem;color:#a0aec0;background:#f7fafc;padding:1px 5px;border-radius:3px">FY26E</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline">
+          <span style="font-size:0.88rem;font-weight:800;color:#27ae60;font-family:'IBM Plex Mono',monospace">&#x20B9;113.9 Cr</span>
+          <span style="font-size:0.58rem;font-weight:700;color:#27ae60;background:#f0fdf4;padding:1px 5px;border-radius:3px">+15% BC</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline">
+          <span style="font-size:1.0rem;font-weight:800;color:#e67e22;font-family:'IBM Plex Mono',monospace">&#x20B9;148.6 Cr</span>
+          <span style="font-size:0.58rem;font-weight:700;color:#e67e22;background:#fff8f0;padding:1px 5px;border-radius:3px">+50% UC</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="kpi" style="border-top-color:#8e44ad">
+      <div class="kl">EBITDA Margin</div>
+      <div style="margin-top:6px;display:flex;flex-direction:column;gap:4px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline">
+          <span style="font-size:0.72rem;font-weight:700;color:#718096;font-family:'IBM Plex Mono',monospace">21.8%</span>
+          <span style="font-size:0.58rem;color:#a0aec0;background:#f7fafc;padding:1px 5px;border-radius:3px">FY26E</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline">
+          <span style="font-size:0.88rem;font-weight:800;color:#27ae60;font-family:'IBM Plex Mono',monospace">21.7%</span>
+          <span style="font-size:0.58rem;font-weight:600;color:#718096;background:#f7fafc;padding:1px 5px;border-radius:3px">~flat BC</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline">
+          <span style="font-size:1.0rem;font-weight:800;color:#e67e22;font-family:'IBM Plex Mono',monospace">25.8%</span>
+          <span style="font-size:0.58rem;font-weight:700;color:#e67e22;background:#fff8f0;padding:1px 5px;border-radius:3px">+410bps UC</span>
+        </div>
+      </div>
+      <div class="ks2" style="margin-top:5px">Recovers toward FY23 peak of 25.6%</div>
+    </div>
+
+    <div class="kpi" style="border-top-color:#00838f">
+      <div class="kl">ARPOB — IP / Day</div>
+      <div style="margin-top:6px;display:flex;flex-direction:column;gap:4px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline">
+          <span style="font-size:0.72rem;font-weight:700;color:#718096;font-family:'IBM Plex Mono',monospace">&#x20B9;35,188</span>
+          <span style="font-size:0.58rem;color:#a0aec0;background:#f7fafc;padding:1px 5px;border-radius:3px">FY26E</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline">
+          <span style="font-size:0.88rem;font-weight:800;color:#27ae60;font-family:'IBM Plex Mono',monospace">&#x20B9;36,200</span>
+          <span style="font-size:0.58rem;font-weight:700;color:#27ae60;background:#f0fdf4;padding:1px 5px;border-radius:3px">+3.4% BC</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline">
+          <span style="font-size:1.0rem;font-weight:800;color:#e67e22;font-family:'IBM Plex Mono',monospace">&#x20B9;40,900</span>
+          <span style="font-size:0.58rem;font-weight:700;color:#e67e22;background:#fff8f0;padding:1px 5px;border-radius:3px">+16% UC</span>
+        </div>
+      </div>
+      <div class="ks2" style="margin-top:5px">UC: oncology &amp; complex care mix premium</div>
+    </div>
+
+    <div class="kpi" style="border-top-color:#e74c3c">
+      <div class="kl">Bed Occupancy</div>
+      <div style="margin-top:6px;display:flex;flex-direction:column;gap:4px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline">
+          <span style="font-size:0.72rem;font-weight:700;color:#718096;font-family:'IBM Plex Mono',monospace">53%</span>
+          <span style="font-size:0.58rem;color:#a0aec0;background:#f7fafc;padding:1px 5px;border-radius:3px">FY26E</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline">
+          <span style="font-size:0.88rem;font-weight:800;color:#27ae60;font-family:'IBM Plex Mono',monospace">62%</span>
+          <span style="font-size:0.58rem;font-weight:700;color:#27ae60;background:#f0fdf4;padding:1px 5px;border-radius:3px">+9ppt BC</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline">
+          <span style="font-size:1.0rem;font-weight:800;color:#e67e22;font-family:'IBM Plex Mono',monospace">68%</span>
+          <span style="font-size:0.58rem;font-weight:700;color:#e67e22;background:#fff8f0;padding:1px 5px;border-radius:3px">+6ppt UC</span>
+        </div>
+      </div>
+      <div class="ks2" style="margin-top:5px">UC: referral networks, telemedicine, outreach</div>
+    </div>
+
+  </div>
+
+  <!-- ── Section 1: Profitability Table (left) + Waterfall (right) ── -->
+  <div class="slabel">&#x1F4CA;&nbsp; Financial Bridge — FY25 Actual &#x2192; FY26E &#x2192; FY27 BC &#x2192; FY27 UC</div>
+  <div style="display:grid;grid-template-columns:1.1fr 1fr;gap:14px;margin-bottom:16px">
+    <div class="card">
+      <div class="ct">Profitability Bridge — FY25 Actual vs FY26E vs FY27 BC vs FY27 UC</div>
+      <div class="cs">&#x20B9; Lakhs &middot; Upside Case (UC) reflects revenue &amp; cost lever upside above BC</div>
+      <table class="ptable">
+        <thead>
+          <tr>
+            <th style="text-align:left">Particulars</th>
+            <th>FY25<br><span style="font-size:0.55rem;font-weight:400">Actual</span></th>
+            <th>FY26E<br><span style="font-size:0.55rem;font-weight:400">Forecast</span></th>
+            <th>FY27 BC<br><span style="font-size:0.55rem;font-weight:400">Base Case</span></th>
+            <th style="background:#1a3a5c;color:white;border-radius:4px 4px 0 0">FY27 UC<br><span style="font-size:0.55rem;font-weight:400;color:rgba(255,255,255,0.6)">Upside Case</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="bold"><td>Revenue</td><td>41,575</td><td>45,278</td><td>52,573</td><td style="font-weight:800;color:#1a3a5c;background:#f0f4f8">57,500</td></tr>
+          <tr><td>&nbsp;&nbsp;[&#x2013;] Consumption / COGS</td><td>12,514</td><td>13,328</td><td>15,259</td><td style="background:#f7fafc;color:#4a5568">15,525</td></tr>
+          <tr><td>&nbsp;&nbsp;[&#x2013;] Doctor Cost</td><td>7,547</td><td>8,009</td><td>9,908</td><td style="background:#f7fafc;color:#4a5568">9,908</td></tr>
+          <tr class="bold"><td>Contribution</td><td>21,515</td><td>23,941</td><td>27,405</td><td style="font-weight:800;color:#1a3a5c;background:#f0f4f8">32,067</td></tr>
+          <tr><td>&nbsp;&nbsp;[&#x2013;] Payroll</td><td>7,401</td><td>7,718</td><td>8,985</td><td style="background:#f7fafc;color:#27ae60;font-weight:700">8,185</td></tr>
+          <tr><td>&nbsp;&nbsp;[&#x2013;] Other Cost</td><td>6,212</td><td>6,341</td><td>7,024</td><td style="background:#f7fafc;color:#27ae60;font-weight:700">6,524</td></tr>
+          <tr class="ebitda-row"><td>EBITDA</td><td>7,901</td><td>9,882</td><td>11,395</td><td style="font-weight:800;color:#e67e22;background:#fff8f0;font-size:0.75rem">14,858</td></tr>
+          <tr class="bold"><td>EBITDA %</td><td>19%</td><td class="up">22%</td><td class="up">22%</td><td style="font-weight:800;color:#e67e22;background:#fff8f0">25.8%</td></tr>
+          <tr><td>&nbsp;&nbsp;[&#x2013;] Depreciation</td><td>2,605</td><td>2,500</td><td>3,493</td><td style="background:#f7fafc;color:#4a5568">3,493</td></tr>
+          <tr class="bold"><td>EBIT</td><td>5,297</td><td>7,382</td><td>7,903</td><td style="font-weight:800;color:#1a3a5c;background:#f0f4f8">11,365</td></tr>
+          <tr><td>&nbsp;&nbsp;[&#x2013;] Finance Cost</td><td>33</td><td>94</td><td>94</td><td style="background:#f7fafc;color:#4a5568">94</td></tr>
+          <tr class="bold"><td>PBT</td><td>5,263</td><td>7,289</td><td>7,809</td><td style="font-weight:800;color:#1a3a5c;background:#f0f4f8">11,271</td></tr>
+          <tr><td>&nbsp;&nbsp;[&#x2013;] Tax</td><td>1,362</td><td>1,886</td><td>2,021</td><td style="background:#f7fafc;color:#4a5568">2,918</td></tr>
+          <tr class="bold"><td>PAT</td><td>3,901</td><td>5,403</td><td>5,788</td><td style="font-weight:800;color:#27ae60;background:#f0fdf4">8,353</td></tr>
+          <tr><td>PAT %</td><td>9%</td><td class="up">12%</td><td>11%</td><td style="font-weight:700;color:#27ae60;background:#f0fdf4">14.5%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div class="ct">FY27 EBITDA Waterfall — Value Creation Bridge &nbsp;<span class="pill pg">Upside Case (UC)</span></div>
+      <div class="cs">FY26E Base &#x20B9;99 Cr &#x2192; Revenue levers +&#x20B9;30 Cr &#x2192; Cost levers +&#x20B9;20 Cr &#x2192; FY27 UC &#x20B9;149 Cr (25.8%)</div>
+      <div class="wfleg">
+        <div class="wfli"><div class="wfld" style="background:#1a3a5c"></div>Base / Target</div>
+        <div class="wfli"><div class="wfld" style="background:#27ae60"></div>Revenue uplift</div>
+        <div class="wfli"><div class="wfld" style="background:#2980b9"></div>Cost savings</div>
+      </div>
+      <div style="position:relative;height:230px"><canvas id="waterfallChart"></canvas></div>
+      <div class="wf-foot">
+        <div class="wff" style="background:#fafbfc"><div class="wffl">FY26E Base</div><div class="wffv" style="color:#1a3a5c">&#x20B9;99 Cr</div><div class="wffs">22% margin</div></div>
+        <div class="wff" style="background:#f0fdf4"><div class="wffl">Revenue Levers</div><div class="wffv" style="color:#27ae60">+&#x20B9;30 Cr</div><div class="wffs">Pkg + referral + capability + mix</div></div>
+        <div class="wff" style="background:#eff6ff"><div class="wffl">Cost Levers</div><div class="wffv" style="color:#2980b9">+&#x20B9;20 Cr</div><div class="wffs">People + vendor</div></div>
+        <div class="wff" style="background:#1a3a5c"><div class="wffl" style="color:rgba(255,255,255,0.5)">FY27 UC</div><div class="wffv" style="color:#f39c12">&#x20B9;149 Cr</div><div class="wffs" style="color:#27ae60;font-weight:700">25.8% margin</div></div>
+      </div>
+      <!-- Compact lever summary -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
+        <div style="background:#f0fdf4;border-radius:6px;padding:8px 10px">
+          <div style="font-size:0.56rem;font-weight:800;text-transform:uppercase;letter-spacing:0.6px;color:#27ae60;margin-bottom:5px">Revenue Levers &nbsp;+&#x20B9;30 Cr</div>
+          <div style="display:flex;flex-direction:column;gap:3px">
+            <div style="display:flex;justify-content:space-between;font-size:0.61rem"><span style="color:#4a5568">Package Revision &amp; Price Uplift</span><span style="font-weight:700;color:#27ae60">+&#x20B9;12 Cr</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:0.61rem"><span style="color:#4a5568">Referral Strengthening &amp; Branding</span><span style="font-weight:700;color:#27ae60">+&#x20B9;8 Cr</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:0.61rem"><span style="color:#4a5568">Clinical Capability &amp; Complex Mix</span><span style="font-weight:700;color:#27ae60">+&#x20B9;6 Cr</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:0.61rem"><span style="color:#4a5568">New Specialties &amp; Payor Mix</span><span style="font-weight:700;color:#27ae60">+&#x20B9;4 Cr</span></div>
+          </div>
+        </div>
+        <div style="background:#eff6ff;border-radius:6px;padding:8px 10px">
+          <div style="font-size:0.56rem;font-weight:800;text-transform:uppercase;letter-spacing:0.6px;color:#2980b9;margin-bottom:5px">Cost Levers &nbsp;+&#x20B9;20 Cr</div>
+          <div style="display:flex;flex-direction:column;gap:3px">
+            <div style="display:flex;justify-content:space-between;font-size:0.61rem"><span style="color:#4a5568">Procurement &amp; Vendor Optimisation</span><span style="font-weight:700;color:#2980b9">+&#x20B9;7 Cr</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:0.61rem"><span style="color:#4a5568">Manpower Rationalisation &amp; PLCs</span><span style="font-weight:700;color:#2980b9">+&#x20B9;11 Cr</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:0.61rem"><span style="color:#4a5568">Other Costs (Power / Mktg / Group)</span><span style="font-weight:700;color:#2980b9">+&#x20B9;2 Cr</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- ── Section 2: Revenue & Cost Levers (full width, below waterfall) ── -->
+  <div class="slabel">&#x1F4A1;&nbsp; Revenue &amp; Cost Levers — Driving FY27 UC (&#x20B9;149 Cr / 25.8%)</div>
+  <div class="card" style="margin-bottom:16px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+
+      <!-- Revenue levers -->
+      <div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+          <span style="background:#27ae60;color:white;padding:3px 10px;border-radius:4px;font-size:0.62rem;font-weight:800;letter-spacing:0.5px">REVENUE LEVERS</span>
+          <span style="font-size:0.68rem;font-weight:700;color:#27ae60">+&#x20B9;30 Cr EBITDA above Base Case</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="background:#f0fdf4;border-left:3px solid #8e44ad;border-radius:0 6px 6px 0;padding:7px 10px;display:flex;justify-content:space-between;align-items:flex-start">
+            <div>
+              <div style="font-size:0.69rem;font-weight:700;color:#1a202c">① Clinical Capability — Complex Case Mix (BMT, Transplant, H&amp;N, Robotics)</div>
+              <div style="font-size:0.6rem;color:#4a5568;margin-top:2px">Senior consultant additions: Dr. Moni (H&amp;N), Haematonc (BMT), Sr. Nephrologist (dialysis spokes) &middot; Head &amp; Neck Oncology (&#x20B9;8.67 Cr FY26E, high-complexity) &middot; complex cases 2–3&times; revenue of routine &rarr; <em>largest ARPOB and UC lever</em></div>
+            </div>
+            <span style="font-size:0.65rem;font-weight:800;color:#27ae60;white-space:nowrap;margin-left:8px">+&#x20B9;6 Cr</span>
+          </div>
+          <div style="background:#f0fdf4;border-left:3px solid #1a3a5c;border-radius:0 6px 6px 0;padding:7px 10px;display:flex;justify-content:space-between;align-items:flex-start">
+            <div>
+              <div style="font-size:0.69rem;font-weight:700;color:#1a202c">② Package Revision — Addition &amp; Price Uplift</div>
+              <div style="font-size:0.6rem;color:#4a5568;margin-top:2px">Revise existing packages for complexity &amp; consumables &middot; add unbundled procedures &middot; 8–12% price increase on IP packages not revised in 2+ years &rarr; <em>directly lifts ARPOB</em></div>
+            </div>
+            <span style="font-size:0.65rem;font-weight:800;color:#27ae60;white-space:nowrap;margin-left:8px">+&#x20B9;12 Cr</span>
+          </div>
+          <div style="background:#f0fdf4;border-left:3px solid #e67e22;border-radius:0 6px 6px 0;padding:7px 10px;display:flex;justify-content:space-between;align-items:flex-start">
+            <div>
+              <div style="font-size:0.69rem;font-weight:700;color:#1a202c">③ Referral Strengthening — Satellite, Burjeel, Marketing &amp; Star Doctors</div>
+              <div style="font-size:0.6rem;color:#4a5568;margin-top:2px">Satellite clinics in tier-2 catchments &middot; Burjeel referral corridor for complex oncology &middot; GP &amp; digital outreach &middot; star consultant recruitment with referral base &rarr; <em>drives occupancy &amp; IP volume</em></div>
+            </div>
+            <span style="font-size:0.65rem;font-weight:800;color:#27ae60;white-space:nowrap;margin-left:8px">+&#x20B9;8 Cr</span>
+          </div>
+          <div style="background:#f0fdf4;border-left:3px solid #0891b2;border-radius:0 6px 6px 0;padding:7px 10px;display:flex;justify-content:space-between;align-items:flex-start">
+            <div>
+              <div style="font-size:0.69rem;font-weight:700;color:#1a202c">④ New Specialties — IR, Cosmetology &amp; Men's Health</div>
+              <div style="font-size:0.6rem;color:#4a5568;margin-top:2px">Capital-light revenue streams &middot; IR high ARPOB minimal bed use &middot; Cosmetology cash-pay high-margin &middot; Men's Health OP growth &rarr; <em>new top-line with no fixed cost drag</em></div>
+            </div>
+            <span style="font-size:0.65rem;font-weight:800;color:#27ae60;white-space:nowrap;margin-left:8px">+&#x20B9;4 Cr</span>
+          </div>
+          <div style="background:#f0fdf4;border-left:3px solid #dc2626;border-radius:0 6px 6px 0;padding:7px 10px;display:flex;justify-content:space-between;align-items:flex-start">
+            <div>
+              <div style="font-size:0.69rem;font-weight:700;color:#1a202c">⑤ Payor Mix — TPA Expansion &amp; International Growth</div>
+              <div style="font-size:0.6rem;color:#4a5568;margin-top:2px">Rationalise TPA mix by realisation &amp; aging — drop / renegotiate low-yield contracts &middot; grow to 30% only with qualifying TPAs &middot; reduce &gt;90-day outstanding &middot; international 9.2%&#x2192;12% via Gulf &amp; Burjeel corridor &rarr; <em>improves net realisation per bed-day, reduces bad debt</em></div>
+            </div>
+            <span style="font-size:0.65rem;font-weight:800;color:#27ae60;white-space:nowrap;margin-left:8px">+&#x20B9;4 Cr</span>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:flex-end;margin-top:8px;padding-top:8px;border-top:1px solid #dcfce7">
+          <span style="font-size:0.62rem;color:#718096;margin-right:8px;font-weight:600">Total Revenue Lever EBITDA Impact:</span>
+          <span style="font-size:0.8rem;font-weight:800;color:#27ae60;font-family:'IBM Plex Mono',monospace">+&#x20B9;30 Cr</span>
+        </div>
+      </div>
+
+      <!-- Cost levers -->
+      <div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+          <span style="background:#2980b9;color:white;padding:3px 10px;border-radius:4px;font-size:0.62rem;font-weight:800;letter-spacing:0.5px">COST LEVERS</span>
+          <span style="font-size:0.68rem;font-weight:700;color:#2980b9">+&#x20B9;20 Cr EBITDA above Base Case</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="background:#eff6ff;border-left:3px solid #2980b9;border-radius:0 6px 6px 0;padding:7px 10px;display:flex;justify-content:space-between;align-items:flex-start">
+            <div>
+              <div style="font-size:0.69rem;font-weight:700;color:#1a202c">Staffing Rationalisation</div>
+              <div style="font-size:0.6rem;color:#4a5568;margin-top:2px">1,624 non-doc staff &middot; &#x20B9;63 Cr payroll &middot; Nursing 630&#x2192;569 &middot; Pharmacy 93&#x2192;50 &middot; PCS 97&#x2192;80</div>
+            </div>
+            <span style="font-size:0.65rem;font-weight:800;color:#2980b9;white-space:nowrap;margin-left:8px">+&#x20B9;11 Cr</span>
+          </div>
+          <div style="background:#eff6ff;border-left:3px solid #2980b9;border-radius:0 6px 6px 0;padding:7px 10px;display:flex;justify-content:space-between;align-items:flex-start">
+            <div>
+              <div style="font-size:0.69rem;font-weight:700;color:#1a202c">Procurement &amp; Vendor Optimisation</div>
+              <div style="font-size:0.6rem;color:#4a5568;margin-top:2px">COGS 28.5%&#x2192;26.5% &middot; Rate contracts &middot; Credit period discounts &middot; BOQ standardisation &middot; Formulary &amp; wastage control &middot; Vendor consolidation &middot; Implant benchmarking</div>
+            </div>
+            <span style="font-size:0.65rem;font-weight:800;color:#2980b9;white-space:nowrap;margin-left:8px">+&#x20B9;7 Cr</span>
+          </div>
+          <div style="background:#eff6ff;border-left:3px solid #2980b9;border-radius:0 6px 6px 0;padding:7px 10px;display:flex;justify-content:space-between;align-items:flex-start">
+            <div>
+              <div style="font-size:0.69rem;font-weight:700;color:#1a202c">Utilities + Doctor Fee Restructuring</div>
+              <div style="font-size:0.6rem;color:#4a5568;margin-top:2px">Solar &middot; HVAC &middot; LED retrofit &middot; Performance-linked MG for new hires</div>
+            </div>
+            <span style="font-size:0.65rem;font-weight:800;color:#2980b9;white-space:nowrap;margin-left:8px">+&#x20B9;2 Cr</span>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:flex-end;margin-top:8px;padding-top:8px;border-top:1px solid #dbeafe">
+          <span style="font-size:0.62rem;color:#718096;margin-right:8px;font-weight:600">Total Cost Lever EBITDA Impact:</span>
+          <span style="font-size:0.8rem;font-weight:800;color:#2980b9;font-family:'IBM Plex Mono',monospace">+&#x20B9;20 Cr</span>
+        </div>
+      </div>
+
+    </div>
+    <!-- Combined total -->
+    <div style="background:linear-gradient(135deg,#1a3a5c,#0d2137);border-radius:7px;padding:10px 16px;margin-top:12px;display:flex;align-items:center;justify-content:space-between">
+      <div style="font-size:0.63rem;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:rgba(255,255,255,0.55)">Total EBITDA Uplift — FY27 UC vs FY27 BC &nbsp;&middot;&nbsp; &#x20B9;99 Cr &#x2192; &#x20B9;149 Cr &nbsp;&middot;&nbsp; 22% &#x2192; 25.8% margin</div>
+      <div style="font-size:1.2rem;font-weight:800;color:#f39c12;font-family:'IBM Plex Mono',monospace;flex-shrink:0">+&#x20B9;50 Cr</div>
+    </div>
+  </div>
+
+  <!-- ── Section 3: UC Scorecard ── -->
+    <div class="slabel">&#x2705;&nbsp; FY27 Upside Case (UC) — Target Scorecard</div>
+  <div style="background:linear-gradient(135deg,#1a3a5c 0%,#0d2137 100%);border-radius:10px;padding:14px 18px;margin-bottom:16px">
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px">
+
+      <div style="background:rgba(255,255,255,0.07);border-radius:7px;padding:11px 12px;text-align:center;border-top:2px solid #e67e22">
+        <div style="font-size:0.52rem;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:rgba(255,255,255,0.45);margin-bottom:5px">Revenue</div>
+        <div style="font-size:1.1rem;font-weight:800;color:#e67e22;font-family:'IBM Plex Mono',monospace">&#x20B9;575 Cr</div>
+        <div style="font-size:0.62rem;font-weight:700;color:#e67e22;margin-top:4px">+27% vs FY26E</div>
+        <div style="height:1px;background:rgba(255,255,255,0.08);margin:6px 0"></div>
+        <div style="font-size:0.58rem;color:rgba(255,255,255,0.35)">FY27 BC: &#x20B9;525.7 Cr</div>
+      </div>
+
+      <div style="background:rgba(255,255,255,0.07);border-radius:7px;padding:11px 12px;text-align:center;border-top:2px solid #f39c12">
+        <div style="font-size:0.52rem;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:rgba(255,255,255,0.45);margin-bottom:5px">EBITDA</div>
+        <div style="font-size:1.1rem;font-weight:800;color:#f39c12;font-family:'IBM Plex Mono',monospace">&#x20B9;148.6 Cr</div>
+        <div style="font-size:0.62rem;font-weight:700;color:#f39c12;margin-top:4px">+50% vs FY26E</div>
+        <div style="height:1px;background:rgba(255,255,255,0.08);margin:6px 0"></div>
+        <div style="font-size:0.58rem;color:rgba(255,255,255,0.35)">FY27 BC: &#x20B9;113.9 Cr</div>
+      </div>
+
+      <div style="background:rgba(255,255,255,0.07);border-radius:7px;padding:11px 12px;text-align:center;border-top:2px solid #a78bfa">
+        <div style="font-size:0.52rem;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:rgba(255,255,255,0.45);margin-bottom:5px">EBITDA Margin</div>
+        <div style="font-size:1.1rem;font-weight:800;color:#a78bfa;font-family:'IBM Plex Mono',monospace">25.8%</div>
+        <div style="font-size:0.62rem;font-weight:700;color:#a78bfa;margin-top:4px">+400 bps vs FY26E</div>
+        <div style="height:1px;background:rgba(255,255,255,0.08);margin:6px 0"></div>
+        <div style="font-size:0.58rem;color:rgba(255,255,255,0.35)">FY27 BC: 21.7%</div>
+      </div>
+
+      <div style="background:rgba(255,255,255,0.07);border-radius:7px;padding:11px 12px;text-align:center;border-top:2px solid #74b9ff">
+        <div style="font-size:0.52rem;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:rgba(255,255,255,0.45);margin-bottom:5px">ARPOB / Day</div>
+        <div style="font-size:1.1rem;font-weight:800;color:#74b9ff;font-family:'IBM Plex Mono',monospace">&#x20B9;40,900</div>
+        <div style="font-size:0.62rem;font-weight:700;color:#74b9ff;margin-top:4px">+16% vs FY26E</div>
+        <div style="height:1px;background:rgba(255,255,255,0.08);margin:6px 0"></div>
+        <div style="font-size:0.58rem;color:rgba(255,255,255,0.35)">FY27 BC: &#x20B9;36,200</div>
+      </div>
+
+      <div style="background:rgba(255,255,255,0.07);border-radius:7px;padding:11px 12px;text-align:center;border-top:2px solid #fd79a8">
+        <div style="font-size:0.52rem;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:rgba(255,255,255,0.45);margin-bottom:5px">Bed Occupancy</div>
+        <div style="font-size:1.1rem;font-weight:800;color:#fd79a8;font-family:'IBM Plex Mono',monospace">68%</div>
+        <div style="font-size:0.62rem;font-weight:700;color:#fd79a8;margin-top:4px">+15 ppt vs FY26E</div>
+        <div style="height:1px;background:rgba(255,255,255,0.08);margin:6px 0"></div>
+        <div style="font-size:0.58rem;color:rgba(255,255,255,0.35)">FY27 BC: 62%</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── Section 4a: UC Revenue Breakdown ── -->
+  <!-- UC Revenue Breakdown section removed -->
+  <!-- ── Section 4b: Specialty-wise Revenue Breakdown ── -->
+  <div class="slabel">&#x1F3E5;&nbsp; Specialty-wise Revenue — FY26E vs FY27 BC (AOP) vs FY27 UC (&#x20B9; Crores)</div>
+  <div class="card" style="margin-bottom:16px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:12px">
+      <div>
+        <div class="ct">Department Revenue Growth — FY27 BC vs FY27 UC (Kochi)</div>
+        <div class="cs">FY26E annualised from YTD actuals &middot; FY27 BC = AOP Budget &middot; FY27 UC = differentiated uplift by specialty &middot; Kochi only &middot; &#x20B9; Crores</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px;justify-content:flex-end">
+        <div style="display:flex;align-items:center;gap:5px;font-size:0.62rem;color:#718096">
+          <div style="width:16px;height:4px;background:#e2e8f0;border-radius:2px"></div>FY26E
+        </div>
+        
+        <div style="display:flex;align-items:center;gap:5px;font-size:0.62rem;color:#27ae60;font-weight:700"><div style="width:16px;height:4px;background:#27ae60;border-radius:2px"></div>FY27 BC (AOP)</div>
+        <div style="display:flex;align-items:center;gap:5px;font-size:0.62rem;color:#e67e22;font-weight:700"><div style="width:16px;height:4px;background:#e67e22;border-radius:2px"></div>FY27 UC</div>
+        <div style="margin-left:8px;display:flex;gap:10px;flex-wrap:wrap">
+          <span style="font-size:0.58rem;display:flex;align-items:center;gap:3px"><span style="width:7px;height:7px;border-radius:50%;background:#dc2626;display:inline-block"></span>Oncology</span>
+          <span style="font-size:0.58rem;display:flex;align-items:center;gap:3px"><span style="width:7px;height:7px;border-radius:50%;background:#1a3a5c;display:inline-block"></span>High ARPOB</span>
+          <span style="font-size:0.58rem;display:flex;align-items:center;gap:3px"><span style="width:7px;height:7px;border-radius:50%;background:#0891b2;display:inline-block"></span>Volume</span>
+          <span style="font-size:0.58rem;display:flex;align-items:center;gap:3px"><span style="width:7px;height:7px;border-radius:50%;background:#7c3aed;display:inline-block"></span>OP-heavy</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- AOP Specialty Bar Chart -->
+    <div style="height:320px;margin-bottom:16px;position:relative">
+      <canvas id="specialtyAOPChart"></canvas>
+    </div>
+
+
+    <div style="overflow-x:auto">
+      <table style="width:100%;border-collapse:collapse">
+        <thead>
+          <tr style="background:#f7fafc;border-bottom:2px solid #e2e8f0">
+            <th style="text-align:left;padding:6px 8px;font-size:0.59rem;font-weight:700;text-transform:uppercase;letter-spacing:0.7px;color:#718096;min-width:160px">Specialty</th>
+            <th style="text-align:right;padding:6px 8px;font-size:0.59rem;font-weight:700;text-transform:uppercase;letter-spacing:0.7px;color:#718096">FY26E</th>
+            <th style="text-align:right;padding:6px 8px;font-size:0.59rem;font-weight:700;text-transform:uppercase;letter-spacing:0.7px;color:#27ae60">FY27 BC<br><span style="font-size:0.5rem;color:#a0aec0;font-weight:500;text-transform:none">AOP Budget</span></th>
+            <th style="text-align:right;padding:6px 8px;font-size:0.59rem;font-weight:700;text-transform:uppercase;letter-spacing:0.7px;color:#e67e22">FY27 UC<br><span style="font-size:0.5rem;color:#a0aec0;font-weight:500;text-transform:none">Upside Case</span></th>
+          </tr>
+        </thead>
+        <tbody style="divide-y:1px solid #f0f4f8">
+      <tr style="border-bottom:2px solid #e8f4fd">
+        <td style="padding:5px 8px;font-size:0.66rem;font-weight:700;color:#1a202c;white-space:nowrap">
+          <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#dc2626;margin-right:5px;vertical-align:middle"></span>Medical Oncology
+        </td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;color:#718096;vertical-align:top">64.0</td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;font-weight:700;color:#27ae60;vertical-align:top">
+          73.1<br><span style="font-size:0.56rem;color:#a0aec0">+9.1 (+14%)</span>
+          <div style="margin-top:3px;font-size:0.55rem;color:#2d7a4f;background:#f0fdf4;border-radius:3px;padding:2px 5px;display:inline-block;line-height:1.3">BMT program ramp · complex chemo protocols</div>
+        </td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;font-weight:800;color:#e67e22;vertical-align:top">
+          80.0<br><span style="font-size:0.56rem;color:#a0aec0">+16.0 (+25%)</span>
+          <div style="margin-top:3px;font-size:0.55rem;color:#92400e;background:#fffbeb;border-radius:3px;padding:2px 5px;display:inline-block;line-height:1.3">Haematonc consultant addition · Referral network uplift · International patients</div>
+        </td>
+      </tr>
+      <tr style="border-bottom:2px solid #e8f4fd">
+        <td style="padding:5px 8px;font-size:0.66rem;font-weight:700;color:#1a202c;white-space:nowrap">
+          <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#1a3a5c;margin-right:5px;vertical-align:middle"></span>Nephrology
+        </td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;color:#718096;vertical-align:top">53.1</td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;font-weight:700;color:#27ae60;vertical-align:top">
+          60.2<br><span style="font-size:0.56rem;color:#a0aec0">+7.1 (+13%)</span>
+          <div style="margin-top:3px;font-size:0.55rem;color:#2d7a4f;background:#f0fdf4;border-radius:3px;padding:2px 5px;display:inline-block;line-height:1.3">Renal transplant volume growth · CKD stage 4→5 conversion</div>
+        </td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;font-weight:800;color:#e67e22;vertical-align:top">
+          69.5<br><span style="font-size:0.56rem;color:#a0aec0">+16.4 (+31%)</span>
+          <div style="margin-top:3px;font-size:0.55rem;color:#92400e;background:#fffbeb;border-radius:3px;padding:2px 5px;display:inline-block;line-height:1.3">Dialysis spoke expansion · Senior consultant addition driving CAPD & HD volumes</div>
+        </td>
+      </tr>
+      <tr style="">
+        <td style="padding:5px 8px;font-size:0.66rem;font-weight:600;color:#1a202c;white-space:nowrap">
+          <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#1a3a5c;margin-right:5px;vertical-align:middle"></span>Neuro Surgery
+        </td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;color:#718096;vertical-align:top">33.7</td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;font-weight:700;color:#27ae60;vertical-align:top">
+          38.1<br><span style="font-size:0.56rem;color:#a0aec0">+4.4 (+13%)</span>
+          <div style="margin-top:3px;font-size:0.55rem;color:#2d7a4f;background:#f0fdf4;border-radius:3px;padding:2px 5px;display:inline-block;line-height:1.3">Increased GP referral network · BOND case volume growth · Additional ambulance tie-up</div>
+        </td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;font-weight:800;color:#e67e22;vertical-align:top">
+          44.5<br><span style="font-size:0.56rem;color:#a0aec0">+10.8 (+32%)</span>
+          <div style="margin-top:3px;font-size:0.55rem;color:#92400e;background:#fffbeb;border-radius:3px;padding:2px 5px;display:inline-block;line-height:1.3">Additional senior consultant onboarded · further volume uplift from referral pipeline</div>
+        </td>
+      </tr>
+      <tr style="">
+        <td style="padding:5px 8px;font-size:0.66rem;font-weight:600;color:#1a202c;white-space:nowrap">
+          <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#1a3a5c;margin-right:5px;vertical-align:middle"></span>Joint Replacement & Sports Med
+        </td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;color:#718096;vertical-align:top">25.0</td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;font-weight:700;color:#27ae60;vertical-align:top">
+          30.2<br><span style="font-size:0.56rem;color:#a0aec0">+5.2 (+21%)</span>
+          <div style="margin-top:3px;font-size:0.55rem;color:#2d7a4f;background:#f0fdf4;border-radius:3px;padding:2px 5px;display:inline-block;line-height:1.3">New consultants onboarded · increased OT utilisation & primary joint replacement volumes</div>
+        </td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;font-weight:800;color:#e67e22;vertical-align:top">
+          33.5<br><span style="font-size:0.56rem;color:#a0aec0">+8.5 (+34%)</span>
+          <div style="margin-top:3px;font-size:0.55rem;color:#92400e;background:#fffbeb;border-radius:3px;padding:2px 5px;display:inline-block;line-height:1.3">Specialised International Joint Replacement Centre launch · high-value implant cases</div>
+        </td>
+      </tr>
+      <tr style="">
+        <td style="padding:5px 8px;font-size:0.66rem;font-weight:600;color:#1a202c;white-space:nowrap">
+          <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#0891b2;margin-right:5px;vertical-align:middle"></span>GI Surgery
+        </td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;color:#718096;vertical-align:top">27.0</td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;font-weight:700;color:#27ae60;vertical-align:top">
+          29.8<br><span style="font-size:0.56rem;color:#a0aec0">+2.8 (+10%)</span>
+          <div style="margin-top:3px;font-size:0.55rem;color:#2d7a4f;background:#f0fdf4;border-radius:3px;padding:2px 5px;display:inline-block;line-height:1.3">Procedure rate revision · expanded referral network for hepatobiliary & colorectal cases</div>
+        </td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;font-weight:800;color:#e67e22;vertical-align:top">
+          34.5<br><span style="font-size:0.56rem;color:#a0aec0">+7.5 (+28%)</span>
+          <div style="margin-top:3px;font-size:0.55rem;color:#92400e;background:#fffbeb;border-radius:3px;padding:2px 5px;display:inline-block;line-height:1.3">Further volume uplift · liver transplant pipeline activation · HPB complex case ramp</div>
+        </td>
+      </tr>
+      <tr style="">
+        <td style="padding:5px 8px;font-size:0.66rem;font-weight:600;color:#1a202c;white-space:nowrap">
+          <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#1a3a5c;margin-right:5px;vertical-align:middle"></span>Cardiology
+        </td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;color:#718096;vertical-align:top">23.8</td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;font-weight:700;color:#27ae60;vertical-align:top">
+          27.3<br><span style="font-size:0.56rem;color:#a0aec0">+3.5 (+15%)</span>
+          
+        </td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;font-weight:800;color:#e67e22;vertical-align:top">
+          30.0<br><span style="font-size:0.56rem;color:#a0aec0">+6.2 (+26%)</span>
+          
+        </td>
+      </tr>
+      <tr style="">
+        <td style="padding:5px 8px;font-size:0.66rem;font-weight:600;color:#1a202c;white-space:nowrap">
+          <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#0891b2;margin-right:5px;vertical-align:middle"></span>Gastroenterology
+        </td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;color:#718096;vertical-align:top">22.1</td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;font-weight:700;color:#27ae60;vertical-align:top">
+          24.6<br><span style="font-size:0.56rem;color:#a0aec0">+2.5 (+11%)</span>
+          
+        </td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;font-weight:800;color:#e67e22;vertical-align:top">
+          27.0<br><span style="font-size:0.56rem;color:#a0aec0">+4.9 (+22%)</span>
+          
+        </td>
+      </tr>
+      <tr style="">
+        <td style="padding:5px 8px;font-size:0.66rem;font-weight:600;color:#1a202c;white-space:nowrap">
+          <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#0891b2;margin-right:5px;vertical-align:middle"></span>Urology
+        </td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;color:#718096;vertical-align:top">19.3</td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;font-weight:700;color:#27ae60;vertical-align:top">
+          21.3<br><span style="font-size:0.56rem;color:#a0aec0">+2.0 (+10%)</span>
+          
+        </td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;font-weight:800;color:#e67e22;vertical-align:top">
+          23.5<br><span style="font-size:0.56rem;color:#a0aec0">+4.2 (+22%)</span>
+          
+        </td>
+      </tr>
+      <tr style="">
+        <td style="padding:5px 8px;font-size:0.66rem;font-weight:600;color:#1a202c;white-space:nowrap">
+          <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#1a3a5c;margin-right:5px;vertical-align:middle"></span>Minimally Invasive Surgery
+        </td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;color:#718096;vertical-align:top">15.0</td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;font-weight:700;color:#27ae60;vertical-align:top">
+          17.3<br><span style="font-size:0.56rem;color:#a0aec0">+2.3 (+15%)</span>
+          
+        </td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;font-weight:800;color:#e67e22;vertical-align:top">
+          19.0<br><span style="font-size:0.56rem;color:#a0aec0">+4.0 (+27%)</span>
+          
+        </td>
+      </tr>
+      <tr style="">
+        <td style="padding:5px 8px;font-size:0.66rem;font-weight:600;color:#1a202c;white-space:nowrap">
+          <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#1a3a5c;margin-right:5px;vertical-align:middle"></span>Foot & Ankle
+        </td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;color:#718096;vertical-align:top">12.1</td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;font-weight:700;color:#27ae60;vertical-align:top">
+          13.9<br><span style="font-size:0.56rem;color:#a0aec0">+1.8 (+15%)</span>
+          
+        </td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;font-weight:800;color:#e67e22;vertical-align:top">
+          15.3<br><span style="font-size:0.56rem;color:#a0aec0">+3.2 (+26%)</span>
+          
+        </td>
+      </tr>
+      <tr style="">
+        <td style="padding:5px 8px;font-size:0.66rem;font-weight:600;color:#1a202c;white-space:nowrap">
+          <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#7c3aed;margin-right:5px;vertical-align:middle"></span>Neurology
+        </td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;color:#718096;vertical-align:top">12.6</td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;font-weight:700;color:#27ae60;vertical-align:top">
+          13.7<br><span style="font-size:0.56rem;color:#a0aec0">+1.1 (+9%)</span>
+          
+        </td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;font-weight:800;color:#e67e22;vertical-align:top">
+          15.0<br><span style="font-size:0.56rem;color:#a0aec0">+2.4 (+19%)</span>
+          
+        </td>
+      </tr>
+      <tr style="">
+        <td style="padding:5px 8px;font-size:0.66rem;font-weight:600;color:#1a202c;white-space:nowrap">
+          <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#1a3a5c;margin-right:5px;vertical-align:middle"></span>Comprehensive Liver Care
+        </td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;color:#718096;vertical-align:top">11.6</td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;font-weight:700;color:#27ae60;vertical-align:top">
+          12.8<br><span style="font-size:0.56rem;color:#a0aec0">+1.2 (+10%)</span>
+          
+        </td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;font-weight:800;color:#e67e22;vertical-align:top">
+          14.0<br><span style="font-size:0.56rem;color:#a0aec0">+2.4 (+21%)</span>
+          
+        </td>
+      </tr>
+      <tr style="">
+        <td style="padding:5px 8px;font-size:0.66rem;font-weight:600;color:#1a202c;white-space:nowrap">
+          <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#dc2626;margin-right:5px;vertical-align:middle"></span>Surgical Oncology
+        </td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;color:#718096;vertical-align:top">11.2</td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;font-weight:700;color:#27ae60;vertical-align:top">
+          12.1<br><span style="font-size:0.56rem;color:#a0aec0">+0.9 (+8%)</span>
+          
+        </td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;font-weight:800;color:#e67e22;vertical-align:top">
+          13.5<br><span style="font-size:0.56rem;color:#a0aec0">+2.3 (+21%)</span>
+          
+        </td>
+      </tr>
+      <tr style="">
+        <td style="padding:5px 8px;font-size:0.66rem;font-weight:600;color:#1a202c;white-space:nowrap">
+          <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#dc2626;margin-right:5px;vertical-align:middle"></span>Head & Neck Oncology
+        </td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;color:#718096;vertical-align:top">10.7</td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;font-weight:700;color:#27ae60;vertical-align:top">
+          11.8<br><span style="font-size:0.56rem;color:#a0aec0">+1.1 (+10%)</span>
+          <div style="margin-top:3px;font-size:0.55rem;color:#2d7a4f;background:#f0fdf4;border-radius:3px;padding:2px 5px;display:inline-block;line-height:1.3">Multidisciplinary H&N tumour board volumes · reconstructive surgery ramp</div>
+        </td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;font-weight:800;color:#e67e22;vertical-align:top">
+          20.5<br><span style="font-size:0.56rem;color:#a0aec0">+9.8 (+92%)</span>
+          <div style="margin-top:3px;font-size:0.55rem;color:#92400e;background:#fffbeb;border-radius:3px;padding:2px 5px;display:inline-block;line-height:1.3">Dr. Moni joining — significant H&N oncology volume uplift · complex resections & reconstructions</div>
+        </td>
+      </tr>
+      <tr style="">
+        <td style="padding:5px 8px;font-size:0.66rem;font-weight:600;color:#1a202c;white-space:nowrap">
+          <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#0891b2;margin-right:5px;vertical-align:middle"></span>General Medicine
+        </td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;color:#718096;vertical-align:top">9.0</td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;font-weight:700;color:#27ae60;vertical-align:top">
+          9.9<br><span style="font-size:0.56rem;color:#a0aec0">+0.9 (+10%)</span>
+          
+        </td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;font-weight:800;color:#e67e22;vertical-align:top">
+          10.8<br><span style="font-size:0.56rem;color:#a0aec0">+1.8 (+20%)</span>
+          
+        </td>
+      </tr>
+      <tr style="">
+        <td style="padding:5px 8px;font-size:0.66rem;font-weight:600;color:#1a202c;white-space:nowrap">
+          <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#0891b2;margin-right:5px;vertical-align:middle"></span>OB & Gynec.
+        </td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;color:#718096;vertical-align:top">8.0</td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;font-weight:700;color:#27ae60;vertical-align:top">
+          8.7<br><span style="font-size:0.56rem;color:#a0aec0">+0.7 (+9%)</span>
+          
+        </td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;font-weight:800;color:#e67e22;vertical-align:top">
+          9.5<br><span style="font-size:0.56rem;color:#a0aec0">+1.5 (+19%)</span>
+          
+        </td>
+      </tr>
+      <tr style="">
+        <td style="padding:5px 8px;font-size:0.66rem;font-weight:600;color:#1a202c;white-space:nowrap">
+          <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#0891b2;margin-right:5px;vertical-align:middle"></span>Pediatrics
+        </td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;color:#718096;vertical-align:top">7.7</td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;font-weight:700;color:#27ae60;vertical-align:top">
+          8.6<br><span style="font-size:0.56rem;color:#a0aec0">+0.9 (+12%)</span>
+          
+        </td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;font-weight:800;color:#e67e22;vertical-align:top">
+          9.4<br><span style="font-size:0.56rem;color:#a0aec0">+1.7 (+22%)</span>
+          
+        </td>
+      </tr>
+      <tr style="">
+        <td style="padding:5px 8px;font-size:0.66rem;font-weight:600;color:#1a202c;white-space:nowrap">
+          <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#0891b2;margin-right:5px;vertical-align:middle"></span>Orthopedics
+        </td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;color:#718096;vertical-align:top">7.7</td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;font-weight:700;color:#27ae60;vertical-align:top">
+          8.5<br><span style="font-size:0.56rem;color:#a0aec0">+0.8 (+10%)</span>
+          
+        </td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;font-weight:800;color:#e67e22;vertical-align:top">
+          9.4<br><span style="font-size:0.56rem;color:#a0aec0">+1.7 (+22%)</span>
+          
+        </td>
+      </tr>
+      <tr style="">
+        <td style="padding:5px 8px;font-size:0.66rem;font-weight:600;color:#1a202c;white-space:nowrap">
+          <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#7c3aed;margin-right:5px;vertical-align:middle"></span>Pulmonology
+        </td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;color:#718096;vertical-align:top">6.5</td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;font-weight:700;color:#27ae60;vertical-align:top">
+          8.1<br><span style="font-size:0.56rem;color:#a0aec0">+1.6 (+25%)</span>
+          
+        </td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;font-weight:800;color:#e67e22;vertical-align:top">
+          9.0<br><span style="font-size:0.56rem;color:#a0aec0">+2.5 (+38%)</span>
+          
+        </td>
+      </tr>
+      <tr style="">
+        <td style="padding:5px 8px;font-size:0.66rem;font-weight:600;color:#1a202c;white-space:nowrap">
+          <span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#dc2626;margin-right:5px;vertical-align:middle"></span>Radiation Oncology
+        </td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;color:#718096;vertical-align:top">7.1</td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;font-weight:700;color:#27ae60;vertical-align:top">
+          7.8<br><span style="font-size:0.56rem;color:#a0aec0">+0.7 (+10%)</span>
+          
+        </td>
+        <td style="padding:5px 8px;text-align:right;font-size:0.67rem;font-family:'IBM Plex Mono',monospace;font-weight:800;color:#e67e22;vertical-align:top">
+          9.2<br><span style="font-size:0.56rem;color:#a0aec0">+2.1 (+30%)</span>
+          
+        </td>
+      </tr>
+      <tr style="background:#f7fafc;border-top:2px solid #e2e8f0">
+        <td style="padding:6px 8px;font-size:0.66rem;font-weight:800;color:#1a3a5c">Top 20 Specialties Total</td>
+        <td style="padding:6px 8px;text-align:right;font-size:0.68rem;font-family:'IBM Plex Mono',monospace;font-weight:700;color:#718096">387.2</td>
+        <td style="padding:6px 8px;text-align:right;font-size:0.68rem;font-family:'IBM Plex Mono',monospace;font-weight:800;color:#27ae60">437.8<br><span style="font-size:0.56rem;color:#a0aec0">+50.6 (+13%)</span></td>
+        <td style="padding:6px 8px;text-align:right;font-size:0.68rem;font-family:'IBM Plex Mono',monospace;font-weight:800;color:#e67e22">485.4<br><span style="font-size:0.56rem;color:#a0aec0">+98.2 (+25%)</span></td>
+        <td></td>
+      </tr>
+      </tbody>
+        
+      </table>
+    </div>
+    <div style="margin-top:8px;padding:6px 10px;background:#fffbf0;border-radius:5px;border-left:3px solid #f59e0b;font-size:0.61rem;color:#92400e">
+      <strong>Note:</strong> FY26E annualised from 10-month YTD actuals (Apr–Jan 26). FY27 BC applies +16.1% uniform growth per FY27 BC sourced from AOP budget (Dep_Rev_Bud sheet). FY27 UC applies differentiated upside case per specialty. <strong>MO BC driver:</strong> BMT ramp &amp; complex chemo. <strong>MO UC driver:</strong> Haematonc consultant + referral network + international patients (₹73.1→₹80 Cr). <strong>Nephro BC driver:</strong> Renal transplant volume growth. <strong>Nephro UC driver:</strong> Dialysis spoke expansion via senior consultant addition (₹60.2→₹69.5 Cr). Source:  Dep_Rev_Bud sheet (AOP FY26-27 V2). FY26E computed from IP discharges × ARPOB × ALOS (4 days) + OP visits × ARPP. Kochi only. Total FY27 BC Kochi &#x20B9;492 Cr. Calicut &#x20B9;4.1 Cr. F&amp;B &#x20B9;20.3 Cr. Consolidated AOP FY27 &#x20B9;525.7 Cr.
+    </div>
+  </div>
+
+    <!-- ── Section 4: Historical Trajectories (full width, 2-up) ── -->
+  <div class="slabel">&#x1F4CA;&nbsp; Historical P&amp;L Walk FY23&#x2013;FY26 &amp; FY27 Upside Case Bridge</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+    <div class="card">
+        <div class="ct">Revenue Trajectory — FY23 to FY27 UC</div>
+        <div class="cs">&#x20B9; Crores &middot; FY26E = Forecast &middot; FY27 BC = Base Case &middot; FY27 UC = Upside Case</div>
+        <div style="position:relative;height:180px"><canvas id="revHistChart"></canvas></div>
+      </div>
+    <div class="card">
+        <div class="ct">EBITDA Trajectory — FY23 to FY27 UC</div>
+        <div class="cs">&#x20B9; Crores &middot; FY23 peak &#x20B9;107 Cr (25.6%) &middot; FY27 UC target &#x20B9;148.6 Cr (25.8%)</div>
+        <div style="position:relative;height:180px"><canvas id="ebitdaHistChart"></canvas></div>
+      </div>
+  </div>
+
+</div>
+
+<div id="page-capex" class="page">
+
+  <!-- Phase Stats -->
+  <div class="mrow m4" style="margin-bottom:14px">
+    <div class="mbox" style="border-left-color:#e74c3c">
+      <div class="ml">Total Buildings (Future)</div>
+      <div class="mv" style="color:#e74c3c">2</div>
+      <div class="ms">1 Cancer Centre + 1 General Hospital</div>
+      <div class="md" style="color:#718096">Currently 1 building</div>
+    </div>
+    <div class="mbox" style="border-left-color:#e67e22">
+      <div class="ml">Total Beds (Future State)</div>
+      <div class="mv" style="color:#e67e22">541</div>
+      <div class="ms">~146 cancer + ~281 general + 114 expansion</div>
+      
+    </div>
+    <div class="mbox" style="border-left-color:#27ae60">
+      <div class="ml">Total OTs (Future State)</div>
+      <div class="mv" style="color:#27ae60">16</div>
+      <div class="ms">6 onco OTs + 10 general OTs</div>
+      <div class="md" style="color:#718096">Currently 8 OTs</div>
+    </div>
+    <div class="mbox" style="border-left-color:#8e44ad">
+      <div class="ml">Active Renovations (Now)</div>
+      <div class="mv" style="color:#8e44ad">&#x20B9;15.6 Cr</div>
+      <div class="ms">ICU, Suites, Casualty, OPDs underway</div>
+      <div class="md" style="color:#718096">2 LINAC machines added</div>
+    </div>
+  </div>
+
+  <!-- Phase 1: Current Renovations -->
+  <div class="slabel">&#x1F6A7;&nbsp; Phase 1 — Active Renovations (FY26) · &#x20B9;15.6 Cr In Progress</div>
+  <div class="capex-phase" style="background:#fff8f0;border:1px solid #fed7aa">
+    <div class="phase-header">
+      <span class="phase-badge" style="background:#e67e22">PHASE 1</span>
+      <div>
+        <div class="phase-title">Main Block Renovation — FY26 Active Projects</div>
+        <div class="phase-sub">Upgrading existing multi-specialty hospital ahead of cancer centre conversion</div>
+      </div>
+    </div>
+    <div class="capex-items">
+      <div class="ci" style="border-left-color:#e74c3c">
+        <div class="ci-name">&#x1F6A8; ICU Complex Upgrade</div>
+        <div class="ci-val" style="color:#e74c3c">&#x20B9;2.25 Cr</div>
+        <div class="ci-sub">1F · Modern ICU standards · In progress</div>
+      </div>
+      <div class="ci" style="border-left-color:#e67e22">
+        <div class="ci-name">&#x1F3E5; Casualty Renovation</div>
+        <div class="ci-val" style="color:#e67e22">&#x20B9;3.80 Cr</div>
+        <div class="ci-sub">GF · Emergency dept upgrade · Active</div>
+      </div>
+      <div class="ci" style="border-left-color:#8e44ad">
+        <div class="ci-name">&#x1F6CF; Suite Rooms &amp; VIP</div>
+        <div class="ci-val" style="color:#8e44ad">&#x20B9;1.20 Cr</div>
+        <div class="ci-sub">8F · Premium luxury suite renovation</div>
+      </div>
+      <div class="ci" style="border-left-color:#2980b9">
+        <div class="ci-name">&#x1F3E5; Ortho OPD &amp; Ultrasound</div>
+        <div class="ci-val" style="color:#2980b9">&#x20B9;1.60 Cr</div>
+        <div class="ci-sub">GF · Specialist OPD expansion</div>
+      </div>
+      <div class="ci" style="border-left-color:#27ae60">
+        <div class="ci-name">&#x1F6AA; Porch &amp; Front Area</div>
+        <div class="ci-val" style="color:#27ae60">&#x20B9;1.40 Cr</div>
+        <div class="ci-sub">GF · Patient-facing entrance upgrade</div>
+      </div>
+      <div class="ci" style="border-left-color:#00838f">
+        <div class="ci-name">&#x2699;&#xFE0F; STP &amp; Services</div>
+        <div class="ci-val" style="color:#00838f">&#x20B9;0.37 Cr</div>
+        <div class="ci-sub">B1 · Sewage treatment plant · Tendered</div>
+      </div>
+      <div class="ci" style="border-left-color:#1a3a5c">
+        <div class="ci-name">&#x1F4A1; Central Cutout</div>
+        <div class="ci-val" style="color:#1a3a5c">&#x20B9;0.34 Cr</div>
+        <div class="ci-sub">GF · Central area redesign</div>
+      </div>
+      <div class="ci" style="border-left-color:#e74c3c">
+        <div class="ci-name">&#x1F52C; Spine Robotics</div>
+        <div class="ci-val" style="color:#e74c3c">&#x20B9;12 Cr</div>
+        <div class="ci-sub">Kerala's first · Clinical capex protected</div>
+      </div>
+      <div class="ci" style="border-left-color:#f39c12">
+        <div class="ci-name">&#x1F3E5; Other Clinical Capex</div>
+        <div class="ci-val" style="color:#f39c12">&#x20B9;87 Cr</div>
+        <div class="ci-sub">Equipment, Oncology, Cathlab etc.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Phase 2: Cancer Centre Conversion -->
+  <div class="slabel">&#x1F3AF;&nbsp; Phase 2 — Main Block &#x2192; Complex Cancer Centre (FY27)</div>
+  <div class="capex-phase" style="background:#fff0f6;border:1px solid #f9a8d4">
+    <div class="phase-header">
+      <span class="phase-badge" style="background:#db2777">PHASE 2</span>
+      <div>
+        <div class="phase-title">Building A — Comprehensive Oncology Centre (8 floors repurposed)</div>
+        <div class="phase-sub">Existing main block transformed into Kerala's first dedicated complex cancer hospital</div>
+      </div>
+    </div>
+    <div class="capex-items">
+      <div class="ci" style="border-left-color:#db2777"><div class="ci-name">8F · Palliative &amp; Rehab</div><div class="ci-val" style="color:#db2777">18 Beds</div><div class="ci-sub">Pain mgmt, psycho-oncology, physio</div></div>
+      <div class="ci" style="border-left-color:#be185d"><div class="ci-name">7F · Medical Oncology Wards</div><div class="ci-val" style="color:#be185d">36 Beds</div><div class="ci-sub">Chemo inpatient, isolation rooms</div></div>
+      <div class="ci" style="border-left-color:#e11d48"><div class="ci-name">6F · Surgical Oncology Wards</div><div class="ci-val" style="color:#e11d48">38 Beds</div><div class="ci-sub">Post-surgical recovery, monitoring</div></div>
+      <div class="ci" style="border-left-color:#9333ea"><div class="ci-name">5F · Precision Medicine &amp; Genomics</div><div class="ci-val" style="color:#9333ea">NGS Lab</div><div class="ci-sub">Next-gen sequencing, liquid biopsy</div></div>
+      <div class="ci" style="border-left-color:#c026d3"><div class="ci-name">4F · Radiation Oncology</div><div class="ci-val" style="color:#c026d3">4 Bays</div><div class="ci-sub">CT-sim, external beam, brachytherapy</div></div>
+      <div class="ci" style="border-left-color:#be185d"><div class="ci-name">3F · Med Onco &amp; Clinical Trials</div><div class="ci-val" style="color:#be185d">OPD</div><div class="ci-sub">Phase I–III trial unit, onco pharmacy</div></div>
+      <div class="ci" style="border-left-color:#e11d48"><div class="ci-name">2F · Surgical Oncology OTs</div><div class="ci-val" style="color:#e11d48">6 OTs</div><div class="ci-sub">Robotic surgery, cancer-dedicated CSSD</div></div>
+      <div class="ci" style="border-left-color:#f43f5e"><div class="ci-name">1F · Cancer ICU &amp; BMT</div><div class="ci-val" style="color:#f43f5e">24 Beds</div><div class="ci-sub">BMT unit (8) + Cancer ICU (16), HEPA</div></div>
+      <div class="ci" style="border-left-color:#d946ef"><div class="ci-name">GF · Cancer Screening &amp; Day Care</div><div class="ci-val" style="color:#d946ef">30 Chairs</div><div class="ci-sub">Reception, rapid screening, chemo day care</div></div>
+      <div class="ci" style="border-left-color:#c026d3"><div class="ci-name">B1 · LINAC Vault</div><div class="ci-val" style="color:#c026d3">2 LINAC</div><div class="ci-sub">Radiation bunker, HDR room, physics lab</div></div>
+    </div>
+  </div>
+
+  <!-- Phase 3: New General Hospital -->
+  <div class="slabel">&#x1F3D7;&#xFE0F;&nbsp; Phase 3 — New General Hospital Building B (FY27–FY28)</div>
+  <div class="capex-phase" style="background:#f0fdf4;border:1px solid #86efac">
+    <div class="phase-header">
+      <span class="phase-badge" style="background:#16a34a">PHASE 3</span>
+      <div>
+        <div class="phase-title">Building B — New General Hospital (10F + 2 Basements) · New Construction</div>
+        <div class="phase-sub">All non-oncology care moves to new building · ~281 beds · Modern infrastructure · Target FY28 completion</div>
+      </div>
+    </div>
+    <div class="capex-items">
+      <div class="ci" style="border-left-color:#2dd4bf"><div class="ci-name">10F · Suite &amp; VIP Rooms</div><div class="ci-val" style="color:#2dd4bf">24 Beds</div><div class="ci-sub">International patient wing</div></div>
+      <div class="ci" style="border-left-color:#06b6d4"><div class="ci-name">9F · Gynae &amp; Pediatrics</div><div class="ci-val" style="color:#06b6d4">44 Beds</div><div class="ci-sub">Maternity, NICU, pediatric wards</div></div>
+      <div class="ci" style="border-left-color:#0891b2"><div class="ci-name">8F · Cardio &amp; Urology</div><div class="ci-val" style="color:#0891b2">44 Beds</div><div class="ci-sub">CCU, cath lab recovery, uro ward</div></div>
+      <div class="ci" style="border-left-color:#4f46e5"><div class="ci-name">7F · Ortho &amp; Neurology</div><div class="ci-val" style="color:#4f46e5">47 Beds</div><div class="ci-sub">Joint replacement, neuro recovery</div></div>
+      <div class="ci" style="border-left-color:#06b6d4"><div class="ci-name">6F · General Medicine</div><div class="ci-val" style="color:#06b6d4">46 Beds</div><div class="ci-sub">Internal medicine, diabetology</div></div>
+      <div class="ci" style="border-left-color:#0891b2"><div class="ci-name">5F · General Surgery</div><div class="ci-val" style="color:#0891b2">44 Beds</div><div class="ci-sub">Post-op, GI surgery, bariatric</div></div>
+      <div class="ci" style="border-left-color:#059669"><div class="ci-name">4F · ICU &amp; HDU</div><div class="ci-val" style="color:#059669">32 Beds</div><div class="ci-sub">Multi-specialty ICU, step-down</div></div>
+      <div class="ci" style="border-left-color:#0d9488"><div class="ci-name">3F · Operation Theatres</div><div class="ci-val" style="color:#0d9488">10 OTs</div><div class="ci-sub">Hybrid OR, 10 OTs, CSSD</div></div>
+      <div class="ci" style="border-left-color:#10b981"><div class="ci-name">2F · Diagnostics &amp; Imaging</div><div class="ci-val" style="color:#10b981">Full Suite</div><div class="ci-sub">3T MRI, 128-slice CT, digital X-ray</div></div>
+      <div class="ci" style="border-left-color:#0284c7"><div class="ci-name">1F · All Specialty OPDs</div><div class="ci-val" style="color:#0284c7">12 Specs</div><div class="ci-sub">Medicine, Cardio, Ortho, Neuro, ENT</div></div>
+      <div class="ci" style="border-left-color:#16a34a"><div class="ci-name">GF · Emergency &amp; Pharmacy</div><div class="ci-val" style="color:#16a34a">24/7 ER</div><div class="ci-sub">Triage, resuscitation, pharmacy</div></div>
+      <div class="ci" style="border-left-color:#1f2937"><div class="ci-name">B1+B2 · Parking</div><div class="ci-val" style="color:#1f2937">200+ Cars</div><div class="ci-sub">EV charging, multi-level covered</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     TAB 3: REVENUE LEVERS
+══════════════════════════════════════════════════════════════════ -->
+<div id="page-revenue" class="page">
+
+  <div class="slabel">&#x1F4B0;&nbsp; Revenue Growth — FY27 BC Foundation &amp; UC Drivers</div>
+  <div class="kpi-strip ks-5">
+    <div class="kpi" style="border-top-color:#e67e22"><div class="kl">Rev Growth FY27 Base Case (BC)</div><div class="kv" style="color:#e67e22">+16%</div><div class="kg g-up">&#x20B9;452.8 → &#x20B9;525.7 Cr</div><div class="ks2">FY26E → FY27</div></div>
+    <div class="kpi" style="border-top-color:#27ae60"><div class="kl">ARPOB Target FY27</div><div class="kv" style="color:#27ae60">&#x20B9;36.2K</div><div class="kg g-up">&#x25B2; +8.3% vs FY26E &#x20B9;33.4K</div><div class="ks2">IP blended ARPOB/day</div></div>
+    <div class="kpi" style="border-top-color:#2980b9"><div class="kl">Target Occupancy FY27</div><div class="kv" style="color:#2980b9">62%</div><div class="kg g-up">&#x25B2; from 53% FY26E</div><div class="ks2">+9 ppt significant jump</div></div>
+    <div class="kpi" style="border-top-color:#8e44ad"><div class="kl">OP Visits Target FY27</div><div class="kv" style="color:#8e44ad">4,39,771</div><div class="kg g-up">&#x25B2; +13% vs FY26E</div><div class="ks2">3,90,805 in FY26E</div></div>
+    <div class="kpi" style="border-top-color:#00838f"><div class="kl">IP Discharge Target FY27</div><div class="kv" style="color:#00838f">24,750</div><div class="kg g-up">&#x25B2; +13% vs FY26E</div><div class="ks2">21,939 in FY26E</div></div>
+  </div>
+
+  <div class="ibox blue">
+    <div class="ibox-title">&#x1F4A1; Revenue Strategy — Operating Leverage is the Prize</div>
+    <div class="ibox-text">Revenue growth is driven by 5 levers acting on the top of the funnel: package pricing, new specialties, referral strengthening, clinical capability, and payor mix. These levers feed three EBITDA outcomes: <strong>(1) ARPOB ↑</strong> driven by package revision &amp; clinical complexity, <strong>(2) OP→IP conversion ↑</strong> driven by referral &amp; capability, and <strong>(3) Occupancy ↑</strong> driven by volume, new specialties &amp; network.</div>
+  </div>
+
+  <div class="slabel">&#x1F3AF;&nbsp; Revenue Levers — Actions Driving the FY27 Upside Case</div>
+  <div class="g-lev">
+    <div>
+      <div class="lever" style="border-left-color:#8e44ad">
+        <div class="lhd"><span class="lnum" style="background:#8e44ad">1</span><span class="ltitle">Strengthen Clinical Capability — Complex Case Mix</span><span class="lval" style="color:#8e44ad">ARPOB ↑</span></div>
+        <div class="ldesc">Move case mix progressively toward high-complexity, high-ARPOB procedures: BMT, renal transplant, spine robotics, hepatobiliary surgery, and H&amp;N oncology. Head &amp; Neck Oncology alone contributes ₹8.67 Cr FY26E at high complexity. Each complex case carries 2–3× the revenue of a routine admission. Requires targeted senior consultant additions (Dr. Moni — H&amp;N, Haematonc — BMT, senior nephrologist — dialysis spokes) and protocol standardisation for complex pathways.</div>
+        <div class="ltags"><span class="pill pg">Highest Impact</span><span class="pill pb">Q2–Q4 — Clinical Heads / CMD</span><span class="pill pn">→ ARPOB ↑ · OP→IP conversion · UC case driver</span></div>
+      </div>
+      <div class="lever" style="border-left-color:#1a3a5c">
+        <div class="lhd"><span class="lnum" style="background:#1a3a5c">2</span><span class="ltitle">Package Revision — Addition &amp; Price Uplift</span><span class="lval" style="color:#1a3a5c">ARPOB ↑</span></div>
+        <div class="ldesc">Revise existing clinical packages to better reflect procedure complexity and consumable costs. Add new packages for high-demand procedures currently unbundled. Strategic price increases of 8–12% across IP packages not revised in 2+ years. Directly lifts ARPOB per admission without requiring volume growth.</div>
+        <div class="ltags"><span class="pill pg">Highest Impact</span><span class="pill pb">Q1 — CFO / Medical Director</span><span class="pill pn">→ ARPOB ↑ · Revenue leakage fix</span></div>
+      </div>
+      <div class="lever" style="border-left-color:#e67e22">
+        <div class="lhd"><span class="lnum" style="background:#e67e22">3</span><span class="ltitle">Referral Strengthening &amp; Brand Building</span><span class="lval" style="color:#e67e22">Volume ↑</span></div>
+        <div class="ldesc">Four parallel tracks: <strong>(a) Satellite clinic network</strong> — extend LHRC reach into tier-2 catchments; <strong>(b) Burjeel partnership</strong> — formalise referral corridor for complex oncology &amp; surgical cases; <strong>(c) Marketing &amp; Comms</strong> — targeted digital and GP outreach campaigns; <strong>(d) Star doctor recruitment</strong> — new consultants with established referral bases drive immediate IP volume on joining.</div>
+        <div class="ltags"><span class="pill pg">High Impact</span><span class="pill pb">Q1–Q4 — Marketing / CEO</span><span class="pill pn">→ Occupancy ↑ · New OP visits · IP conversion</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="lever" style="border-left-color:#0891b2">
+        <div class="lhd"><span class="lnum" style="background:#0891b2">4</span><span class="ltitle">New Specialty Addition — IR, Cosmetology &amp; Men's Health Focus</span><span class="lval" style="color:#0891b2">New Revenue</span></div>
+        <div class="ldesc">Launch Interventional Radiology (IR) as a standalone revenue centre — high ARPOB, minimal bed use. Cosmetology and aesthetic services tap a cash-pay, high-margin segment. Men's Health clinic addresses an underserved OP segment with strong referral potential. All three are capital-light and can be operational within FY27 Q1–Q2.</div>
+        <div class="ltags"><span class="pill pg">High Impact</span><span class="pill pb">Q1–Q2 — Clinical Head / COO</span><span class="pill pn">→ New OP revenue · ARPOB mix improvement</span></div>
+      </div>
+      <div class="lever" style="border-left-color:#dc2626">
+        <div class="lhd"><span class="lnum" style="background:#dc2626">5</span><span class="ltitle">Payor Mix Optimisation — TPA &amp; International</span><span class="lval" style="color:#dc2626">Yield ↑</span></div>
+        <div class="ldesc">Two sub-levers: <strong>(a) TPA expansion</strong> — grow insurance mix from 26% to 30%, onboard 3 new TPA agreements, renegotiate rates with top-5 insurers on volume commitment basis. <strong>(b) International patient growth</strong> — target 12% international revenue mix (from 9.2% FY26E) via Gulf diaspora outreach, Burjeel corridor, and dedicated international patient services desk. Both improve realisation per bed day without adding fixed costs.</div>
+        <div class="ltags"><span class="pill po">Medium Impact</span><span class="pill pb">Q1–Q3 — CFO / Intl Business Head</span><span class="pill pn">→ Revenue realisation ↑ · Bad debt ↓</span></div>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     TAB 4: COST LEVERS
+══════════════════════════════════════════════════════════════════ -->
+<!-- ══════════════════════════════════════════════════════════════════
+     TAB 4: COST LEVERS
+══════════════════════════════════════════════════════════════════ -->
+<div id="page-cost" class="page">
+
+  <div class="slabel">&#x1F3AF;&nbsp; 3 MECE Cost Levers — Targeting +&#x20B9;20 Cr EBITDA above FY27 BC</div>
+  <div class="g-lev">
+    <div>
+      <div class="lever" style="border-left-color:#1a3a5c">
+        <div class="lhd"><span class="lnum" style="background:#1a3a5c">1</span><span class="ltitle">Staff Rationalisation — Dept Norms &amp; Doctor PLCs</span><span class="lval" style="color:#1a3a5c">+&#x20B9;11 Cr</span></div>
+        <div class="ldesc">
+          Two sub-levers: staff-to-patient ratio norms by department, and doctor fee realignment to PLCs.<br><br>
+          <strong>a) Staff Norms by Dept / Ratio</strong> — From HR data (Jan 2026): 1,624 non-doctor staff · ₹63.1 Cr/year · ₹3.88L avg/head:<br>
+          ▸ <strong>Nursing:</strong> 630 → 569 (−61) via ICU reorg, 2.25× occupied bed ratio · <em>saves ₹2.26 Cr</em><br>
+          ▸ <strong>Pharmacy:</strong> 93 → 50 (−43) via barcode scanning + process redesign · <em>saves ₹1.42 Cr</em><br>
+          ▸ <strong>Patient Care Services:</strong> 97 → 80 (−17) via EMR / ward secretary redesign · <em>saves ₹0.60 Cr</em><br>
+          ▸ <strong>Radiotherapy:</strong> 13 → 9 (−4) per AERB norms · <em>saves ₹0.44 Cr</em><br>
+          ▸ <strong>10–30 person depts (15 depts):</strong> 10% cut across Administration, Biochemistry, Accounts, Stores, CSSD, Cardiology nursing, Medical Records, Insurance, Transport, Clinical Nutrition · <em>saves ₹1.27 Cr</em><br>
+          ▸ <strong>Paramedical:</strong> 122 → 116 (5% cut) + Biomedical Eng 9→7 · <em>saves ₹0.21 Cr</em><br>
+          ▸ <strong>Broader scope:</strong> Lab consolidation (Biochem/Histo/Micro/Haem 85→75), attrition hold across 40+ depts · additional ₹4 Cr<br><br>
+          <strong>b) Doctor Realignment → PLCs (Performance-Linked Contracts)</strong> — Doctor cost budgeted at ₹9,908L (+23.7% vs FY26E). All 41 new doctors on performance-linked contracts with structured ramp. Visiting fee cap at 35% of IP collections. Bottom-quartile MG review in Q3. Incumbent doctors unchanged to protect clinical culture.
+        </div>
+        <div class="ltags"><span class="pill pg">Highest Impact</span><span class="pill pb">Q1–Q4 — CHRO + CEO + Dept Heads</span><span class="pill pg">₹6.19 Cr Identified in Data</span><span class="pill pr">Doctor portion: Sensitive</span></div>
+      </div>
+      <div class="lever" style="border-left-color:#2980b9">
+        <div class="lhd"><span class="lnum" style="background:#2980b9">2</span><span class="ltitle">Procurement &amp; Vendor Optimisation — COGS 28.5% → 26.5%</span><span class="lval" style="color:#2980b9">+&#x20B9;7 Cr</span></div>
+        <div class="ldesc">
+          Combines procurement, vendor and material cost rationalisation into one consolidated lever targeting COGS from 28.5% → 26.5% of revenue — a 200 bps improvement worth ~₹7 Cr at FY27 revenue.<br><br>
+          ▸ <strong>Vendor renegotiation:</strong> Consolidate to single distributor per category, 6-month bulk pricing contracts, implant benchmarking vs peer hospitals · <em>~0.5% saving</em><br>
+          ▸ <strong>Credit period optimisation:</strong> Extend credit terms to 60–90 days on key categories, early-payment discounts on fast-moving items · <em>~0.5% saving</em><br>
+          ▸ <strong>Better inventory management:</strong> Min-max par levels, cut-strip elimination, formulary rationalisation, wastage reduction · <em>~0.5% saving</em><br>
+          ▸ <strong>Standard BOQs for procedures &amp; pharmacy:</strong> Procedure-wise BOQ standardisation across OT, ICU, Ward — eliminates unwarranted variability in consumption per case · <em>~0.5% saving</em>
+        </div>
+        <div class="ltags"><span class="pill pg">Highest Impact</span><span class="pill pb">Q1–Q3 — CFO / Supply Chain / Pharmacy</span><span class="pill pn">→ COGS% ↓ · Formulary discipline</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="lever" style="border-left-color:#00838f">
+        <div class="lhd"><span class="lnum" style="background:#00838f">3</span><span class="ltitle">Other Cost Optimisation — Power, Marketing &amp; Group</span><span class="lval" style="color:#00838f">+&#x20B9;2 Cr</span></div>
+        <div class="ldesc">
+          Other costs budgeted ₹7,024L (+10.8% vs FY26E). Three sub-levers:<br><br>
+          ▸ <strong>Power / Utilities:</strong> Solar rooftop Phase 1 (500 KW, &lt;24 month payback), HVAC IoT optimisation, LED retrofit in clinical zones — target 15% energy cost reduction · <em>saves ₹1 Cr</em><br>
+          ▸ <strong>Marketing rationalisation:</strong> Shift from traditional media spend to performance-based digital &amp; referral marketing; redirect budget toward doctor outreach and satellite clinic activation · <em>saves ₹0.5 Cr</em><br>
+          ▸ <strong>Group cost allocation:</strong> Review group-level shared service charges and central overhead allocations for appropriateness; negotiate rebased allocation for FY27 · <em>saves ₹0.5 Cr</em>
+        </div>
+        <div class="ltags"><span class="pill po">Medium Impact</span><span class="pill pb">Q2–Q4 — CFO / Facilities / CMO</span><span class="pill pn">→ Other cost % ↓</span></div>
+      </div>
+      <div class="tbox" style="background:#eff6ff;border:1px solid #93c5fd">
+        <div><div class="tbl" style="color:#1e40af">Total Cost EBITDA Uplift (above FY27 BC)</div><div class="tsub">Staff Rationalisation (₹11 Cr) + Procurement &amp; Vendor Optimisation (₹7 Cr) + Other Cost Optimisation (₹2 Cr)</div></div>
+        <div class="tval" style="color:#2980b9">+&#x20B9;20 Cr</div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="page-enablers" class="page">
+
+  <div class="ibox navy">
+    <div class="ibox-title">&#x26A1; Transformation Enablers — What Must Be In Place for FY27 Success</div>
+    <div class="ibox-text">The revenue and cost levers above require three critical enablers to be operational. These are the <strong>infrastructure, governance, and capability foundations</strong> that determine whether the &#x20B9;50 Cr EBITDA uplift is achieved or remains on paper. These were identified in the strategy session and are non-negotiable pre-conditions.</div>
+  </div>
+
+  <div class="slabel">&#x26A1;&nbsp; Enabler 1 — Future Ready Org Structure</div>
+  <div class="enabler-card" style="border-top-color:#1a3a5c">
+    <div><span class="en-num" style="background:#1a3a5c">1</span></div>
+    <div class="en-title">Future Ready Org Structure</div>
+    <div class="en-desc">
+      The transformation from a multi-specialty hospital to a dual-campus complex requires a fundamentally revised organisational structure. Current org design does not reflect the separation of Cancer Centre vs General Hospital operations. Key requirements:
+      <br><br>
+      <strong>▸ Revised Org Chart:</strong> Separate P&amp;L accountability for Cancer Centre and General Hospital. Dedicated heads for each building post-transition.
+      <br><br>
+      <strong>▸ Performance Management:</strong> Department-level P&amp;L accountability. Revenue targets cascaded to specialty heads. Doctor performance dashboards linked to fee structures.
+    </div>
+    <div class="en-tags">
+      <span class="pill pn">Priority: IMMEDIATE</span>
+      <span class="pill pb">Owner: CEO + Board</span>
+      <span class="pill po">Timeline: Q1 FY27</span>
+    </div>
+  </div>
+
+  <div class="slabel">&#x1F4BB;&nbsp; Enabler 2 — Digital Transformation</div>
+  <div class="enabler-card" style="border-top-color:#2980b9">
+    <div><span class="en-num" style="background:#2980b9">2</span></div>
+    <div class="en-title">Digital Transformation</div>
+    <div class="en-desc">
+      Current IT systems are inadequate for the dual-campus transformation and revenue optimization targets. A new implementation is required — not upgrades to current legacy systems.
+      <br><br>
+      <strong>▸ Hospital Information System (HIS):</strong> The current HIS implementation is to be fully reviewed and assessed. A comprehensive evaluation will be conducted before any further rollout or investment decisions are made.
+      <br><br>
+      <strong>▸ ERP System:</strong> A cost-benefit analysis is to be conducted to evaluate the appropriate ERP solution for LHRC, covering finance, supply chain, HR, and procurement modules.
+      <br><br>
+      <strong>▸ Clinical Decision Support System (CDSS):</strong> Oncology care pathway systems, CPOE (Computerized Physician Order Entry), pharmacy management integrated with billing. We will evaluate and add a <strong>Virtual Tumour Board</strong> as part of the CDSS implementation — enabling multi-disciplinary oncology case reviews across campuses.
+      <br><br>
+      <strong>▸ Analytics &amp; Dashboards:</strong> Real-time department-level revenue, ARPOB, occupancy dashboards for daily management. Weekly KPI reporting automation. Doctor productivity tracking.
+      <br><br>
+      <strong>▸ CRM / Patient Journey:</strong> OP-to-IP conversion tracking, telemedicine platform, referral doctor portal. Critical for achieving +13% OP volume growth.
+    </div>
+    <div class="en-tags">
+      <span class="pill pb">Priority: HIGH</span>
+      <span class="pill pn">Owner: CIO</span>
+      <span class="pill pg">CRM Live: Q1 FY27</span>
+    </div>
+  </div>
+
+  <div class="slabel">&#x1F3D7;&#xFE0F;&nbsp; Enabler 3 — Capex Details for Expansion → Infrastructure by FY28</div>
+  <div class="enabler-card" style="border-top-color:#8e44ad">
+    <div><span class="en-num" style="background:#8e44ad">3</span></div>
+    <div class="en-title">Capex Details for Expansion → Infrastructure by FY28 (Circled Priority)</div>
+    <div class="en-desc">
+      The building expansion — both the Cancer Centre conversion and new General Hospital construction — requires a fully costed, approved, and financed capex plan. This is the single largest value-driver for FY28–FY30 and must be locked in FY27.
+      <br><br>
+      <strong>▸ Cancer Centre Conversion Capex:</strong> Detailed floor-by-floor budgets for LINAC vault (&#x20B9;15–20 Cr), Radiation Oncology (&#x20B9;25 Cr), BMT Unit (&#x20B9;12 Cr), Genomics Lab (&#x20B9;8 Cr). Total Cancer Centre fit-out: est. &#x20B9;80–100 Cr.
+      <br><br>
+      <strong>▸ New General Hospital (Building B):</strong> 10F + 2B construction. Full structural, MEP, and fit-out plan. Estimated &#x20B9;180–220 Cr over 24 months. Financing plan (internal vs debt) to be decided by Board Q1 FY27.
+      <br><br>
+      <strong>▸ Medical Equipment List:</strong> Comprehensive equipment schedule by floor and specialty. Vendor shortlisting, import duty planning, installation timelines. Avoid last-minute procurement delays.
+      <br><br>
+      <strong>▸ Regulatory &amp; Licensing:</strong> AERB (Atomic Energy Regulatory Board) approvals for LINAC. NABH accreditation roadmap for new building. Fire NOC, environmental clearances.
+    </div>
+    <div class="en-tags">
+      <span class="pill pp">Priority: CRITICAL</span>
+      <span class="pill po">Board Approval: Q1 FY27</span>
+      <span class="pill pn">Owner: COO + CFO + CEO + Board</span>
+      <span class="pill pg">Target FY28 Completion</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════
+     TAB 6: IMMEDIATE NEXT STEPS
+══════════════════════════════════════════════════════════════════ -->
+<div id="page-nextsteps" class="page">
+
+  <div class="ibox navy">
+    <div class="ibox-title">&#x1F4C5; 12-Month Execution Plan — April 2026 to March 2027</div>
+    <div class="ibox-text">A phased implementation plan starting 1 April 2026. Phase 1 captures low-hanging fruit across revenue and cost within the first 60 days while preparing the Board with a full capex, cancer centre, and IT plan. Staffing rationalisation begins immediately and runs as an ongoing effort throughout the year. Revenue growth from new specialist doctors is a medium-term lever — Phase 1 brings the first new specialist, with further additions planned across subsequent phases.</div>
+  </div>
+
+  <!-- Phase 1 -->
+  <div class="slabel">&#x1F7E2;&nbsp; Phase 1 — Days 1–60 &nbsp;(April 1 – May 31, 2026) &nbsp;·&nbsp; Low-Hanging Fruit + Board Preparation</div>
+  <table class="ns-table" style="margin-bottom:18px">
+    <thead>
+      <tr>
+        <th style="width:4%">#</th>
+        <th style="width:42%">Action</th>
+        <th style="width:8%">Type</th>
+        <th style="width:16%">Owner</th>
+        <th style="width:10%">Impact</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr>
+        <td><span class="priority-dot rag-r"></span><strong>2</strong></td>
+        <td><strong>Initiate staffing rationalisation — Nursing &amp; Pharmacy first</strong><br><span style="font-size:0.62rem;color:#718096">Nursing: 630 &#x2192; 569. Pharmacy: 93 &#x2192; 50. Natural attrition + redeployment plan</span></td>
+        <td><span class="pill" style="background:#eff6ff;color:#2980b9">Cost</span></td>
+        <td>CHRO + Dept Heads</td>
+        <td><span class="pill pg">+₹11 Cr</span></td>
+        <td style="font-size:0.63rem;color:#718096">HR data-backed. ₹6.19 Cr already identified. ICU reorganisation, barcode scanning in pharmacy. Ongoing throughout FY27.</td>
+      </tr>
+      <tr>
+        <td><span class="priority-dot rag-r"></span><strong>3</strong></td>
+        <td><strong>Rate revision exercise — identify feasible rate increases</strong><br><span style="font-size:0.62rem;color:#718096">Strategic rate revisions across OP consultations, procedures, packages</span></td>
+        <td><span class="pill" style="background:#f0fdf4;color:#27ae60">Revenue</span></td>
+        <td>CMO + CFO</td>
+        <td><span class="pill pg">ARPOB ↑</span></td>
+        <td style="font-size:0.63rem;color:#718096">Quick ARPOB lever. No capital required. Benchmark vs peer hospitals in Kerala and South India.</td>
+      </tr>
+      <tr>
+        <td><span class="priority-dot rag-r"></span><strong>4</strong></td>
+        <td><strong>Onboard 1 new specialist — Phase 1 clinical capability addition</strong><br><span style="font-size:0.62rem;color:#718096">First high-value specialist joining in Phase 1. Further specialists to be added in Phases 2 and 3 as infrastructure readiness allows</span></td>
+        <td><span class="pill" style="background:#f0fdf4;color:#27ae60">Revenue</span></td>
+        <td>Medical Director + COO</td>
+        <td><span class="pill pg">High ARPOB</span></td>
+        <td style="font-size:0.63rem;color:#718096">Critical to have OT allocation, support team, and referral pipeline ready from Day 1. Subsequent specialists onboarded progressively in later phases.</td>
+      </tr>
+
+      <tr>
+        <td><span class="priority-dot rag-r"></span><strong>5</strong></td>
+        <td><strong>Referral strengthening — activate key referral channels</strong><br><span style="font-size:0.62rem;color:#718096">Structured outreach to GP network, specialist referrers, and institutional partners. Dedicated liaison and pipeline tracking.</span></td>
+        <td><span class="pill" style="background:#f0fdf4;color:#27ae60">Revenue</span></td>
+        <td>COO + Marketing Head</td>
+        <td><span class="pill pg">Occupancy ↑</span></td>
+        <td style="font-size:0.63rem;color:#718096">No capital required. High potential to drive IP volume through formalised referral relationships and monthly coordination cadence.</td>
+      </tr>
+      <tr>
+        <td><span class="priority-dot rag-r"></span><strong>6</strong></td>
+        <td><strong>Present consolidated Board pack — Capex, Cancer Centre &amp; IT plan</strong><br><span style="font-size:0.62rem;color:#718096">Full capex plan (Building B), floor-by-floor cancer centre conversion, HIS/ERP cost-benefit &amp; vendor shortlist</span></td>
+        <td><span class="pill" style="background:#edf2f7;color:#1a3a5c">Board</span></td>
+        <td>CFO + CIO + CEO</td>
+        <td><span class="pill pb">Approval</span></td>
+        <td style="font-size:0.63rem;color:#718096">AERB approval takes 12–18 months — must start immediately. Building B contractor selection cannot begin without Board sign-off.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Phase 2 -->
+  <div class="slabel">&#x1F7E1;&nbsp; Phase 2 — Days 61–180 &nbsp;(June 1 – September 30, 2026) &nbsp;·&nbsp; Procurement, Material Costs &amp; Revenue Ramp</div>
+  <table class="ns-table" style="margin-bottom:18px">
+    <thead>
+      <tr>
+        <th style="width:4%">#</th>
+        <th style="width:42%">Action</th>
+        <th style="width:8%">Type</th>
+        <th style="width:16%">Owner</th>
+        <th style="width:10%">Impact</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="priority-dot rag-a"></span><strong>8</strong></td>
+        <td><strong>Vendor consolidation &amp; procurement rationalisation</strong><br><span style="font-size:0.62rem;color:#718096">Top 3 consumable suppliers, single pharmacy distributor, 6-month bulk contracts</span></td>
+        <td><span class="pill" style="background:#eff6ff;color:#2980b9">Cost</span></td>
+        <td>Admin / Supply Chain</td>
+        <td><span class="pill pg">+₹3 Cr</span></td>
+        <td style="font-size:0.63rem;color:#718096">Complement to Material Cost programme. Single distributor reduces leakage. Implant benchmarking vs peers.</td>
+      </tr>
+      <tr>
+        <td><span class="priority-dot rag-a"></span><strong>9</strong></td>
+        <td><strong>Material Cost Rationalisation programme launch</strong><br><span style="font-size:0.62rem;color:#718096">Rate contracts, credit period discounts, BOQ standardisation for major surgeries, formulary &amp; wastage control</span></td>
+        <td><span class="pill" style="background:#eff6ff;color:#2980b9">Cost</span></td>
+        <td>CFO + Pharmacy Head</td>
+        <td><span class="pill pg">+₹4 Cr</span></td>
+        <td style="font-size:0.63rem;color:#718096">COGS target: 28.5% &#x2192; 26.5% of revenue. 3-level authorised formulary. Wastage / cut-strip reduction. Inventory optimisation.</td>
+      </tr>
+      <tr>
+        <td><span class="priority-dot rag-a"></span><strong>10</strong></td>
+        <td><strong>TPA renegotiation — top 5 insurers + 3 new TPA agreements</strong><br><span style="font-size:0.62rem;color:#718096">Renegotiate package rates, onboard 3 new TPAs to grow insurance mix 26% &#x2192; 30%</span></td>
+        <td><span class="pill" style="background:#f0fdf4;color:#27ae60">Revenue</span></td>
+        <td>CFO + Billing Head</td>
+        <td><span class="pill pg">+₹3 Cr</span></td>
+        <td style="font-size:0.63rem;color:#718096">Reduces bad debt. Better collection efficiency. Higher insurance mix = more predictable revenue.</td>
+      </tr>
+      <tr>
+        <td><span class="priority-dot rag-a"></span><strong>11</strong></td>
+        <td><strong>North Kerala &amp; border district referral programme</strong><br><span style="font-size:0.62rem;color:#718096">Dedicated outreach to Malappuram, Kozhikode border districts. Referral doctor portal live.</span></td>
+        <td><span class="pill" style="background:#f0fdf4;color:#27ae60">Revenue</span></td>
+        <td>COO + Marketing</td>
+        <td><span class="pill pg">Occupancy ↑</span></td>
+        <td style="font-size:0.63rem;color:#718096">Telemedicine follow-ups converting to IP. Targets 62% &#x2192; 68% occupancy pathway.</td>
+      </tr>
+      <tr>
+        <td><span class="priority-dot rag-a"></span><strong>12</strong></td>
+        <td><strong>Cancer Centre floor-by-floor conversion begins — Phase 2</strong><br><span style="font-size:0.62rem;color:#718096">Main block floors 6–8 conversion to surgical oncology, medical oncology wards and palliative</span></td>
+        <td><span class="pill" style="background:#edf2f7;color:#1a3a5c">Capex</span></td>
+        <td>CFO + Medical Director + Infra</td>
+        <td><span class="pill pb">FY27–28</span></td>
+        <td style="font-size:0.63rem;color:#718096">Post Board approval in May. AERB application for LINAC submitted. LINAC vault construction begins Q3.</td>
+      </tr>
+      <tr>
+        <td><span class="priority-dot rag-a"></span><strong>13</strong></td>
+        <td><strong>HIS / ERP vendor selected &amp; implementation kick-off</strong><br><span style="font-size:0.62rem;color:#718096">Post Board approval of cost-benefit analysis. Vendor shortlisted, implementation roadmap signed off</span></td>
+        <td><span class="pill" style="background:#edf2f7;color:#1a3a5c">IT</span></td>
+        <td>CIO + CEO</td>
+        <td><span class="pill pb">FY27–28</span></td>
+        <td style="font-size:0.63rem;color:#718096">Revenue cycle accuracy. OP&#x2192;IP conversion tracking. Doctor billing visibility. ERP covers finance, supply chain, HR.</td>
+      </tr>
+      <tr>
+        <td><span class="priority-dot rag-a"></span><strong>14</strong></td>
+        <td><strong>Utilities optimisation — solar &amp; HVAC initiatives</strong><br><span style="font-size:0.62rem;color:#718096">Solar rooftop Phase 1 (500 KW), HVAC IoT sensors, LED retrofit in clinical zones</span></td>
+        <td><span class="pill" style="background:#eff6ff;color:#2980b9">Cost</span></td>
+        <td>Facilities Head + CFO</td>
+        <td><span class="pill pg">+₹1 Cr</span></td>
+        <td style="font-size:0.63rem;color:#718096">Solar: &lt;24 month payback. HVAC optimisation reduces other costs by 10–15%.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Phase 3 -->
+  <div class="slabel">&#x1F535;&nbsp; Phase 3 — Days 181–360 &nbsp;(October 2026 – March 2027) &nbsp;·&nbsp; Revenue Ramp, New Doctors &amp; Infrastructure</div>
+  <table class="ns-table">
+    <thead>
+      <tr>
+        <th style="width:4%">#</th>
+        <th style="width:42%">Milestone</th>
+        <th style="width:8%">Type</th>
+        <th style="width:16%">Owner</th>
+        <th style="width:10%">Impact</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="priority-dot rag-g"></span><strong>15</strong></td>
+        <td><strong>New specialist doctors onboarded — Complex Cases &amp; IR</strong><br><span style="font-size:0.62rem;color:#718096">Recruitment of additional high-value specialists in complex care and IR as Phase 2 infrastructure comes online</span></td>
+        <td><span class="pill" style="background:#f0fdf4;color:#27ae60">Revenue</span></td>
+        <td>Medical Director + CEO</td>
+        <td><span class="pill pg">ARPOB ↑↑</span></td>
+        <td style="font-size:0.63rem;color:#718096">Medium-term lever. Doctors need OT space and support teams which depend on cancer centre conversion progress. Drives 85%+ ARPOB premium cases.</td>
+      </tr>
+      <tr>
+        <td><span class="priority-dot rag-g"></span><strong>16</strong></td>
+        <td><strong>Interventional Radiology services launched</strong><br><span style="font-size:0.62rem;color:#718096">Dedicated IR suite, trained team, referral pathway from oncology and vascular</span></td>
+        <td><span class="pill" style="background:#f0fdf4;color:#27ae60">Revenue</span></td>
+        <td>Radiology Head + CFO</td>
+        <td><span class="pill pg">High ARPOB</span></td>
+        <td style="font-size:0.63rem;color:#718096">High-value clinical expansion. Complements oncology and complex surgical workload.</td>
+      </tr>
+      <tr>
+        <td><span class="priority-dot rag-g"></span><strong>17</strong></td>
+        <td><strong>International patient programme</strong><br><span style="font-size:0.62rem;color:#718096">Dedicated international patient desk, facilitator partnerships and GCC direct engagement</span></td>
+        <td><span class="pill" style="background:#f0fdf4;color:#27ae60">Revenue</span></td>
+        <td>COO + Marketing</td>
+        <td><span class="pill pg">Mix ↑</span></td>
+        <td style="font-size:0.63rem;color:#718096">International revenue target: 12% of mix (from 9.2% FY26E). Higher ARPOB and payor quality.</td>
+      </tr>
+      <tr>
+        <td><span class="priority-dot rag-g"></span><strong>18</strong></td>
+        <td><strong>HIS Phase 1 go-live — billing &amp; revenue cycle</strong><br><span style="font-size:0.62rem;color:#718096">Oracle Health or selected HIS live for revenue cycle management, billing integration, doctor dashboards</span></td>
+        <td><span class="pill" style="background:#edf2f7;color:#1a3a5c">IT</span></td>
+        <td>CIO</td>
+        <td><span class="pill pb">₹5–8 Cr</span></td>
+        <td style="font-size:0.63rem;color:#718096">Revenue leakage fix. ARPOB tracking accuracy. Doctor billing visibility. Drives revenue cycle improvement into FY28.</td>
+      </tr>
+      <tr>
+        <td><span class="priority-dot rag-g"></span><strong>19</strong></td>
+        <td><strong>Building B — architect &amp; contractor finalised, foundation begins</strong><br><span style="font-size:0.62rem;color:#718096">New General Hospital: 10F + 2B. Full structural, MEP and fit-out plan submitted</span></td>
+        <td><span class="pill" style="background:#edf2f7;color:#1a3a5c">Capex</span></td>
+        <td>CFO + Chairman</td>
+        <td><span class="pill pb">FY28–29</span></td>
+        <td style="font-size:0.63rem;color:#718096">Critical path for FY28 bed expansion. Every 1 month delay = 1 month delay in 541-bed target completion.</td>
+      </tr>
+      <tr>
+        <td><span class="priority-dot rag-g"></span><strong>20</strong></td>
+        <td><strong>FY27 year-end review — UC vs BC scorecard</strong><br><span style="font-size:0.62rem;color:#718096">Full year P&amp;L review: revenue, EBITDA, ARPOB, occupancy vs FY27 BC and UC targets</span></td>
+        <td><span class="pill" style="background:#edf2f7;color:#1a3a5c">Board</span></td>
+        <td>CFO + CEO + Chairman</td>
+        <td><span class="pill pb">FY28 Plan</span></td>
+        <td style="font-size:0.63rem;color:#718096">Set FY28 AOP. Assess UC achievement. Determine capex prioritisation for Building B and cancer centre completion.</td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+
+
+<!-- ══════════════════════════════ FOOTER ══════════════════════════════ -->
+<div class="footer">
+  VPS Lakeshore Hospital &amp; Research Centre
+  <span class="f-sep">&middot;</span>
+  Chairman Dashboard &amp; FY27 Strategy
+  <span class="f-sep">&middot;</span>
+  Confidential — Board Use Only
+  <span class="f-sep">&middot;</span>
+  Last Updated: 3 March 2026
+</div>
+
+
+<!-- ══════════════════════════════ SCRIPTS ══════════════════════════════ -->
+<script>
+const C={navy:'#1a3a5c',orange:'#e67e22',green:'#27ae60',blue:'#2980b9',purple:'#8e44ad',red:'#e74c3c',teal:'#00838f',grey:'#718096'};
+Chart.defaults.font.family="'IBM Plex Sans',system-ui,sans-serif";
+Chart.defaults.font.size=11;Chart.defaults.color=C.grey;
+
+function showTab(id,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  if(el)el.classList.add('active');
+  if(id==='transformation' && typeof fp_setView==='function') fp_setView('current');
+}
+
+// ── Revenue History ──
+new Chart(document.getElementById('revHistChart'),{
+  type:'bar',
+  data:{
+    labels:['FY23','FY24','FY25','FY26E','FY27\nBC','FY27\nUC'],
+    datasets:[{
+      data:[419,396,408,452.8,525.7,575],
+      backgroundColor:['rgba(26,58,92,0.3)','rgba(26,58,92,0.45)','rgba(26,58,92,0.6)','rgba(26,58,92,0.78)',C.navy,'#e67e22'],
+      borderRadius:5,barPercentage:0.58
+    }]
+  },
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'₹'+c.raw+' Cr'}}},scales:{y:{min:340,ticks:{callback:v=>'₹'+v,font:{size:9}},grid:{color:'#f0f4f8'}},x:{grid:{display:false},ticks:{font:{size:9}}}}},
+  plugins:[{id:'rl2',afterDatasetsDraw(chart){
+    const{ctx,scales:{x,y}}=chart;
+    const vals=[419,396,408,452.8,525.7,575];
+    const g=[null,'−5.5%','+3.0%','+11.1%','+16.1%','+9.4%'];
+    const cols=[null,C.red,C.orange,C.green,C.green,'#e67e22'];
+    ctx.save();vals.forEach((v,i)=>{if(!g[i])return;ctx.fillStyle=cols[i];ctx.font='bold 9px IBM Plex Sans';ctx.textAlign='center';ctx.fillText(g[i],x.getPixelForValue(i),y.getPixelForValue(v)-7);});ctx.restore();
+  }}]
+});
+
+// ── EBITDA History — bars only, no trendline ──
+new Chart(document.getElementById('ebitdaHistChart'),{
+  type:'bar',
+  data:{
+    labels:['FY23','FY24','FY25','FY26E','FY27\nBC','FY27\nUC'],
+    datasets:[{
+      label:'EBITDA ₹Cr',
+      data:[107,73,79,98.8,113.9,148.6],
+      backgroundColor:['rgba(39,174,96,0.8)','rgba(231,76,60,0.55)','rgba(39,174,96,0.55)','rgba(39,174,96,0.8)',C.green,'#e67e22'],
+      borderRadius:5,barPercentage:0.58
+    }]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{
+      legend:{display:false},
+      tooltip:{callbacks:{label:c=>'₹'+c.raw+' Cr  |  Margin: '+['25.6%','18.5%','19.4%','21.8%','21.7%','25.8%'][c.dataIndex]}}
+    },
+    scales:{
+      y:{min:50,ticks:{callback:v=>'₹'+v,font:{size:9}},grid:{color:'#f0f4f8'}},
+      x:{grid:{display:false},ticks:{font:{size:9}}}
+    }
+  },
+  plugins:[{id:'el2',afterDatasetsDraw(chart){
+    const{ctx,scales:{x,y}}=chart;
+    const vals=[107,73,79,98.8,113.9,148.6];
+    const g=[null,'−31.8%','+8.2%','+25%','+15.3%','+30.4%'];
+    const margins=['25.6%','18.5%','19.4%','21.8%','21.7%','25.8%'];
+    const cols=[null,C.red,C.orange,C.green,C.green,'#e67e22'];
+    ctx.save();
+    vals.forEach((v,i)=>{
+      const xp=x.getPixelForValue(i), yp=y.getPixelForValue(v);
+      // growth label above bar
+      if(g[i]){ctx.fillStyle=cols[i];ctx.font='bold 9px IBM Plex Sans';ctx.textAlign='center';ctx.fillText(g[i],xp,yp-7);}
+      // margin % inside bar
+      const barH=y.getPixelForValue(0)-yp;
+      if(barH>22){ctx.fillStyle='rgba(255,255,255,0.9)';ctx.font='bold 8.5px IBM Plex Mono';ctx.textAlign='center';ctx.fillText(margins[i],xp,yp+barH/2+3);}
+    });
+    ctx.restore();
+  }}]
+});
+
+// ── Waterfall ──
+new Chart(document.getElementById('waterfallChart'),{
+  type:'bar',
+  data:{
+    labels:['FY26E Base\nEBITDA','Revenue\nLevers','Cost\nLevers','FY27\nUC'],
+    datasets:[
+      {data:[0,99,129,0],backgroundColor:'transparent',borderColor:'transparent',stack:'wf'},
+      {data:[99,30,20,149],backgroundColor:[C.navy,C.green,C.blue,'#d35400'],borderRadius:[5,5,5,5],stack:'wf',barPercentage:0.48}
+    ]
+  },
+  options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>{if(c.datasetIndex===0)return null;return['FY26E Base: ₹99 Cr (22% margin)','Rev uplift: +₹30 Cr EBITDA','Cost savings: +₹20 Cr EBITDA','FY27 Upside Case (UC): ₹149 Cr (25%)'][c.dataIndex];}}}},scales:{y:{stacked:true,beginAtZero:true,max:195,ticks:{callback:v=>'₹'+v+'Cr',font:{size:9}},grid:{color:'#f0f4f8'}},x:{stacked:true,grid:{display:false},ticks:{font:{size:9}}}}},
+  plugins:[{id:'wfl',afterDatasetsDraw(chart){
+    const{ctx,scales:{x,y}}=chart;
+    const vals=[99,30,20,149],bases=[0,99,129,0];
+    const tl=['₹99 Cr','+₹30','+₹20','₹149 Cr'],sl=['22% mrgn','Rev uplift','Cost save','25% ✓'],sc=['rgba(255,255,255,0.65)','rgba(255,255,255,0.8)','rgba(255,255,255,0.8)','#f39c12'];
+    ctx.save();vals.forEach((v,i)=>{
+      const xp=x.getPixelForValue(i),my=y.getPixelForValue(bases[i]+v/2);
+      const barH=Math.abs(y.getPixelForValue(bases[i])-y.getPixelForValue(bases[i]+v));
+      ctx.fillStyle='white';ctx.font='bold 10px IBM Plex Mono';ctx.textAlign='center';
+      ctx.fillText(tl[i],xp,my+(barH>40?0:2));
+      if(barH>32){ctx.fillStyle=sc[i];ctx.font='8px IBM Plex Sans';ctx.fillText(sl[i],xp,my+13);}
+    });ctx.restore();
+  }}]
+});
+
+// ── Specialty AOP Revenue Chart ──
+new Chart(document.getElementById('specialtyAOPChart'),{
+  type:'bar',
+  data:{
+    labels:["Medical Oncology", "Nephrology", "Neuro Surgery", "Joint Replacement & Sp", "Gi Surgery", "Cardiology", "Gastroenterology", "Urology", "Minimally Invasive Sur", "Foot & Ankle", "Neurology", "Comprehensive Liver Ca", "Surgical Oncology", "Head And Neck Oncology", "General Medicine", "Ob & Gynec.", "Pediatrics", "Orthopedics", "Pulmonology", "Radiation Oncology"],
+    datasets:[
+      {
+        label:'FY26E',
+        data:[64.05, 53.13, 33.74, 25.04, 27.02, 23.81, 22.09, 19.29, 14.99, 12.09, 12.62, 11.56, 11.15, 10.67, 9.02, 8.02, 7.69, 7.73, 6.48, 7.11],
+        backgroundColor:'rgba(226,232,240,0.8)',
+        borderRadius:3,barPercentage:0.7,categoryPercentage:0.75
+      },
+      {
+        label:'FY27 BC',
+        data:[73.14, 60.17, 38.08, 30.24, 29.81, 27.27, 24.55, 21.34, 17.27, 13.91, 13.72, 12.76, 12.12, 11.77, 9.93, 8.71, 8.63, 8.53, 8.11, 7.78],
+        backgroundColor:["#dc2626", "#1a3a5c", "#1a3a5c", "#1a3a5c", "#0891b2", "#1a3a5c", "#0891b2", "#0891b2", "#1a3a5c", "#1a3a5c", "#7c3aed", "#1a3a5c", "#dc2626", "#dc2626", "#0891b2", "#0891b2", "#0891b2", "#0891b2", "#7c3aed", "#dc2626"].map(c=>c+'cc'),
+        borderColor:["#dc2626", "#1a3a5c", "#1a3a5c", "#1a3a5c", "#0891b2", "#1a3a5c", "#0891b2", "#0891b2", "#1a3a5c", "#1a3a5c", "#7c3aed", "#1a3a5c", "#dc2626", "#dc2626", "#0891b2", "#0891b2", "#0891b2", "#0891b2", "#7c3aed", "#dc2626"],
+        borderWidth:1,
+        borderRadius:3,barPercentage:0.7,categoryPercentage:0.75
+      },
+      {
+        label:'FY27 UC',
+        data:[91.42, 66.19, 42.65, 32.66, 32.79, 30.0, 27.01, 23.05, 19.0, 14.74, 14.82, 14.67, 14.54, 15.89, 10.43, 9.23, 9.23, 9.13, 8.68, 9.34],
+        backgroundColor:'rgba(230,126,34,0.7)',
+        borderColor:'#e67e22',
+        borderWidth:1,
+        borderRadius:3,barPercentage:0.7,categoryPercentage:0.75
+      }
+    ]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{
+      legend:{display:true,position:'top',labels:{boxWidth:10,font:{size:10},padding:12}},
+      tooltip:{callbacks:{label:c=>'₹'+c.raw.toFixed(1)+' Cr'}}
+    },
+    scales:{
+      y:{beginAtZero:true,ticks:{callback:v=>'₹'+v,font:{size:9}},grid:{color:'#f0f4f8'}},
+      x:{grid:{display:false},ticks:{font:{size:8},maxRotation:35,minRotation:25}}
+    }
+  },
+  plugins:[{id:'growthLabel',afterDatasetsDraw(chart){}}]
+});
+
+</script>
+</body>
+</html>
