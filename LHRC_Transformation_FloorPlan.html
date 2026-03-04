@@ -3,235 +3,838 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VPS Lakeshore — Transformation Blueprint v2</title>
+<title>VPS Lakeshore — Transformation Blueprint v3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: 'Inter', -apple-system, sans-serif; background: #0a0e1a; color: #e0e4ef; min-height: 100vh; overflow-x: hidden; }
-  .header { text-align: center; padding: 48px 24px 12px; }
-  .header h1 { font-size: 30px; font-weight: 800; background: linear-gradient(135deg, #60a5fa, #a78bfa, #f472b6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.5px; }
-  .header p { margin-top: 8px; color: #8892b0; font-size: 14px; font-weight: 400; }
-  .toggle-wrap { display: flex; justify-content: center; margin: 28px 0 8px; }
-  .toggle-bar { display: flex; background: #151b2e; border-radius: 14px; padding: 5px; gap: 4px; border: 1px solid #1e2740; flex-wrap: wrap; justify-content: center; }
-  .toggle-btn { padding: 11px 22px; border: none; border-radius: 11px; font-family: inherit; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.35s ease; background: transparent; color: #6b7394; }
-  .toggle-btn.active { background: linear-gradient(135deg, #1e3a5f, #2d1b4e); color: #fff; box-shadow: 0 4px 20px rgba(96,165,250,0.15); }
-  .phase-label { text-align: center; margin: 16px 0 4px; font-size: 12px; font-weight: 500; color: #8892b0; letter-spacing: 2px; text-transform: uppercase; }
-  .canvas { display: flex; justify-content: center; gap: 40px; padding: 20px 32px 40px; flex-wrap: wrap; }
-  .building { display: flex; flex-direction: column; align-items: center; }
-  .bldg-title { font-size: 15px; font-weight: 700; margin-bottom: 5px; letter-spacing: 0.5px; }
-  .bldg-subtitle { font-size: 11px; color: #6b7394; margin-bottom: 14px; font-weight: 400; }
-  .floor { display: flex; align-items: stretch; margin-bottom: 3px; cursor: pointer; border-radius: 6px; overflow: hidden; transition: transform 0.2s ease; }
-  .floor:hover { transform: scale(1.015); box-shadow: 0 0 20px rgba(255,255,255,0.06); z-index: 2; }
-  .floor-label { width: 52px; min-height: 46px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #c0c8e0; background: #12162680; border-right: 1px solid #1e274060; letter-spacing: 0.5px; flex-shrink: 0; }
-  .floor-block { display: flex; align-items: center; padding: 7px 12px; min-height: 46px; width: 350px; position: relative; }
-  .floor-block .dept-name { font-size: 12px; font-weight: 600; color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.4); }
-  .floor-block .dept-detail { font-size: 10px; color: rgba(255,255,255,0.7); margin-top: 2px; }
-  .floor-block .bed-count { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-size: 9px; font-weight: 700; color: rgba(255,255,255,0.85); background: rgba(0,0,0,0.25); padding: 2px 7px; border-radius: 20px; white-space: nowrap; }
-  .phase-badge { display: inline-flex; align-items: center; font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 4px; margin-left: 6px; vertical-align: middle; }
-  .phase-badge.p1 { background: rgba(251,146,60,0.25); color: #fb923c; border: 1px solid rgba(251,146,60,0.4); }
-  .phase-badge.p2 { background: rgba(52,211,153,0.2); color: #34d399; border: 1px solid rgba(52,211,153,0.35); }
-  .c-er { background: linear-gradient(135deg,#dc2626,#b91c1c); }
-  .c-icu { background: linear-gradient(135deg,#ef4444,#dc2626); }
-  .c-ot { background: linear-gradient(135deg,#f97316,#ea580c); }
-  .c-opd { background: linear-gradient(135deg,#3b82f6,#2563eb); }
-  .c-ward { background: linear-gradient(135deg,#6366f1,#4f46e5); }
-  .c-diag { background: linear-gradient(135deg,#8b5cf6,#7c3aed); }
-  .c-service { background: linear-gradient(135deg,#374151,#1f2937); }
-  .c-parking { background: linear-gradient(135deg,#1e293b,#0f172a); }
-  .c-suite { background: linear-gradient(135deg,#a855f7,#9333ea); }
-  .c-onc-surg { background: linear-gradient(135deg,#e11d48,#be123c); }
-  .c-onc-med { background: linear-gradient(135deg,#db2777,#be185d); }
-  .c-onc-rad { background: linear-gradient(135deg,#c026d3,#a21caf); }
-  .c-onc-day { background: linear-gradient(135deg,#e879f9,#d946ef); }
-  .c-onc-pal { background: linear-gradient(135deg,#f472b6,#ec4899); }
-  .c-onc-bmt { background: linear-gradient(135deg,#fb7185,#f43f5e); }
-  .c-onc-hn { background: linear-gradient(135deg,#f59e0b,#b45309); }
-  .c-rare-gen { background: linear-gradient(135deg,#0891b2,#0e7490); }
-  .c-transplant { background: linear-gradient(135deg,#0d9488,#0f766e); }
-  .c-gen-opd { background: linear-gradient(135deg,#0ea5e9,#0284c7); }
-  .c-gen-ward { background: linear-gradient(135deg,#06b6d4,#0891b2); }
-  .c-gen-ot { background: linear-gradient(135deg,#14b8a6,#0d9488); }
-  .c-gen-icu { background: linear-gradient(135deg,#10b981,#059669); }
-  .c-gen-er { background: linear-gradient(135deg,#22c55e,#16a34a); }
-  .c-gen-diag { background: linear-gradient(135deg,#34d399,#10b981); }
-  .c-gen-suite { background: linear-gradient(135deg,#2dd4bf,#14b8a6); }
-  .c-reno { background: repeating-linear-gradient(45deg,#f59e0b22,#f59e0b22 4px,transparent 4px,transparent 8px),linear-gradient(135deg,#f59e0b,#d97706); }
-  .legend-section { padding: 4px 32px 24px; display: flex; justify-content: center; }
-  .legend-box { background: #111827; border: 1px solid #1e2740; border-radius: 12px; padding: 18px 24px; max-width: 1200px; width: 100%; }
-  .legend-title { font-size: 12px; font-weight: 700; color: #8892b0; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; }
-  .legend-grid { display: flex; flex-wrap: wrap; gap: 7px 18px; }
-  .legend-item { display: flex; align-items: center; gap: 7px; }
-  .legend-swatch { width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0; }
-  .legend-label { font-size: 11px; color: #a0a8c4; font-weight: 500; }
-  .stats-bar { display: flex; justify-content: center; gap: 16px; padding: 0 32px 8px; flex-wrap: wrap; }
-  .stat-card { background: #111827; border: 1px solid #1e2740; border-radius: 10px; padding: 12px 18px; text-align: center; min-width: 120px; }
-  .stat-val { font-size: 20px; font-weight: 800; background: linear-gradient(135deg,#60a5fa,#a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-  .stat-label { font-size: 10px; color: #6b7394; margin-top: 3px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.8px; }
-  .arrow-col { display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 6px; }
-  .arrow-icon { font-size: 30px; color: #4f46e5; animation: pulse-arrow 2s ease-in-out infinite; }
-  .arrow-label { font-size: 10px; color: #6b7394; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; writing-mode: vertical-rl; text-orientation: mixed; }
-  @keyframes pulse-arrow { 0%,100%{opacity:0.5;transform:translateX(0);}50%{opacity:1;transform:translateX(4px);} }
-  .reno-badge { display: inline-block; font-size: 9px; font-weight: 700; color: #fbbf24; background: rgba(251,191,36,0.15); padding: 2px 5px; border-radius: 3px; margin-left: 6px; vertical-align: middle; }
-  .tooltip-overlay { display: none; position: fixed; top:0;left:0;right:0;bottom:0; z-index:100; pointer-events:none; }
-  .tooltip-overlay.active { display: block; }
-  .tooltip-box { position: absolute; background: #1a1f35; border: 1px solid #2d3555; border-radius: 10px; padding: 14px 18px; max-width: 340px; box-shadow: 0 12px 40px rgba(0,0,0,0.5); pointer-events: none; }
-  .tooltip-box h4 { font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 6px; }
-  .tooltip-box p { font-size: 11.5px; color: #a0a8c4; line-height: 1.6; }
-  .tooltip-box .capex-tag { display: inline-block; margin-top: 8px; background: rgba(96,165,250,0.12); border: 1px solid rgba(96,165,250,0.3); color: #60a5fa; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 5px; }
-  .capex-section { padding: 0 32px 40px; display: flex; justify-content: center; }
-  .capex-panel { background: #0f1422; border: 1px solid #1e2740; border-radius: 16px; padding: 26px 28px; max-width: 1200px; width: 100%; }
-  .capex-header { font-size: 12px; font-weight: 700; color: #8892b0; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 18px; display: flex; align-items: center; gap: 10px; }
-  .capex-header::after { content:''; flex:1; height:1px; background: linear-gradient(to right,#1e2740,transparent); }
-  .capex-timeline { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 22px; }
-  .phase-block { border-radius: 12px; padding: 18px; }
-  .phase-block.fy27 { background: linear-gradient(135deg,#1c1a2e,#1a1020); border: 1px solid rgba(251,146,60,0.3); }
-  .phase-block.fy28 { background: linear-gradient(135deg,#0f1e1c,#0a1a18); border: 1px solid rgba(52,211,153,0.3); }
-  .phase-block-title { font-size: 13px; font-weight: 800; margin-bottom: 3px; }
-  .phase-block.fy27 .phase-block-title { color: #fb923c; }
-  .phase-block.fy28 .phase-block-title { color: #34d399; }
-  .phase-block-sub { font-size: 11px; color: #6b7394; margin-bottom: 14px; font-weight: 500; }
-  .floor-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-  .floor-list li { display: flex; align-items: flex-start; gap: 9px; font-size: 11.5px; color: #c0c8e0; line-height: 1.5; }
-  .fl-dot { width: 7px; height: 7px; border-radius: 50%; margin-top: 4px; flex-shrink: 0; }
-  .fy27 .fl-dot { background: #fb923c; }
-  .fy28 .fl-dot { background: #34d399; }
-  .capex-est { font-size: 10px; font-weight: 700; color: #60a5fa; margin-left: auto; white-space: nowrap; padding-left: 8px; }
-  .capex-summary { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-top: 4px; }
-  .capex-sum-card { background: #111827; border: 1px solid #1e2740; border-radius: 10px; padding: 14px 14px; text-align: center; }
-  .capex-sum-val { font-size: 17px; font-weight: 800; background: linear-gradient(135deg,#60a5fa,#a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-  .capex-sum-label { font-size: 10px; color: #6b7394; margin-top: 3px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.7px; }
-  .note-text { font-size: 11px; color: #4b5568; margin-top: 14px; text-align: center; line-height: 1.5; }
-  @media (max-width:1200px) { .floor-block{width:300px;} .capex-timeline{grid-template-columns:1fr;} .capex-summary{grid-template-columns:repeat(2,1fr);} }
-  @media (max-width:820px) { .canvas{flex-direction:column;align-items:center;gap:32px;} .arrow-label{writing-mode:horizontal-tb;} .arrow-icon{transform:rotate(90deg);} }
+:root {
+  --bg:        #07090f;
+  --surface:   #0d1120;
+  --surface2:  #111827;
+  --border:    #1a2235;
+  --border2:   #243048;
+  --text:      #d8dff0;
+  --muted:     #5a6480;
+  --accent1:   #4f8ef7;
+  --accent2:   #a78bfa;
+  --accent3:   #f472b6;
+  --gold:      #f0b429;
+  --green:     #34d399;
+  --orange:    #fb923c;
+  --red:       #f87171;
+  --teal:      #2dd4bf;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── GRAIN OVERLAY ── */
+body::before {
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;
+  z-index:0;
+  opacity:.4;
+}
+
+/* ── HEADER ── */
+.header {
+  position: relative;
+  padding: 52px 40px 24px;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+}
+
+.header-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--accent1);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+.header h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 38px;
+  font-weight: 400;
+  line-height: 1.1;
+  background: linear-gradient(135deg, #e8eeff 0%, #a78bfa 50%, #f472b6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 10px;
+}
+
+.header-sub {
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 400;
+  letter-spacing: 0.3px;
+}
+
+.header-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 16px;
+  background: rgba(240,180,41,0.1);
+  border: 1px solid rgba(240,180,41,0.3);
+  color: var(--gold);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 20px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+
+
+/* ── NAV TABS ── */
+.nav-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 24px 32px 8px;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.nav-btn {
+  padding: 10px 22px;
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s;
+  background: var(--surface);
+  color: var(--muted);
+  letter-spacing: 0.3px;
+}
+.nav-btn:hover { border-color: var(--accent1); color: var(--text); }
+.nav-btn.active {
+  background: linear-gradient(135deg, #1a2f5e, #2a1a4a);
+  border-color: var(--accent1);
+  color: #fff;
+  box-shadow: 0 4px 20px rgba(79,142,247,0.2);
+}
+.nav-btn.warn-btn {
+  background: linear-gradient(135deg, rgba(251,146,60,0.08), rgba(248,113,113,0.08));
+  border-color: rgba(251,146,60,0.35);
+  color: var(--orange);
+}
+.nav-btn.warn-btn.active {
+  background: linear-gradient(135deg, rgba(251,146,60,0.2), rgba(248,113,113,0.15));
+  box-shadow: 0 4px 20px rgba(251,146,60,0.2);
+}
+
+/* ── PHASE LABEL ── */
+.phase-label {
+  text-align: center;
+  margin: 12px 0 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+}
+
+/* ── STATS BAR ── */
+.stats-bar {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 32px 4px;
+  flex-wrap: wrap;
+}
+.stat-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 16px;
+  text-align: center;
+  min-width: 110px;
+}
+.stat-val {
+  font-family: 'DM Serif Display', serif;
+  font-size: 19px;
+  font-weight: 400;
+  background: linear-gradient(135deg, var(--accent1), var(--accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.stat-label {
+  font-size: 9px;
+  color: var(--muted);
+  margin-top: 2px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ── CANVAS ── */
+.canvas {
+  display: flex;
+  justify-content: center;
+  gap: 36px;
+  padding: 20px 32px 36px;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 1;
+}
+
+.building { display: flex; flex-direction: column; align-items: center; }
+.bldg-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 16px;
+  font-weight: 400;
+  margin-bottom: 3px;
+  color: #e8eeff;
+}
+.bldg-subtitle {
+  font-size: 10px;
+  color: var(--muted);
+  margin-bottom: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.5px;
+}
+
+/* ── FLOOR ROWS ── */
+.floor {
+  display: flex;
+  align-items: stretch;
+  margin-bottom: 3px;
+  cursor: pointer;
+  border-radius: 6px;
+  overflow: hidden;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  position: relative;
+}
+.floor:hover {
+  transform: scale(1.012);
+  box-shadow: 0 0 24px rgba(255,255,255,0.07);
+  z-index: 3;
+}
+
+.floor-label {
+  width: 50px;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  font-weight: 600;
+  color: #8892b0;
+  background: rgba(13,17,32,0.7);
+  border-right: 1px solid rgba(30,39,64,0.5);
+  flex-shrink: 0;
+  letter-spacing: 0.3px;
+}
+
+.floor-block {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  min-height: 48px;
+  width: 340px;
+  position: relative;
+}
+.dept-name {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+}
+.dept-detail {
+  font-size: 9.5px;
+  color: rgba(255,255,255,0.68);
+  margin-top: 2px;
+  font-weight: 400;
+}
+.bed-count {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8.5px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.85);
+  background: rgba(0,0,0,0.3);
+  padding: 2px 7px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+/* ── RENO BADGE ── */
+.reno-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 8px;
+  font-weight: 700;
+  color: #fbbf24;
+  background: rgba(251,191,36,0.18);
+  border: 1px solid rgba(251,191,36,0.4);
+  padding: 1px 5px;
+  border-radius: 3px;
+  margin-left: 5px;
+  vertical-align: middle;
+  font-family: 'JetBrains Mono', monospace;
+}
+.reno-badge::before { content: '⚙'; font-size: 8px; }
+
+/* ── PHASE BADGES ── */
+.phase-badge {
+  display: inline-flex;
+  align-items: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 8px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 3px;
+  margin-left: 5px;
+  vertical-align: middle;
+}
+.phase-badge.p1 { background: rgba(251,146,60,0.2); color: #fb923c; border: 1px solid rgba(251,146,60,0.4); }
+.phase-badge.p2 { background: rgba(52,211,153,0.15); color: #34d399; border: 1px solid rgba(52,211,153,0.3); }
+.phase-badge.infra { background: rgba(251,191,36,0.15); color: #fbbf24; border: 1px solid rgba(251,191,36,0.35); }
+
+
+
+/* ── FLOOR COLORS ── */
+.c-er   { background: linear-gradient(135deg,#b91c1c,#991b1b); }
+.c-icu  { background: linear-gradient(135deg,#dc2626,#b91c1c); }
+.c-ot   { background: linear-gradient(135deg,#ea580c,#c2410c); }
+.c-opd  { background: linear-gradient(135deg,#2563eb,#1d4ed8); }
+.c-ward { background: linear-gradient(135deg,#4f46e5,#3730a3); }
+.c-diag { background: linear-gradient(135deg,#7c3aed,#6d28d9); }
+.c-service { background: linear-gradient(135deg,#374151,#1f2937); }
+.c-parking { background: linear-gradient(135deg,#1e293b,#0f172a); }
+.c-suite { background: linear-gradient(135deg,#7c3aed,#6d28d9); }
+.c-reno { background: repeating-linear-gradient(45deg,rgba(245,158,11,0.18),rgba(245,158,11,0.18) 4px,transparent 4px,transparent 9px),linear-gradient(135deg,#b45309,#92400e); }
+.c-infra { background: repeating-linear-gradient(45deg,rgba(52,211,153,0.12),rgba(52,211,153,0.12) 4px,transparent 4px,transparent 9px),linear-gradient(135deg,#065f46,#064e3b); }
+
+.c-onc-surg  { background: linear-gradient(135deg,#be123c,#9f1239); }
+.c-onc-med   { background: linear-gradient(135deg,#be185d,#9d174d); }
+.c-onc-rad   { background: linear-gradient(135deg,#a21caf,#86198f); }
+.c-onc-day   { background: linear-gradient(135deg,#d946ef,#c026d3); }
+.c-onc-pal   { background: linear-gradient(135deg,#db2777,#be185d); }
+.c-onc-bmt   { background: linear-gradient(135deg,#e11d48,#be123c); }
+.c-onc-hn    { background: linear-gradient(135deg,#d97706,#b45309); }
+.c-rare-gen  { background: linear-gradient(135deg,#0e7490,#0c4a6e); }
+.c-transplant{ background: linear-gradient(135deg,#0f766e,#134e4a); }
+.c-gen-opd   { background: linear-gradient(135deg,#0284c7,#0369a1); }
+.c-gen-ward  { background: linear-gradient(135deg,#0891b2,#0e7490); }
+.c-gen-ot    { background: linear-gradient(135deg,#0d9488,#0f766e); }
+.c-gen-icu   { background: linear-gradient(135deg,#059669,#047857); }
+.c-gen-er    { background: linear-gradient(135deg,#16a34a,#15803d); }
+.c-gen-diag  { background: linear-gradient(135deg,#10b981,#059669); }
+.c-gen-suite { background: linear-gradient(135deg,#14b8a6,#0d9488); }
+.c-wellness  { background: linear-gradient(135deg,#4f46e5,#6366f1); }
+
+/* ── ARROW CONNECTOR ── */
+.arrow-col {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 80px;
+}
+.arrow-line {
+  width: 2px;
+  height: 120px;
+  background: linear-gradient(to bottom, var(--accent1), transparent);
+  border-radius: 2px;
+}
+.arrow-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  writing-mode: vertical-rl;
+}
+.arrow-icon { font-size: 22px; color: var(--accent1); }
+
+/* ── LEGEND ── */
+.legend-section {
+  padding: 4px 32px 20px;
+  display: flex;
+  justify-content: center;
+}
+.legend-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 22px;
+  max-width: 1200px;
+  width: 100%;
+}
+.legend-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.legend-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+}
+.legend-item { display: flex; align-items: center; gap: 6px; }
+.legend-swatch { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+.legend-label { font-size: 10.5px; color: #8892b0; font-weight: 500; }
+
+/* ── TOOLTIP ── */
+.tooltip-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  pointer-events: none;
+}
+.tooltip-overlay.active { display: block; }
+.tooltip-box {
+  position: absolute;
+  background: #141929;
+  border: 1px solid var(--border2);
+  border-radius: 12px;
+  padding: 16px 18px;
+  max-width: 360px;
+  box-shadow: 0 16px 50px rgba(0,0,0,0.6);
+  pointer-events: none;
+}
+.tooltip-box h4 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #fff;
+  margin-bottom: 7px;
+}
+.tooltip-box p { font-size: 11.5px; color: #94a3b8; line-height: 1.65; }
+.tooltip-box .tt-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
+.tooltip-box .tt-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+.tt-capex { background: rgba(79,142,247,0.12); border: 1px solid rgba(79,142,247,0.3); color: #60a5fa; }
+.tt-reno  { background: rgba(251,191,36,0.12); border: 1px solid rgba(251,191,36,0.3); color: #fbbf24; }
+.tt-risk  { background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); color: #f87171; }
+
+/* ── ACTIVE RENO PANEL ── */
+#renoPanel {
+  display: none;
+  padding: 0 32px 36px;
+  justify-content: center;
+}
+.reno-panel-inner {
+  background: var(--surface);
+  border: 1px solid rgba(251,146,60,0.25);
+  border-radius: 16px;
+  padding: 26px 28px;
+  max-width: 1200px;
+  width: 100%;
+}
+.rp-header {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--orange);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.rp-header::after { content:''; flex:1; height:1px; background: linear-gradient(to right,rgba(251,146,60,0.3),transparent); }
+.reno-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 10px;
+}
+.reno-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  position: relative;
+  overflow: hidden;
+}
+.reno-card::before {
+  content:'';
+  position: absolute;
+  left:0; top:0; bottom:0;
+  width: 3px;
+}
+.reno-card.wip::before { background: var(--orange); }
+.reno-card.tender::before { background: var(--accent1); }
+.reno-card.boq::before { background: var(--gold); }
+.reno-card.infra::before { background: var(--green); }
+.rc-title { font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+.rc-loc { font-size: 10px; color: var(--muted); margin-bottom: 8px; font-family: 'JetBrains Mono', monospace; }
+.rc-footer { display: flex; align-items: center; justify-content: space-between; }
+.rc-status {
+  font-size: 9px;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  padding: 2px 7px;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+.rc-status.wip { background: rgba(251,146,60,0.15); color: var(--orange); border: 1px solid rgba(251,146,60,0.3); }
+.rc-status.tender { background: rgba(79,142,247,0.12); color: var(--accent1); border: 1px solid rgba(79,142,247,0.3); }
+.rc-status.boq { background: rgba(240,180,41,0.12); color: var(--gold); border: 1px solid rgba(240,180,41,0.3); }
+.rc-status.infra { background: rgba(52,211,153,0.12); color: var(--green); border: 1px solid rgba(52,211,153,0.3); }
+.rc-budget {
+  font-family: 'DM Serif Display', serif;
+  font-size: 14px;
+  color: #e8eeff;
+}
+.reno-risk-box {
+  margin-top: 16px;
+  background: rgba(248,113,113,0.06);
+  border: 1px solid rgba(248,113,113,0.2);
+  border-radius: 8px;
+  padding: 12px 16px;
+}
+.reno-risk-box p {
+  font-size: 11.5px;
+  color: #fca5a5;
+  line-height: 1.6;
+}
+.reno-risk-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--red);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+
+
+/* ── CAPEX PANEL ── */
+#capexPanel {
+  display: none;
+  padding: 0 32px 36px;
+  justify-content: center;
+}
+.capex-inner {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 26px 28px;
+  max-width: 1200px;
+  width: 100%;
+}
+.capex-hdr {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.capex-hdr::after { content:''; flex:1; height:1px; background: linear-gradient(to right,var(--border2),transparent); }
+.capex-timeline { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 22px; }
+.phase-block { border-radius: 12px; padding: 20px; }
+.phase-block.fy27 { background: linear-gradient(135deg,#1c1a2e,#1a100e); border: 1px solid rgba(251,146,60,0.3); }
+.phase-block.fy28 { background: linear-gradient(135deg,#0f1e1c,#0a1a18); border: 1px solid rgba(52,211,153,0.3); }
+.phase-block-title { font-size: 12px; font-weight: 800; margin-bottom: 3px; }
+.phase-block.fy27 .phase-block-title { color: var(--orange); }
+.phase-block.fy28 .phase-block-title { color: var(--green); }
+.phase-block-sub { font-size: 10.5px; color: var(--muted); margin-bottom: 14px; font-weight: 500; }
+.floor-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.floor-list li { display: flex; align-items: flex-start; gap: 9px; font-size: 11px; color: #94a3b8; line-height: 1.6; }
+.fl-dot { width: 7px; height: 7px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
+.fy27 .fl-dot { background: var(--orange); }
+.fy28 .fl-dot { background: var(--green); }
+.capex-est { font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 700; color: var(--accent1); margin-left: auto; white-space: nowrap; padding-left: 8px; }
+.capex-summary { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-top: 4px; }
+.capex-sum-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 14px; text-align: center; }
+.capex-sum-val { font-family: 'DM Serif Display', serif; font-size: 16px; font-weight: 400; background: linear-gradient(135deg,var(--accent1),var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.capex-sum-label { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--muted); margin-top: 3px; text-transform: uppercase; letter-spacing: 0.7px; }
+.note-text { font-size: 10.5px; color: #374151; margin-top: 14px; text-align: center; line-height: 1.6; }
+
+@media(max-width:1100px) { .capex-timeline{grid-template-columns:1fr;} .capex-summary{grid-template-columns:repeat(2,1fr);} }
+@media(max-width:820px) { .canvas{flex-direction:column;align-items:center;gap:28px;} .floor-block{width:290px;} .arrow-label{writing-mode:horizontal-tb;} .rev-summary-strip{grid-template-columns:repeat(2,1fr);} }
 </style>
 </head>
 <body>
 
 <div class="header">
-  <h1>VPS Lakeshore Hospital &mdash; Transformation Blueprint</h1>
-  <p>Kochi, Kerala &nbsp;|&nbsp; Two-Building Segregation: Complex Cancer &amp; CarT Centre + General Hospital &nbsp;|&nbsp; FY27 H2 &ndash; FY28 H1 Phased Execution</p>
+
+  <h1>VPS Lakeshore Hospital<br>Transformation Blueprint</h1>
+  <div class="header-sub">Kochi, Kerala &nbsp;·&nbsp; Two-Building Segregation: Complex Cancer Centre + General Hospital &nbsp;·&nbsp; FY27 H2 – FY28 H1 Phased Execution</div>
+
 </div>
 
-<div class="toggle-wrap">
-  <div class="toggle-bar">
-    <button class="toggle-btn active" onclick="setView('current')">Current State</button>
-    <button class="toggle-btn" onclick="setView('transition')">Transition View</button>
-    <button class="toggle-btn" onclick="setView('future')">Future State</button>
-    <button class="toggle-btn" onclick="setView('phasing')">&#9889; Phased Rollout</button>
-  </div>
+
+
+<!-- Nav Tabs -->
+<div class="nav-wrap">
+  <button class="nav-btn active"      onclick="setView('current')">Current State</button>
+  <button class="nav-btn"             onclick="setView('transition')">Transition View</button>
+  <button class="nav-btn"             onclick="setView('future')">Future State</button>
+  <button class="nav-btn"             onclick="setView('phasing')">⚡ Phased Rollout</button>
+  <button class="nav-btn warn-btn"    onclick="setView('reno')">⚙ Active Renovations</button>
 </div>
 
 <div class="phase-label" id="phaseLabel"></div>
 <div class="stats-bar" id="statsBar"></div>
 <div class="canvas" id="canvas"></div>
 
-<div class="legend-section">
+<div class="legend-section" id="legendSection">
   <div class="legend-box">
     <div class="legend-title" id="legendTitle">Department Legend</div>
     <div class="legend-grid" id="legendGrid"></div>
   </div>
 </div>
 
-<div class="capex-section" id="capexSection" style="display:none;">
-  <div class="capex-panel">
-    <div class="capex-header">PHASED CAPEX PLAN &mdash; FLOOR-BY-FLOOR EXECUTION &middot; BUILDING A</div>
-    <div class="capex-timeline">
-      <div class="phase-block fy27">
-        <div class="phase-block-title">&#9889; PHASE 1 &mdash; FY27 H2 (Oct 2027 &ndash; Mar 2028)</div>
-        <div class="phase-block-sub">Foundation Floors: Radiation Vault, Cancer ICU/BMT, Day Care, Head &amp; Neck OPD &nbsp;|&nbsp; Est. &#8377;50&ndash;65 Cr</div>
-        <ul class="floor-list">
-          <li><span class="fl-dot"></span><span><strong>B1 &mdash; LINAC Vault &amp; Radiation Bunker:</strong> Radiation-shielded civil construction, medical physics lab, HDR brachytherapy vault. Most critical long-lead item &mdash; AERB bunker approval required ~6 months before works start. PET-CT pit construction concurrent.</span><span class="capex-est">&#8377;35&ndash;45 Cr</span></li>
-          <li><span class="fl-dot"></span><span><strong>GF &mdash; Dedicated Cancer Reception, Screening &amp; Chemo Day Care:</strong> Segregated cancer entry separate from general hospital. 30-chair infusion centre with individual entertainment, genetic risk counseling desk, integrated oncology pharmacy, Gulf Corridor welcome lounge.</span><span class="capex-est">&#8377;4&ndash;6 Cr</span></li>
-          <li><span class="fl-dot"></span><span><strong>1F &mdash; Cancer ICU, BMT Unit &amp; Head &amp; Neck OPD:</strong> HEPA-filtered BMT rooms (8 beds with laminar flow isolation), Cancer ICU (16 beds). Head &amp; Neck OPD: dedicated H&amp;N surgery consultations, voice &amp; swallowing lab, flexible nasoendoscopy suite, microvascular MDT room. First dedicated H&amp;N centre in Kerala.</span><span class="capex-est">&#8377;10&ndash;14 Cr</span></li>
-        </ul>
-      </div>
-      <div class="phase-block fy28">
-        <div class="phase-block-title">&#128640; PHASE 2 &mdash; FY28 H1 (Apr 2028 &ndash; Sep 2028)</div>
-        <div class="phase-block-sub">Upper Floors: OTs, Clinical Trials, Radiation, Genomics, Rare Disease, IPD Wards &nbsp;|&nbsp; Est. &#8377;65&ndash;90 Cr</div>
-        <ul class="floor-list">
-          <li><span class="fl-dot"></span><span><strong>2F &mdash; Surgical Oncology OTs &amp; Head &amp; Neck Theatre:</strong> 6 cancer-dedicated OTs including robotic surgery platform (Da Vinci: prostatectomy, rectal, gastric), 1 dedicated H&amp;N/microvascular OT with intraoperative nerve monitoring (NIM), oncology CSSD with cancer-specific sterility protocols.</span><span class="capex-est">&#8377;18&ndash;24 Cr</span></li>
-          <li><span class="fl-dot"></span><span><strong>3F &mdash; Medical Oncology OPD &amp; Clinical Trials Unit:</strong> Outpatient consultations, Phase I&ndash;III clinical trial unit with study coordinators, dedicated oncology pharmacy. Academic partnership with Amrita IMS for trial enrolment and research publications.</span><span class="capex-est">&#8377;4&ndash;6 Cr</span></li>
-          <li><span class="fl-dot"></span><span><strong>4F &mdash; Radiation Oncology &amp; Brachytherapy:</strong> CT-simulator, treatment planning workstations, external beam bays (IMRT/SBRT/SRS/IGRT), HDR brachytherapy suite. LINAC commissioning target FY28 Q1. Provision for third LINAC in B1 by FY29 based on demand.</span><span class="capex-est">&#8377;12&ndash;16 Cr</span></li>
-          <li><span class="fl-dot"></span><span><strong>5F &mdash; Precision Medicine, Genomics &amp; Rare Disease Centre:</strong> NGS sequencing, liquid biopsy, ctDNA profiling, OncoHelix tie-up. Rare Disease beds (12): thalassemia, SMA, Gaucher/Fabry, metabolic disorders. Genetic counseling, carrier screening, prenatal diagnostics. Tumor board suite. First such integrated centre in Kerala &mdash; core CarT differentiation.</span><span class="capex-est">&#8377;14&ndash;20 Cr</span></li>
-          <li><span class="fl-dot"></span><span><strong>6F&ndash;8F &mdash; Oncology IPD Wards &amp; Palliative Care:</strong> Surgical oncology (38 beds incl. H&amp;N post-op with FLAP monitoring, tracheostomy care), medical oncology (36 beds, laminar flow isolation, immunotherapy suites), palliative &amp; rehabilitation floor (18 beds, psycho-oncology, physio gym).</span><span class="capex-est">&#8377;10&ndash;16 Cr</span></li>
-        </ul>
-      </div>
+<!-- Active Renovations Panel -->
+<div id="renoPanel">
+  <div class="reno-panel-inner">
+    <div class="rp-header">Active Renovation Projects — Ground Reality · 12 Projects · ₹15.53 Cr Total Active Spend</div>
+    <div class="reno-grid" id="renoGrid"></div>
+    <div class="reno-risk-box" style="margin-top:18px;">
+      <div class="reno-risk-title">⚠ Sequencing Risk — GF Congestion</div>
+      <p>Four separate Ground Floor projects (Central Cutout ₹34L, Ortho OPD ₹1.60 Cr, Casualty ₹3.80 Cr, Cutout Roof ₹40L) are running near-simultaneously. The future-state plan requires this same GF to become the <strong style="color:#fca5a5;">Dedicated Cancer Reception & 30-Chair Chemo Day Care</strong> in FY27 H2. These active works must be sequenced as <em>precursors</em> to the transformation, not concurrent with it. A defined hand-over milestone is needed before FY27 H2 transformation works begin.</p>
     </div>
-    <div class="capex-header" style="margin-top:8px;">TOTAL INVESTMENT SUMMARY &mdash; BUILDING A TRANSFORMATION</div>
-    <div class="capex-summary">
-      <div class="capex-sum-card"><div class="capex-sum-val">&#8377;115&ndash;155 Cr</div><div class="capex-sum-label">Civil &amp; Fit-Out (Bldg A)</div></div>
-      <div class="capex-sum-card"><div class="capex-sum-val">&#8377;80&ndash;100 Cr</div><div class="capex-sum-label">Radiation (2 LINACs)</div></div>
-      <div class="capex-sum-card"><div class="capex-sum-val">&#8377;30&ndash;40 Cr</div><div class="capex-sum-label">Genomics &amp; Rare Disease</div></div>
-      <div class="capex-sum-card"><div class="capex-sum-val">&#8377;400 Cr</div><div class="capex-sum-label">Total 5-Year Programme</div></div>
+    <div class="reno-risk-box" style="margin-top:10px; border-color: rgba(52,211,153,0.25); background: rgba(52,211,153,0.05);">
+      <div class="reno-risk-title" style="color:var(--green);">✓ Infrastructure Workstreams — Parallel to Transformation</div>
+      <p style="color:#86efac;">MLCP (₹4.41 Cr, machinery in production) and STP Renovation (₹37L, tender submitted) are utility-layer projects that run <em>parallel</em> to, not as blockers of, the transformation. Both must be tracked as separate workstreams in the master programme. Parking area leveling (₹35L) is scheduled post-MLCP installation — already correctly sequenced.</p>
     </div>
-    <p class="note-text">Capex estimates are indicative and subject to architectural drawings, MEP survey, equipment procurement timelines and AERB/regulatory approvals.<br>Building B (General Hospital) upgrade capex assessed separately. Hover over floors above for per-floor capex estimates.</p>
   </div>
 </div>
 
+<!-- Capex Panel (Phasing view) -->
+<div id="capexPanel">
+  <div class="capex-inner">
+    <div class="capex-hdr">Phased Capex Plan — Floor-by-Floor Execution · Building A</div>
+    <div class="capex-timeline">
+      <div class="phase-block fy27">
+        <div class="phase-block-title">⚡ PHASE 1 — FY27 H2 (Oct 2027 – Mar 2028)</div>
+        <div class="phase-block-sub">Foundation Floors: LINAC Vault, Cancer ICU/BMT, Day Care, H&amp;N OPD | Est. ₹50–65 Cr<br><em style="color:#f97316;font-size:10px;">Precondition: Active GF renovations (Casualty, Ortho OPD, Cutout) must be completed before transformation begins</em></div>
+        <ul class="floor-list">
+          <li><span class="fl-dot"></span><span><strong>B1 — LINAC Vault &amp; Radiation Bunker:</strong> Radiation-shielded civil construction, medical physics lab, HDR brachytherapy vault. AERB bunker approval required ~6 months before works start. PET-CT pit concurrent.</span><span class="capex-est">₹35–45 Cr</span></li>
+          <li><span class="fl-dot"></span><span><strong>GF — Dedicated Cancer Reception, Screening &amp; Chemo Day Care:</strong> Segregated cancer entry. 30-chair infusion centre, genetic risk counseling desk, oncology pharmacy, Gulf &amp; GCC Corridor welcome lounge.</span><span class="capex-est">₹4–6 Cr</span></li>
+          <li><span class="fl-dot"></span><span><strong>1F — Cancer ICU, BMT Unit &amp; Head &amp; Neck OPD:</strong> HEPA-filtered BMT rooms (8 beds, laminar flow isolation), Cancer ICU (16 beds), dedicated H&amp;N OPD with voice &amp; swallowing lab, nasoendoscopy suite.</span><span class="capex-est">₹10–14 Cr</span></li>
+        </ul>
+      </div>
+      <div class="phase-block fy28">
+        <div class="phase-block-title">🚀 PHASE 2 — FY28 H1 (Apr 2028 – Sep 2028)</div>
+        <div class="phase-block-sub">Upper Floors: OTs, Clinical Trials, Radiation, Genomics, Rare Disease, IPD Wards | Est. ₹65–90 Cr</div>
+        <ul class="floor-list">
+          <li><span class="fl-dot"></span><span><strong>2F — Surgical Oncology OTs &amp; H&amp;N Theatre:</strong> 6 cancer-dedicated OTs including robotic surgery (Da Vinci), 1 H&amp;N/microvascular OT with intraoperative nerve monitoring, oncology CSSD.</span><span class="capex-est">₹18–24 Cr</span></li>
+          <li><span class="fl-dot"></span><span><strong>3F — Medical Oncology OPD &amp; Clinical Trials:</strong> Phase I–III clinical trial unit, dedicated pharmacy, academic partnership with Amrita IMS for trial enrolment.</span><span class="capex-est">₹4–6 Cr</span></li>
+          <li><span class="fl-dot"></span><span><strong>4F — Radiation Oncology &amp; Brachytherapy:</strong> CT-simulator, IMRT/SBRT/SRS/IGRT bays, HDR suite. LINAC commissioning FY28 Q1. Third LINAC provision by FY29.</span><span class="capex-est">₹12–16 Cr</span></li>
+          <li><span class="fl-dot"></span><span><strong>5F — Precision Medicine, Genomics &amp; Rare Disease:</strong> NGS sequencing, liquid biopsy, ctDNA profiling, OncoHelix tie-up. 12 rare disease beds. Genetic counseling, tumor board suite. First such centre in Kerala.</span><span class="capex-est">₹14–20 Cr</span></li>
+          <li><span class="fl-dot"></span><span><strong>6F–8F — Oncology IPD Wards &amp; Palliative Care:</strong> Surgical oncology (38 beds, H&amp;N post-op, FLAP monitoring), medical oncology (36 beds, laminar flow), palliative &amp; rehabilitation (18 beds, psycho-oncology).</span><span class="capex-est">₹10–16 Cr</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="capex-hdr" style="margin-top:10px;">Total Investment Summary — Building A Transformation</div>
+    <div class="capex-summary">
+      <div class="capex-sum-card"><div class="capex-sum-val">₹115–155 Cr</div><div class="capex-sum-label">Civil &amp; Fit-Out (Bldg A)</div></div>
+      <div class="capex-sum-card"><div class="capex-sum-val">₹80–100 Cr</div><div class="capex-sum-label">Radiation (2 LINACs)</div></div>
+      <div class="capex-sum-card"><div class="capex-sum-val">₹30–40 Cr</div><div class="capex-sum-label">Genomics &amp; Rare Disease</div></div>
+
+    </div>
+    <p class="note-text">Capex estimates are indicative and subject to architectural drawings, MEP survey, equipment procurement timelines and AERB/regulatory approvals. Active renovation budgets (₹15.53 Cr across 12 projects) are precursor spend, not included in above transformation capex. Building B (General Hospital) upgrade capex assessed separately.</p>
+  </div>
+</div>
+
+
+
+<!-- Tooltip -->
 <div class="tooltip-overlay" id="tooltipOverlay">
   <div class="tooltip-box" id="tooltipBox"></div>
 </div>
 
 <script>
+// ── DATA ──
+
 var bA_cur = [
-  {label:"8F",dept:"Suite Rooms &amp; VIP Wards",detail:"Premium patient rooms, attendant lounges",cls:"c-suite",beds:"18 beds",reno:true,tip:"Currently under renovation (&#8377;12L). Will be repurposed as cancer inpatient premium suites and Gulf Corridor patient accommodation post-transformation.",capex:"&#8377;12L active"},
-  {label:"7F",dept:"ENT &middot; Ophthalmology &middot; Dermatology",detail:"Specialist OPDs, procedure rooms",cls:"c-opd",beds:"32 beds",tip:"Three specialty OPDs today. Post-transformation: ENT expanded into dedicated Head &amp; Neck Surgery department. H&amp;N consolidates surgical oncology, ENT, voice &amp; swallowing services under one roof &mdash; first dedicated H&amp;N centre in Kerala.",capex:""},
-  {label:"6F",dept:"Gynecology &amp; Pediatrics",detail:"Maternity, NICU, pediatric wards",cls:"c-ward",beds:"40 beds",tip:"Full maternity services including labor rooms, NICU, pediatric inpatient. Will migrate to Building B to free this floor for Surgical Oncology inpatient care.",capex:""},
-  {label:"5F",dept:"Orthopedics &amp; Neurology",detail:"Specialty wards, neuro ICU",cls:"c-ward",beds:"38 beds",tip:"Ortho and neurology inpatient. To migrate to Building B. This floor becomes the Precision Medicine, Genomics &amp; Rare Disease Centre &mdash; the CarT differentiation anchor for VPS Healthcare India.",capex:"&#8377;14&ndash;20 Cr (FY28 H1)"},
-  {label:"4F",dept:"General Surgery &amp; Urology",detail:"Surgical wards, pre/post-op",cls:"c-ward",beds:"42 beds",tip:"Surgical inpatient. To migrate to Building B. Becomes Radiation Oncology floor: CT-sim, treatment planning, SBRT/IGRT bays, HDR brachytherapy suite.",capex:"&#8377;12&ndash;16 Cr (FY28 H1)"},
-  {label:"3F",dept:"General Medicine &amp; Cardiology",detail:"Medical wards, CCU, echo lab",cls:"c-ward",beds:"44 beds",tip:"Medicine and cardiology floor. To migrate to Building B. Becomes Medical Oncology OPD and Phase I&ndash;III Clinical Trials unit. Academic linkage with Amrita IMS for trial enrolment.",capex:"&#8377;4&ndash;6 Cr (FY28 H1)"},
-  {label:"2F",dept:"Operation Theatres &amp; CSSD",detail:"8 OTs, recovery, sterilisation",cls:"c-ot",beds:"8 OTs",tip:"8 general OTs. Will become 6 cancer-dedicated OTs including robotic surgery (Da Vinci) and a dedicated Head &amp; Neck/microvascular OT with intraoperative nerve monitoring. Oncology CSSD with cancer-specific sterility protocols.",capex:"&#8377;18&ndash;24 Cr (FY28 H1)"},
-  {label:"1F",dept:"ICU Complex",detail:"Medical ICU, Surgical ICU, HDU",cls:"c-icu",beds:"30 beds",reno:true,tip:"Major renovation underway (&#8377;2.25 Cr). Becomes: Cancer ICU (16 beds) + BMT Unit (8 HEPA-filtered beds with laminar flow) + Head &amp; Neck OPD with voice &amp; swallowing lab, nasoendoscopy suite, microvascular MDT room.",capex:"&#8377;10&ndash;14 Cr (FY27 H2)"},
-  {label:"GF",dept:"Casualty &middot; OPD &middot; Pharmacy &middot; Reception",detail:"Emergency, Ortho OPD, Ultrasound, Central area",cls:"c-er",beds:"",reno:true,tip:"Multiple active renovations (Casualty &#8377;3.80 Cr, Ortho OPD &#8377;1.60 Cr, Porch &#8377;1.40 Cr). Will become dedicated cancer reception with separate entry, rapid screening suites, genetic risk counseling desk, 30-chair chemo day care, Gulf Corridor lounge.",capex:"&#8377;4&ndash;6 Cr (FY27 H2)"},
-  {label:"B1",dept:"Services &amp; Utilities",detail:"HVAC, DG sets, medical gas, STP",cls:"c-service",beds:"",tip:"LINAC vault construction starts here in FY27 H2 &mdash; most critical long-lead item. Radiation-shielded bunker for 2 LINACs + HDR vault + physics lab. AERB bunker approval required ~6 months before civil works begin. PET-CT installation concurrent.",capex:"&#8377;35&ndash;45 Cr (FY27 H2)"}
+  {label:"8F",dept:"Suite Rooms & VIP Wards",detail:"Premium patient rooms, attendant lounges",cls:"c-suite",beds:"18 beds",reno:true,renoAmt:"₹12L",
+   tip:"Active renovation in progress (₹12L). Post-transformation: Cancer inpatient premium suites and Gulf/GCC Corridor patient accommodation. Post-transformation: premium GCC patient accommodation.",
+   capex:"₹12L active"},
+  {label:"7F",dept:"ENT · Ophthalmology · Dermatology",detail:"Specialist OPDs, procedure rooms",cls:"c-opd",beds:"32 beds",
+   tip:"Three specialty OPDs. Post-transformation: ENT expanded into dedicated Head & Neck Surgery. H&N consolidates surgical oncology, ENT, voice & swallowing — first dedicated H&N centre in Kerala.",capex:""},
+  {label:"6F",dept:"Gynecology & Pediatrics",detail:"Maternity, NICU, pediatric wards",cls:"c-ward",beds:"40 beds",
+   tip:"Full maternity services. Migrates to Building B to free floor for Surgical Oncology inpatient.",capex:""},
+  {label:"5F",dept:"Orthopedics & Neurology",detail:"Specialty wards, neuro ICU",cls:"c-ward",beds:"38 beds",
+   tip:"Ortho and neurology inpatient. Migrates to Building B. Migrates to Building B before FY27 H2 transformation.",capex:""},
+  {label:"4F",dept:"General Surgery & Urology",detail:"Surgical wards, pre/post-op",cls:"c-ward",beds:"42 beds",
+   tip:"Surgical inpatient. Migrates to Building B. Becomes Radiation Oncology floor with CT-sim, SBRT/IGRT bays, HDR brachytherapy suite.",capex:""},
+  {label:"3F",dept:"General Medicine & Cardiology",detail:"Medical wards, CCU, echo lab",cls:"c-ward",beds:"44 beds",
+   tip:"Medicine and cardiology floor. Migrates to Building B. Becomes Medical Oncology OPD + Phase I–III Clinical Trials unit with academic partnership to Amrita IMS.",capex:""},
+  {label:"2F",dept:"Operation Theatres & CSSD",detail:"8 OTs, recovery, sterilisation",cls:"c-ot",beds:"8 OTs",
+   tip:"8 general OTs. Becomes 6 cancer-dedicated OTs: robotic surgery (Da Vinci) + dedicated H&N/microvascular OT with intraoperative NIM.",capex:""},
+  {label:"1F",dept:"ICU Complex",detail:"Medical ICU, Surgical ICU, HDU",cls:"c-icu",beds:"30 beds",reno:true,renoAmt:"₹2.25 Cr",
+   tip:"MAJOR ACTIVE RENOVATION (₹2.25 Cr, work in progress). This is the single largest active project on site. Becomes: Cancer ICU (16 beds) + BMT Unit (8 HEPA-filtered beds) + Head & Neck OPD. RISK: Transformation timeline for this floor is directly contingent on current renovation completing on schedule.",
+   capex:"₹10–14 Cr (FY27 H2)"},
+  {label:"GF",dept:"Casualty · OPD · Pharmacy · Reception",detail:"Emergency, Ortho OPD, Ultrasound, Cutout area",cls:"c-er",beds:"",reno:true,renoAmt:"₹7.14 Cr combined",
+   tip:"FOUR ACTIVE RENOVATIONS on this floor: Casualty ₹3.80 Cr (3D drawings in progress), Ortho OPD & Ultrasound ₹1.60 Cr (tender issued), Central Cutout ₹34L (WIP), Cutout Roof ₹40L (BOQ prep). SEQUENCING RISK: All must complete before FY27 H2 Cancer Reception transformation begins. Becomes: Dedicated cancer entry, 30-chair chemo day care, genetic risk counseling, Gulf/GCC welcome lounge.",
+   capex:"₹4–6 Cr (FY27 H2)"},
+  {label:"B1",dept:"Services & Utilities",detail:"HVAC, DG sets, medical gas, STP",cls:"c-service",beds:"",
+   tip:"LINAC vault construction starts here in FY27 H2 — most critical long-lead item. AERB approval required ~6 months before civil works. STP Renovation (₹37L, tender submitted) is a parallel workstream on this level — must not block vault construction sequencing.",
+   capex:"₹35–45 Cr (FY27 H2)"}
 ];
 
 var bB_cur = [
-  {label:"8F",dept:"Long-Stay &amp; Rehabilitation",detail:"Physio, step-down, LTAC beds",cls:"c-ward",beds:"20 beds",tip:"Long-stay and rehabilitation. Retained in Building B post-transformation.",capex:""},
-  {label:"7F",dept:"Neurosurgery &amp; Spine",detail:"Pre/post-op, neuro-monitoring",cls:"c-ward",beds:"36 beds",tip:"Neurosurgery inpatient. Stays in Building B as part of General Hospital. H&amp;N reconstructive cases from Building A will have a defined clinical pathway here.",capex:""},
-  {label:"6F",dept:"Cardiothoracic &amp; Vascular Surgery",detail:"CTVS wards, pre/post-cath",cls:"c-ward",beds:"38 beds",tip:"CTVS inpatient. Retained in Building B.",capex:""},
-  {label:"5F",dept:"Transplant &amp; Nephrology",detail:"Renal, liver transplant, dialysis unit",cls:"c-ward",beds:"40 beds",tip:"Strong transplant programme &mdash; 189 transplants in FY25. Anchors the 'T' in CarT platform. Stays in Building B, deeply integrated with Building A cancer care. Thalassemia day care linked to Rare Disease unit in Bldg A 5F.",capex:""},
+  {label:"8F",dept:"Long-Stay & Rehabilitation",detail:"Physio, step-down, LTAC beds",cls:"c-ward",beds:"20 beds",
+   tip:"Long-stay and rehabilitation. Retained in Building B post-transformation."},
+  {label:"7F",dept:"Neurosurgery & Spine",detail:"Pre/post-op, neuro-monitoring",cls:"c-ward",beds:"36 beds",
+   tip:"Neurosurgery inpatient. Stays in Building B. H&N reconstructive cases from Building A will have a defined clinical pathway here.",capex:""},
+  {label:"6F",dept:"Cardiothoracic & Vascular Surgery",detail:"CTVS wards, pre/post-cath",cls:"c-ward",beds:"38 beds",
+   tip:"CTVS inpatient. Retained in Building B.",capex:""},
+  {label:"5F",dept:"Transplant & Nephrology",detail:"Renal, liver transplant, dialysis unit",cls:"c-ward",beds:"40 beds",
+   tip:"Strong transplant programme — 189 transplants in FY25. Thalassemia day care linked to Rare Disease unit in Building A 5F.",capex:""},
   {label:"4F",dept:"General Medicine Wards",detail:"Internal medicine, post-procedure",cls:"c-ward",beds:"44 beds",tip:"General inpatient. Retained in Building B.",capex:""},
-  {label:"3F",dept:"Burns &amp; Plastics &middot; Skin",detail:"Burns unit, reconstructive surgery",cls:"c-ward",beds:"32 beds",tip:"Burns and plastic surgery. Stays in Building B. H&amp;N reconstructive cases from Building A have a defined post-op pathway here.",capex:""},
-  {label:"2F",dept:"OPDs &mdash; Specialist Clinics",detail:"Cardio, Neuro, Nephro, Endocrine OPDs",cls:"c-opd",beds:"",tip:"Specialist outpatient clinics. Stays in Building B.",capex:""},
-  {label:"1F",dept:"Diagnostics &mdash; Imaging &amp; Central Lab",detail:"CT, MRI, Echo, X-ray, Central Lab",cls:"c-diag",beds:"",tip:"Core diagnostics shared between both buildings. Upgrade: PET-CT and nuclear medicine (Lu-177, I-131 theranostics) as part of cancer programme.",capex:"&#8377;40&ndash;50 Cr (equipment)"},
-  {label:"GF",dept:"Emergency &amp; Pharmacy",detail:"24/7 ER, triage, resuscitation, pharmacy",cls:"c-er",beds:"",tip:"General emergency retained in Building B. Cancer emergency pathways clearly signed from Building A GF.",capex:""},
-  {label:"B1",dept:"Services &amp; Parking",detail:"Engineering plant, medical gas, parking",cls:"c-parking",beds:"100+ cars",tip:"Basement services and parking. To be expanded as part of campus masterplan.",capex:""}
+  {label:"3F",dept:"Burns & Plastics · Skin",detail:"Burns unit, reconstructive surgery",cls:"c-ward",beds:"32 beds",
+   tip:"Burns and plastic surgery. Stays in Building B. H&N reconstructive cases from Building A have a defined post-op pathway here.",},
+  {label:"2F",dept:"OPDs — Specialist Clinics",detail:"Cardio, Neuro, Nephro, Endocrine OPDs",cls:"c-opd",beds:"",
+   tip:"Specialist OPD clinics. Stays in Building B as part of General Hospital.",},
+  {label:"1F",dept:"Diagnostics — Imaging & Central Lab",detail:"CT, MRI, Echo, X-ray, Central Lab",cls:"c-diag",beds:"",
+   tip:"Core diagnostics. Upgrade: Interventional Radiology (IR) suite included. PET-CT and nuclear medicine (theranostics) as part of cancer programme.",
+   capex:"₹40–50 Cr (equipment)"},
+  {label:"GF",dept:"Emergency & Pharmacy",detail:"24/7 ER, triage, resuscitation, pharmacy",cls:"c-er",beds:"",
+   tip:"General emergency retained in Building B. Cancer emergency pathways clearly signed from Building A GF.",capex:""},
+  {label:"B1",dept:"Services & Parking",detail:"Engineering plant, medical gas, parking",cls:"c-parking",beds:"100+ cars",
+   tip:"Basement services and parking. MLCP (₹4.41 Cr, machinery already in production) is the near-term parking solution. Parking leveling & interlock (₹35L) scheduled post-MLCP installation — correctly sequenced.",
+   capex:"MLCP ₹4.41 Cr active"}
 ];
 
 var bA_fut = [
-  {label:"8F",dept:"Palliative Care &amp; Rehabilitation",detail:"End-of-life, pain mgmt, psycho-oncology, physio",cls:"c-onc-pal",beds:"18 beds",phase:"p2",tip:"Dedicated palliative oncology floor: holistic pain management, psycho-oncology, physiotherapy, family support suites. Gulf Corridor follow-up and long-stay patients accommodated here.",capex:"&#8377;3&ndash;4 Cr (FY28 H1)"},
-  {label:"7F",dept:"Cancer Wards &mdash; Medical Oncology IPD",detail:"Chemo inpatient, neutropenic isolation, immunotherapy",cls:"c-onc-med",beds:"36 beds",phase:"p2",tip:"Medical oncology inpatient with laminar flow isolation rooms for neutropenic patients. Immunotherapy suites with continuous monitoring. Beds configured for extended targeted therapy stays.",capex:"&#8377;4&ndash;5 Cr (FY28 H1)"},
-  {label:"6F",dept:"Cancer Wards &mdash; Surgical Oncology IPD",detail:"Post-surgical recovery, H&amp;N post-op, FLAP monitoring",cls:"c-onc-surg",beds:"38 beds",phase:"p2",tip:"Post-surgical oncology ward with enhanced monitoring. H&amp;N post-op sub-unit: airway management, FLAP monitoring suites, tracheostomy care, speech therapy. Feeds from 2F OTs below.",capex:"&#8377;4&ndash;5 Cr (FY28 H1)"},
-  {label:"5F",dept:"Precision Medicine &middot; Genomics &middot; Rare Disease",detail:"NGS, molecular path, tumor board, genetic counseling, 12 rare beds",cls:"c-rare-gen",beds:"12 rare beds",phase:"p2",tip:"State-of-the-art molecular diagnostics: NGS sequencing, liquid biopsy, ctDNA profiling, OncoHelix tie-up. Rare Disease beds (12): thalassemia, SMA, Gaucher/Fabry, metabolic/lysosomal disorders. Genetic counseling, prenatal diagnostics, carrier screening. Integrated tumor board suite. First such centre in Kerala &mdash; core CarT differentiation.",capex:"&#8377;14&ndash;20 Cr (FY28 H1)"},
-  {label:"4F",dept:"Radiation Oncology &amp; Brachytherapy",detail:"CT-sim, SBRT/SRS/IGRT bays, HDR suite",cls:"c-onc-rad",beds:"4 bays",phase:"p2",tip:"Radiation therapy floor: CT-simulator, treatment planning workstations, external beam bays (IMRT/SBRT/SRS/IGRT), HDR brachytherapy suite. LINAC commissioning target FY28 Q1. Third LINAC provision for FY29 capacity expansion.",capex:"&#8377;12&ndash;16 Cr (FY28 H1)"},
-  {label:"3F",dept:"Medical Oncology OPD &amp; Clinical Trials",detail:"Consultations, Phase I&ndash;III trials, onco pharmacy",cls:"c-onc-med",beds:"",phase:"p2",tip:"Outpatient medical oncology hub. Phase I&ndash;III clinical trial unit with study coordinators, dedicated pharmacy. Academic partnership with Amrita IMS for trial enrolment and research publications.",capex:"&#8377;4&ndash;6 Cr (FY28 H1)"},
-  {label:"2F",dept:"Surgical Oncology OTs &middot; Head &amp; Neck Theatre",detail:"6 onco OTs, robotic surgery, H&amp;N OT, onco CSSD",cls:"c-onc-surg",beds:"6 OTs",phase:"p2",tip:"Cancer surgical complex: 6 OTs including robotic surgery (Da Vinci: prostatectomy, rectal, gastric), dedicated H&amp;N/microvascular OT with intraoperative nerve monitoring (NIM). Oncology CSSD with cancer-specific sterility protocols.",capex:"&#8377;18&ndash;24 Cr (FY28 H1)"},
-  {label:"1F",dept:"Cancer ICU &middot; BMT Unit &middot; Head &amp; Neck OPD",detail:"16-bed cancer ICU, 8-bed BMT, H&amp;N clinics &amp; voice lab",cls:"c-onc-bmt",beds:"24 beds + clinics",phase:"p1",tip:"HEPA-filtered BMT unit (8 beds, laminar flow isolation) + Cancer ICU (16 beds). Head &amp; Neck OPD: dedicated H&amp;N surgery consultations, voice &amp; swallowing lab, flexible nasoendoscopy suite, microvascular MDT room. First dedicated H&amp;N centre in Kerala.",capex:"&#8377;10&ndash;14 Cr (FY27 H2)"},
-  {label:"GF",dept:"Cancer Reception &middot; Screening &middot; Day Care Chemo",detail:"Dedicated cancer entry, 30-chair infusion, genetic risk desk",cls:"c-onc-day",beds:"30 chairs",phase:"p1",tip:"Patient-centric dedicated cancer reception with completely separate entry from general hospital. Rapid screening suites, genetic risk counseling desk, 30-chair chemotherapy day care with individual entertainment. Integrated pharmacy. Gulf Corridor welcome lounge.",capex:"&#8377;4&ndash;6 Cr (FY27 H2)"},
-  {label:"B1",dept:"LINAC Vault &middot; Nuclear Medicine &middot; Physics Lab",detail:"2 LINACs (SBRT/IGRT/SRS), HDR vault, PET-CT, physics",cls:"c-onc-rad",beds:"2 LINACs",phase:"p1",tip:"Radiation-shielded vault: 2 LINACs for IMRT/SBRT/SRS/IGRT. HDR brachytherapy room. PET-CT scanner. Medical physics laboratory. AERB bunker approval required &mdash; apply ~6 months before civil works. Most critical FY27 H2 workstream.",capex:"&#8377;35&ndash;45 Cr (FY27 H2)"}
+  {label:"8F",dept:"Palliative Care & Rehabilitation",detail:"End-of-life, pain mgmt, psycho-oncology, physio",cls:"c-onc-pal",beds:"18 beds",phase:"p2",
+   tip:"Palliative oncology floor: holistic pain management, psycho-oncology, physiotherapy, family support. Gulf Corridor follow-up and long-stay patients. ",
+   capex:"₹3–4 Cr (FY28 H1)"},
+  {label:"7F",dept:"Cancer Wards — Medical Oncology IPD",detail:"Chemo inpatient, neutropenic isolation, immunotherapy",cls:"c-onc-med",beds:"36 beds",phase:"p2",
+   tip:"Medical oncology inpatient: laminar flow isolation rooms, immunotherapy suites. ",
+   capex:"₹4–5 Cr (FY28 H1)"},
+  {label:"6F",dept:"Cancer Wards — Surgical Oncology IPD",detail:"Post-surgical recovery, H&N post-op, FLAP monitoring",cls:"c-onc-surg",beds:"38 beds",phase:"p2",
+   tip:"Post-surgical oncology ward. H&N post-op sub-unit: airway management, FLAP monitoring, tracheostomy care, speech therapy.",
+   capex:"₹4–5 Cr (FY28 H1)"},
+  {label:"5F",dept:"Precision Medicine · Genomics · Rare Disease",detail:"NGS, molecular path, tumor board, genetic counseling, 12 rare beds",cls:"c-rare-gen",beds:"12 rare beds",phase:"p2",
+   tip:"NGS sequencing, liquid biopsy, ctDNA profiling, OncoHelix tie-up. Rare Disease: thalassemia, SMA, Gaucher/Fabry. Genetic counseling, prenatal diagnostics. Tumor board suite. Academic linkage to Amrita IMS for trial enrolment. First such integrated centre in Kerala.",
+   capex:"₹14–20 Cr (FY28 H1)"},
+  {label:"4F",dept:"Radiation Oncology & Brachytherapy",detail:"CT-sim, SBRT/SRS/IGRT bays, HDR suite",cls:"c-onc-rad",beds:"4 bays",phase:"p2",
+   tip:"CT-simulator, IMRT/SBRT/SRS/IGRT, HDR brachytherapy. LINAC commissioning FY28 Q1. Third LINAC provision for FY29.",
+   capex:"₹12–16 Cr (FY28 H1)"},
+  {label:"3F",dept:"Medical Oncology OPD & Clinical Trials",detail:"Consultations, Phase I–III trials, onco pharmacy",cls:"c-onc-med",beds:"",phase:"p2",
+   tip:"Outpatient medical oncology hub. Phase I–III clinical trial unit with dedicated pharmacy.",
+   capex:"₹4–6 Cr (FY28 H1)"},
+  {label:"2F",dept:"Surgical Oncology OTs · Head & Neck Theatre",detail:"6 onco OTs, robotic surgery, H&N OT, onco CSSD",cls:"c-onc-surg",beds:"6 OTs",phase:"p2",
+   tip:"6 OTs: robotic surgery (Da Vinci — prostatectomy, rectal, gastric), H&N/microvascular OT with intraoperative NIM. ",
+   capex:"₹18–24 Cr (FY28 H1)"},
+  {label:"1F",dept:"Cancer ICU · BMT Unit · Head & Neck OPD",detail:"16-bed cancer ICU, 8-bed BMT, H&N clinics & voice lab",cls:"c-onc-bmt",beds:"24 beds + clinics",phase:"p1",
+   tip:"HEPA-filtered BMT (8 beds) + Cancer ICU (16 beds) + H&N OPD with voice & swallowing lab, nasoendoscopy suite. First dedicated H&N centre in Kerala.",
+   capex:"₹10–14 Cr (FY27 H2)"},
+  {label:"GF",dept:"Cancer Reception · Screening · Day Care Chemo",detail:"Dedicated cancer entry, 30-chair infusion, genetic risk desk",cls:"c-onc-day",beds:"30 chairs",phase:"p1",
+   tip:"Segregated cancer entry from general hospital. 30-chair chemo day care with individual entertainment. Genetic risk counseling desk. Gulf/GCC Corridor welcome lounge.",
+   capex:"₹4–6 Cr (FY27 H2)"},
+  {label:"B1",dept:"LINAC Vault · Nuclear Medicine · Physics Lab",detail:"2 LINACs (SBRT/IGRT/SRS), HDR vault, PET-CT, physics",cls:"c-onc-rad",beds:"2 LINACs",phase:"p1",
+   tip:"Radiation-shielded vault: 2 LINACs for IMRT/SBRT/SRS/IGRT. HDR brachytherapy. PET-CT. Physics lab. AERB approval required — apply 6 months before civil works. Most critical FY27 H2 workstream.",
+   capex:"₹35–45 Cr (FY27 H2)"}
 ];
 
 var bB_fut = [
-  {label:"10F",dept:"Suite Rooms &amp; International Patient Wing",detail:"Premium suites, Gulf Corridor, VIP accommodation",cls:"c-gen-suite",beds:"24 beds",tip:"Top-floor premium suites. International patient coordinator, Gulf Corridor UAE referral lounge, VVIP facilities. Long-stay suites for outstation patients undergoing radiation in Building A.",capex:"&#8377;3&ndash;4 Cr"},
-  {label:"9F",dept:"Gynecology, Maternity &amp; Pediatrics",detail:"Maternity, NICU, pediatric wards",cls:"c-gen-ward",beds:"44 beds",tip:"Full maternity services relocated from Building A. Labor rooms, post-natal wards, NICU (12 beds), pediatric inpatient.",capex:"&#8377;3&ndash;5 Cr (fit-out)"},
-  {label:"8F",dept:"Cardiology &amp; Cardiothoracic Surgery",detail:"CTVS wards, CCU, cath lab recovery",cls:"c-gen-ward",beds:"44 beds",tip:"Cardiology and CTVS inpatient with CCU, cath lab recovery bays. Consolidated cardiac services.",capex:""},
-  {label:"7F",dept:"Neurology, Neurosurgery &amp; Spine",detail:"Neuro ward, neuro-ICU, spine unit",cls:"c-gen-ward",beds:"40 beds",tip:"Neurology and neurosurgery inpatient. Neuro-ICU (8 beds). Spine surgery with neuro-monitoring. H&amp;N reconstructive case pathway linkage to Building A.",capex:""},
-  {label:"6F",dept:"Transplant &amp; Nephrology Centre",detail:"Renal/liver transplant, dialysis, thalassemia day care",cls:"c-transplant",beds:"42 beds",tip:"Dedicated transplant floor &mdash; 189 transplants in FY25. Anchors the 'T' in CarT platform. Dialysis expanded. Thalassemia day care co-located and linked to Rare Disease unit in Building A 5F.",capex:""},
-  {label:"5F",dept:"Orthopedics, Rheumatology &amp; Rehabilitation",detail:"Joint replacement, rheumatology, physio gym",cls:"c-gen-ward",beds:"44 beds",tip:"Musculoskeletal and rheumatology inpatient. Joint replacement theatre on 3F. Full physiotherapy and rehabilitation gym.",capex:""},
-  {label:"4F",dept:"General Surgery, Urology &amp; Bariatrics",detail:"GI surgery, urology, bariatric, post-op wards",cls:"c-gen-ward",beds:"42 beds",tip:"General surgical inpatient, urology ward, bariatrics programme.",capex:""},
-  {label:"3F",dept:"Multi-Specialty ICU &amp; Operation Theatres",detail:"10 OTs (incl. hybrid OR), ICU (24 beds), HDU (8 beds)",cls:"c-gen-ot",beds:"10 OTs + 32 ICU",tip:"General surgical complex: 10 OTs including hybrid OR for cardiac/vascular. Multi-specialty ICU (24 beds) and HDU (8 beds).",capex:""},
-  {label:"2F",dept:"Diagnostics, Imaging &amp; Nuclear Medicine",detail:"3T MRI, CT, PET-CT, echo, central lab",cls:"c-gen-diag",beds:"",tip:"Shared diagnostics serving both buildings. 3T MRI, 128-slice CT, PET-CT, digital X-ray, ultrasound. Nuclear medicine for theranostics (Lu-177, I-131). Central lab with molecular pathology linkage to Building A genomics lab.",capex:"&#8377;40&ndash;50 Cr (equipment)"},
-  {label:"1F",dept:"OPDs &mdash; All General Specialties",detail:"Medicine, Cardio, Ortho, Neuro, Gastro, Nephro",cls:"c-gen-opd",beds:"",tip:"Consolidated OPD for all non-oncology specialties. H&amp;N surgery OPD cross-links to Building A 1F for seamless oncology navigation.",capex:""},
-  {label:"GF",dept:"Emergency &middot; Pharmacy &middot; General Reception",detail:"24/7 ER, triage, resuscitation, pharmacy",cls:"c-gen-er",beds:"",tip:"General emergency retained in Building B with upgraded trauma and resuscitation bays. 24/7 pharmacy. Clearly signed separate pathways from cancer reception in Building A GF.",capex:""},
-  {label:"B1",dept:"Engineering Services &amp; CSSD",detail:"HVAC, DG, medical gas, water treatment, CSSD",cls:"c-service",beds:"",tip:"Central building services: medical gas manifold, DG sets, fire suppression, water treatment, general CSSD.",capex:""},
-  {label:"B2",dept:"Parking &mdash; Multi-Level",detail:"200+ cars, EV charging, patient drop-off zones",cls:"c-parking",beds:"200+ cars",tip:"Covered basement parking for 200+ vehicles. EV charging stations. Dedicated cancer patient drop-off zone with covered walkway to Building A GF reception.",capex:""}
+  {label:"10F",dept:"International Patient Wing & Suites",detail:"Gulf Corridor, VIP accommodation, coordinator desk",cls:"c-gen-suite",beds:"24 beds",
+   tip:"Top-floor premium suites. GCC Corridor coordinator, UAE referral lounge, VVIP facilities. Long-stay suites for outstation patients undergoing radiation in Building A.",
+   capex:"₹3–4 Cr"},
+  {label:"9F",dept:"Gynecology, Maternity & Pediatrics",detail:"Maternity, NICU, pediatric wards",cls:"c-gen-ward",beds:"44 beds",
+   tip:"Full maternity services relocated from Building A. Labor rooms, post-natal, NICU (12 beds), pediatric inpatient.",capex:"₹3–5 Cr (fit-out)"},
+  {label:"8F",dept:"Cardiology & Cardiothoracic Surgery",detail:"CTVS wards, CCU, cath lab recovery",cls:"c-gen-ward",beds:"44 beds",
+   tip:"Cardiology and CTVS inpatient with CCU, cath lab recovery bays.",capex:""},
+  {label:"7F",dept:"Neurology, Neurosurgery & Spine",detail:"Neuro ward, neuro-ICU, spine unit",cls:"c-gen-ward",beds:"40 beds",
+   tip:"Neurology and neurosurgery inpatient. Spine surgery and neurosurgery inpatient. H&N reconstructive case pathway linkage to Building A.",},
+  {label:"6F",dept:"Transplant & Nephrology Centre",detail:"Renal/liver transplant, dialysis, thalassemia day care",cls:"c-transplant",beds:"42 beds",
+   tip:"189 transplants in FY25 —  Dialysis expanded. Thalassemia day care linked to Rare Disease unit in Building A 5F. ",},
+  {label:"5F",dept:"Orthopedics, Rheumatology & Rehabilitation",detail:"Joint replacement, rheumatology, physio gym",cls:"c-gen-ward",beds:"44 beds",
+   tip:"Musculoskeletal and rheumatology inpatient. Joint replacement theatre on 3F. Full physiotherapy and rehabilitation gym.",},
+  {label:"4F",dept:"General Surgery, Urology & Bariatrics",detail:"GI surgery, urology, bariatric, post-op wards",cls:"c-gen-ward",beds:"42 beds",
+   tip:"Bariatric surgery repackaged as an international patient programme — GCC, Sri Lanka, Vietnam markets targeted. Urology ward.",},
+  {label:"3F",dept:"Multi-Specialty ICU & Operation Theatres",detail:"10 OTs (incl. hybrid OR), ICU (24 beds), HDU (8 beds)",cls:"c-gen-ot",beds:"10 OTs + 32 ICU",
+   tip:"10 OTs including hybrid OR for cardiac/vascular. Multi-specialty ICU (24 beds) + HDU (8 beds).",capex:""},
+  {label:"2F",dept:"Diagnostics, IR & Nuclear Medicine",detail:"3T MRI, CT, PET-CT, IR suite, central lab",cls:"c-gen-diag",beds:"",
+   tip:"Shared diagnostics. Shared diagnostics: 3T MRI, 128-slice CT, PET-CT, digital X-ray, ultrasound. Nuclear medicine for theranostics (Lu-177, I-131). Central lab linked to Building A genomics. Interventional Radiology suite included.",
+   capex:"₹40–50 Cr (equipment)"},
+  {label:"1F",dept:"OPDs — All General Specialties + Cosmetology",detail:"Medicine, Cardio, Ortho, Neuro, Gastro, Nephro, Cosmetology",cls:"c-gen-opd",beds:"",
+   tip:"Consolidated OPD for all non-oncology specialties. H&N surgery OPD cross-links to Building A 1F. Strategic rate revision applicable to specialist consultations.",},
+  {label:"GF",dept:"Emergency · Pharmacy · General Reception",detail:"24/7 ER, triage, resuscitation, pharmacy",cls:"c-gen-er",beds:"",
+   tip:"General emergency with upgraded trauma and resuscitation bays. 24/7 pharmacy. Clearly signed pathways from Building A cancer reception.",capex:""},
+  {label:"B1",dept:"Engineering Services & CSSD",detail:"HVAC, DG, medical gas, water treatment, CSSD",cls:"c-service",beds:"",
+   tip:"Central building services. STP Renovation (₹37L) completed as precursor. Medical gas manifold, DG sets, fire suppression, water treatment.",
+   capex:"STP ₹37L + Fire escape ₹9L (active)"},
+  {label:"B2",dept:"MLCP — Multi-Level Car Park",detail:"200+ cars, EV charging, patient drop-off zones",cls:"c-parking",beds:"200+ cars",phase:"infra",
+   tip:"MLCP CURRENTLY IN PRODUCTION (₹4.41 Cr — machinery production stage). Covered parking for 200+ vehicles, EV charging. Parking leveling & interlock (₹35L) scheduled post-MLCP installation — correctly sequenced. Dedicated cancer patient drop-off with covered walkway to Building A GF.",
+   capex:"₹4.41 Cr active (MLCP machinery production)"}
 ];
 
+
+
+// ── ACTIVE RENO DATA ──
+var renoProjects = [
+  {title:"ICU Complex Renovation",loc:"First Floor — Main Block",status:"wip",statusLabel:"Work in Progress",budget:"₹2,25,00,000",type:"transformation",
+   note:"Largest active project on site. Critical precursor to Cancer ICU & BMT transformation in FY27 H2."},
+  {title:"Central Cutout Area",loc:"Ground Floor — Main Block",status:"wip",statusLabel:"Work in Progress",budget:"₹34,00,000",type:"gf",
+   note:"One of four concurrent GF projects. Must complete before Cancer Reception transformation begins."},
+  {title:"Ortho OPD & Ultrasound",loc:"Ground Floor — Main Block",status:"tender",statusLabel:"Tender Issued",budget:"₹1,60,00,000",type:"gf",
+   note:"Tender already issued. GF sequencing dependency — completion required before FY27 H2."},
+  {title:"Casualty Renovation",loc:"Ground Floor — Main Block",status:"boq",statusLabel:"3D Drawings / BOQ WIP",budget:"₹3,80,00,000",type:"gf",
+   note:"Largest single GF renovation. 3D & detailed drawings in progress. Critical GF sequencing item."},
+  {title:"Road & Walkway Beautification",loc:"Arch Gate to 4th Gate & Casualty",status:"boq",statusLabel:"Drawings & BOQ WIP",budget:"₹40,00,000",type:"infra",
+   note:"External works. Supports GCC patient experience — ties into the international patient strategy."},
+  {title:"Porch & Front Area",loc:"Main Block",status:"boq",statusLabel:"Drawings & BOQ WIP",budget:"₹1,40,00,000",type:"infra",
+   note:"Supports dedicated cancer entry point and Gulf Corridor welcome experience at GF."},
+  {title:"Cutout Roof Closing & Platform",loc:"Ground Floor — Main Block",status:"boq",statusLabel:"Preparing BOQ",budget:"₹40,00,000",type:"gf",
+   note:"Fourth concurrent GF project. Must be sequenced to close out before FY27 H2 transformation."},
+  {title:"MLCP — Multi-Level Car Park",loc:"Parking Area",status:"infra",statusLabel:"Machinery Production WIP",budget:"₹4,41,00,000",type:"infra",
+   note:"Major active infrastructure. Parallel workstream — does not block transformation. Provides 200+ car capacity."},
+  {title:"Parking Area Leveling & Interlock",loc:"Parking Area",status:"boq",statusLabel:"Post-MLCP Installation",budget:"₹35,00,000",type:"infra",
+   note:"Correctly sequenced post-MLCP. No scheduling conflict."},
+  {title:"STP Renovation",loc:"Main Block",status:"tender",statusLabel:"Tender Submitted",budget:"₹37,00,000",type:"infra",
+   note:"Parallel utility workstream. Must not conflict with B1 LINAC vault civil construction scheduling."},
+  {title:"Fire Escape & Support Painting",loc:"Main Block",status:"boq",statusLabel:"Tender Preparation WIP",budget:"₹9,00,000",type:"infra",
+   note:"Minor works. Parallel to main programme."},
+  {title:"Suite Rooms Renovation",loc:"Eighth Floor — Main Block",status:"wip",statusLabel:"Work in Progress",budget:"₹12,00,000",type:"transformation",
+   note:"Active renovation (₹12L). Post-transformation these rooms become premium GCC patient accommodation."}
+];
+
+// ── HELPERS ──
 function badge(p) {
   if (!p) return '';
   if (p==='p1') return '<span class="phase-badge p1">FY27 H2</span>';
   if (p==='p2') return '<span class="phase-badge p2">FY28 H1</span>';
+  if (p==='infra') return '<span class="phase-badge infra">INFRA · ACTIVE</span>';
   return '';
 }
 
@@ -239,12 +842,12 @@ function renderBuilding(floors, title, subtitle) {
   var h = '<div class="bldg-title">'+title+'</div><div class="bldg-subtitle">'+subtitle+'</div>';
   for (var i=0;i<floors.length;i++) {
     var f=floors[i];
-    var rt = f.reno ? '<span class="reno-badge">RENO</span>':'';
+    var rt = f.reno ? '<span class="reno-badge">RENO '+f.renoAmt+'</span>' : '';
     var pt = badge(f.phase);
-    var bt = f.beds ? '<span class="bed-count">'+f.beds+'</span>':'';
-    var st = (f.dept||'').replace(/"/g,'&quot;');
-    var tp = (f.tip||'').replace(/"/g,'&quot;');
-    var cx = (f.capex||'').replace(/"/g,'&quot;');
+    var bt = f.beds ? '<span class="bed-count">'+f.beds+'</span>' : '';
+    var st = (f.dept||'').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+    var tp = (f.tip||'').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+    var cx = (f.capex||'').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
     h+='<div class="floor" onmouseenter="showTip(event,\''+st+'\',\''+tp+'\',\''+cx+'\')" onmouseleave="hideTip()">';
     h+='<div class="floor-label">'+f.label+'</div>';
     h+='<div class="floor-block '+f.cls+'">';
@@ -258,116 +861,149 @@ var currentView='';
 
 function setView(v) {
   currentView=v;
-  var btns=document.querySelectorAll('.toggle-btn');
-  var views=['current','transition','future','phasing'];
-  btns.forEach(function(b,i){b.classList.toggle('active',views[i]===v);});
-  var canvas=document.getElementById('canvas');
-  var pl=document.getElementById('phaseLabel');
-  var sb=document.getElementById('statsBar');
-  var cs=document.getElementById('capexSection');
-  cs.style.display='none';
+  var btns=document.querySelectorAll('.nav-btn');
+  var views=['current','transition','future','phasing','reno'];
+  btns.forEach(function(b,i){ b.classList.toggle('active', views[i]===v); });
+
+  var canvas   = document.getElementById('canvas');
+  var pl       = document.getElementById('phaseLabel');
+  var sb       = document.getElementById('statsBar');
+  var ls       = document.getElementById('legendSection');
+  var renoP    = document.getElementById('renoPanel');
+  var capexP   = document.getElementById('capexPanel');
+
+  // reset all panels
+  canvas.style.display='flex';
+  ls.style.display='flex';
+  renoP.style.display='none';
+  capexP.style.display='none';
+  canvas.innerHTML='';
 
   if (v==='current') {
-    pl.textContent='EXISTING STATE — TWO BUILDINGS, MULTI-SPECIALTY · BOTH TO BE REPURPOSED';
+    pl.textContent='EXISTING STATE — MULTI-SPECIALTY · ACTIVE RENOVATIONS UNDERWAY · 12 PROJECTS ₹15.53 CR';
     canvas.innerHTML=
-      '<div class="building">'+renderBuilding(bA_cur,'&#127973; Building A — Main Block','Existing Hospital · Est. 2004 · Target: Cancer &amp; CarT Block')+'</div>'+
-      '<div class="arrow-col"><div style="width:2px;height:180px;background:linear-gradient(to bottom,#4f46e5,transparent);border-radius:2px;"></div></div>'+
-      '<div class="building">'+renderBuilding(bB_cur,'&#127959; Building B — Secondary Block','Existing Hospital · Target: Upgraded General Hospital')+'</div>';
+      '<div class="building">'+renderBuilding(bA_cur,'🏥 Building A — Main Block','Existing Hospital · Target: Complex Cancer Centre · 5 Active Reno Projects')+'</div>'+
+      '<div class="arrow-col"><div class="arrow-line"></div></div>'+
+      '<div class="building">'+renderBuilding(bB_cur,'🏗 Building B — Secondary Block','Existing Hospital · Target: Upgraded General Hospital · 7 Active Infra Projects')+'</div>';
     sb.innerHTML=
-      '<div class="stat-card"><div class="stat-val">2</div><div class="stat-label">Buildings</div></div>'+
-      '<div class="stat-card"><div class="stat-val">572</div><div class="stat-label">Total Beds</div></div>'+
-      '<div class="stat-card"><div class="stat-val">52%</div><div class="stat-label">Occupancy FY25</div></div>'+
-      '<div class="stat-card"><div class="stat-val">&#8377;408 Cr</div><div class="stat-label">Revenue FY25</div></div>'+
-      '<div class="stat-card"><div class="stat-val">&#8377;45,683</div><div class="stat-label">ARPOB FY25</div></div>';
+      stat('2','Buildings')+stat('572','Total Beds')+stat('52%','Occupancy FY25')+stat('₹15.53 Cr','Active Reno Spend');
     updateLegend('current');
-  } else if (v==='transition') {
-    pl.textContent='TRANSFORMATION — SEGREGATING CANCER & GENERAL CARE ACROSS BOTH EXISTING BUILDINGS';
+  }
+  else if (v==='transition') {
+    pl.textContent='TRANSFORMATION — SEGREGATING CANCER & GENERAL CARE · ACTIVE RENO PRECURSORS MUST COMPLETE FIRST';
     canvas.innerHTML=
       '<div class="building">'+renderBuilding(bA_cur,'Building A (Current)','Multi-Specialty → Repurposed for Cancer')+'</div>'+
-      '<div class="arrow-col"><div class="arrow-label">REPURPOSED TO</div><div class="arrow-icon">&#10230;</div></div>'+
-      '<div class="building" style="opacity:0.82;">'+renderBuilding(bA_fut,'Building A (Future)','&#127895; Complex Cancer &amp; CarT Centre')+'</div>'+
-      '<div class="arrow-col"><div class="arrow-label">RETAINED &amp; UPGRADED AS</div><div class="arrow-icon">&#10230;</div></div>'+
-      '<div class="building" style="opacity:0.82;">'+renderBuilding(bB_fut,'Building B (Future)','&#127973; General Hospital · Upgraded')+'</div>';
+      '<div class="arrow-col"><div class="arrow-label">REPURPOSED TO</div><div class="arrow-icon">⟶</div></div>'+
+      '<div class="building" style="opacity:0.82;">'+renderBuilding(bA_fut,'Building A (Future)','♋ Complex Cancer Centre')+'</div>'+
+      '<div class="arrow-col"><div class="arrow-label">RETAINED & UPGRADED AS</div><div class="arrow-icon">⟶</div></div>'+
+      '<div class="building" style="opacity:0.82;">'+renderBuilding(bB_fut,'Building B (Future)','🏥 General Hospital · Upgraded')+'</div>';
     sb.innerHTML=
-      '<div class="stat-card"><div class="stat-val">2&#8594;2</div><div class="stat-label">Buildings (Segregated)</div></div>'+
-      '<div class="stat-card"><div class="stat-val">572&#8594;700+</div><div class="stat-label">Total Beds</div></div>'+
-      '<div class="stat-card"><div class="stat-val">8&#8594;16</div><div class="stat-label">Operation Theatres</div></div>'+
-      '<div class="stat-card"><div class="stat-val">2 LINACs</div><div class="stat-label">Added Radiation</div></div>'+
-      '<div class="stat-card"><div class="stat-val">&#8377;400 Cr</div><div class="stat-label">Programme Capex</div></div>';
+      stat('2→2','Buildings (Segregated)')+stat('572→700+','Total Beds')+stat('8→16','Operation Theatres')+stat('2 LINACs','Added Radiation')+stat('⚠ GF Risk','4 Concurrent Reno Projects');
     updateLegend('transition');
-  } else if (v==='future') {
-    pl.textContent='FUTURE STATE — TWO DEDICATED BUILDINGS: CANCER + CarT  |  GENERAL HOSPITAL';
+  }
+  else if (v==='future') {
+    pl.textContent='FUTURE STATE — TWO DEDICATED BUILDINGS: CANCER  |  GENERAL HOSPITAL';
     canvas.innerHTML=
-      '<div class="building">'+renderBuilding(bA_fut,'&#127895; Building A — Complex Cancer &amp; CarT Centre','Main Block Repurposed · Oncology + H&amp;N + Rare Disease + Genomics · Phase badges show execution')+'</div>'+
-      '<div class="arrow-col"><div style="width:2px;height:180px;background:linear-gradient(to bottom,#4f46e5,transparent);border-radius:2px;"></div></div>'+
-      '<div class="building">'+renderBuilding(bB_fut,'&#127973; Building B — General Hospital','Retained &amp; Upgraded · Transplant Anchor · 13 Floors + 2 Basements')+'</div>';
+      '<div class="building">'+renderBuilding(bA_fut,'♋ Building A — Complex Cancer Centre','Main Block Repurposed · Oncology + H&N + Rare Disease + Genomics')+'</div>'+
+      '<div class="arrow-col"><div class="arrow-line"></div></div>'+
+      '<div class="building">'+renderBuilding(bB_fut,'🏥 Building B — General Hospital','Retained & Upgraded · Transplant Anchor · 13 Floors + 2 Basements')+'</div>';
     sb.innerHTML=
-      '<div class="stat-card"><div class="stat-val">2</div><div class="stat-label">Dedicated Buildings</div></div>'+
-      '<div class="stat-card"><div class="stat-val">~158</div><div class="stat-label">Cancer Beds (Bldg A)</div></div>'+
-      '<div class="stat-card"><div class="stat-val">~380</div><div class="stat-label">General Beds (Bldg B)</div></div>'+
-      '<div class="stat-card"><div class="stat-val">16</div><div class="stat-label">Total OTs</div></div>'+
-      '<div class="stat-card"><div class="stat-val">CarT</div><div class="stat-label">Cancer+Rare+Transplant</div></div>';
-    updateLegend('future');
-  } else if (v==='phasing') {
-    pl.textContent='PHASED ROLLOUT — FLOOR BY FLOOR · BUILDING A · FY27 H2 → FY28 H1';
-    canvas.innerHTML=
-      '<div class="building">'+renderBuilding(bA_fut,'&#127895; Building A — Phased Transformation','Orange = FY27 H2 &nbsp;|&nbsp; Green = FY28 H1 &nbsp;|&nbsp; Hover each floor for capex detail')+'</div>';
-    sb.innerHTML=
-      '<div class="stat-card"><div class="stat-val">FY27 H2</div><div class="stat-label">Phase 1 Start</div></div>'+
-      '<div class="stat-card"><div class="stat-val">&#8377;50&ndash;65 Cr</div><div class="stat-label">Phase 1 Capex Est.</div></div>'+
-      '<div class="stat-card"><div class="stat-val">FY28 H1</div><div class="stat-label">Phase 2 Start</div></div>'+
-      '<div class="stat-card"><div class="stat-val">&#8377;65&ndash;90 Cr</div><div class="stat-label">Phase 2 Capex Est.</div></div>'+
-      '<div class="stat-card"><div class="stat-val">18 Months</div><div class="stat-label">Total Execution</div></div>';
-    cs.style.display='flex';
+      stat('2','Dedicated Buildings')+stat('~158','Cancer Beds (Bldg A)')+stat('~380','General Beds (Bldg B)')+stat('16','Total OTs')+stat('Cancer Centre','Cancer+Rare+Transplant');
     updateLegend('future');
   }
+  else if (v==='phasing') {
+    pl.textContent='PHASED ROLLOUT — FLOOR BY FLOOR · BUILDING A · FY27 H2 → FY28 H1';
+    canvas.innerHTML=
+      '<div class="building">'+renderBuilding(bA_fut,'♋ Building A — Phased Transformation','Orange = FY27 H2 · Green = FY28 H1 · Hover each floor for detail')+'</div>';
+    sb.innerHTML=
+      stat('FY27 H2','Phase 1 Start')+stat('₹50–65 Cr','Phase 1 Capex')+stat('FY28 H1','Phase 2 Start')+stat('₹65–90 Cr','Phase 2 Capex')+stat('18 Months','Total Execution')+stat('⚠ Precondition','GF Reno Must Complete First');
+    capexP.style.display='flex';
+    updateLegend('future');
+  }
+  else if (v==='reno') {
+    pl.textContent='ACTIVE RENOVATION REGISTER — 12 PROJECTS · ₹15.53 CR TOTAL · GROUND REALITY LAYER';
+    canvas.style.display='none';
+    ls.style.display='none';
+    renoP.style.display='flex';
+    sb.innerHTML=
+      stat('12','Active Projects')+stat('₹15.53 Cr','Total Reno Budget')+stat('₹5.66 Cr','GF Works (4 Projects)')+stat('₹4.41 Cr','MLCP (In Production)')+stat('⚠ Risk','GF Concurrency')+stat('✓ OK','MLCP + STP Parallel');
+    buildRenoGrid();
+  }
+
+}
+
+function stat(val, label) {
+  return '<div class="stat-card"><div class="stat-val">'+val+'</div><div class="stat-label">'+label+'</div></div>';
 }
 
 function updateLegend(view) {
-  var grid=document.getElementById('legendGrid');
-  var title=document.getElementById('legendTitle');
-  var items=[];
+  var grid  = document.getElementById('legendGrid');
+  var title = document.getElementById('legendTitle');
+  var items = [];
   if (view==='current') {
-    title.textContent='DEPARTMENT LEGEND — CURRENT';
+    title.textContent='DEPARTMENT LEGEND — CURRENT STATE';
     items=[
-      {cls:'c-er',label:'Emergency / Casualty'},{cls:'c-icu',label:'ICU / Critical Care'},
-      {cls:'c-ot',label:'Operation Theatres'},{cls:'c-opd',label:'OPD / Specialist Clinics'},
-      {cls:'c-ward',label:'Inpatient Wards'},{cls:'c-diag',label:'Diagnostics & Imaging'},
-      {cls:'c-suite',label:'Suite / VIP Rooms'},{cls:'c-service',label:'Services & Utilities'},
-      {cls:'c-reno',label:'Active Renovation'}
+      {cls:'c-er',l:'Emergency / Casualty'},{cls:'c-icu',l:'ICU / Critical Care'},
+      {cls:'c-ot',l:'Operation Theatres'},{cls:'c-opd',l:'OPD / Specialist Clinics'},
+      {cls:'c-ward',l:'Inpatient Wards'},{cls:'c-diag',l:'Diagnostics & Imaging'},
+      {cls:'c-suite',l:'Suite / VIP Rooms'},{cls:'c-service',l:'Services & Utilities'},
+      {cls:'c-parking',l:'Parking / Infrastructure'},{cls:'c-reno',l:'Active Renovation'}
     ];
   } else {
     title.textContent='DEPARTMENT LEGEND — FUTURE STATE';
     items=[
-      {cls:'c-onc-surg',label:'Surgical Oncology'},{cls:'c-onc-med',label:'Medical Oncology'},
-      {cls:'c-onc-rad',label:'Radiation Oncology'},{cls:'c-onc-hn',label:'Head & Neck Surgery'},
-      {cls:'c-rare-gen',label:'Precision / Genomics / Rare Disease'},{cls:'c-transplant',label:'Transplant / Nephrology (CarT)'},
-      {cls:'c-onc-day',label:'Screening / Chemo Day Care'},{cls:'c-onc-bmt',label:'BMT / Cancer ICU'},
-      {cls:'c-onc-pal',label:'Palliative & Rehabilitation'},{cls:'c-gen-er',label:'General Emergency'},
-      {cls:'c-gen-opd',label:'General OPDs'},{cls:'c-gen-ward',label:'General Wards'},
-      {cls:'c-gen-ot',label:'General OTs / ICU'},{cls:'c-gen-diag',label:'Diagnostics & Nuclear Med'},
-      {cls:'c-gen-suite',label:'Suite / VIP / International'},{cls:'c-service',label:'Services'},
-      {cls:'c-parking',label:'Parking'}
+      {cls:'c-onc-surg',l:'Surgical Oncology'},{cls:'c-onc-med',l:'Medical Oncology'},
+      {cls:'c-onc-rad',l:'Radiation Oncology'},{cls:'c-onc-hn',l:'Head & Neck Surgery'},
+      {cls:'c-rare-gen',l:'Precision / Genomics / Rare Disease'},{cls:'c-transplant',l:'Transplant / Nephrology'},
+      {cls:'c-onc-day',l:'Screening / Chemo Day Care'},{cls:'c-onc-bmt',l:'BMT / Cancer ICU'},
+      {cls:'c-onc-pal',l:'Palliative & Rehabilitation'},{cls:'c-gen-er',l:'General Emergency'},
+      {cls:'c-gen-opd',l:'General OPDs + Cosmetology'},{cls:'c-gen-ward',l:'General Wards'},
+      {cls:'c-gen-ot',l:'General OTs / ICU'},{cls:'c-gen-diag',l:'Diagnostics & IR & Nuclear Med'},
+      {cls:'c-gen-suite',l:'International Patient Wing'},{cls:'c-service',l:'Services'},
+      {cls:'c-parking',l:'MLCP Parking (Active)'}
     ];
   }
   grid.innerHTML=items.map(function(i){
-    return '<div class="legend-item"><div class="legend-swatch '+i.cls+'"></div><span class="legend-label">'+i.label+'</span></div>';
+    return '<div class="legend-item"><div class="legend-swatch '+i.cls+'"></div><span class="legend-label">'+i.l+'</span></div>';
   }).join('');
 }
 
-function showTip(e,title,text,capex) {
+function buildRenoGrid() {
+  var statusMap = {wip:'wip',tender:'tender',boq:'boq',infra:'infra'};
+  var labelMap  = {wip:'Work in Progress',tender:'Tender Stage',boq:'BOQ / Drawings',infra:'Infra / Parallel'};
+  var html = renoProjects.map(function(p){
+    var sc = statusMap[p.status]||'boq';
+    return '<div class="reno-card '+sc+'">'+
+      '<div class="rc-title">'+p.title+'</div>'+
+      '<div class="rc-loc">'+p.loc+'</div>'+
+      '<div style="font-size:10.5px;color:#94a3b8;margin-bottom:10px;line-height:1.55;">'+p.note+'</div>'+
+      '<div class="rc-footer">'+
+      '<span class="rc-status '+sc+'">'+labelMap[sc]+'</span>'+
+      '<span class="rc-budget">'+p.budget+'</span>'+
+      '</div></div>';
+  }).join('');
+  document.getElementById('renoGrid').innerHTML = html;
+}
+
+
+
+function showTip(e, title, text, capex) {
   if (!text) return;
-  var overlay=document.getElementById('tooltipOverlay');
-  var box=document.getElementById('tooltipBox');
-  var cx=capex?'<div><span class="capex-tag">&#128176; Est. Capex: '+capex+'</span></div>':'';
-  box.innerHTML='<h4>'+title+'</h4><p>'+text+'</p>'+cx;
+  var overlay = document.getElementById('tooltipOverlay');
+  var box     = document.getElementById('tooltipBox');
+  var tags = '';
+  if (capex) tags += '<span class="tt-tag tt-capex">💰 '+capex+'</span>';
+  if (text.indexOf('RISK')>=0 || text.indexOf('Risk')>=0 || text.indexOf('ACTIVE RENOVATION')>=0 || text.indexOf('concurrent')>=0) {
+    tags += '<span class="tt-tag tt-risk">⚠ Sequencing Risk</span>';
+  }
+  box.innerHTML='<h4>'+title+'</h4><p>'+text+'</p>'+(tags?'<div class="tt-tags">'+tags+'</div>':'');
   overlay.classList.add('active');
-  var x=Math.min(e.clientX+16,window.innerWidth-360);
-  var y=Math.min(e.clientY-10,window.innerHeight-160);
+  var x = Math.min(e.clientX+16, window.innerWidth-380);
+  var y = Math.min(e.clientY-10, window.innerHeight-200);
   box.style.left=x+'px';
   box.style.top=y+'px';
 }
-function hideTip(){document.getElementById('tooltipOverlay').classList.remove('active');}
+function hideTip(){ document.getElementById('tooltipOverlay').classList.remove('active'); }
 
 setView('current');
 </script>
