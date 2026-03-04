@@ -5,12 +5,9 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>LHRC — 12-Month Efficiency Plan FY27</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f0f4f8;color:#1a202c;font-size:13px}
-
-/* HEADER */
 .header{background:linear-gradient(135deg,#0d1f35 0%,#1a3a5c 55%,#1e4976 100%);color:white;padding:18px 36px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid #e67e22}
 .header-left h1{font-size:1.35rem;font-weight:700;letter-spacing:-0.3px}
 .header-left p{font-size:0.68rem;opacity:0.55;margin-top:3px}
@@ -18,55 +15,32 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f0f4f8;color:#
 .hbadge{padding:3px 10px;border-radius:4px;font-size:0.63rem;font-weight:600;font-family:'IBM Plex Mono',monospace}
 .hb-or{background:#e67e22}.hb-gr{background:#27ae60}.hb-bl{background:#2980b9}.hb-pu{background:#8e44ad}.hb-rd{background:#c0392b}.hb-tl{background:#00838f}
 .header-right{text-align:right;opacity:0.4;font-size:0.6rem;line-height:2;font-family:'IBM Plex Mono',monospace;flex-shrink:0}
-
-/* PHASE TIMELINE BAR */
 .timeline-bar{background:white;border-bottom:2px solid #e2e8f0;padding:10px 28px;display:flex;gap:0;align-items:stretch}
-.phase-seg{flex:1;text-align:center;padding:10px 14px;color:white;position:relative;cursor:default}
-.phase-seg.p1{background:linear-gradient(90deg,#1a7d4b,#27ae60);border-radius:8px 0 0 8px;flex:1}
+.phase-seg{flex:1;text-align:center;padding:10px 14px;color:white;cursor:default}
+.phase-seg.p1{background:linear-gradient(90deg,#1a7d4b,#27ae60);border-radius:8px 0 0 8px}
 .phase-seg.p2{background:linear-gradient(90deg,#c0700e,#e67e22);flex:1.5}
 .phase-seg.p3{background:linear-gradient(90deg,#1a5c96,#2980b9);border-radius:0 8px 8px 0;flex:2}
 .phase-seg .pt{font-size:0.75rem;font-weight:700}
 .phase-seg .pd{font-size:0.6rem;opacity:0.85;margin-top:1px}
-.phase-seg .pv{font-size:0.62rem;opacity:0.7;margin-top:2px;font-family:'IBM Plex Mono',monospace}
-
-/* TABS */
 .tab-bar{background:white;border-bottom:2px solid #e2e8f0;padding:0 24px;display:flex;gap:0;overflow-x:auto;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
 .tab{padding:13px 16px;font-size:0.72rem;font-weight:600;color:#718096;cursor:pointer;border-bottom:3px solid transparent;transition:all 0.2s;white-space:nowrap;margin-bottom:-2px}
 .tab:hover{color:#1a3a5c;background:#f7fafc}
 .tab.active{color:#1a3a5c;border-bottom-color:#e67e22;font-weight:700}
-
-/* PAGES */
 .page{display:none;padding:20px 28px;max-width:1600px;margin:0 auto}
 .page.active{display:block}
-
-/* KPI STRIPS */
 .kpi-strip{display:grid;gap:10px;margin-bottom:14px}
-.ks-6{grid-template-columns:repeat(6,1fr)}.ks-5{grid-template-columns:repeat(5,1fr)}.ks-4{grid-template-columns:repeat(4,1fr)}.ks-3{grid-template-columns:repeat(3,1fr)}
+.ks-6{grid-template-columns:repeat(6,1fr)}
 .kpi{background:white;border-radius:8px;padding:12px 13px;box-shadow:0 1px 3px rgba(0,0,0,0.06);border-top:3px solid}
 .kpi .kl{font-size:0.56rem;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:#a0aec0;margin-bottom:3px}
 .kpi .kv{font-size:1.15rem;font-weight:700;line-height:1.1;font-family:'IBM Plex Mono',monospace}
 .kpi .kg{font-size:0.6rem;font-weight:600;margin-top:3px}
 .kpi .ks2{font-size:0.57rem;color:#a0aec0;margin-top:1px}
-.g-up{color:#27ae60}.g-dn{color:#e74c3c}.g-nt{color:#e67e22}
-
-/* GRIDS */
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.g-up{color:#27ae60}
 .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
-.g21{display:grid;grid-template-columns:2fr 1fr;gap:14px}
-.g12{display:grid;grid-template-columns:1fr 2fr;gap:14px}
-@media(max-width:1100px){.ks-6{grid-template-columns:repeat(3,1fr)}.g2,.g3,.g21,.g12{grid-template-columns:1fr}}
-
-/* CARDS */
+@media(max-width:1100px){.ks-6{grid-template-columns:repeat(3,1fr)}.g3{grid-template-columns:1fr}}
 .card{background:white;border-radius:8px;padding:16px 18px;box-shadow:0 1px 4px rgba(0,0,0,0.06);margin-bottom:14px}
-.card .ct{font-size:0.78rem;font-weight:700;color:#1a202c;margin-bottom:2px}
-.card .cs{font-size:0.6rem;color:#a0aec0;margin-bottom:10px}
-
-/* SECTION LABELS */
 .slabel{font-size:0.59rem;font-weight:700;text-transform:uppercase;letter-spacing:1.4px;color:#a0aec0;margin:20px 0 10px;display:flex;align-items:center;gap:8px}
 .slabel::after{content:'';flex:1;height:1px;background:#e2e8f0}
-.slabel:first-child{margin-top:0}
-
-/* TABLES */
 .tbl{width:100%;border-collapse:collapse;font-size:0.7rem}
 .tbl th{background:#f7fafc;text-align:left;padding:7px 9px;font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#718096;border-bottom:2px solid #e2e8f0;white-space:nowrap}
 .tbl th.right,.tbl td.right{text-align:right}
@@ -74,43 +48,25 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f0f4f8;color:#
 .tbl tr:hover td{background:#fafbfc}
 .tbl tr.bold td{font-weight:700;color:#1a202c;background:#f7fafc}
 .tbl tr.total td{font-weight:800;color:#1a3a5c;background:#edf2f7;border-top:2px solid #cbd5e0}
-
-/* PILLS */
 .pill{display:inline-block;padding:2px 7px;border-radius:4px;font-size:0.57rem;font-weight:700}
 .pg{background:#e8f5e9;color:#2e7d32}.po{background:#fff3e0;color:#e65100}.pb{background:#e3f2fd;color:#1565c0}
-.pr{background:#fce4ec;color:#c62828}.pn{background:#e8edf3;color:#1a3a5c}.pt{background:#e0f2f1;color:#00695c}.pp{background:#f3e8ff;color:#6b21a8}
+.pr{background:#fce4ec;color:#c62828}.pn{background:#e8edf3;color:#1a3a5c}
 .p1-pill{background:#e8f5e9;color:#1a7d4b}.p2-pill{background:#fff3e0;color:#c0700e}.p3-pill{background:#e3f2fd;color:#1a5c96}
-
-/* LEVER CARDS */
-.lever{background:white;border-radius:8px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,0.06);border-left:4px solid;margin-bottom:10px}
-.lhd{display:flex;align-items:flex-start;gap:8px;margin-bottom:5px}
-.lnum{width:22px;height:22px;border-radius:5px;display:inline-flex;align-items:center;justify-content:center;color:white;font-size:0.65rem;font-weight:700;flex-shrink:0;margin-top:1px}
-.ltitle{font-size:0.75rem;font-weight:700;flex:1;line-height:1.3}
-.lval{font-size:0.85rem;font-weight:700;white-space:nowrap;font-family:'IBM Plex Mono',monospace}
-.ldesc{font-size:0.65rem;color:#4a5568;line-height:1.7;margin-top:3px}
-.ltags{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px}
-
-/* INFO BOXES */
 .ibox{border-radius:7px;padding:10px 13px;margin-bottom:11px;border-left:4px solid}
 .ibox.amber{background:#fffbf0;border-color:#f59e0b}.ibox.green{background:#f0fdf4;border-color:#22c55e}
 .ibox.blue{background:#eff6ff;border-color:#3b82f6}.ibox.navy{background:#edf2f7;border-color:#1a3a5c}
-.ibox.red{background:#fff5f5;border-color:#ef4444}
 .ibox-title{font-size:0.63rem;font-weight:800;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:3px}
-.ibox.amber .ibox-title{color:#92400e}.ibox.green .ibox-title{color:#166534}.ibox.blue .ibox-title{color:#1e40af}.ibox.navy .ibox-title{color:#1a3a5c}.ibox.red .ibox-title{color:#991b1b}
+.ibox.amber .ibox-title{color:#92400e}.ibox.green .ibox-title{color:#166534}.ibox.blue .ibox-title{color:#1e40af}.ibox.navy .ibox-title{color:#1a3a5c}
 .ibox-text{font-size:0.68rem;color:#4a5568;line-height:1.65}
-
-/* MILESTONE CARDS */
 .milestone-section{margin-bottom:22px}
-.ms-header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:8px 8px 0 0;color:white;margin-bottom:0}
+.ms-header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-radius:8px 8px 0 0;color:white}
 .ms-p1{background:linear-gradient(90deg,#1a7d4b,#27ae60)}
 .ms-p2{background:linear-gradient(90deg,#c0700e,#e67e22)}
 .ms-p3{background:linear-gradient(90deg,#1a5c96,#2980b9)}
 .ms-title{font-size:0.88rem;font-weight:700}
 .ms-sub{font-size:0.62rem;opacity:0.8;margin-top:2px}
 .ms-badge{background:rgba(255,255,255,0.2);padding:4px 10px;border-radius:4px;font-size:0.65rem;font-weight:700;font-family:'IBM Plex Mono',monospace;margin-left:auto}
-
 .ms-body{background:white;border-radius:0 0 8px 8px;border:1px solid #e2e8f0;border-top:none;padding:14px}
-
 .initiative-row{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid #f0f4f8;align-items:flex-start}
 .initiative-row:last-child{border-bottom:none;padding-bottom:0}
 .ir-week{background:#f7fafc;border-radius:5px;padding:4px 8px;font-size:0.58rem;font-weight:700;font-family:'IBM Plex Mono',monospace;color:#718096;text-align:center;white-space:nowrap;min-width:52px;margin-top:1px}
@@ -120,118 +76,56 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f0f4f8;color:#
 .ir-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px}
 .ir-value{font-size:0.78rem;font-weight:700;font-family:'IBM Plex Mono',monospace;white-space:nowrap;text-align:right;min-width:70px;padding-top:1px}
 .ir-value.rev{color:#27ae60}.ir-value.cost{color:#2980b9}.ir-value.both{color:#8e44ad}
-
-/* SCENARIO */
-.scenario-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;border-radius:8px;overflow:hidden;border:1px solid #e2e8f0;margin-bottom:14px}
-.sc-col{padding:16px;text-align:center}
-.sc-col.down{background:#fff5f5}.sc-col.mid{background:#f7fafc}.sc-col.up{background:#f0fdf4}
-.sc-label{font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#a0aec0;margin-bottom:6px}
-.sc-val{font-size:1.4rem;font-weight:800;font-family:'IBM Plex Mono',monospace;color:#1a202c}
-.sc-sub{font-size:0.62rem;color:#718096;margin-top:3px}
-
-/* SUMMARY BAND */
-.sum-band{background:linear-gradient(135deg,#1a3a5c,#0d1f35);border-radius:10px;padding:16px 22px;display:flex;align-items:center;justify-content:space-around;flex-wrap:wrap;gap:0;margin-bottom:14px}
-.sb-item{text-align:center;padding:4px 12px}
-.sb-v{font-size:1.05rem;font-weight:700;font-family:'IBM Plex Mono',monospace;color:white}
-.sb-l{font-size:0.53rem;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:rgba(255,255,255,0.35);margin-top:2px}
-.sb-div{width:1px;height:36px;background:rgba(255,255,255,0.1);flex-shrink:0}
-
-/* DEPT TABLE */
-.dtable{width:100%;border-collapse:collapse;font-size:0.68rem}
-.dtable th{background:#1a3a5c;color:rgba(255,255,255,0.7);font-weight:700;font-size:0.58rem;text-transform:uppercase;letter-spacing:0.5px;padding:8px 9px;text-align:left}
-.dtable th.r{text-align:right}
-.dtable td{padding:6px 9px;border-bottom:1px solid #f0f4f8;color:#2d3748;vertical-align:middle}
-.dtable td.r{text-align:right;font-family:'IBM Plex Mono',monospace}
-.dtable tr:hover td{background:#fafbfc}
-.dtable tr.core td{border-left:3px solid #e67e22}
-.dtable tr.transform td{border-left:3px solid #8e44ad}
-.dtable tr.grow td{border-left:3px solid #2980b9}
-
-/* RISK TABLE */
-.rtable{width:100%;border-collapse:collapse;font-size:0.68rem}
-.rtable th{background:#f7fafc;color:#718096;font-weight:700;font-size:0.58rem;text-transform:uppercase;letter-spacing:0.5px;padding:7px 9px;border-bottom:2px solid #e2e8f0}
-.rtable td{padding:7px 9px;border-bottom:1px solid #f0f4f8;color:#2d3748;vertical-align:top}
-.rtable tr:hover td{background:#fafbfc}
-.rag{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:4px;vertical-align:middle}
-.rag-r{background:#e74c3c}.rag-a{background:#f39c12}.rag-g{background:#27ae60}
-
-/* CHART CANVASES */
-.chart-wrap{position:relative;height:180px}
-.chart-wrap.tall{height:220px}
-
-/* MONTH TIMELINE */
-.month-timeline{display:grid;grid-template-columns:repeat(12,1fr);gap:4px;margin-bottom:14px}
-.month-box{border-radius:5px;padding:8px 6px;text-align:center}
-.month-box .mn{font-size:0.58rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px}
-.month-box .mp{font-size:0.56rem;margin-top:2px;opacity:0.8}
-.mb-p1{background:linear-gradient(180deg,#c8f5da,#e8f5e9);color:#1a7d4b}
-.mb-p2{background:linear-gradient(180deg,#ffe0b2,#fff3e0);color:#c0700e}
-.mb-p3{background:linear-gradient(180deg,#bbdefb,#e3f2fd);color:#1a5c96}
-
-/* FOOTER */
 .footer{background:#1a3a5c;color:rgba(255,255,255,0.3);text-align:center;padding:11px;font-size:0.58rem;margin-top:20px;font-family:'IBM Plex Mono',monospace}
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
 <div class="header">
   <div>
     <div class="header-left">
-      <h1>LHRC — 12-Month Efficiency &amp; Growth Plan FY27</h1>
-      <p>VPS Lakeshore Hospital &amp; Research Centre, Kochi &nbsp;·&nbsp; April 2026 – March 2027 &nbsp;·&nbsp; Revenue + Cost + Transformation</p>
+      <h1>LHRC &mdash; 12-Month Efficiency &amp; Growth Plan FY27</h1>
+      <p>VPS Lakeshore Hospital &amp; Research Centre, Kochi &nbsp;&middot;&nbsp; April 2026 &ndash; March 2027 &nbsp;&middot;&nbsp; Revenue + Cost + Transformation</p>
     </div>
     <div class="header-badges">
-      <span class="hbadge hb-gr">+₹50 Cr EBITDA Target</span>
-      <span class="hbadge hb-or">22% → 25.8% Margin</span>
-      <span class="hbadge hb-bl">3 Phases · 12 Months</span>
+      <span class="hbadge hb-gr">+&#8377;50 Cr EBITDA Target</span>
+      <span class="hbadge hb-or">22% &rarr; 25.8% Margin</span>
+      <span class="hbadge hb-bl">3 Phases &middot; 12 Months</span>
       <span class="hbadge hb-pu">10 Workstreams</span>
-      <span class="hbadge hb-tl">₹525–575 Cr Revenue</span>
+      <span class="hbadge hb-tl">&#8377;525&ndash;575 Cr Revenue</span>
       <span class="hbadge hb-rd">Dual-Campus Transformation</span>
     </div>
   </div>
   <div class="header-right">
-    FY27 Base Case: ₹525.7 Cr<br>
-    FY27 Upside Case: ₹575 Cr<br>
-    EBITDA UC: ₹148.6 Cr<br>
+    FY27 Base Case: &#8377;525.7 Cr<br>
+    FY27 Upside Case: &#8377;575 Cr<br>
+    EBITDA UC: &#8377;148.6 Cr<br>
     Start Date: 01 April 2026
   </div>
 </div>
 
-<!-- PHASE TIMELINE -->
 <div class="timeline-bar">
   <div class="phase-seg p1">
-    <div class="pt">Phase 1 — Quick Wins &amp; Foundation</div>
-    <div class="pd">Days 1–60 &nbsp;·&nbsp; April 1 – May 31, 2026</div>
-    <div class="pv">₹12–18 Cr EBITDA Impact</div>
+    <div class="pt">Phase 1 &mdash; Quick Wins &amp; Foundation</div>
+    <div class="pd">Days 1&ndash;60 &nbsp;&middot;&nbsp; April 1 &ndash; May 31, 2026</div>
   </div>
   <div class="phase-seg p2">
-    <div class="pt">Phase 2 — Structural Reform</div>
-    <div class="pd">Days 61–180 &nbsp;·&nbsp; June 1 – Sept 30, 2026</div>
-    <div class="pv">₹18–24 Cr EBITDA Impact</div>
+    <div class="pt">Phase 2 &mdash; Structural Reform</div>
+    <div class="pd">Days 61&ndash;180 &nbsp;&middot;&nbsp; June 1 &ndash; Sept 30, 2026</div>
   </div>
   <div class="phase-seg p3">
-    <div class="pt">Phase 3 — Revenue Leverage &amp; Transformation</div>
-    <div class="pd">Days 181–360 &nbsp;·&nbsp; Oct 1, 2026 – Mar 31, 2027</div>
-    <div class="pv">₹20–28 Cr EBITDA Impact</div>
+    <div class="pt">Phase 3 &mdash; Revenue Leverage &amp; Transformation</div>
+    <div class="pd">Days 181&ndash;360 &nbsp;&middot;&nbsp; Oct 1, 2026 &ndash; Mar 31, 2027</div>
   </div>
 </div>
 
-<!-- TABS -->
 <div class="tab-bar">
-  <div class="tab active" onclick="showTab('summary',this)">📊 Executive Summary</div>
-  <div class="tab" onclick="showTab('phase1',this)">🟢 Phase 1: Days 1–60</div>
-  <div class="tab" onclick="showTab('phase2',this)">🟠 Phase 2: Days 61–180</div>
-  <div class="tab" onclick="showTab('phase3',this)">🔵 Phase 3: Days 181–360</div>
-  <div class="tab" onclick="showTab('revenue',this)">📈 Revenue Levers</div>
-  <div class="tab" onclick="showTab('cost',this)">✂️ Cost Levers</div>
-  <div class="tab" onclick="showTab('milestones',this)">🗓️ Monthly Milestones</div>
-  <div class="tab" onclick="showTab('scenario',this)">🔮 Scenario Model</div>
+  <div class="tab active" onclick="showTab('summary',this)">&#128202; Executive Summary</div>
+  <div class="tab" onclick="showTab('phase1',this)">&#128994; Phase 1: Days 1&ndash;60</div>
+  <div class="tab" onclick="showTab('phase2',this)">&#128992; Phase 2: Days 61&ndash;180</div>
+  <div class="tab" onclick="showTab('phase3',this)">&#128309; Phase 3: Days 181&ndash;360</div>
 </div>
 
-<!-- ═══════════════════════════════════════════
-     TAB 1: EXECUTIVE SUMMARY
-═══════════════════════════════════════════ -->
 <div id="page-summary" class="page active">
 
   <div class="kpi-strip ks-6">
@@ -267,42 +161,9 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f0f4f8;color:#
     </div>
   </div>
 
-  <div class="sum-band">
-    <div class="sb-item"><div class="sb-v" style="color:#f39c12">₹40.9K</div><div class="sb-l">ARPOB Target (UC)</div></div>
-    <div class="sb-div"></div>
-    <div class="sb-item"><div class="sb-v" style="color:#27ae60">68%</div><div class="sb-l">Occupancy Target (UC)</div></div>
-    <div class="sb-div"></div>
-    <div class="sb-item"><div class="sb-v">4,80,000</div><div class="sb-l">OP Visits Target (UC)</div></div>
-    <div class="sb-div"></div>
-    <div class="sb-item"><div class="sb-v">3.5x</div><div class="sb-l">Staff/Bed Target</div></div>
-    <div class="sb-div"></div>
-    <div class="sb-item"><div class="sb-v" style="color:#e67e22">30%</div><div class="sb-l">Insurance Mix Target</div></div>
-    <div class="sb-div"></div>
-    <div class="sb-item"><div class="sb-v" style="color:#00838f">12%</div><div class="sb-l">International Mix Target</div></div>
-    <div class="sb-div"></div>
-    <div class="sb-item"><div class="sb-v" style="color:#8e44ad">541</div><div class="sb-l">Beds (Future State)</div></div>
-  </div>
-
   <div class="ibox navy">
     <div class="ibox-title">💡 The 12-Month Thesis</div>
-    <div class="ibox-text">LHRC is a debt-free ₹452 Cr hospital at 21.8% EBITDA — positioned at the inflection point of a landmark transformation. The 12-month plan runs in three distinct phases: <strong>Phase 1 (Apr–May)</strong> locks in quick-win cost saves and structural decisions; <strong>Phase 2 (Jun–Sep)</strong> executes HR rationalisation, procurement reform, and digital infrastructure; <strong>Phase 3 (Oct–Mar)</strong> captures the full revenue upside via oncology ramp, spine robotics, occupancy expansion and payor mix optimisation. The ₹50 Cr EBITDA uplift above budget is achievable by executing both the revenue engine (ARPOB ₹35K→₹41K, occupancy 53%→68%) and the cost lever (staffing ₹13 Cr + procurement ₹5 Cr + energy ₹1 Cr + doctor fee ₹1 Cr) simultaneously.</div>
-  </div>
-
-  <div class="g2">
-    <div class="card">
-      <div class="ct">Value Creation Waterfall — ₹ Crore (EBITDA)</div>
-      <div class="cs">FY26E Base → Revenue Levers → Cost Levers → FY27 Upside Case</div>
-      <div class="chart-wrap">
-        <canvas id="waterfallChart"></canvas>
-      </div>
-    </div>
-    <div class="card">
-      <div class="ct">Monthly EBITDA Ramp — Phase Build-Up</div>
-      <div class="cs">Cumulative EBITDA uplift by phase gate · ₹ Crore</div>
-      <div class="chart-wrap">
-        <canvas id="rampChart"></canvas>
-      </div>
-    </div>
+    <div class="ibox-text">LHRC is a debt-free ₹452 Cr hospital at 21.8% EBITDA — positioned at the inflection point of a landmark transformation. The 12-month plan runs in three distinct phases: <strong>Phase 1 (Apr–May)</strong> captures low-hanging fruit in staffing, rate revision, specialist onboarding and referral activation, while presenting the Board with a consolidated capex plan (₹150 Cr), Cancer Centre roadmap and HIS/ERP shortlist; <strong>Phase 2 (Jun–Sep)</strong> executes procurement rationalisation, material cost reform (COGS 28.5%→26.5%), North Kerala referral expansion, Cancer Centre floor conversion and HIS/ERP kick-off; <strong>Phase 3 (Oct–Mar)</strong> captures the full revenue upside via new specialist doctors, Interventional Radiology launch, international patient programme, HIS Phase 1 go-live and 3rd LINAC AERB filing. The ₹50 Cr EBITDA uplift above budget is achievable by executing both the revenue engine (ARPOB ₹35K→₹41K, occupancy 53%→68%) and the cost lever (staffing ₹11 Cr + material costs ₹7 Cr + energy ₹1 Cr) simultaneously.</div>
   </div>
 
   <div class="slabel">Workstream Scorecard — 10 Initiatives · 3 Phase Gates</div>
@@ -341,57 +202,31 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f0f4f8;color:#
       <div class="slabel">Phase 1 Quick Wins · Days 1–60</div>
       <div class="ibox green">
         <div class="ibox-title">✅ Immediate Actions — April &amp; May</div>
-        <div class="ibox-text">• Non-clinical capex freeze (₹4 Cr cash save)<br>• All 41 new doctors on performance-linked contracts<br>• Vendor audit &amp; HK consolidation RFP<br>• Procurement benchmarking (pharmacy distributor)<br>• Org structure &amp; DOA framework approved<br>• CRM platform selection commenced</div>
+        <div class="ibox-text">• Staffing rationalisation initiated: Nursing 630→569, Pharmacy 93→50<br>• Rate revision exercise across OP, procedures &amp; packages<br>• 1 new specialist onboarded with OT allocation from Day 1<br>• Referral channels activated — GP network + institutional partners<br>• Vendor consolidation + material cost programme launched<br>• Consolidated Board pack: ₹150 Cr capex, Cancer Centre roadmap, 3rd LINAC AERB timeline, HIS/ERP shortlist</div>
       </div>
     </div>
     <div>
       <div class="slabel">Phase 2 Structural · Days 61–180</div>
       <div class="ibox amber">
         <div class="ibox-title">🔧 Core Reform — Jun to Sep</div>
-        <div class="ibox-text">• HR rationalisation: 143 headcount reduction<br>• Bulk procurement contracts (6-month cycles)<br>• Oracle Health Phase 1 go-live (billing)<br>• TPA renegotiation — 26% → 28–30% insurance mix<br>• Solar + HVAC energy audit<br>• AERB application submitted for LINAC</div>
+        <div class="ibox-text">• Vendor consolidation contracts live + material cost COGS 28.5%→26.5%<br>• TPA renegotiation — 26% → 30% insurance mix (3 new agreements)<br>• North Kerala &amp; border district referral programme launched<br>• Cancer Centre Main Block floors 6–8 conversion begins<br>• HIS/ERP vendor selected &amp; implementation kicked off<br>• Solar 500 KW + HVAC IoT — ₹1 Cr energy save</div>
       </div>
     </div>
     <div>
       <div class="slabel">Phase 3 Revenue · Days 181–360</div>
       <div class="ibox blue">
         <div class="ibox-title">🚀 Revenue Capture — Oct to Mar</div>
-        <div class="ibox-text">• Spine Robotics: first 50 cases complete<br>• Oncology OPD + cancer screening centre operational<br>• ARPOB tracking ₹40K+ (UC path)<br>• Occupancy 62% → 68% via referral network<br>• International volume: 9.2% → 12%<br>• Building B architect selected &amp; design approved</div>
+        <div class="ibox-text">• New specialists: Complex Cases &amp; Interventional Radiology launched<br>• IR services live — dedicated suite + referral pathway from oncology<br>• International patient programme: dedicated desk + GCC engagement<br>• HIS Phase 1 go-live: billing &amp; revenue cycle (₹5–8 Cr leakage fix)<br>• ARPOB tracking ₹40K+ (UC path) via specialist mix<br>• 3rd LINAC AERB filed · Old Building OT/ICU conversion on track</div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════
-     TAB 2: PHASE 1 (DAYS 1–60)
-═══════════════════════════════════════════ -->
 <div id="page-phase1" class="page">
 
-  <div class="kpi-strip ks-4">
-    <div class="kpi" style="border-top-color:#1a7d4b">
-      <div class="kl">Phase Duration</div>
-      <div class="kv">60 Days</div>
-      <div class="ks2">Apr 1 – May 31, 2026</div>
-    </div>
-    <div class="kpi" style="border-top-color:#27ae60">
-      <div class="kl">EBITDA Impact</div>
-      <div class="kv">₹12–18 Cr</div>
-      <div class="kg g-up">Annualised run-rate</div>
-    </div>
-    <div class="kpi" style="border-top-color:#e67e22">
-      <div class="kl">Cost Saves</div>
-      <div class="kv">₹10–14 Cr</div>
-      <div class="ks2">HR + Procurement + Capex deferral</div>
-    </div>
-    <div class="kpi" style="border-top-color:#2980b9">
-      <div class="kl">Revenue Foundation</div>
-      <div class="kv">₹2–4 Cr</div>
-      <div class="ks2">Doctor contracts + CRM setup</div>
-    </div>
-  </div>
-
   <div class="ibox green">
-    <div class="ibox-title">🎯 Phase 1 Mandate — Foundation &amp; Quick Wins</div>
-    <div class="ibox-text">The first 60 days are about locking structural decisions that enable everything else. Three imperatives: (1) Board approvals for org structure, DOA, capex plan, and IT vendor — without these, Phase 2 reforms cannot proceed; (2) Immediate cost captures in doctor fee contracts, capex deferral, and procurement — all cash-generative with no patient impact; (3) Setup of governance cadence, KPI dashboards, and CRM infrastructure that Phase 3 revenue levers depend on.</div>
+    <div class="ibox-title">🎯 Phase 1 Mandate — Low-Hanging Fruit &amp; Board Preparation</div>
+    <div class="ibox-text">Phase 1 captures low-hanging fruit across revenue and cost within the first 60 days while preparing the Board with a full capex, cancer centre, and IT plan. Four immediate priorities: (1) Initiate staffing rationalisation in Nursing (630→569) and Pharmacy (93→50) — ₹11 Cr annualised opportunity; (2) Rate revision exercise across OP consultations, procedures and packages — no capital required, immediate ARPOB lever; (3) Onboard the first high-value specialist with OT allocation and referral pipeline ready from Day 1; (4) Activate referral channels through structured GP and specialist outreach with a dedicated liaison. The consolidated Board pack covering capex (₹150 Cr), Cancer Centre roadmap, 3rd LINAC AERB timeline and HIS/ERP shortlist must be presented by end of Phase 1.</div>
   </div>
 
   <!-- WEEK-BY-WEEK MILESTONES -->
@@ -401,53 +236,53 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f0f4f8;color:#
         <div class="ms-title">Week 1–2 · April 1–14, 2026 · Board Decisions &amp; Structural Locks</div>
         <div class="ms-sub">Critical blocking decisions — delay here cascades across all workstreams</div>
       </div>
-      <div class="ms-badge">₹4–6 Cr (Capex + Contracts)</div>
+      <div class="ms-badge">Week 1–2</div>
     </div>
     <div class="ms-body">
       <div class="initiative-row">
         <div class="ir-week">W1–2</div>
         <div class="ir-content">
-          <div class="ir-title">Board Approval — Revised Org Structure &amp; DOA Framework</div>
-          <div class="ir-desc">New org chart for dual-campus model (Cancer Centre vs General Hospital with separate P&amp;L accountability). DOA limits for capex (>₹10L committee), hiring, vendor contracts. CEO + Chairman sign-off. Cascades to all hiring and vendor workstreams.</div>
-          <div class="ir-tags"><span class="pill p1-pill">Wk 1</span><span class="pill pr">BLOCKING</span><span class="pill pn">Chairman + CEO</span></div>
+          <div class="ir-title">Initiate Staffing Rationalisation — Nursing &amp; Pharmacy First</div>
+          <div class="ir-desc">Nursing: 630 → 569. Pharmacy: 93 → 50. Executed through natural attrition and redeployment — no forced exits. ICU reorganisation enables 2.25x occupied bed ratio in nursing. Barcode scanning automation reduces pharmacy staffing requirement. ₹6.19 Cr already identified in HR data. Total annualised target: ₹11 Cr. Ongoing throughout FY27 with CHRO + Dept Heads leading.</div>
+          <div class="ir-tags"><span class="pill p1-pill">Wk 1</span><span class="pill pr">PRIORITY</span><span class="pill pb">Cost</span><span class="pill pn">CHRO + Dept Heads</span></div>
         </div>
-        <div class="ir-value both">STRUCTURAL</div>
+        <div class="ir-value cost">₹11 Cr</div>
       </div>
       <div class="initiative-row">
         <div class="ir-week">W1–2</div>
         <div class="ir-content">
-          <div class="ir-title">Non-Clinical Capex Freeze — ₹4 Cr Cash Deferral</div>
-          <div class="ir-desc">Halt beautification (₹2.2 Cr), suite renovations (₹0.6 Cr), vehicles (₹0.7 Cr), non-clinical soft furnishings. Protect all ₹99 Cr clinical capex. Weekly capex release committee operational from Day 1. Note: improves cash, not EBITDA directly (depreciation already budgeted).</div>
-          <div class="ir-tags"><span class="pill p1-pill">Wk 1</span><span class="pill pb">Cash Save</span><span class="pill pn">CFO</span></div>
+          <div class="ir-title">Rate Revision Exercise — OP Consultations, Procedures &amp; Packages</div>
+          <div class="ir-desc">Strategic rate revisions across outpatient consultations, clinical procedures and inpatient packages. No capital required — immediate ARPOB lever. Benchmark rates vs peer hospitals in Kerala and South India. CMO + CFO to lead. Feasibility mapped across all key service lines before implementation.</div>
+          <div class="ir-tags"><span class="pill p1-pill">Wk 1–2</span><span class="pill pr">PRIORITY</span><span class="pill pg">Revenue</span><span class="pill pn">CMO + CFO</span></div>
         </div>
-        <div class="ir-value cost">₹4 Cr</div>
-      </div>
-      <div class="initiative-row">
-        <div class="ir-week">W1–2</div>
-        <div class="ir-content">
-          <div class="ir-title">All 41 New Doctor Hires on Performance-Linked Contracts</div>
-          <div class="ir-desc">FY27 new doctors (oncology, ortho, cardiology) onboarded on revised fee model: 55:45 fixed:variable (from incumbent 78:22). Volume targets set at 30-day and 90-day marks. Minimum guarantee justified against revenue forecast. Bottom-quartile MG review scheduled Q3.</div>
-          <div class="ir-tags"><span class="pill p1-pill">Wk 1</span><span class="pill pb">Cost</span><span class="pill pg">Revenue</span><span class="pill pn">CEO + CHRO</span></div>
-        </div>
-        <div class="ir-value cost">₹1 Cr</div>
+        <div class="ir-value rev">ARPOB ↑</div>
       </div>
       <div class="initiative-row">
         <div class="ir-week">W2</div>
         <div class="ir-content">
-          <div class="ir-title">Board Approval — Cancer Centre Conversion &amp; Building B Capex Plan</div>
-          <div class="ir-desc">Lock floor-by-floor Cancer Centre capex (LINAC vault ₹15–20 Cr, Radiation Oncology ₹25 Cr, BMT unit ₹12 Cr, Genomics lab ₹8 Cr). Approve Building B (₹180–220 Cr) financing decision: internal cash vs project loan. AERB pre-application timeline confirmed.</div>
-          <div class="ir-tags"><span class="pill p1-pill">Wk 2</span><span class="pill pr">BLOCKING</span><span class="pill pn">Chairman + CFO + Board</span></div>
+          <div class="ir-title">Onboard 1 New Specialist — Phase 1 Clinical Capability Addition</div>
+          <div class="ir-desc">First high-value specialist joining in Phase 1. OT allocation, support team, and referral pipeline must be ready from Day 1. Further specialists onboarded progressively in Phases 2 and 3 as infrastructure readiness allows. Critical to match clinical capacity with growing inbound demand. Medical Director + COO to lead recruitment and onboarding.</div>
+          <div class="ir-tags"><span class="pill p1-pill">Wk 2</span><span class="pill pg">Revenue</span><span class="pill pn">Medical Director + COO</span></div>
+        </div>
+        <div class="ir-value rev">High ARPOB</div>
+      </div>
+      <div class="initiative-row">
+        <div class="ir-week">W2–3</div>
+        <div class="ir-content">
+          <div class="ir-title">Referral Strengthening — Activate Key Referral Channels</div>
+          <div class="ir-desc">Structured outreach to GP network, specialist referrers and institutional partners. Dedicated liaison appointed. Pipeline tracking system live. Monthly coordination cadence established. No capital required — high potential to drive IP volume through formalised referral relationships. Foundation for North Kerala and border district programme in Phase 2.</div>
+          <div class="ir-tags"><span class="pill p1-pill">Wk 2–3</span><span class="pill pg">Revenue</span><span class="pill pn">COO + Marketing Head</span></div>
+        </div>
+        <div class="ir-value rev">Occupancy ↑</div>
+      </div>
+      <div class="initiative-row">
+        <div class="ir-week">W4–8</div>
+        <div class="ir-content">
+          <div class="ir-title">Present Consolidated Board Pack — Capex, Infra Transformation &amp; IT Plan</div>
+          <div class="ir-desc">Full FY27 capex plan (₹150 Cr), floor-by-floor infra transformation roadmap, 3rd LINAC AERB timeline, and HIS/ERP cost-benefit analysis with vendor shortlist. AERB approval takes 12–18 months — must start immediately. 3rd LINAC is the highest-ROI infrastructure investment and requires Board sign-off to proceed. CFO + CIO + CEO to present.</div>
+          <div class="ir-tags"><span class="pill p1-pill">Wk 4–8</span><span class="pill pr">BLOCKING</span><span class="pill pn">CFO + CIO + CEO</span></div>
         </div>
         <div class="ir-value both">STRATEGIC</div>
-      </div>
-      <div class="initiative-row">
-        <div class="ir-week">W2</div>
-        <div class="ir-content">
-          <div class="ir-title">IT Vendor Selection — Oracle Health HIS &amp; CRM Platform</div>
-          <div class="ir-desc">Confirm Oracle Health Phase 1 go-live plan. CRM platform selection for OP→IP conversion tracking and referral doctor portal. ERP cost-benefit analysis initiated. Timeline: CRM live Q1, Oracle Health Phase 1 Aug '26. Without this, revenue leakage fix and ARPOB tracking are not possible.</div>
-          <div class="ir-tags"><span class="pill p1-pill">Wk 2</span><span class="pill pr">HIGH</span><span class="pill pn">CIO + CEO</span></div>
-        </div>
-        <div class="ir-value rev">₹2–5 Cr</div>
       </div>
     </div>
   </div>
@@ -455,36 +290,36 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f0f4f8;color:#
   <div class="milestone-section">
     <div class="ms-header ms-p1">
       <div>
-        <div class="ms-title">Week 3–5 · April 15 – May 9, 2026 · Procurement &amp; HR Audit</div>
-        <div class="ms-sub">Vendor consolidation, HK RFP, HR rationalisation planning</div>
+        <div class="ms-title">Week 3–5 · April 15 – May 9, 2026 · Procurement Reform &amp; Staffing Execution</div>
+        <div class="ms-sub">Vendor consolidation, material cost rationalisation, HR audit formalised</div>
       </div>
-      <div class="ms-badge">₹3–5 Cr (Procurement)</div>
+      <div class="ms-badge">Week 3–5</div>
     </div>
     <div class="ms-body">
       <div class="initiative-row">
         <div class="ir-week">W3–4</div>
         <div class="ir-content">
-          <div class="ir-title">HK Vendor Consolidation RFP — 3 Vendors → 1–2</div>
-          <div class="ir-desc">Current HK spread: ₹17.1K to ₹28.7K/head across 3 vendors. Target: consolidate 194 HK staff to ₹20K/head. Issue RFP Week 3, evaluate Week 4, sign contracts Week 5. Add backup vendor for 175 Utiz-dependent security/ward boys. Save ₹1.5–2 Cr annualised.</div>
-          <div class="ir-tags"><span class="pill p1-pill">Wk 3–5</span><span class="pill pb">Cost</span><span class="pill pn">Admin</span></div>
+          <div class="ir-title">Vendor Consolidation &amp; Procurement Rationalisation</div>
+          <div class="ir-desc">Top 3 consumable suppliers consolidated, single pharmacy distributor appointed, 6-month bulk contracts in place. Implant cost benchmarked vs peer hospitals. Complements Material Cost programme. Single distributor arrangement reduces leakage. Target: ₹3 Cr EBITDA save annualised. Admin / Supply Chain to lead.</div>
+          <div class="ir-tags"><span class="pill p1-pill">Wk 3–4</span><span class="pill pb">Cost</span><span class="pill pn">Admin / Supply Chain</span></div>
         </div>
-        <div class="ir-value cost">₹1.5–2 Cr</div>
+        <div class="ir-value cost">₹3 Cr</div>
       </div>
       <div class="initiative-row">
-        <div class="ir-week">W3–4</div>
+        <div class="ir-week">W3–5</div>
         <div class="ir-content">
-          <div class="ir-title">Pharmacy &amp; Consumables Distributor Consolidation</div>
-          <div class="ir-desc">Consumption budgeted at ₹15,259L (29% of FY27 revenue; target 27%). New 6-month bulk pricing contracts with top 3 consumable suppliers. Single pharmacy distributor negotiations. Implant cost benchmarking vs peer hospitals. Saves ₹3–5 Cr EBITDA over 12 months.</div>
-          <div class="ir-tags"><span class="pill p1-pill">Wk 3–5</span><span class="pill pb">Cost</span><span class="pill pn">Supply Chain</span></div>
+          <div class="ir-title">Material Cost Rationalisation Programme Launch</div>
+          <div class="ir-desc">Rate contracts established, credit period discounts captured, BOQ standardisation for major surgeries, formulary control and wastage reduction implemented. COGS target: 28.5% → 26.5% of revenue. 3-level authorised formulary introduced. Wastage and cut-strip reduction protocols live. Inventory optimisation underway. CFO + Pharmacy Head to lead. Target: ₹4 Cr EBITDA save.</div>
+          <div class="ir-tags"><span class="pill p1-pill">Wk 3–5</span><span class="pill pb">Cost</span><span class="pill pn">CFO + Pharmacy Head</span></div>
         </div>
-        <div class="ir-value cost">₹3–5 Cr</div>
+        <div class="ir-value cost">₹4 Cr</div>
       </div>
       <div class="initiative-row">
         <div class="ir-week">W4–5</div>
         <div class="ir-content">
           <div class="ir-title">HR Rationalisation — Departmental Audit &amp; Plan Sign-Off</div>
-          <div class="ir-desc">Validate bottom-up HR data (Jan 2026): 1,624 non-doctor staff · ₹63.1 Cr/year. Department-by-department plan: Nursing 630→569, Pharmacy 93→50, PCS 97→80, Radiotherapy 13→9. Sign off phased attrition plan with CHRO. No forced exits in Phase 1 — attrition hold and no backfill.</div>
-          <div class="ir-tags"><span class="pill p1-pill">Wk 4–5</span><span class="pill pb">Cost</span><span class="pill pn">CHRO</span></div>
+          <div class="ir-desc">Validate bottom-up HR data (Jan 2026): 1,624 non-doctor staff · ₹63.1 Cr/year. Nursing 630→569, Pharmacy 93→50 to proceed via attrition and process redesign. ICU reorganisation design finalised. Barcode scanning rollout timeline confirmed with Pharmacy Head. Sign off phased attrition plan with CHRO — no forced exits in Phase 1.</div>
+          <div class="ir-tags"><span class="pill p1-pill">Wk 4–5</span><span class="pill pb">Cost</span><span class="pill pn">CHRO + Dept Heads</span></div>
         </div>
         <div class="ir-value cost">Plan Lock</div>
       </div>
@@ -492,8 +327,8 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f0f4f8;color:#
         <div class="ir-week">W4–5</div>
         <div class="ir-content">
           <div class="ir-title">TPA Renegotiation — Top 5 Insurers, 3 New TPA Agreements</div>
-          <div class="ir-desc">Target insurance mix: 26% → 28–30% of revenue. International patient volumes: 9.2% → 12%. Issue revised rate proposals to top TPA partners. Reduce receivables cycle. Better collection efficiency targets set. Projected EBITDA impact: ₹3 Cr.</div>
-          <div class="ir-tags"><span class="pill p1-pill">Wk 4–5</span><span class="pill pg">Revenue</span><span class="pill pn">CFO + Billing</span></div>
+          <div class="ir-desc">Renegotiate package rates with top 5 TPA partners. Onboard 3 new TPAs to grow insurance mix from 26% → 30%. Reduces bad debt and improves collection efficiency. Higher insurance mix = more predictable revenue. Target: ₹3 Cr EBITDA impact. CFO + Billing Head to lead.</div>
+          <div class="ir-tags"><span class="pill p1-pill">Wk 4–5</span><span class="pill pg">Revenue</span><span class="pill pn">CFO + Billing Head</span></div>
         </div>
         <div class="ir-value rev">₹3 Cr</div>
       </div>
@@ -539,119 +374,75 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f0f4f8;color:#
     </div>
   </div>
 
-  <div class="g2">
-    <div class="card">
-      <div class="ct">Phase 1 EBITDA Bridge — ₹ Crore</div>
-      <div class="cs">Annualised run-rate savings locked by Day 60</div>
-      <div class="chart-wrap">
-        <canvas id="p1BridgeChart"></canvas>
-      </div>
-    </div>
-    <div>
-      <div class="slabel">Phase 1 KPIs to Track</div>
-      <table class="tbl">
-        <thead><tr><th>KPI</th><th>Baseline</th><th>Day 60 Target</th></tr></thead>
-        <tbody>
-          <tr><td>Vendor contracts signed</td><td>3 HK vendors</td><td>1–2 contracts signed</td></tr>
-          <tr><td>Non-clinical capex frozen</td><td>₹4 Cr planned</td><td>100% frozen</td></tr>
-          <tr><td>New doctor contracts</td><td>0 on new model</td><td>41 on 55:45 model</td></tr>
-          <tr><td>HR rationalisation plan</td><td>Not started</td><td>Plan signed off</td></tr>
-          <tr><td>TPA renegotiation</td><td>26% mix</td><td>Proposals sent</td></tr>
-          <tr><td>CRM platform</td><td>Not selected</td><td>Live / onboarding</td></tr>
-          <tr><td>Org structure + DOA</td><td>Not approved</td><td>Board approved</td></tr>
-          <tr><td>AERB application</td><td>Not started</td><td>Pre-application filed</td></tr>
-        </tbody>
-      </table>
-    </div>
+  <div class="slabel">Phase 1 KPIs to Track</div>
+  <div class="card">
+    <table class="tbl">
+      <thead><tr><th>KPI</th><th>Baseline</th><th>Day 60 Target</th></tr></thead>
+      <tbody>
+        <tr><td>Nursing rationalisation</td><td>630 nurses</td><td>Attrition plan live, ICU redesign approved</td></tr>
+        <tr><td>Pharmacy rationalisation</td><td>93 staff</td><td>Barcode system live, plan to 50 signed off</td></tr>
+        <tr><td>Rate revision exercise</td><td>Current rates</td><td>Rate card benchmarked &amp; approved</td></tr>
+        <tr><td>New specialist onboarded</td><td>0 Phase 1 additions</td><td>1 specialist operational</td></tr>
+        <tr><td>Referral channels active</td><td>Ad hoc outreach</td><td>Liaison appointed, tracking live</td></tr>
+        <tr><td>Vendor consolidation</td><td>Multiple suppliers</td><td>Top 3 contracts signed</td></tr>
+        <tr><td>Material cost programme</td><td>COGS 28.5% of rev</td><td>Rate contracts &amp; formulary live</td></tr>
+        <tr><td>Board pack presented</td><td>Not submitted</td><td>₹150 Cr capex plan + AERB timeline approved</td></tr>
+      </tbody>
+    </table>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════
-     TAB 3: PHASE 2 (DAYS 61–180)
-═══════════════════════════════════════════ -->
 <div id="page-phase2" class="page">
 
-  <div class="kpi-strip ks-4">
-    <div class="kpi" style="border-top-color:#c0700e">
-      <div class="kl">Phase Duration</div>
-      <div class="kv">120 Days</div>
-      <div class="ks2">Jun 1 – Sep 30, 2026</div>
-    </div>
-    <div class="kpi" style="border-top-color:#e67e22">
-      <div class="kl">EBITDA Impact</div>
-      <div class="kv">₹18–24 Cr</div>
-      <div class="kg g-up">Cumulative by Day 180</div>
-    </div>
-    <div class="kpi" style="border-top-color:#27ae60">
-      <div class="kl">HR Savings</div>
-      <div class="kv">₹6.2 Cr</div>
-      <div class="ks2">143 headcount reduction identified</div>
-    </div>
-    <div class="kpi" style="border-top-color:#2980b9">
-      <div class="kl">Revenue Build</div>
-      <div class="kv">₹5–8 Cr</div>
-      <div class="ks2">TPA + conversion + billing accuracy</div>
-    </div>
-  </div>
-
   <div class="ibox amber">
-    <div class="ibox-title">🔧 Phase 2 Mandate — Structural Reform &amp; Revenue Infrastructure</div>
-    <div class="ibox-text">Phase 2 is the engine room of the plan. The HR rationalisation (₹13 Cr target, ₹6.2 Cr identified in data) is executed through attrition, barcode/EMR-enabled process redesign, and ICU reorganisation — not forced redundancy. The Oracle Health billing system goes live, plugging revenue leakage. Occupancy push commences via referral network and outreach. AERB submission is non-negotiable — 12–18 month approval cycle means every week's delay is a week's delay on LINAC revenue.</div>
+    <div class="ibox-title">🔧 Phase 2 Mandate — Procurement, Material Costs &amp; Revenue Ramp</div>
+    <div class="ibox-text">Phase 2 builds on Phase 1's foundation with structural reform across procurement and revenue infrastructure. Vendor consolidation and the Material Cost Rationalisation programme target COGS from 28.5% to 26.5% of revenue — a ₹7 Cr combined opportunity. TPA renegotiation (top 5 insurers, 3 new agreements) grows insurance mix from 26% to 30%. The North Kerala and border district referral programme begins driving occupancy toward 68%. The Cancer Centre floor-by-floor conversion commences post-Board approval (Main Block floors 6–8), and the HIS/ERP vendor is selected and implementation kicked off. AERB application for the 3rd LINAC is submitted — 12–18 month approval cycle means every week's delay costs revenue in FY28.</div>
   </div>
 
   <div class="milestone-section">
     <div class="ms-header ms-p2">
       <div>
-        <div class="ms-title">Month 3–4 · June–July 2026 · HR Rationalisation &amp; Oracle Health</div>
-        <div class="ms-sub">Largest cost lever activated · Billing infrastructure built</div>
+        <div class="ms-title">Month 3–4 · June–July 2026 · Procurement Reform &amp; Referral Expansion</div>
+        <div class="ms-sub">Material costs tackled · North Kerala referral programme launched · Cancer Centre conversion begins</div>
       </div>
-      <div class="ms-badge">₹8–10 Cr Run-Rate</div>
+      <div class="ms-badge">Month 3–4</div>
     </div>
     <div class="ms-body">
       <div class="initiative-row">
         <div class="ir-week">Jun</div>
         <div class="ir-content">
-          <div class="ir-title">Nursing Rationalisation — 630 → 569 via ICU Reorganisation</div>
-          <div class="ir-desc">ICU consolidation enables 2.25x occupied bed ratio (from current higher ratio). 61 nursing positions absorbed through attrition, cross-training, and ICU redesign. No forced exits. Saves ₹2.26 Cr annualised. ICU reorganisation design finalized and approved.</div>
-          <div class="ir-tags"><span class="pill p2-pill">Jun</span><span class="pill pb">Cost</span><span class="pill pn">CHRO + Nursing Head</span></div>
+          <div class="ir-title">Vendor Consolidation &amp; Procurement Rationalisation — Contracts Live</div>
+          <div class="ir-desc">Top 3 consumable supplier contracts fully executed. Single pharmacy distributor agreement signed. 6-month bulk pricing contracts in force. Implant benchmarking completed. Single distributor reduces leakage. Procurement savings begin flowing through P&amp;L. Admin / Supply Chain reporting monthly to CFO.</div>
+          <div class="ir-tags"><span class="pill p2-pill">Jun</span><span class="pill pb">Cost</span><span class="pill pn">Admin / Supply Chain</span></div>
         </div>
-        <div class="ir-value cost">₹2.26 Cr</div>
+        <div class="ir-value cost">₹3 Cr</div>
       </div>
       <div class="initiative-row">
         <div class="ir-week">Jun–Jul</div>
         <div class="ir-content">
-          <div class="ir-title">Pharmacy Staff 93 → 50 via Barcode &amp; Process Redesign</div>
-          <div class="ir-desc">Barcode scanning automation + process re-engineering reduces pharmacy staffing requirement from 93 to 50 (−43 FTEs). Average cost ₹3.29L/head. ₹1.42 Cr annualised saving. Tech rollout Jun, process redesign Jul, attrition plan operative from Aug.</div>
-          <div class="ir-tags"><span class="pill p2-pill">Jun–Jul</span><span class="pill pb">Cost</span><span class="pill pn">Pharmacy Head + CHRO</span></div>
+          <div class="ir-title">Material Cost Rationalisation Programme — Full Execution</div>
+          <div class="ir-desc">Rate contracts, credit period discounts, BOQ standardisation for major surgeries, 3-level formulary and wastage control all active. COGS target: 28.5% → 26.5% of revenue. Wastage / cut-strip reduction protocols monitored weekly. Inventory optimisation delivering working capital improvement. CFO + Pharmacy Head driving programme with monthly COGS scorecard.</div>
+          <div class="ir-tags"><span class="pill p2-pill">Jun–Jul</span><span class="pill pb">Cost</span><span class="pill pn">CFO + Pharmacy Head</span></div>
         </div>
-        <div class="ir-value cost">₹1.42 Cr</div>
+        <div class="ir-value cost">₹4 Cr</div>
       </div>
       <div class="initiative-row">
         <div class="ir-week">Jun–Jul</div>
         <div class="ir-content">
-          <div class="ir-title">PCS 97 → 80 via EMR &amp; Ward Secretary Implementation</div>
-          <div class="ir-desc">Patient Care Services rationalisation (−17 FTEs) enabled by EMR implementation and IP/OP ward secretaries taking on administrative load. ₹0.60 Cr saving. CRM integration with EMR reduces data re-entry and staffing requirement.</div>
-          <div class="ir-tags"><span class="pill p2-pill">Jun</span><span class="pill pb">Cost</span><span class="pill pn">COO + IT</span></div>
+          <div class="ir-title">North Kerala &amp; Border District Referral Programme</div>
+          <div class="ir-desc">Dedicated outreach to Malappuram and Kozhikode border districts. Referral doctor portal live with pipeline tracking. Telemedicine follow-ups converting to IP admissions. Targets 62% → 68% occupancy pathway. Monthly coordination cadence with district referral partners established. COO + Marketing to run programme.</div>
+          <div class="ir-tags"><span class="pill p2-pill">Jun–Jul</span><span class="pill pg">Revenue</span><span class="pill pn">COO + Marketing</span></div>
         </div>
-        <div class="ir-value cost">₹0.60 Cr</div>
+        <div class="ir-value rev">Occupancy ↑</div>
       </div>
       <div class="initiative-row">
         <div class="ir-week">Jul</div>
         <div class="ir-content">
-          <div class="ir-title">AERB Application Submitted for LINAC Installation</div>
-          <div class="ir-desc">AERB approval takes 12–18 months — must start immediately. Application covers both LINAC machines (Radiation Oncology + backup). This is a FY28 revenue driver (₹10–15 Cr LINAC contribution once operational). Every week delayed = week delayed on oncology transformation go-live.</div>
-          <div class="ir-tags"><span class="pill p2-pill">Jul</span><span class="pill pr">CRITICAL</span><span class="pill pn">CFO + Medical Director</span></div>
+          <div class="ir-title">Cancer Centre Conversion Begins — Main Block Floors 6–8</div>
+          <div class="ir-desc">Post-Board approval from Phase 1. Main block floors 6–8 conversion commences to surgical oncology, medical oncology wards, and palliative care. AERB application for 3rd LINAC (B2 New Building) submitted. LINAC vault construction begins Q3. This is the foundation for the oncology revenue ramp in FY28. CFO + Medical Director + Infra team to lead.</div>
+          <div class="ir-tags"><span class="pill p2-pill">Jul</span><span class="pill pr">CRITICAL</span><span class="pill pn">CFO + Medical Director + Infra</span></div>
         </div>
-        <div class="ir-value rev">FY28 Rev</div>
-      </div>
-      <div class="initiative-row">
-        <div class="ir-week">Jul</div>
-        <div class="ir-content">
-          <div class="ir-title">AERB Pre-Application + Radiation Oncology Floor Design Finalised</div>
-          <div class="ir-desc">LINAC vault structural design (B1 floor) signed off. Radiation shielding specifications to architect. HDR room layout approved. Physics lab provisioned. This enables AERB submission — cannot be submitted without structural design approval.</div>
-          <div class="ir-tags"><span class="pill p2-pill">Jul</span><span class="pill pr">CRITICAL PATH</span><span class="pill pn">Medical Director + Architect</span></div>
-        </div>
-        <div class="ir-value both">BLOCKING</div>
+        <div class="ir-value both">FY27–28</div>
       </div>
     </div>
   </div>
@@ -659,36 +450,27 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f0f4f8;color:#
   <div class="milestone-section">
     <div class="ms-header ms-p2">
       <div>
-        <div class="ms-title">Month 5–6 · August–September 2026 · Digital Go-Live &amp; Revenue Build</div>
-        <div class="ms-sub">Oracle Health Phase 1, energy savings, occupancy push acceleration</div>
+        <div class="ms-title">Month 5–6 · August–September 2026 · HIS Go-Live, Utilities &amp; Occupancy Push</div>
+        <div class="ms-sub">HIS/ERP vendor selected &amp; implementation begins · Solar + HVAC savings commence · Occupancy accelerates</div>
       </div>
-      <div class="ms-badge">₹15–20 Cr Cumulative</div>
+      <div class="ms-badge">Month 5–6</div>
     </div>
     <div class="ms-body">
       <div class="initiative-row">
         <div class="ir-week">Aug</div>
         <div class="ir-content">
-          <div class="ir-title">Oracle Health Phase 1 Go-Live — Billing &amp; Revenue Cycle</div>
-          <div class="ir-desc">Revenue cycle automation: unbilled services audit, package pricing review, ARPOB tracking accuracy. Expected to capture ₹2–5 Cr in annual revenue leakage. Doctor billing audit enabled. Department-level revenue dashboards live for daily management. 14-day parallel run before full cutover.</div>
-          <div class="ir-tags"><span class="pill p2-pill">Aug</span><span class="pill pg">Revenue</span><span class="pill pb">Cost</span><span class="pill pn">CIO + CFO</span></div>
+          <div class="ir-title">HIS / ERP Vendor Selected &amp; Implementation Kick-Off</div>
+          <div class="ir-desc">Post-Board approval of cost-benefit analysis. Vendor shortlisted, implementation roadmap signed off. Covers revenue cycle management, billing integration, doctor dashboards, finance, supply chain and HR. Revenue cycle accuracy improvements reduce leakage by ₹2–5 Cr. OP→IP conversion tracking and doctor billing visibility activated. CIO + CEO to lead.</div>
+          <div class="ir-tags"><span class="pill p2-pill">Aug</span><span class="pill pg">Revenue</span><span class="pill pb">IT</span><span class="pill pn">CIO + CEO</span></div>
         </div>
         <div class="ir-value rev">₹2–5 Cr</div>
       </div>
       <div class="initiative-row">
-        <div class="ir-week">Aug</div>
-        <div class="ir-content">
-          <div class="ir-title">Dept Rationalisation — 15 Mid-Size Departments (10–30 staff, −10%)</div>
-          <div class="ir-desc">Administration, Biochemistry, Nephrology, Histopathology, Accounts, Stores, CSSD, Cardiology, Microbiology, Blood Bank, Haematology, Medical Records, Insurance, Transport, Clinical Nutrition — 10% headcount cut through attrition. ₹1.27 Cr annualised saving.</div>
-          <div class="ir-tags"><span class="pill p2-pill">Aug</span><span class="pill pb">Cost</span><span class="pill pn">CHRO + Dept Heads</span></div>
-        </div>
-        <div class="ir-value cost">₹1.27 Cr</div>
-      </div>
-      <div class="initiative-row">
         <div class="ir-week">Aug–Sep</div>
         <div class="ir-content">
-          <div class="ir-title">Energy Audit Go-Live — Solar Rooftop Phase 1 + HVAC IoT</div>
-          <div class="ir-desc">Solar rooftop Phase 1: 500 KW installation (&lt;24 month payback). HVAC IoT sensors deployed for zonal temperature optimisation across 3 units. LED retrofit in clinical zones. Other costs budgeted ₹7,024L — 15% energy reduction target = ₹1 Cr EBITDA save. Solar MoU signed Aug, installation commences Sep.</div>
-          <div class="ir-tags"><span class="pill p2-pill">Aug–Sep</span><span class="pill pb">Cost</span><span class="pill pn">Facilities</span></div>
+          <div class="ir-title">Utilities Optimisation — Solar Rooftop Phase 1 + HVAC IoT</div>
+          <div class="ir-desc">Solar rooftop Phase 1: 500 KW installation (less than 24-month payback). HVAC IoT sensors deployed for zonal temperature optimisation across 3 units. LED retrofit in clinical zones. HVAC optimisation reduces other costs by 10–15%. Total energy cost reduction target: ₹1 Cr EBITDA save. Solar MoU signed Aug, installation commences Sep. Facilities Head + CFO to manage.</div>
+          <div class="ir-tags"><span class="pill p2-pill">Aug–Sep</span><span class="pill pb">Cost</span><span class="pill pn">Facilities Head + CFO</span></div>
         </div>
         <div class="ir-value cost">₹1 Cr</div>
       </div>
@@ -696,7 +478,7 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f0f4f8;color:#
         <div class="ir-week">Sep</div>
         <div class="ir-content">
           <div class="ir-title">Occupancy Push — Referral Network Operational · 53% → 62%</div>
-          <div class="ir-desc">Referral doctor portal live with 200+ registered referral partners. Tier-2 Kerala outreach camps running monthly (Thrissur, Kozhikode, Palakkad, Trivandrum). OT turnaround time improvement protocol live. Every 1 ppt occupancy gain = ~₹3.5 Cr revenue at 35%+ margin. Budget target 62%.</div>
+          <div class="ir-desc">North Kerala referral programme fully operational. Referral doctor portal live with 200+ registered partners. Telemedicine follow-ups converting to IP at growing rate. Monthly outreach camps running across Malappuram, Kozhikode and border districts. OT turnaround time improvement protocol live. Every 1 ppt occupancy gain = ~₹3.5 Cr revenue at 35%+ margin. Budget target: 62% by Sep.</div>
           <div class="ir-tags"><span class="pill p2-pill">Sep</span><span class="pill pg">Revenue</span><span class="pill pn">COO + Marketing</span></div>
         </div>
         <div class="ir-value rev">₹8 Cr</div>
@@ -705,7 +487,7 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f0f4f8;color:#
         <div class="ir-week">Sep</div>
         <div class="ir-content">
           <div class="ir-title">DAY 180 PHASE GATE — Mid-Year Review &amp; Phase 3 Launch</div>
-          <div class="ir-desc">Formal review: (1) ₹15–20 Cr annualised savings locked, (2) Oracle Health operational, (3) HR rationalisation on track, (4) Building B architect shortlist to 3, (5) AERB submitted, (6) Occupancy at 60%+. Phase 3 revenue campaign formally launched. Board briefing.</div>
+          <div class="ir-desc">Formal review: (1) ₹15–20 Cr annualised savings locked, (2) HIS/ERP implementation kicked off, (3) HR rationalisation on track, (4) Cancer Centre conversion underway, (5) AERB submitted for 3rd LINAC, (6) Occupancy at 60%+. Phase 3 revenue campaign formally launched. Board briefing.</div>
           <div class="ir-tags"><span class="pill pr">GATE</span><span class="pill pn">CEO + Board</span></div>
         </div>
         <div class="ir-value both">GATE</div>
@@ -714,74 +496,48 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f0f4f8;color:#
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════
-     TAB 4: PHASE 3 (DAYS 181–360)
-═══════════════════════════════════════════ -->
 <div id="page-phase3" class="page">
 
-  <div class="kpi-strip ks-4">
-    <div class="kpi" style="border-top-color:#1a5c96">
-      <div class="kl">Phase Duration</div>
-      <div class="kv">180 Days</div>
-      <div class="ks2">Oct 1, 2026 – Mar 31, 2027</div>
-    </div>
-    <div class="kpi" style="border-top-color:#2980b9">
-      <div class="kl">EBITDA Target</div>
-      <div class="kv">₹148.6 Cr</div>
-      <div class="kg g-up">Full-year UC run-rate</div>
-    </div>
-    <div class="kpi" style="border-top-color:#8e44ad">
-      <div class="kl">Revenue Engine</div>
-      <div class="kv">+₹30 Cr</div>
-      <div class="ks2">EBITDA above budget target</div>
-    </div>
-    <div class="kpi" style="border-top-color:#27ae60">
-      <div class="kl">ARPOB Target (UC)</div>
-      <div class="kv">₹40.9K</div>
-      <div class="kg g-up">vs ₹35K FY26E (+16%)</div>
-    </div>
-  </div>
-
   <div class="ibox blue">
-    <div class="ibox-title">🚀 Phase 3 Mandate — Revenue Capture &amp; Transformation</div>
-    <div class="ibox-text">Phase 3 is where the operating leverage of the plan is realised. The cost base has been tightened in Phases 1–2. Now revenue initiatives drive the EBITDA expansion. Three revenue engines: (1) ARPOB growth through oncology premium, spine robotics, and complex care mix — targeting ₹40.9K/day from ₹35K; (2) Volume growth through occupancy expansion from 62% to 68% via referral network and telemedicine; (3) Mix optimisation through international volume growth (9.2%→12%) and insurance share increase (26%→30%). The year ends with the Building B architect selected and design approved — setting up FY28 bed doubling.</div>
+    <div class="ibox-title">🚀 Phase 3 Mandate — Revenue Ramp, New Doctors &amp; Infrastructure</div>
+    <div class="ibox-text">Phase 3 is where the operating leverage of the plan is realised. The cost base has been tightened in Phases 1–2. Now revenue initiatives drive the EBITDA expansion. Three revenue engines: (1) New specialist doctors onboarded for Complex Cases and Interventional Radiology as Phase 2 infrastructure comes online — driving 85%+ ARPOB premium cases; (2) Volume growth through occupancy expansion from 62% to 68% via the referral network and international patient programme; (3) Mix optimisation through international volume growth (9.2%→12%) and insurance share increase (26%→30%). HIS Phase 1 goes live for billing and revenue cycle. The 3rd LINAC AERB application is submitted and Old Building OT/ICU/CSSD conversion progresses — setting up FY28 bed and oncology capacity expansion.</div>
   </div>
 
   <div class="milestone-section">
     <div class="ms-header ms-p3">
       <div>
-        <div class="ms-title">Month 7–8 · October–November 2026 · Oncology &amp; Robotics Launch</div>
-        <div class="ms-sub">The highest-ARPOB specialties go live · Premium pricing mix shift begins</div>
+        <div class="ms-title">Month 7–8 · October–November 2026 · New Specialists, IR Launch &amp; HIS Go-Live</div>
+        <div class="ms-sub">Complex care and IR doctors operational · HIS billing live · ARPOB premium mix accelerates</div>
       </div>
-      <div class="ms-badge">₹10–15 Cr Revenue Impact</div>
+      <div class="ms-badge">Month 7–8</div>
     </div>
     <div class="ms-body">
       <div class="initiative-row">
         <div class="ir-week">Oct</div>
         <div class="ir-content">
-          <div class="ir-title">Oncology OPD &amp; Cancer Screening Centre — Full Operational</div>
-          <div class="ir-desc">Cancer OPD fully operational with 6 new oncologists. Day care chemo (30 chairs) running at capacity. Rapid cancer screening programme launched. Anchors the cancer centre narrative. Day care chemo contributes ₹3–5 Cr independently. Conversion from screening to IPD admission — foundational for FY28 Cancer Centre ramp.</div>
-          <div class="ir-tags"><span class="pill p3-pill">Oct</span><span class="pill pg">Revenue</span><span class="pill pn">Oncology Head</span></div>
+          <div class="ir-title">New Specialist Doctors Onboarded — Complex Cases &amp; Interventional Radiology</div>
+          <div class="ir-desc">Recruitment of additional high-value specialists in complex care and Interventional Radiology as Phase 2 infrastructure comes online. Doctors need OT space and support teams — both dependent on Cancer Centre conversion progress. Drives 85%+ ARPOB premium cases. Medical Director + CEO to lead recruitment; sequential onboarding aligned to infrastructure readiness.</div>
+          <div class="ir-tags"><span class="pill p3-pill">Oct</span><span class="pill pg">Revenue</span><span class="pill pn">Medical Director + CEO</span></div>
         </div>
-        <div class="ir-value rev">₹10–15 Cr</div>
+        <div class="ir-value rev">ARPOB ↑↑</div>
       </div>
       <div class="initiative-row">
         <div class="ir-week">Oct–Nov</div>
         <div class="ir-content">
-          <div class="ir-title">Spine Robotics — First 50 Cases Completed · Kerala's First</div>
-          <div class="ir-desc">Spine robotics program fully operational (₹12 Cr equipment, protected clinical capex). ARPOB premium: 80%+ vs standard ortho. Referral magnet for complex spine cases from across Kerala and Gulf diaspora. Target: 50 cases by Nov '26 to establish program track record. Marketing campaign live in tier-2 cities.</div>
-          <div class="ir-tags"><span class="pill p3-pill">Oct–Nov</span><span class="pill pg">Revenue</span><span class="pill pn">Ortho + Marketing</span></div>
+          <div class="ir-title">Interventional Radiology Services Launched</div>
+          <div class="ir-desc">Dedicated IR suite operational with trained team and a clear referral pathway from oncology and vascular specialties. High-value clinical expansion that complements oncology and complex surgical workload. IR is a strong ARPOB driver and positions LHRC as a comprehensive tertiary centre. Radiology Head + CFO to lead service design and go-live.</div>
+          <div class="ir-tags"><span class="pill p3-pill">Oct–Nov</span><span class="pill pg">Revenue</span><span class="pill pn">Radiology Head + CFO</span></div>
         </div>
-        <div class="ir-value rev">₹6–10 Cr</div>
+        <div class="ir-value rev">High ARPOB</div>
       </div>
       <div class="initiative-row">
         <div class="ir-week">Nov</div>
         <div class="ir-content">
-          <div class="ir-title">ARPOB Tracking ₹38K+ · Complex Care Mix Protocol Active</div>
-          <div class="ir-desc">ARPOB actively tracked via Oracle Health dashboard (live since Aug). Complex care case mix protocols for Ortho, Cardiology, GI Surgery and Oncology departments. Premium package pricing reviewed and updated. ARPOB target journey: FY26E ₹35K → Nov ₹38K → Mar '27 ₹40.9K (UC path).</div>
-          <div class="ir-tags"><span class="pill p3-pill">Nov</span><span class="pill pg">Revenue</span><span class="pill pn">Clinical Heads + CFO</span></div>
+          <div class="ir-title">HIS Phase 1 Go-Live — Billing &amp; Revenue Cycle</div>
+          <div class="ir-desc">Selected HIS (Oracle Health or equivalent) live for revenue cycle management, billing integration and doctor dashboards. Fixes revenue leakage estimated at ₹5–8 Cr. ARPOB tracking accuracy improves. Doctor billing visibility live for daily management. Revenue cycle improvement drives into FY28. CIO to lead go-live with 14-day parallel run before full cutover.</div>
+          <div class="ir-tags"><span class="pill p3-pill">Nov</span><span class="pill pg">Revenue</span><span class="pill pb">IT</span><span class="pill pn">CIO</span></div>
         </div>
-        <div class="ir-value rev">₹12 Cr</div>
+        <div class="ir-value rev">₹5–8 Cr</div>
       </div>
     </div>
   </div>
@@ -789,17 +545,26 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f0f4f8;color:#
   <div class="milestone-section">
     <div class="ms-header ms-p3">
       <div>
-        <div class="ms-title">Month 9–10 · December 2026–January 2027 · Volume &amp; Mix Optimisation</div>
-        <div class="ms-sub">Occupancy push to 68% · International patients · Bottom-Q doctor review</div>
+        <div class="ms-title">Month 9–10 · December 2026–January 2027 · International Programme, Volume &amp; Mix</div>
+        <div class="ms-sub">International patient programme live · Occupancy push to 68% · Payor mix optimisation</div>
       </div>
-      <div class="ms-badge">₹20–28 Cr Revenue Impact</div>
+      <div class="ms-badge">Month 9–10</div>
     </div>
     <div class="ms-body">
       <div class="initiative-row">
         <div class="ir-week">Dec</div>
         <div class="ir-content">
+          <div class="ir-title">International Patient Programme — Dedicated Desk &amp; GCC Engagement</div>
+          <div class="ir-desc">Dedicated international patient desk operational. Facilitator partnerships established. GCC direct engagement for cardiac, oncology and orthopaedic programmes. International revenue target: 12% of mix (from 9.2% FY26E). Higher ARPOB and payor quality versus domestic mix. COO + Marketing to drive. Programme supported by specialist additions from Phase 3 Month 7–8.</div>
+          <div class="ir-tags"><span class="pill p3-pill">Dec</span><span class="pill pg">Revenue</span><span class="pill pn">COO + Marketing</span></div>
+        </div>
+        <div class="ir-value rev">Mix ↑</div>
+      </div>
+      <div class="initiative-row">
+        <div class="ir-week">Dec</div>
+        <div class="ir-content">
           <div class="ir-title">Occupancy Push to 68% — Referral + Telemedicine at Full Scale</div>
-          <div class="ir-desc">Referral network at 500+ registered partners. Monthly outreach camps in 5 tier-2 Kerala cities. Gulf NRI marketing campaign for cardiology, oncology, and orthopedics. Telemedicine consultations converting to IPD at 18%+ rate. OT turnaround time protocol reducing idle OT slots by 15%. Every 1ppt occupancy gain = ₹3.5 Cr revenue.</div>
+          <div class="ir-desc">Referral network at 500+ registered partners. Monthly outreach camps in tier-2 Kerala cities. Gulf NRI marketing campaign for cardiology, oncology and orthopaedics. Telemedicine consultations converting to IPD at 18%+ rate. OT turnaround time protocol reducing idle OT slots by 15%. Every 1 ppt occupancy gain = ₹3.5 Cr revenue.</div>
           <div class="ir-tags"><span class="pill p3-pill">Dec</span><span class="pill pg">Revenue</span><span class="pill pn">COO + Marketing</span></div>
         </div>
         <div class="ir-value rev">₹8 Cr</div>
@@ -807,8 +572,8 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f0f4f8;color:#
       <div class="initiative-row">
         <div class="ir-week">Dec–Jan</div>
         <div class="ir-content">
-          <div class="ir-title">International Volume 9.2% → 12% + Insurance Mix 26% → 30%</div>
-          <div class="ir-desc">International patient coordinator team operational. Gulf diaspora packages for cardiac, orthopedic, oncology programs. 3 new TPA agreements signed (from Phase 2 renegotiation) now driving volume. Combined payor mix improvement: +₹5–7 Cr EBITDA impact from better realisation and lower bad debt.</div>
+          <div class="ir-title">Insurance Mix 26% → 30% + International Mix 9.2% → 12%</div>
+          <div class="ir-desc">3 new TPA agreements from Phase 2 renegotiation now driving volume. International patient coordinator team and GCC facilitators operational. Combined payor mix improvement: +₹5–7 Cr EBITDA impact from better realisation and lower bad debt. CFO + International Head to manage and report monthly.</div>
           <div class="ir-tags"><span class="pill p3-pill">Dec–Jan</span><span class="pill pg">Revenue</span><span class="pill pn">CFO + International Head</span></div>
         </div>
         <div class="ir-value rev">₹5 Cr</div>
@@ -828,8 +593,8 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f0f4f8;color:#
   <div class="milestone-section">
     <div class="ms-header ms-p3">
       <div>
-        <div class="ms-title">Month 11–12 · February–March 2027 · Year-End Consolidation &amp; FY28 Setup</div>
-        <div class="ms-sub">Lock FY27 results · Commission FY28 transformation infrastructure</div>
+        <div class="ms-title">Month 11–12 · February–March 2027 · AERB Milestones, HR Completion &amp; FY28 Setup</div>
+        <div class="ms-sub">3rd LINAC AERB application filed · Old Building conversion on track · FY27 UC vs BC scorecard</div>
       </div>
       <div class="ms-badge">Year-End Gate · FY28 Foundations</div>
     </div>
@@ -837,27 +602,27 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f0f4f8;color:#
       <div class="initiative-row">
         <div class="ir-week">Feb '27</div>
         <div class="ir-content">
-          <div class="ir-title">Building B Architect Selected &amp; Design Approved by Board</div>
-          <div class="ir-desc">Critical path for FY28 completion. Structural, MEP, and fit-out design approved. Every 1 month delay = 1 month delay on FY28 revenue (target: 541 beds operational FY28). Contractor tender process commenced. Financing plan (internal cash vs project loan) finalised and Board-approved.</div>
-          <div class="ir-tags"><span class="pill p3-pill">Feb '27</span><span class="pill pr">CRITICAL</span><span class="pill pn">CFO + Chairman</span></div>
+          <div class="ir-title">3rd LINAC AERB Application Submitted &amp; Infra Transformation on Track</div>
+          <div class="ir-desc">AERB application for 3rd LINAC (B2 New Building) filed — filing by Q2 FY27 is critical given 12–18 month approval cycle. Old Building 1F OT/ICU/CSSD conversion progressing on schedule. BMT floor (9F) and Clinical Research floor (10F) design finalised. Old Building conversion is the foundation for OT capacity expansion in FY28. CFO + Chairman + Medical Director to review monthly.</div>
+          <div class="ir-tags"><span class="pill p3-pill">Feb '27</span><span class="pill pr">CRITICAL</span><span class="pill pn">CFO + Chairman + Medical Director</span></div>
         </div>
         <div class="ir-value both">FY28 Setup</div>
       </div>
       <div class="initiative-row">
         <div class="ir-week">Feb–Mar '27</div>
         <div class="ir-content">
-          <div class="ir-title">HR Rationalisation — Broader Scope (Target ₹13 Cr Total)</div>
-          <div class="ir-desc">Consolidation of Biochem/Histo/Micro/Haem labs (85→75), Biomedical Engineering (9→7), attrition hold fully realised across 40+ departments. Together with Phase 2 HR actions = ₹13 Cr total EBITDA run-rate. Staff/bed ratio target: 3.8x → 3.5x by Mar '27 (vs benchmark 3.0–3.5x).</div>
+          <div class="ir-title">HR Rationalisation — Full Run-Rate Achieved (₹11 Cr Target)</div>
+          <div class="ir-desc">Nursing 630→569 and Pharmacy 93→50 fully realised through attrition and process redesign. Broader departmental attrition hold completed across 40+ departments. Together with Phase 1 and Phase 2 HR actions = full ₹11 Cr annualised EBITDA run-rate. Staff/bed ratio target: 3.8x → 3.5x by Mar '27 (vs benchmark 3.0–3.5x). CHRO to present final staffing scorecard.</div>
           <div class="ir-tags"><span class="pill p3-pill">Feb–Mar</span><span class="pill pb">Cost</span><span class="pill pn">CHRO</span></div>
         </div>
-        <div class="ir-value cost">₹13 Cr Total</div>
+        <div class="ir-value cost">₹11 Cr</div>
       </div>
       <div class="initiative-row">
         <div class="ir-week">Mar '27</div>
         <div class="ir-content">
-          <div class="ir-title">DAY 360 — FINAL GATE · FY27 Results &amp; FY28 Plan</div>
-          <div class="ir-desc">Full-year results vs budget and upside case targets. EBITDA walk: FY26E ₹99 Cr → FY27 actuals (BC ₹113.9 Cr; UC ₹148.6 Cr). All 10 workstream owners present results. FY28 transformation plan approved with Building B construction commenced. AERB approval status reviewed.</div>
-          <div class="ir-tags"><span class="pill pr">FINAL GATE</span><span class="pill pn">Chairman + Board</span></div>
+          <div class="ir-title">DAY 360 — FINAL GATE · FY27 UC vs BC Scorecard &amp; FY28 Plan</div>
+          <div class="ir-desc">Full-year P&amp;L review: revenue, EBITDA, ARPOB and occupancy vs FY27 BC and UC targets. EBITDA walk: FY26E ₹99 Cr → FY27 actuals. Set FY28 AOP. Assess UC achievement. Determine capex prioritisation for 3rd LINAC, BMT unit, Clinical Research floor and Old Building conversion completion. CFO + CEO + Chairman to present to full Board.</div>
+          <div class="ir-tags"><span class="pill pr">FINAL GATE</span><span class="pill pn">CFO + CEO + Chairman</span></div>
         </div>
         <div class="ir-value both">YEAR END</div>
       </div>
@@ -865,586 +630,15 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f0f4f8;color:#
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════
-     TAB 5: REVENUE LEVERS
-═══════════════════════════════════════════ -->
-<div id="page-revenue" class="page">
-
-  <div class="kpi-strip ks-5">
-    <div class="kpi" style="border-top-color:#8e44ad">
-      <div class="kl">Total Revenue Uplift</div>
-      <div class="kv">+₹30 Cr</div>
-      <div class="ks2">EBITDA above BC budget</div>
-    </div>
-    <div class="kpi" style="border-top-color:#e67e22">
-      <div class="kl">ARPOB FY26E → UC</div>
-      <div class="kv">₹35K → ₹41K</div>
-      <div class="kg g-up">+16% · ₹12 Cr EBITDA</div>
-    </div>
-    <div class="kpi" style="border-top-color:#27ae60">
-      <div class="kl">Occupancy FY26E → UC</div>
-      <div class="kv">53% → 68%</div>
-      <div class="kg g-up">+15 ppt · ₹8 Cr EBITDA</div>
-    </div>
-    <div class="kpi" style="border-top-color:#2980b9">
-      <div class="kl">OP → IP Conversion</div>
-      <div class="kv">14.2% → 16%</div>
-      <div class="kg g-up">+1.8 ppt · ₹5 Cr EBITDA</div>
-    </div>
-    <div class="kpi" style="border-top-color:#00838f">
-      <div class="kl">Insurance Mix Target</div>
-      <div class="kv">26% → 30%</div>
-      <div class="kg g-up">+4 ppt · ₹3 Cr EBITDA</div>
-    </div>
-  </div>
-
-  <div class="lever" style="border-left-color:#e67e22">
-    <div class="lhd">
-      <div class="lnum" style="background:#e67e22">1</div>
-      <div class="ltitle">ARPOB Growth — Oncology &amp; Complex Care Premium</div>
-      <div class="lval" style="color:#e67e22">+₹12 Cr EBITDA</div>
-    </div>
-    <div class="ldesc">Push ARPOB from ₹35K (FY26E) → ₹40.9K through oncology volumes (50–85% ARPOB premium), Spine Robotics program (Kerala's first, 80%+ ARPOB premium vs standard ortho), and complex surgical protocols for Ortho, GI Surgery, and Cardiology. Each ₹1K ARPOB gain at 541 beds (future state) = ₹21 Cr incremental revenue at 35%+ margin fall-through. Phase 3 lever — requires oncology doctors operational (Oct) and robotics live (Oct–Nov).</div>
-    <div class="ltags"><span class="pill pg">Highest Impact</span><span class="pill p3-pill">Phase 3 Q3–Q4</span><span class="pill pn">CEO + Clinical Heads</span><span class="pill po">₹21 Cr rev per ₹1K ARPOB</span></div>
-  </div>
-
-  <div class="lever" style="border-left-color:#27ae60">
-    <div class="lhd">
-      <div class="lnum" style="background:#27ae60">2</div>
-      <div class="ltitle">Occupancy Growth — 53% → 62% (BC) → 68% (UC)</div>
-      <div class="lval" style="color:#27ae60">+₹8 Cr EBITDA</div>
-    </div>
-    <div class="ldesc">FY27 budget targets 62% occupancy vs 53% FY26E (+9 ppt). Additional ₹8 Cr EBITDA uplift (above BC) requires reaching 68% (+6 ppt on BC). Every 1 ppt occupancy gain = ~₹3.5 Cr revenue. Levers: expanded referral network (500+ GPs by Dec), telemedicine OPD → IPD conversion, tier-2 Kerala outreach camps monthly (5 cities), faster OT turnaround time protocol. International patient volume: 9.2% → 12% contributes disproportionate ARPOB uplift.</div>
-    <div class="ltags"><span class="pill pg">High Impact</span><span class="pill p2-pill">Phase 2 Q2–Q3</span><span class="pill pn">COO + Marketing</span><span class="pill pt">₹3.5 Cr per ppt occ</span></div>
-  </div>
-
-  <div class="lever" style="border-left-color:#2980b9">
-    <div class="lhd">
-      <div class="lnum" style="background:#2980b9">3</div>
-      <div class="ltitle">OP → IP Conversion + Payor Mix Optimisation</div>
-      <div class="lval" style="color:#2980b9">+₹5 Cr EBITDA</div>
-    </div>
-    <div class="ldesc">4,39,771 OP visits budgeted FY27. Even 1.8 ppt improvement in OP→IP conversion at ₹1,44,722 per discharge = ₹6+ Cr revenue. CRM-assisted follow-up protocol for high-conversion specialties: Ortho, Cardiology, Oncology. Insurance mix: 26% → 30% (TPA renegotiation, 3 new agreements). International mix: 9.2% → 12% (Gulf diaspora packages). Combined payor mix = ₹3 Cr EBITDA from better realisation and lower bad debt.</div>
-    <div class="ltags"><span class="pill pg">Medium-High</span><span class="pill p2-pill">Phase 2 Q1–Q2</span><span class="pill pn">CFO + Billing Head</span><span class="pill pb">CRM live Q1</span></div>
-  </div>
-
-  <div class="lever" style="border-left-color:#8e44ad">
-    <div class="lhd">
-      <div class="lnum" style="background:#8e44ad">4</div>
-      <div class="ltitle">Oncology OPD + Spine Robotics Program — Premium Revenue Ramp</div>
-      <div class="lval" style="color:#8e44ad">+₹4–8 Cr EBITDA</div>
-    </div>
-    <div class="ldesc">Cancer OPD (30-chair day care chemo) + screening centre operational Oct '26. Spine Robotics: 50 cases target by Nov '26. Head &amp; Neck Oncology (₹8.67 Cr FY26E, ₹3,325 ARPOB) grows with programme. Medical Oncology target: FY26E ₹28.6 Cr → ₹32 Cr (+12%). Haematology/BMT: ₹8.4 Cr → ₹11 Cr (+31% with BMT program launch). These are the highest ARPOB specialties — driving the blended ARPOB lift from ₹35K to ₹41K.</div>
-    <div class="ltags"><span class="pill pg">High Impact</span><span class="pill p3-pill">Phase 3 Q3</span><span class="pill pn">Oncology Head + Ortho</span><span class="pill pp">85% ARPOB premium</span></div>
-  </div>
-
-  <div class="lever" style="border-left-color:#00838f">
-    <div class="lhd">
-      <div class="lnum" style="background:#00838f">5</div>
-      <div class="ltitle">Revenue Leakage Fix &amp; Oracle Health Billing Accuracy</div>
-      <div class="lval" style="color:#00838f">+₹2–5 Cr EBITDA</div>
-    </div>
-    <div class="ldesc">Oracle Health Phase 1 go-live (Aug '26) enables: unbilled services audit, underpriced package identification, doctor-wise billing accuracy, and real-time ARPOB dashboard. Revenue leakage in current system estimated ₹2–5 Cr annualised (unbilled ICU consumables, underpriced packages, missing procedure charges). CRM tracks OP→IP conversion in real-time. Package pricing reviewed quarterly post go-live.</div>
-    <div class="ltags"><span class="pill pg">Medium</span><span class="pill p2-pill">Phase 2 Aug</span><span class="pill pn">CIO + CFO</span><span class="pill pb">Oracle Health Q2</span></div>
-  </div>
-
-  <div class="slabel">Department-Level Revenue Targets — Top 10 · FY27 UC Path</div>
-  <div class="card">
-    <table class="dtable">
-      <thead>
-        <tr>
-          <th>#</th><th>Department</th><th class="r">FY25 ₹Cr</th><th class="r">FY26E ₹Cr</th><th class="r">FY27 BC ₹Cr</th><th class="r">FY27 UC Target</th><th class="r">UC Uplift</th><th>Key Lever</th><th>Priority</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="core"><td>1</td><td><strong>Orthopaedics</strong></td><td class="r">54.2</td><td class="r">48.1</td><td class="r">55.0</td><td class="r">60.0</td><td class="r" style="color:#27ae60">+25%</td><td>Spine robotics launch</td><td><span class="pill po">CORE</span></td></tr>
-        <tr class="core"><td>2</td><td><strong>GI Surgery</strong></td><td class="r">42.8</td><td class="r">38.5</td><td class="r">44.0</td><td class="r">47.0</td><td class="r" style="color:#27ae60">+22%</td><td>Liver transplant + bariatric</td><td><span class="pill po">CORE</span></td></tr>
-        <tr class="core"><td>3</td><td><strong>Cardiology</strong></td><td class="r">38.5</td><td class="r">35.2</td><td class="r">41.0</td><td class="r">44.0</td><td class="r" style="color:#27ae60">+25%</td><td>Biplane cathlab + complex</td><td><span class="pill po">CORE</span></td></tr>
-        <tr class="transform"><td>4</td><td><strong>Medical Oncology</strong></td><td class="r">28.6</td><td class="r">26.3</td><td class="r">30.0</td><td class="r">34.0</td><td class="r" style="color:#8e44ad">+29%</td><td>6 new oncologists + tomotherapy</td><td><span class="pill pp">TRANSFORM</span></td></tr>
-        <tr class="grow"><td>5</td><td><strong>Neurosurgery</strong></td><td class="r">26.4</td><td class="r">24.1</td><td class="r">27.0</td><td class="r">29.0</td><td class="r" style="color:#2980b9">+20%</td><td>CUSA + neuro OT upgrade</td><td><span class="pill pb">GROW</span></td></tr>
-        <tr class="grow"><td>6</td><td><strong>Nephrology</strong></td><td class="r">22.1</td><td class="r">19.8</td><td class="r">23.0</td><td class="r">25.0</td><td class="r" style="color:#2980b9">+26%</td><td>Renal transplant centre</td><td><span class="pill pb">GROW</span></td></tr>
-        <tr class="transform"><td>7</td><td><strong>Critical Care</strong></td><td class="r">15.2</td><td class="r">14.0</td><td class="r">16.0</td><td class="r">18.0</td><td class="r" style="color:#8e44ad">+29%</td><td>ICU reorg + 10 nurses freed</td><td><span class="pill pp">TRANSFORM</span></td></tr>
-        <tr class="transform"><td>8</td><td><strong>Haematology / BMT</strong></td><td class="r">8.4</td><td class="r">8.0</td><td class="r">9.5</td><td class="r">12.0</td><td class="r" style="color:#8e44ad">+50%</td><td>BMT program launch</td><td><span class="pill pp">TRANSFORM</span></td></tr>
-        <tr class="grow"><td>9</td><td><strong>Plastic Surgery</strong></td><td class="r">19.4</td><td class="r">17.2</td><td class="r">19.0</td><td class="r">21.0</td><td class="r" style="color:#2980b9">+22%</td><td>Cosmetic + reconstructive mix</td><td><span class="pill pb">GROW</span></td></tr>
-        <tr class="grow"><td>10</td><td><strong>Pulmonology</strong></td><td class="r">16.8</td><td class="r">15.1</td><td class="r">17.0</td><td class="r">18.0</td><td class="r" style="color:#2980b9">+19%</td><td>Sleep lab + bronchoscopy</td><td><span class="pill pb">GROW</span></td></tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════════════
-     TAB 6: COST LEVERS
-═══════════════════════════════════════════ -->
-<div id="page-cost" class="page">
-
-  <div class="kpi-strip ks-5">
-    <div class="kpi" style="border-top-color:#1a3a5c">
-      <div class="kl">Total Cost Savings</div>
-      <div class="kv">+₹20 Cr</div>
-      <div class="ks2">EBITDA above BC budget</div>
-    </div>
-    <div class="kpi" style="border-top-color:#c0392b">
-      <div class="kl">Staffing Rationalisation</div>
-      <div class="kv">₹13 Cr</div>
-      <div class="kg">₹6.19 Cr identified in data</div>
-    </div>
-    <div class="kpi" style="border-top-color:#2980b9">
-      <div class="kl">Procurement &amp; COGS</div>
-      <div class="kv">₹5 Cr</div>
-      <div class="ks2">29% → 27% of revenue</div>
-    </div>
-    <div class="kpi" style="border-top-color:#27ae60">
-      <div class="kl">Energy + Doctor Fee</div>
-      <div class="kv">₹2 Cr</div>
-      <div class="ks2">Solar + HVAC + new hire fee</div>
-    </div>
-    <div class="kpi" style="border-top-color:#e67e22">
-      <div class="kl">People / Revenue Target</div>
-      <div class="kv">36.7% → 34%</div>
-      <div class="ks2">Staff/Bed: 3.8x → 3.5x</div>
-    </div>
-  </div>
-
-  <div class="ibox red">
-    <div class="ibox-title">⚠ Key Alert — Doctor Cost Growing Faster than Revenue</div>
-    <div class="ibox-text">Doctor cost is budgeted to grow +23.7% (FY27 BC: ₹9,908L) vs revenue growth of +16.1%. This reflects 41 new doctor hires with minimum guarantees. Action required: (1) Ensure all new doctors ramp volumes within 6–9 months; (2) Performance-linked contracts strictly enforced after ramp; (3) Bottom-quartile MG review in Q3 (Jan '27); (4) Visiting doctor Calicut share capped at 8% of IP collections. Incumbent doctors are not impacted — new-hire-only approach protects clinical culture.</div>
-  </div>
-
-  <div class="lever" style="border-left-color:#c0392b">
-    <div class="lhd">
-      <div class="lnum" style="background:#c0392b">1</div>
-      <div class="ltitle">Staffing Rationalisation — HR Data-Backed · 1,624 Non-Doctor Staff</div>
-      <div class="lval" style="color:#c0392b">+₹13 Cr EBITDA</div>
-    </div>
-    <div class="ldesc">Jan 2026 HR data: 1,624 non-doctor staff · ₹63.1 Cr/year · ₹3.88L avg/head. ₹6.19 Cr identified in bottom-up analysis across 6 streams:<br>▸ Nursing: 630 → 569 (−61) via ICU reorganisation, 2.25x occupied bed ratio → saves <strong>₹2.26 Cr</strong><br>▸ Pharmacy: 93 → 50 (−43) via barcode scanning + process redesign → saves <strong>₹1.42 Cr</strong><br>▸ Patient Care Services: 97 → 80 (−17) via EMR + ward secretaries → saves <strong>₹0.60 Cr</strong><br>▸ Radiotherapy: 13 → 9 (−4) per AERB norms → saves <strong>₹0.44 Cr</strong><br>▸ 15 mid-size depts (10–30 staff): 10% cut → saves <strong>₹1.27 Cr</strong><br>▸ Paramedical: 122 → 116 (5% cut) → saves <strong>₹0.21 Cr</strong><br>Additional ₹7 Cr from broader scope: Biochem/Histo/Micro/Haem consolidation (85→75), Biomedical Eng (9→7), attrition hold across 40+ depts.</div>
-    <div class="ltags"><span class="pill pg">Highest Impact</span><span class="pill p1-pill">P1–P2</span><span class="pill pn">CHRO + Dept Heads</span><span class="pill pr">₹6.19 Cr Data-Identified</span></div>
-  </div>
-
-  <div class="lever" style="border-left-color:#2980b9">
-    <div class="lhd">
-      <div class="lnum" style="background:#2980b9">2</div>
-      <div class="ltitle">Procurement &amp; Consumption Consolidation</div>
-      <div class="lval" style="color:#2980b9">+₹5 Cr EBITDA</div>
-    </div>
-    <div class="ldesc">Consumption budgeted at ₹15,259L (29% of FY27 revenue). Target: 27% of revenue = ₹5 Cr saving. Levers: 6-month bulk pricing contracts with top 3 consumable suppliers, single pharmacy distributor (pharmacy ~30% of monthly revenue — highest leverage category), implant cost benchmarking vs peer hospitals (implants are consistently over-priced vs national average in Kerala). Vendor consolidation initiative from Phase 1 produces savings from Month 3 onwards.</div>
-    <div class="ltags"><span class="pill pg">High Impact</span><span class="pill p1-pill">Phase 1</span><span class="pill pn">Admin / Supply Chain</span><span class="pill pb">29% → 27% COGS ratio</span></div>
-  </div>
-
-  <div class="lever" style="border-left-color:#27ae60">
-    <div class="lhd">
-      <div class="lnum" style="background:#27ae60">3</div>
-      <div class="ltitle">Energy &amp; Utilities Reduction — Solar + HVAC + LED</div>
-      <div class="lval" style="color:#27ae60">+₹1 Cr EBITDA</div>
-    </div>
-    <div class="ldesc">Other costs budgeted ₹7,024L (+10.8%). Energy targeted for 15% reduction: Solar rooftop Phase 1 (500 KW, &lt;24 month payback) — MoU signed Aug '26, installation commences Sep '26. HVAC optimisation with IoT sensors across 3 units (main building, suites, OPD block). LED retrofit in all clinical zones. F&amp;B outsource evaluation. Combined energy saving: ₹1 Cr EBITDA annualised from H2 FY27 onwards.</div>
-    <div class="ltags"><span class="pill pg">Medium Impact</span><span class="pill p2-pill">Phase 2 Q2–Q3</span><span class="pill pn">Facilities</span><span class="pill pt">500KW Solar · &lt;24m payback</span></div>
-  </div>
-
-  <div class="lever" style="border-left-color:#e67e22">
-    <div class="lhd">
-      <div class="lnum" style="background:#e67e22">4</div>
-      <div class="ltitle">Doctor Fee Restructuring — New Hires Only (41 doctors)</div>
-      <div class="lval" style="color:#e67e22">+₹1 Cr EBITDA</div>
-    </div>
-    <div class="ldesc">Doctor cost budgeted at ₹9,908L (+23.7%). All 41 new doctors on performance-linked contracts (55:45 fixed:variable, from incumbent 78:22 fixed ratio). Visiting doctor fee: Calicut share capped at 8% of IP collections. Bottom-quartile MG review Q3 (Jan '27). Incumbent doctors are unchanged — this protects clinical culture while ensuring new capacity is cost-efficient. Additional ₹1–2 Cr unlocked if Q3 review proceeds well.</div>
-    <div class="ltags"><span class="pill pg">Medium</span><span class="pill p1-pill">Phase 1</span><span class="pill pn">CEO</span><span class="pill pr">Sensitive</span><span class="pill po">Incumbent docs unchanged</span></div>
-  </div>
-
-  <div class="ibox navy">
-    <div class="ibox-title">📌 Capex Deferral — Cash Flow Benefit Only (Not EBITDA)</div>
-    <div class="ibox-text">Deferring ₹4 Cr of non-clinical capex (beautification ₹2.2 Cr, suite renovations ₹0.6 Cr, vehicles ₹0.7 Cr) improves <strong>cash flow</strong> but does NOT improve EBITDA. Capex goes to the balance sheet; only depreciation flows through P&amp;L. FY27 depreciation of ₹3,493L is already budgeted. This is a cash conservation measure — not an EBITDA lever. All ₹99 Cr clinical capex (Spine Robotics ₹12 Cr, Oncology, Cathlab, ICU) remains fully protected.</div>
-  </div>
-
-  <div class="slabel">Non-Doctor Staff Rationalisation — Data Summary (Jan 2026 Actuals)</div>
-  <div class="card">
-    <table class="tbl">
-      <thead>
-        <tr>
-          <th>Department</th>
-          <th class="right">Current FTEs</th>
-          <th class="right">Target FTEs</th>
-          <th class="right">Reduction</th>
-          <th>Mechanism</th>
-          <th class="right">₹ Cr Save</th>
-          <th>Phase</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td>Nursing</td><td class="right">630</td><td class="right">569</td><td class="right">−61</td><td>ICU reorganisation · 2.25x occ bed ratio</td><td class="right" style="color:#27ae60">2.26</td><td><span class="pill p2-pill">P2 Jun</span></td></tr>
-        <tr><td>Pharmacy</td><td class="right">93</td><td class="right">50</td><td class="right">−43</td><td>Barcode scanning + process redesign</td><td class="right" style="color:#27ae60">1.42</td><td><span class="pill p2-pill">P2 Jul</span></td></tr>
-        <tr><td>Patient Care Services</td><td class="right">97</td><td class="right">80</td><td class="right">−17</td><td>EMR + IP/OP ward secretaries</td><td class="right" style="color:#27ae60">0.60</td><td><span class="pill p2-pill">P2 Jun</span></td></tr>
-        <tr><td>Radiotherapy</td><td class="right">13</td><td class="right">9</td><td class="right">−4</td><td>AERB norms compliance</td><td class="right" style="color:#27ae60">0.44</td><td><span class="pill p2-pill">P2 Aug</span></td></tr>
-        <tr><td>15 Mid-Size Depts (10–30 staff)</td><td class="right">~280</td><td class="right">~252</td><td class="right">−28</td><td>10% attrition hold across depts</td><td class="right" style="color:#27ae60">1.27</td><td><span class="pill p2-pill">P2 Aug</span></td></tr>
-        <tr><td>Paramedical</td><td class="right">122</td><td class="right">116</td><td class="right">−6</td><td>5% cut via attrition</td><td class="right" style="color:#27ae60">0.21</td><td><span class="pill p2-pill">P2</span></td></tr>
-        <tr class="bold"><td><strong>Identified Sub-Total</strong></td><td class="right"><strong>1,235+</strong></td><td class="right"><strong>1,076+</strong></td><td class="right"><strong>−159</strong></td><td></td><td class="right" style="color:#27ae60"><strong>6.19</strong></td><td></td></tr>
-        <tr><td>Broader Scope (Biochem/Histo/Micro labs, Biomedical, +40 depts attrition)</td><td class="right">~389</td><td class="right">~359</td><td class="right">−30+</td><td>Lab consolidation + attrition hold</td><td class="right" style="color:#2980b9">~7.0</td><td><span class="pill p3-pill">P3</span></td></tr>
-        <tr class="total"><td><strong>TOTAL TARGET</strong></td><td class="right"><strong>1,624</strong></td><td class="right"><strong>~1,435</strong></td><td class="right"><strong>−189</strong></td><td><strong>No forced exits · Attrition + tech</strong></td><td class="right"><strong>~13 Cr</strong></td><td></td></tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════════════
-     TAB 7: MONTHLY MILESTONES
-═══════════════════════════════════════════ -->
-<div id="page-milestones" class="page">
-
-  <div class="slabel">12-Month Master Calendar — Key Milestones by Month</div>
-  <div class="month-timeline">
-    <div class="month-box mb-p1"><div class="mn">APR</div><div class="mp">P1: Structure</div></div>
-    <div class="month-box mb-p1"><div class="mn">MAY</div><div class="mp">P1: Gate</div></div>
-    <div class="month-box mb-p2"><div class="mn">JUN</div><div class="mp">P2: HR</div></div>
-    <div class="month-box mb-p2"><div class="mn">JUL</div><div class="mp">P2: AERB</div></div>
-    <div class="month-box mb-p2"><div class="mn">AUG</div><div class="mp">P2: Oracle</div></div>
-    <div class="month-box mb-p2"><div class="mn">SEP</div><div class="mp">P2: Gate</div></div>
-    <div class="month-box mb-p3"><div class="mn">OCT</div><div class="mp">P3: Onco</div></div>
-    <div class="month-box mb-p3"><div class="mn">NOV</div><div class="mp">P3: Robotics</div></div>
-    <div class="month-box mb-p3"><div class="mn">DEC</div><div class="mp">P3: Occupancy</div></div>
-    <div class="month-box mb-p3"><div class="mn">JAN</div><div class="mp">P3: MG Review</div></div>
-    <div class="month-box mb-p3"><div class="mn">FEB</div><div class="mp">P3: Building B</div></div>
-    <div class="month-box mb-p3"><div class="mn">MAR</div><div class="mp">YEAR END</div></div>
-  </div>
-
-  <div class="card">
-    <div class="ct">Master Milestone Matrix — FY27 (Apr 2026 – Mar 2027)</div>
-    <div class="cs">Phase gates · Key deliverables · Owners · Cumulative EBITDA impact</div>
-    <table class="tbl">
-      <thead>
-        <tr>
-          <th>Month</th>
-          <th>Phase</th>
-          <th>Key Milestones</th>
-          <th>Owner</th>
-          <th class="right">EBITDA Run-Rate</th>
-          <th>Gate</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><strong>April '26</strong></td>
-          <td><span class="pill p1-pill">P1</span></td>
-          <td>Board approves org structure + DOA · Capex freeze order · 41 new doctors on 55:45 model · Building B capex plan approved · AERB pre-application timeline</td>
-          <td>Chairman + CEO + CFO</td>
-          <td class="right" style="color:#e67e22">₹5–7 Cr</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td><strong>May '26</strong></td>
-          <td><span class="pill p1-pill">P1</span></td>
-          <td>HK vendor contract signed · Procurement bulk contracts signed · HR rationalisation plan signed off · CRM platform live · TPA proposals sent · IT vendor confirmed</td>
-          <td>Admin + CHRO + CIO</td>
-          <td class="right" style="color:#e67e22">₹10–14 Cr</td>
-          <td><span class="pill pr">DAY 60 GATE</span></td>
-        </tr>
-        <tr>
-          <td><strong>June '26</strong></td>
-          <td><span class="pill p2-pill">P2</span></td>
-          <td>Nursing rationalisation plan live (630→569) · PCS 97→80 via EMR · Referral portal 200+ GPs onboarded · Oracle Health parallel run begins · ICU redesign approved</td>
-          <td>CHRO + Nursing + COO</td>
-          <td class="right" style="color:#e67e22">₹13–17 Cr</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td><strong>July '26</strong></td>
-          <td><span class="pill p2-pill">P2</span></td>
-          <td>Pharmacy 93→50 (barcode live) · AERB application submitted · Radiotherapy 13→9 · LINAC vault structural design approved · 15 mid-depts 10% attrition hold</td>
-          <td>Pharmacy + Medical Director</td>
-          <td class="right" style="color:#e67e22">₹15–19 Cr</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td><strong>August '26</strong></td>
-          <td><span class="pill p2-pill">P2</span></td>
-          <td>Oracle Health Phase 1 Go-Live (billing + ARPOB dashboard) · Solar MoU signed · HVAC IoT sensors deployed · Insurance mix 26%→28% (TPA contracts live)</td>
-          <td>CIO + CFO + Facilities</td>
-          <td class="right" style="color:#e67e22">₹17–22 Cr</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td><strong>September '26</strong></td>
-          <td><span class="pill p2-pill">P2</span></td>
-          <td>Occupancy 60%+ confirmed · Building B architect shortlist 3 firms · Energy savings live · Phase 2 full review · Broader HR scope plan approved</td>
-          <td>COO + CFO + Chairman</td>
-          <td class="right" style="color:#e67e22">₹18–24 Cr</td>
-          <td><span class="pill pr">DAY 180 GATE</span></td>
-        </tr>
-        <tr>
-          <td><strong>October '26</strong></td>
-          <td><span class="pill p3-pill">P3</span></td>
-          <td>Oncology OPD fully operational · Cancer screening centre (30 chairs) · Spine Robotics first 10 cases · ARPOB tracking ₹37K+ · Revenue leakage fixed (Oracle live)</td>
-          <td>Oncology Head + Ortho + CIO</td>
-          <td class="right" style="color:#27ae60">₹22–28 Cr</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td><strong>November '26</strong></td>
-          <td><span class="pill p3-pill">P3</span></td>
-          <td>Spine Robotics 50 cases milestone · ARPOB ₹38K+ · Telemedicine outreach 500+ referral partners · International patient packages live · H&amp;N Oncology volumes ramping</td>
-          <td>Ortho + Marketing + International</td>
-          <td class="right" style="color:#27ae60">₹25–32 Cr</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td><strong>December '26</strong></td>
-          <td><span class="pill p3-pill">P3</span></td>
-          <td>Occupancy push 65%+ · Gulf diaspora campaign live · International mix 9.2%→11% · BMT program first cases · Haematology revenue ramp · Solar installation commences</td>
-          <td>COO + Oncology + Facilities</td>
-          <td class="right" style="color:#27ae60">₹28–36 Cr</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td><strong>January '27</strong></td>
-          <td><span class="pill p3-pill">P3</span></td>
-          <td>Bottom-quartile doctor MG review · Lab consolidation (Biochem/Histo 85→75) · Insurance mix 30% target · Attrition hold full run-rate · ARPOB ₹39K+</td>
-          <td>CEO + CHRO + CFO</td>
-          <td class="right" style="color:#27ae60">₹32–40 Cr</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td><strong>February '27</strong></td>
-          <td><span class="pill p3-pill">P3</span></td>
-          <td>Building B architect selected &amp; design Board-approved · Contractor tender commenced · Financing plan (cash vs loan) finalised · AERB status reviewed · International 12%</td>
-          <td>CFO + Chairman + Board</td>
-          <td class="right" style="color:#27ae60">₹38–45 Cr</td>
-          <td></td>
-        </tr>
-        <tr>
-          <td><strong>March '27</strong></td>
-          <td><span class="pill p3-pill">P3</span></td>
-          <td>Full-year results vs UC target · ARPOB ₹40.9K+ · Occupancy 68% · EBITDA ₹148.6 Cr UC path · Staff/bed 3.5x · FY28 plan approved · Building B construction start</td>
-          <td>Chairman + CEO + Board</td>
-          <td class="right" style="color:#27ae60"><strong>₹50 Cr UC</strong></td>
-          <td><span class="pill pr">YEAR END GATE</span></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════════════
-     TAB 8: SCENARIO MODEL
-═══════════════════════════════════════════ -->
-<div id="page-scenario" class="page">
-
-  <div class="slabel">Three-Scenario Financial Model — FY27</div>
-  <div class="ibox navy">
-    <div class="ibox-title">Scenario Assumptions</div>
-    <div class="ibox-text"><strong>Base Case:</strong> Budget targets achieved (₹525.7 Cr rev, 62% occ, ₹36.2K ARPOB) — no additional upside vs budget. <strong>Upside Case (UC):</strong> All 5 revenue levers and 4 cost levers execute at 80%+ success rate. ARPOB ₹40.9K, occupancy 68%, insurance 30%. This is the primary target. <strong>Downside:</strong> Doctor economics underperform, spine robotics delayed 2 quarters, occupancy improvement stalls at 58%, procurement savings partial.</div>
-  </div>
-
-  <div class="scenario-grid">
-    <div class="sc-col down">
-      <div class="sc-label">⚠️ Downside Case</div>
-      <div class="sc-val">₹490 Cr</div>
-      <div class="sc-sub">Revenue · 50% execution</div>
-      <div style="margin-top:10px;font-size:0.63rem;color:#718096">EBITDA: ~₹100–105 Cr<br>Margin: ~20.5–21.5%<br>ARPOB: ₹36–37K<br>Occupancy: 58%</div>
-    </div>
-    <div class="sc-col mid">
-      <div class="sc-label">📊 Base Case (Budget)</div>
-      <div class="sc-val">₹525.7 Cr</div>
-      <div class="sc-sub">Revenue · BC targets</div>
-      <div style="margin-top:10px;font-size:0.63rem;color:#718096">EBITDA: ₹113.9 Cr<br>Margin: 21.7%<br>ARPOB: ₹36.2K<br>Occupancy: 62%</div>
-    </div>
-    <div class="sc-col up">
-      <div class="sc-label">🚀 Upside Case (UC) ← TARGET</div>
-      <div class="sc-val">₹575 Cr</div>
-      <div class="sc-sub">Revenue · +27% vs FY26E</div>
-      <div style="margin-top:10px;font-size:0.63rem;color:#27ae60">EBITDA: ₹148.6 Cr<br>Margin: 25.8%<br>ARPOB: ₹40.9K<br>Occupancy: 68%</div>
-    </div>
-  </div>
-
-  <div class="g2">
-    <div class="card">
-      <div class="ct">Revenue Scenario — FY23 to FY27 UC</div>
-      <div class="cs">₹ Crore · Actuals + Forecast + Scenarios</div>
-      <div class="chart-wrap tall">
-        <canvas id="revScenChart"></canvas>
-      </div>
-    </div>
-    <div class="card">
-      <div class="ct">EBITDA Scenario — FY23 to FY27 UC</div>
-      <div class="cs">₹ Crore · Margin % shown in bars</div>
-      <div class="chart-wrap tall">
-        <canvas id="ebitdaScenChart"></canvas>
-      </div>
-    </div>
-  </div>
-
-  <div class="slabel">FY27 P&amp;L Projection — Baseline vs Base Case vs Upside Case</div>
-  <div class="card">
-    <table class="tbl">
-      <thead>
-        <tr>
-          <th>Particulars</th>
-          <th class="right">FY25 Actual</th>
-          <th class="right">FY26E</th>
-          <th class="right">FY27 Base Case</th>
-          <th class="right">FY27 Upside Case</th>
-          <th class="right">BC vs FY26E</th>
-          <th class="right">UC vs BC</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td>Revenue (₹L)</td><td class="right">41,575</td><td class="right">45,278</td><td class="right">52,573</td><td class="right">57,500</td><td class="right g-up">+16.1%</td><td class="right g-up">+9.4%</td></tr>
-        <tr><td>&nbsp;&nbsp;[–] COGS / Consumption</td><td class="right">12,514</td><td class="right">13,328</td><td class="right">15,259</td><td class="right">15,525</td><td class="right">+14.5%</td><td class="right">+1.7%</td></tr>
-        <tr><td>&nbsp;&nbsp;[–] Doctor Cost</td><td class="right">7,547</td><td class="right">8,009</td><td class="right">9,908</td><td class="right">9,908</td><td class="right g-nt">+23.7%</td><td class="right">flat</td></tr>
-        <tr class="bold"><td>Contribution (₹L)</td><td class="right">21,515</td><td class="right">23,941</td><td class="right">27,405</td><td class="right">32,067</td><td class="right g-up">+14.5%</td><td class="right g-up">+17%</td></tr>
-        <tr><td>&nbsp;&nbsp;[–] Payroll (Non-Doctor)</td><td class="right">7,401</td><td class="right">7,718</td><td class="right">8,985</td><td class="right">8,185</td><td class="right">+16.4%</td><td class="right g-up">−8.9%</td></tr>
-        <tr><td>&nbsp;&nbsp;[–] Other Costs</td><td class="right">6,212</td><td class="right">6,341</td><td class="right">7,024</td><td class="right">6,524</td><td class="right">+10.8%</td><td class="right g-up">−7.1%</td></tr>
-        <tr class="bold" style="background:#edf2f7"><td><strong>EBITDA (₹L)</strong></td><td class="right"><strong>7,901</strong></td><td class="right"><strong>9,882</strong></td><td class="right"><strong>11,395</strong></td><td class="right" style="color:#27ae60"><strong>14,858</strong></td><td class="right g-up"><strong>+15.3%</strong></td><td class="right g-up"><strong>+30.4%</strong></td></tr>
-        <tr class="bold" style="background:#edf2f7"><td><strong>EBITDA Margin</strong></td><td class="right"><strong>19%</strong></td><td class="right"><strong>21.8%</strong></td><td class="right"><strong>21.7%</strong></td><td class="right" style="color:#27ae60"><strong>25.8%</strong></td><td class="right">~flat</td><td class="right g-up"><strong>+410 bps</strong></td></tr>
-        <tr><td>[–] Depreciation</td><td class="right">2,605</td><td class="right">2,500</td><td class="right">3,493</td><td class="right">3,493</td><td class="right"></td><td class="right"></td></tr>
-        <tr><td>PBT (₹L)</td><td class="right">5,263</td><td class="right">7,289</td><td class="right">7,809</td><td class="right">11,271</td><td class="right g-up">+7.1%</td><td class="right g-up">+44.3%</td></tr>
-        <tr class="total"><td><strong>PAT (₹L)</strong></td><td class="right"><strong>3,901</strong></td><td class="right"><strong>5,403</strong></td><td class="right"><strong>5,788</strong></td><td class="right" style="color:#27ae60"><strong>8,353</strong></td><td class="right g-up"><strong>+7.1%</strong></td><td class="right g-up"><strong>+44.3%</strong></td></tr>
-        <tr class="total"><td><strong>PAT Margin</strong></td><td class="right"><strong>9.4%</strong></td><td class="right"><strong>11.9%</strong></td><td class="right"><strong>11.0%</strong></td><td class="right" style="color:#27ae60"><strong>14.5%</strong></td><td class="right"></td><td class="right g-up"><strong>+350 bps</strong></td></tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<div class="footer">VPS Lakeshore Hospital &amp; Research Centre &nbsp;·&nbsp; 12-Month Efficiency &amp; Growth Plan FY27 &nbsp;·&nbsp; April 2026 – March 2027 &nbsp;·&nbsp; Confidential — Board &amp; Senior Leadership Use Only &nbsp;·&nbsp; March 2026</div>
+<div class="footer">VPS Lakeshore Hospital &amp; Research Centre &nbsp;&middot;&nbsp; 12-Month Efficiency &amp; Growth Plan FY27 &nbsp;&middot;&nbsp; April 2026 &ndash; March 2027 &nbsp;&middot;&nbsp; Confidential &mdash; Board &amp; Senior Leadership Use Only &nbsp;&middot;&nbsp; March 2026</div>
 
 <script>
-const C={navy:'#1a3a5c',orange:'#e67e22',green:'#27ae60',blue:'#2980b9',purple:'#8e44ad',red:'#c0392b',teal:'#00838f',grey:'#718096'};
-Chart.defaults.font.family="'IBM Plex Sans',system-ui,sans-serif";
-Chart.defaults.font.size=11;Chart.defaults.color=C.grey;
-
-function showTab(id,el){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.getElementById('page-'+id).classList.add('active');
-  if(el)el.classList.add('active');
+function showTab(id, el) {
+  document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+  document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+  document.getElementById('page-' + id).classList.add('active');
+  if (el) el.classList.add('active');
 }
-
-// WATERFALL
-new Chart(document.getElementById('waterfallChart'),{
-  type:'bar',
-  data:{
-    labels:['FY26E Base\nEBITDA','Revenue\nLevers (+5)','Cost\nLevers (+4)','FY27\nUpside Case'],
-    datasets:[
-      {data:[0,99,129,0],backgroundColor:'transparent',borderColor:'transparent',stack:'wf'},
-      {data:[99,30,20,149],backgroundColor:[C.navy,C.green,C.blue,'#d35400'],borderRadius:[5,5,5,5],stack:'wf',barPercentage:0.5}
-    ]
-  },
-  options:{
-    responsive:true,maintainAspectRatio:false,
-    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>{if(c.datasetIndex===0)return null;return['FY26E: ₹99 Cr (21.8%)','Rev uplift: +₹30 Cr EBITDA','Cost saves: +₹20 Cr EBITDA','FY27 UC: ₹149 Cr (25.8%)'][c.dataIndex];}}}},
-    scales:{
-      y:{stacked:true,beginAtZero:true,max:200,ticks:{callback:v=>'₹'+v,font:{size:9}},grid:{color:'#f0f4f8'}},
-      x:{stacked:true,grid:{display:false},ticks:{font:{size:9}}}
-    }
-  },
-  plugins:[{id:'wfl',afterDatasetsDraw(chart){
-    const{ctx,scales:{x,y}}=chart;
-    const vals=[99,30,20,149],bases=[0,99,129,0];
-    const tl=['₹99 Cr','+₹30','+₹20','₹149 Cr'],sl=['21.8%','Rev','Cost','25.8% ✓'];
-    ctx.save();vals.forEach((v,i)=>{
-      const xp=x.getPixelForValue(i),my=y.getPixelForValue(bases[i]+v/2);
-      const barH=Math.abs(y.getPixelForValue(bases[i])-y.getPixelForValue(bases[i]+v));
-      ctx.fillStyle='white';ctx.font='bold 10px IBM Plex Mono';ctx.textAlign='center';
-      ctx.fillText(tl[i],xp,my+(barH>40?0:2));
-      if(barH>32){ctx.fillStyle='rgba(255,255,255,0.75)';ctx.font='8px IBM Plex Sans';ctx.fillText(sl[i],xp,my+13);}
-    });ctx.restore();
-  }}]
-});
-
-// PHASE RAMP
-new Chart(document.getElementById('rampChart'),{
-  type:'bar',
-  data:{
-    labels:['Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar'],
-    datasets:[{
-      label:'Monthly EBITDA Uplift (₹ Cr)',
-      data:[2,3,4,5,5,6,8,10,12,15,17,20],
-      backgroundColor:['#1a7d4b','#1a7d4b','#c0700e','#c0700e','#c0700e','#c0700e','#1a5c96','#1a5c96','#1a5c96','#1a5c96','#1a5c96','#e67e22'],
-      borderRadius:4,barPercentage:0.65
-    }]
-  },
-  options:{
-    responsive:true,maintainAspectRatio:false,
-    plugins:{legend:{display:false}},
-    scales:{
-      y:{beginAtZero:true,ticks:{callback:v=>'₹'+v,font:{size:9}},grid:{color:'#f0f4f8'}},
-      x:{grid:{display:false},ticks:{font:{size:9}}}
-    }
-  }
-});
-
-// P1 BRIDGE
-new Chart(document.getElementById('p1BridgeChart'),{
-  type:'bar',
-  data:{
-    labels:['FY26E\nBase','Doctor\nContracts','Capex\nFreeze','Vendor\nConsol.','Procurement\nContracts','Day 60\nRun-Rate'],
-    datasets:[
-      {data:[0,99,99.8,101.8,103.3,0],backgroundColor:'transparent',borderColor:'transparent',stack:'b'},
-      {data:[99,0.8,2,1.5,3,106.3],backgroundColor:[C.navy,'#e67e22','#27ae60','#27ae60','#27ae60','#1a5c96'],borderRadius:4,stack:'b',barPercentage:0.45}
-    ]
-  },
-  options:{
-    responsive:true,maintainAspectRatio:false,
-    plugins:{legend:{display:false}},
-    scales:{
-      y:{stacked:true,min:96,max:112,ticks:{callback:v=>'₹'+v,font:{size:9}},grid:{color:'#f0f4f8'}},
-      x:{stacked:true,grid:{display:false},ticks:{font:{size:9}}}
-    }
-  }
-});
-
-// REVENUE SCENARIO
-new Chart(document.getElementById('revScenChart'),{
-  type:'bar',
-  data:{
-    labels:['FY23','FY24','FY25','FY26E','FY27 BC','FY27 UC'],
-    datasets:[{
-      data:[419,396,408,452.8,525.7,575],
-      backgroundColor:['rgba(26,58,92,0.3)','rgba(26,58,92,0.45)','rgba(26,58,92,0.6)','rgba(26,58,92,0.8)',C.navy,'#e67e22'],
-      borderRadius:5,barPercentage:0.58
-    }]
-  },
-  options:{
-    responsive:true,maintainAspectRatio:false,
-    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'₹'+c.raw+' Cr'}}},
-    scales:{y:{min:340,ticks:{callback:v=>'₹'+v,font:{size:9}},grid:{color:'#f0f4f8'}},x:{grid:{display:false},ticks:{font:{size:9}}}}
-  },
-  plugins:[{id:'rl',afterDatasetsDraw(chart){
-    const{ctx,scales:{x,y}}=chart;
-    const vals=[419,396,408,452.8,525.7,575];
-    const g=[null,'−5.5%','+3.0%','+11.1%','+16.1%','+9.4%'];
-    const cols=[null,C.red,C.orange,C.green,C.green,'#e67e22'];
-    ctx.save();vals.forEach((v,i)=>{if(!g[i])return;ctx.fillStyle=cols[i];ctx.font='bold 9px IBM Plex Sans';ctx.textAlign='center';ctx.fillText(g[i],x.getPixelForValue(i),y.getPixelForValue(v)-7);});ctx.restore();
-  }}]
-});
-
-// EBITDA SCENARIO
-new Chart(document.getElementById('ebitdaScenChart'),{
-  type:'bar',
-  data:{
-    labels:['FY23','FY24','FY25','FY26E','FY27 BC','FY27 UC'],
-    datasets:[{
-      data:[107,73,79,98.8,113.9,148.6],
-      backgroundColor:['rgba(39,174,96,0.75)','rgba(231,76,60,0.55)','rgba(39,174,96,0.55)','rgba(39,174,96,0.8)',C.green,'#e67e22'],
-      borderRadius:5,barPercentage:0.58
-    }]
-  },
-  options:{
-    responsive:true,maintainAspectRatio:false,
-    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'₹'+c.raw+' Cr | '+['25.6%','18.5%','19.4%','21.8%','21.7%','25.8%'][c.dataIndex]}}},
-    scales:{y:{min:50,ticks:{callback:v=>'₹'+v,font:{size:9}},grid:{color:'#f0f4f8'}},x:{grid:{display:false},ticks:{font:{size:9}}}}
-  },
-  plugins:[{id:'el',afterDatasetsDraw(chart){
-    const{ctx,scales:{x,y}}=chart;
-    const vals=[107,73,79,98.8,113.9,148.6];
-    const margins=['25.6%','18.5%','19.4%','21.8%','21.7%','25.8%'];
-    const g=[null,'−31.8%','+8.2%','+25%','+15.3%','+30.4%'];
-    const cols=[null,C.red,C.orange,C.green,C.green,'#e67e22'];
-    ctx.save();vals.forEach((v,i)=>{
-      const xp=x.getPixelForValue(i),yp=y.getPixelForValue(v);
-      const barH=y.getPixelForValue(0)-yp;
-      if(g[i]){ctx.fillStyle=cols[i];ctx.font='bold 9px IBM Plex Sans';ctx.textAlign='center';ctx.fillText(g[i],xp,yp-7);}
-      if(barH>22){ctx.fillStyle='rgba(255,255,255,0.9)';ctx.font='bold 8.5px IBM Plex Mono';ctx.textAlign='center';ctx.fillText(margins[i],xp,yp+barH/2+3);}
-    });ctx.restore();
-  }}]
-});
 </script>
 </body>
 </html>
