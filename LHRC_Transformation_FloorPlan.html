@@ -394,5 +394,325 @@ function setView(v) {
 
 setView('current');
 </script>
+
+<!-- ── TRANSFORMATION ADVANTAGES ── -->
+<style>
+.adv-wrap {
+  padding: 0 40px 56px;
+  max-width: 1160px;
+  margin: 0 auto;
+}
+.adv-section-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.adv-section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, var(--border2), transparent);
+}
+
+/* ── ROI THESIS BAR ── */
+.thesis-bar {
+  background: linear-gradient(135deg, #0d1829 0%, #111e38 100%);
+  border: 1px solid var(--border2);
+  border-left: 3px solid var(--accent);
+  border-radius: 10px;
+  padding: 16px 22px;
+  margin-bottom: 28px;
+  font-size: 12px;
+  color: #a8b8d8;
+  line-height: 1.75;
+}
+.thesis-bar strong { color: #e8eeff; }
+
+/* ── CAPEX PHASE CARDS ── */
+.phase-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 28px;
+}
+.phase-card {
+  border-radius: 10px;
+  padding: 16px 18px;
+  border: 1px solid;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.pc-now   { background: #1a1208; border-color: #7c4a0f; }
+.pc-fy27  { background: #091a10; border-color: #1a6633; }
+.pc-fy28  { background: #1a0820; border-color: #7c1a5a; }
+
+.phase-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 5px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+.pb-now  { background: #7c3d0a; color: #fed7aa; }
+.pb-fy27 { background: #14532d; color: #86efac; }
+.pb-fy28 { background: #7e1a5c; color: #f9a8d4; }
+
+.phase-title {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #e8eeff;
+  line-height: 1.35;
+}
+.phase-sub {
+  font-size: 10px;
+  color: var(--muted);
+  margin-top: 1px;
+}
+.phase-items {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.phase-item {
+  font-size: 11px;
+  color: #8892b0;
+  line-height: 1.55;
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+.phase-item .pi-icon { flex-shrink: 0; }
+.phase-footer {
+  font-size: 10.5px;
+  font-weight: 700;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  font-family: 'JetBrains Mono', monospace;
+}
+.pf-now  { color: #fb923c; }
+.pf-fy27 { color: #4ade80; }
+.pf-fy28 { color: #f472b6; }
+
+/* ── CALLOUT CARDS ── */
+.callout-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.callout-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.cc-top {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.cc-body {
+  font-size: 11.5px;
+  color: #8892b0;
+  line-height: 1.65;
+}
+.cc-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 9.5px;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  margin-top: 2px;
+  align-self: flex-start;
+}
+.tag-red    { background: rgba(185,28,28,0.25); color: #fca5a5; }
+.tag-green  { background: rgba(22,163,74,0.2);  color: #86efac; }
+.tag-purple { background: rgba(124,58,237,0.25);color: #c4b5fd; }
+.tag-blue   { background: rgba(21,101,192,0.25);color: #93c5fd; }
+
+/* ── CONSTRAINTS vs ADVANTAGES ── */
+.compare-bar {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.cb-block {
+  border-radius: 10px;
+  padding: 16px 18px;
+  border: 1px solid;
+}
+.cb-constraint { background: #1a0a0a; border-color: #7f1d1d; }
+.cb-advantage  { background: #071510; border-color: #14532d; }
+.cb-head {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.cb-constraint .cb-head { color: #fca5a5; }
+.cb-advantage  .cb-head { color: #86efac; }
+.cb-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.cb-row {
+  font-size: 11.5px;
+  color: #8892b0;
+  line-height: 1.5;
+  display: flex;
+  gap: 8px;
+}
+
+@media (max-width: 860px) {
+  .phase-grid   { grid-template-columns: 1fr; }
+  .callout-grid { grid-template-columns: 1fr 1fr; }
+  .compare-bar  { grid-template-columns: 1fr; }
+  .adv-wrap     { padding: 0 20px 40px; }
+}
+</style>
+
+<div class="adv-wrap">
+
+  <div class="adv-section-title">Transformation Rationale &amp; Investment Logic</div>
+
+  <div class="thesis-bar">
+    The FY27 AOP capex is predominantly clinical — <strong>Plant &amp; Machinery ₹47.70 Cr (63.8%)</strong> — equipment that directly generates revenue. Building renovation (₹18.3 Cr) focuses on converting the Old Building to an efficient IP+OT layout. This is not a speculative greenfield build but a <strong>repurposing of existing assets</strong> toward higher-value clinical use. The <strong>LINAC Upgrade, BMT capability, and Clinical Research floor</strong> are the three highest-ROI infrastructure investments that underpin the revenue upside case.
+  </div>
+
+  <div class="adv-section-title">Capex Phasing — Active Renovations to Full Transformation</div>
+
+  <div class="phase-grid">
+
+    <div class="phase-card pc-now">
+      <div>
+        <div class="phase-badge pb-now">FY26 · Now</div>
+        <div class="phase-title" style="margin-top:8px">Active Renovations — ₹7.36 Cr In Progress</div>
+        <div class="phase-sub">ICU · Emergency · Ortho · Porch · Engineering Services</div>
+      </div>
+      <div class="phase-items">
+        <div class="phase-item"><span class="pi-icon">🚨</span><span>ICU Complex Upgrade incl. Central Cutout — ₹1.37 Cr</span></div>
+        <div class="phase-item"><span class="pi-icon">🏥</span><span>Emergency Department Renovation — ₹3.20 Cr</span></div>
+        <div class="phase-item"><span class="pi-icon">🦴</span><span>Ortho Dept + Ultrasound — ₹1.17 Cr</span></div>
+        <div class="phase-item"><span class="pi-icon">🚪</span><span>Porch, Patient Waiting &amp; IP Billing Area — ₹0.57 Cr</span></div>
+        <div class="phase-item"><span class="pi-icon">🏗️</span><span>Roads, Doors &amp; Cutout Works — ₹0.27 Cr</span></div>
+        <div class="phase-item"><span class="pi-icon">⚙️</span><span>Engineering Services — STP, AHU, Cisterns — ₹0.82 Cr</span></div>
+      </div>
+      <div class="phase-footer pf-now">→ Will complete / carry into Q1 FY27</div>
+    </div>
+
+    <div class="phase-card pc-fy27">
+      <div>
+        <div class="phase-badge pb-fy27">FY27 · AOP</div>
+        <div class="phase-title" style="margin-top:8px">Clinical Equipment + Floor Reorg — ₹74.80 Cr</div>
+        <div class="phase-sub">Plant &amp; Machinery dominant · Building conversions start</div>
+      </div>
+      <div class="phase-items">
+        <div class="phase-item"><span class="pi-icon">🔬</span><span>Clinical Equipment &amp; LINAC infrastructure — ₹47.70 Cr</span></div>
+        <div class="phase-item"><span class="pi-icon">🏗️</span><span>Old Building floor conversions to IP beds — ₹18.3 Cr</span></div>
+        <div class="phase-item"><span class="pi-icon">💻</span><span>IT / Digital + HIS — ₹4.3 Cr</span></div>
+        <div class="phase-item"><span class="pi-icon">🛏️</span><span>Furniture, vehicles, intangibles — ₹4.4 Cr</span></div>
+      </div>
+      <div class="phase-footer pf-fy27">→ FY27 AOP · ₹74.80 Cr budgeted</div>
+    </div>
+
+    <div class="phase-card pc-fy28">
+      <div>
+        <div class="phase-badge pb-fy28">FY28+ · Vision</div>
+        <div class="phase-title" style="margin-top:8px">Full 2-Building Transformation</div>
+        <div class="phase-sub">LINAC Upgrade · BMT · Clinical Research · New Building complete</div>
+      </div>
+      <div class="phase-items">
+        <div class="phase-item"><span class="pi-icon">🦠</span><span>BMT Unit — 9F New Building · dedicated programme</span></div>
+        <div class="phase-item"><span class="pi-icon">🔬</span><span>LINAC Upgrade — B2 New Building · radiation expansion</span></div>
+        <div class="phase-item"><span class="pi-icon">🧪</span><span>Clinical Research Floor — 10F · trials programme</span></div>
+        <div class="phase-item"><span class="pi-icon">🧬</span><span>Nephrology / Dialysis hub — 6F · spoke network</span></div>
+      </div>
+      <div class="phase-footer pf-fy28">→ Full Board capex plan required FY27 Q1</div>
+    </div>
+
+  </div>
+
+  <div class="adv-section-title">Key Infrastructure Changes — What Moves &amp; Why It Matters</div>
+
+  <div class="callout-grid">
+
+    <div class="callout-card">
+      <div class="cc-top" style="color:#fca5a5">🔬 Radiation Expansion</div>
+      <div class="cc-body">LINAC Upgrade added to New Building B2 alongside the existing 2 machines. HDR room and physics lab integrated. Expands oncology treatment capacity without displacing any existing services. AERB application must be filed Q1 FY27 — approval takes 12–18 months.</div>
+      <span class="cc-tag tag-red">High Priority</span>
+    </div>
+
+    <div class="callout-card">
+      <div class="cc-top" style="color:#86efac">🧪 Lab &amp; Diagnostics Move</div>
+      <div class="cc-body">Lab relocates to New Building B1 alongside Rehab &amp; Physio. Frees up Old Building floorspace for conversion to additional IP beds. Admin consolidated with back office in the same move — improving clinical-to-admin separation.</div>
+      <span class="cc-tag tag-green">Efficiency Gain</span>
+    </div>
+
+    <div class="callout-card">
+      <div class="cc-top" style="color:#c4b5fd">🦠 BMT Unit — 9F New Block</div>
+      <div class="cc-body">Dedicated Bone Marrow Transplant floor on New Building 9F with OPDs. Clean-room fit-out, HEPA filtration, dedicated nursing station. Currently no standalone BMT floor exists. Requires Haematoncology consultant on-board first as a pre-condition.</div>
+      <span class="cc-tag tag-purple">New Capability</span>
+    </div>
+
+    <div class="callout-card">
+      <div class="cc-top" style="color:#93c5fd">🔬 Clinical Research Floor</div>
+      <div class="cc-body">10F New Building dedicated to clinical trials infrastructure, genomics lab, and data management. Enables Phase I–III trials, supports Burjeel Group's research ambitions, and differentiates LHRC from regional competition. Requires ethics committee setup and research institution tie-ups.</div>
+      <span class="cc-tag tag-blue">Strategic Differentiator</span>
+    </div>
+
+  </div>
+
+  <div class="adv-section-title">Current Constraints vs Future State Advantages</div>
+
+  <div class="compare-bar">
+    <div class="cb-block cb-constraint">
+      <div class="cb-head">⚠️ Current Constraints</div>
+      <div class="cb-list">
+        <div class="cb-row"><span>—</span><span>Mixed use floors with no clinical zoning — OTs and ICU sharing with OPDs on the same level</span></div>
+        <div class="cb-row"><span>—</span><span>Oncology scattered across buildings with no dedicated cancer patient pathway</span></div>
+        <div class="cb-row"><span>—</span><span>No standalone BMT floor, no Clinical Research space</span></div>
+        <div class="cb-row"><span>—</span><span>Old Building floors 3–10 underutilised as undifferentiated IP beds without specialty zoning</span></div>
+        <div class="cb-row"><span>—</span><span>Lab and diagnostics mixed into clinical floors, limiting IP bed expansion headroom</span></div>
+      </div>
+    </div>
+    <div class="cb-block cb-advantage">
+      <div class="cb-head">✅ Future State Advantages</div>
+      <div class="cb-list">
+        <div class="cb-row"><span>→</span><span>Old Building: full IP wards across floors 2–10 + dedicated OT/ICU/CSSD surgical zone on 1F</span></div>
+        <div class="cb-row"><span>→</span><span>New Building: specialty floors by discipline — Cardiac, Gastro, Nephro, Ortho, Mother &amp; Child, BMT</span></div>
+        <div class="cb-row"><span>→</span><span>LINAC Upgrade in B2 — radiation capacity expanded, oncology revenue ceiling raised</span></div>
+        <div class="cb-row"><span>→</span><span>BMT unit and Clinical Research floor create two new high-value revenue streams unavailable today</span></div>
+        <div class="cb-row"><span>→</span><span>Clear patient pathways by specialty reduce clinical handoff risk and improve throughput</span></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
 </body>
 </html>
