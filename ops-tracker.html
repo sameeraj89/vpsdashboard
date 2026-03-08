@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
 :root {
   --blue:#0072BC; --blue-dark:#005a96; --blue-deep:#003f6e;
@@ -127,6 +128,16 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .deadline-text{font-size:0.65rem;color:var(--muted);font-family:monospace;white-space:nowrap;}
 .notes-snip{font-size:0.64rem;color:var(--muted);font-style:italic;max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .empty-row td{text-align:center;padding:48px;color:var(--muted);font-size:.8rem;}
+/* ── ROW COLOUR CODING (by status) ── */
+.task-table tr.row-not-started td:first-child{border-left:3px solid #d4dce6;}
+.task-table tr.row-in-progress td{background:rgba(0,114,188,.03);}
+.task-table tr.row-in-progress td:first-child{border-left:3px solid var(--sky);}
+.task-table tr.row-complete td{background:rgba(14,122,90,.03);}
+.task-table tr.row-complete td:first-child{border-left:3px solid var(--green);}
+.task-table tr.row-blocked td{background:rgba(200,16,62,.04);}
+.task-table tr.row-blocked td:first-child{border-left:3px solid var(--crimson);}
+.task-table tr.row-deferred td{background:rgba(74,58,136,.04);}
+.task-table tr.row-deferred td:first-child{border-left:3px solid var(--purple);}
 
 /* ── PRE-PHASE 1 WEEKLY CARDS ── */
 .week-section{margin-bottom:28px;}
@@ -561,7 +572,8 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
         </div>
       </div>
       <div class="ad-info-box">
-        <div class="ad-info-line">📌 <strong>Note:</strong> This tab must remain open in the browser for auto-digest to fire. The digest modal will open automatically at the scheduled time.</div>
+        <div class="ad-info-line" id="adInfoNote">Loading…</div>
+        <div class="ad-info-line" style="margin-top:4px;">📌 This browser tab must stay open for the timer to fire.</div>
         <div class="ad-info-line" id="adLastSentLine">🕐 Last sent: Never</div>
       </div>
     </div>
@@ -582,11 +594,50 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
     <div class="modal-body" id="digestBody"></div>
     <div class="modal-footer">
       <button class="btn-cancel" onclick="closeDigest()">Close</button>
+      <button id="digestSendAll" class="btn-save" onclick="sendAllDigests()" style="display:none;">📤 Send All</button>
     </div>
   </div>
 </div>
 
 <script>
+/* ══════════════════════════════════════
+   EMAILJS CONFIG
+   ─────────────────────────────────────
+   1. Sign up free at https://emailjs.com
+   2. Add an Email Service (Gmail / Outlook)
+   3. Create a template with variables:
+        {{to_name}}   — recipient first name
+        {{date}}      — today's date
+        {{task_list}} — formatted task block
+   4. Paste your IDs below and set EJ_CONFIGURED = true
+══════════════════════════════════════ */
+var EJ_SERVICE_ID  = 'YOUR_SERVICE_ID';
+var EJ_TEMPLATE_ID = 'YOUR_TEMPLATE_ID';
+var EJ_PUBLIC_KEY  = 'YOUR_PUBLIC_KEY';
+var EJ_CONFIGURED  = false; /* set to true once IDs are filled in */
+
+/* ══════════════════════════════════════
+   DEADLINE PARSER — returns Date or null
+══════════════════════════════════════ */
+var MONTH_IDX={Jan:0,Feb:1,Mar:2,Apr:3,May:4,Jun:5,Jul:6,Aug:7,Sep:8,Oct:9,Nov:10,Dec:11};
+function parseDeadline(dl){
+  if(!dl||dl==='—')return null;
+  var parts=dl.trim().split(/[\s,]+/);
+  if(parts.length<2)return null;
+  var m=MONTH_IDX[parts[0]];var d=parseInt(parts[1]);
+  if(isNaN(m)||isNaN(d))return null;
+  var yr=new Date().getFullYear();
+  var dt=new Date(yr,m,d);
+  /* if parsed date is >6 months in the past, it wraps to next year */
+  if(dt.getTime()<Date.now()-180*86400000)dt.setFullYear(yr+1);
+  return dt;
+}
+function deadlineInNextDays(dl,days){
+  var dt=parseDeadline(dl);if(!dt)return true;/* unknown deadline — include */
+  var cutoff=new Date(Date.now()+days*86400000);
+  return dt<=cutoff;
+}
+
 /* ══════════════════════════════════════
    TEAM MEMBERS
 ══════════════════════════════════════ */
@@ -883,7 +934,8 @@ function renderTable(list){
   var rows='';
   list.forEach(function(t){
     var isGate=(t.type==='gate');
-    rows+='<tr '+(isGate?'class="gate-row"':'')+' onclick="openEdit(\''+t.id+'\')">';
+    var rowCls=(isGate?'gate-row ':'')+'row-'+(t.status||'not-started');
+    rows+='<tr class="'+rowCls+'" onclick="openEdit(\''+t.id+'\')">';
     rows+='<td>'+phasePill(t.phase)+'</td>';
     rows+='<td><div style="font-size:.73rem;font-weight:600;color:var(--text);line-height:1.3;">'+t.title+'</div></td>';
     rows+='<td><div style="font-size:.64rem;color:var(--muted);">'+t.workstream+'</div></td>';
@@ -901,15 +953,16 @@ function renderTable(list){
 /* ══════════════════════════════════════
    MAIN RENDER
 ══════════════════════════════════════ */
+var PRIORITY_BANNER='<div class="priority-banner" style="margin-bottom:14px;"><div class="pb-icon">🎯</div><div><div class="pb-title">Pre-Phase 1 Priority Focus — Mar 8 to Apr 1, 2026</div><div class="pb-desc">Four parallel tracks this month, all owned and time-bound. Every task below is a blocker for Phase 1 Day 1 readiness (Apr 1).</div><div class="pb-tags"><span class="pb-tag">🛏 Drive Bed Occupancy</span><span class="pb-tag">👨‍⚕️ Onboard 1 Specialist</span><span class="pb-tag">💼 Hire BD Manager</span><span class="pb-tag">📉 Staff Rationalisation</span><span class="pb-tag">🌐 Website Redesign</span></div></div></div>';
+
 function renderContent(){
   var ca=document.getElementById('contentArea');
   var fb=document.getElementById('filterBar');
+  fb.style.display='flex';
   if(activeTab==='pre'){
-    fb.style.display='none';
-    ca.innerHTML=renderPrePhase();
+    ca.innerHTML=PRIORITY_BANNER+renderTable(applyFiltersTo(preTasks));
     updateMetrics(preTasks);
   } else {
-    fb.style.display='flex';
     var phase={'p1':'Phase 1','p2':'Phase 2','p3':'Phase 3','all':null}[activeTab];
     var list=phase?mainTasks.filter(function(t){return t.phase===phase;}):mainTasks;
     ca.innerHTML=renderTable(applyFiltersTo(list));
@@ -1074,48 +1127,99 @@ function saveTeamSettings(){
 }
 
 /* ══════════════════════════════════════
-   DIGEST MODAL
+   DIGEST HELPERS
 ══════════════════════════════════════ */
-function openDigest(){
-  document.getElementById('digestDate').textContent='Daily Ops Digest — '+todayStr();
+function buildTaskText(tasks){
+  return tasks.map(function(t){
+    return '• '+t.title+'\n  Deadline: '+t.deadline+'  |  Status: '+t.status.replace(/-/g,' ')+(t.notes?'\n  Note: '+t.notes:'');
+  }).join('\n\n');
+}
+function digestByOwner(){
+  /* only tasks not complete, assigned, deadline within 60 days */
   var byOwner={};
   allTasks.forEach(function(t){
     if(t.status==='complete'||!t.assignee||t.assignee==='Unassigned')return;
+    if(!deadlineInNextDays(t.deadline,60))return;
     if(!byOwner[t.assignee])byOwner[t.assignee]=[];
     byOwner[t.assignee].push(t);
   });
+  return byOwner;
+}
+function sendDigestEmail(name,email,tasks,onDone){
+  if(!EJ_CONFIGURED){onDone&&onDone(false,'EmailJS not configured');return;}
+  var firstName=name.replace(/\s*\(.*\)/,'').trim();
+  emailjs.send(EJ_SERVICE_ID,EJ_TEMPLATE_ID,{
+    to_name:firstName,
+    to_email:email,
+    date:new Date().toLocaleDateString('en-GB'),
+    task_list:buildTaskText(tasks)
+  }).then(function(){onDone&&onDone(true);},function(err){onDone&&onDone(false,err);});
+}
 
-  var html='<div class="digest-copy-bar"><span class="digest-copy-lbl">Click a person\'s 📧 button to open their individual email in your mail client.</span></div>';
+/* ══════════════════════════════════════
+   DIGEST MODAL
+══════════════════════════════════════ */
+function openDigest(){
+  var dateLabel=todayStr();
+  document.getElementById('digestDate').textContent='Daily Ops Digest — '+dateLabel+' · Deadlines within 60 days';
+  var byOwner=digestByOwner();
+
+  var modeNote=EJ_CONFIGURED
+    ? '📤 Click <strong>Send</strong> to dispatch via EmailJS, or <strong>Send All</strong> to send to everyone at once.'
+    : '📧 EmailJS not yet configured — click each person\'s email button to open in your mail client. <a href="#" onclick="openAutoDigest();return false;" style="color:var(--blue);font-weight:600;">Configure auto-send →</a>';
+
+  var html='<div class="digest-copy-bar"><span class="digest-copy-lbl">'+modeNote+'</span></div>';
 
   Object.keys(byOwner).sort().forEach(function(name){
     var tasks=byOwner[name];
     var email=memberEmail(name);
+    var firstName=name.replace(/\s*\(.*\)/,'').trim();
     var subj=encodeURIComponent('VPS Lakeshore Ops Digest — '+new Date().toLocaleDateString('en-GB'));
-    var body=encodeURIComponent(
-      'Hi '+name.replace(/\s*\(.*\)/,'').trim()+',\n\nHere is your VPS Lakeshore operations task update for '+new Date().toLocaleDateString('en-GB')+':\n\n'+
-      tasks.map(function(t){return '• '+t.title+'\n  Deadline: '+t.deadline+'  |  Status: '+t.status.replace(/-/g,' ')+(t.notes?'\n  Note: '+t.notes:'');}).join('\n\n')+
-      '\n\nPlease update your task statuses and flag any blockers.\n\n—\nVPS Lakeshore Ops Tracker\nhttps://vpslakeshoretdx.in/ops-tracker.html'
-    );
-    var mailtoHref=email?'mailto:'+email+'?subject='+subj+'&body='+body:'';
+    var bodyTxt='Hi '+firstName+',\n\nYour VPS Lakeshore task update for '+new Date().toLocaleDateString('en-GB')+':\n\n'+buildTaskText(tasks)+'\n\nPlease update statuses and flag any blockers.\n\n—\nVPS Lakeshore Ops Tracker\nhttps://vpslakeshoretdx.in/ops-tracker.html';
+    var mailtoHref=email?'mailto:'+email+'?subject='+subj+'&body='+encodeURIComponent(bodyTxt):'';
 
     html+='<div class="digest-owner-block">';
-    html+='<div class="digest-owner-header"><div><div class="digest-owner-name">'+name+'</div><div class="digest-owner-email">'+(email||'<em style="color:#aaa">No email set — click Team & Emails to add</em>')+'</div></div>';
-    if(email){html+='<a class="mailto-btn" href="'+mailtoHref+'">📧 Email '+name.replace(/\s*\(.*\)/,'').trim()+'</a>';}
+    html+='<div class="digest-owner-header"><div><div class="digest-owner-name">'+name+'</div><div class="digest-owner-email">'+(email||'<em style="color:#aaa">No email — click Team &amp; Emails to add</em>')+'</div></div>';
+    if(email){
+      if(EJ_CONFIGURED){
+        html+='<button class="mailto-btn" onclick="sendDigestEmail(\''+name+'\',\''+email+'\',digestByOwner()[\''+name+'\'],function(ok){var el=document.getElementById(\'ds_'+name.replace(/[^a-z0-9]/gi,'_')+'\');el.textContent=ok?\'✓ Sent\':\'⚠ Failed\';el.style.color=ok?\'green\':\'red\';})">📤 Send</button>';
+        html+='<span id="ds_'+name.replace(/[^a-z0-9]/gi,'_')+'" style="font-size:.6rem;margin-left:6px;"></span>';
+      } else {
+        html+='<a class="mailto-btn" href="'+mailtoHref+'">📧 Email '+firstName+'</a>';
+      }
+    }
     html+='</div><div class="digest-task-list">';
     tasks.forEach(function(t){
-      html+='<div class="digest-task-row"><span style="font-size:.65rem;margin-right:2px;">'+({'not-started':'○','in-progress':'◑','blocked':'✕','deferred':'⏸'}[t.status]||'○')+'</span><span class="digest-task-title">'+t.title+'</span><span class="digest-task-dl">'+t.deadline+'</span>'+statusBadge(t.status)+'</div>';
+      var ico={'not-started':'○','in-progress':'◑','complete':'✓','blocked':'✕','deferred':'⏸'}[t.status]||'○';
+      html+='<div class="digest-task-row"><span style="font-size:.65rem;margin-right:2px;">'+ico+'</span><span class="digest-task-title">'+t.title+'</span><span class="digest-task-dl">'+t.deadline+'</span>'+statusBadge(t.status)+'</div>';
     });
     html+='</div></div>';
   });
 
   if(Object.keys(byOwner).length===0){
-    html+='<div style="text-align:center;padding:32px;color:var(--muted);font-size:.8rem;">All tasks are complete or unassigned — nothing to send today! 🎉</div>';
+    html+='<div style="text-align:center;padding:32px;color:var(--muted);font-size:.8rem;">No open tasks with deadlines in the next 60 days — nothing to send today! 🎉</div>';
   }
 
   document.getElementById('digestBody').innerHTML=html;
+
+  /* show/hide "Send All" footer button */
+  var sendAllBtn=document.getElementById('digestSendAll');
+  if(sendAllBtn) sendAllBtn.style.display=EJ_CONFIGURED&&Object.keys(byOwner).length?'inline-flex':'none';
+
   document.getElementById('digestOverlay').classList.add('open');
 }
 function closeDigest(){document.getElementById('digestOverlay').classList.remove('open');}
+function sendAllDigests(){
+  var byOwner=digestByOwner();
+  var names=Object.keys(byOwner);var i=0;
+  function next(){
+    if(i>=names.length){alert('All digest emails dispatched via EmailJS!');return;}
+    var name=names[i++];var email=memberEmail(name);
+    if(!email){next();return;}
+    sendDigestEmail(name,email,byOwner[name],function(){setTimeout(next,400);});
+  }
+  next();
+}
 
 /* ══════════════════════════════════════
    CLOSE ON OVERLAY CLICK
@@ -1155,6 +1259,7 @@ function _refreshAdModal(){
   var badge=document.getElementById('adStatusBadge');
   var nextRun=document.getElementById('adNextRun');
   var lastLine=document.getElementById('adLastSentLine');
+  var infoBox=document.getElementById('adInfoNote');
   var t=document.getElementById('adTimeInput').value||adTime;
   if(adEnabled){
     tBtn.textContent='Disable';tBtn.style.background='var(--crimson)';
@@ -1166,6 +1271,13 @@ function _refreshAdModal(){
     nextRun.textContent='—';
   }
   lastLine.textContent='🕐 Last sent: '+(adLastSent||'Never');
+  if(infoBox){
+    if(EJ_CONFIGURED){
+      infoBox.innerHTML='✅ <strong>EmailJS configured.</strong> Emails will be sent automatically at the scheduled time — no action needed from you.';
+    } else {
+      infoBox.innerHTML='⚙️ <strong>EmailJS not set up yet.</strong> At the scheduled time the digest modal will open; you click email buttons manually. To fully automate, fill in <code>EJ_SERVICE_ID</code>, <code>EJ_TEMPLATE_ID</code>, and <code>EJ_PUBLIC_KEY</code> at the top of the script (see code comment for setup guide) then set <code>EJ_CONFIGURED = true</code>.';
+    }
+  }
 }
 function _updateHeaderAdBtn(){
   var btn=document.getElementById('headerAdBtn');
@@ -1176,6 +1288,12 @@ function _updateHeaderAdBtn(){
     btn.textContent='⏰ Auto-Digest: OFF';
     btn.style.color='';btn.style.borderColor='';
   }
+}
+function _showAdBanner(msg,color){
+  var b=document.createElement('div');
+  b.style.cssText='position:fixed;top:18px;left:50%;transform:translateX(-50%);background:'+(color||'#0e7a5a')+';color:#fff;padding:11px 22px;border-radius:8px;font-size:.76rem;font-weight:600;z-index:9990;box-shadow:0 8px 24px rgba(0,0,0,.2);animation:fadeInDown .3s ease;white-space:nowrap;';
+  b.textContent=msg;document.body.appendChild(b);
+  setTimeout(function(){b.remove();},5000);
 }
 function _startAdTimer(){
   if(adTimer)clearInterval(adTimer);
@@ -1190,15 +1308,24 @@ function _startAdTimer(){
     if(tod===adTime&&adLastSent!==today){
       adLastSent=today;
       localStorage.setItem('vps_ad_last_sent',today);
-      openDigest();
-      /* show a floating banner */
-      var b=document.createElement('div');
-      b.style.cssText='position:fixed;top:18px;left:50%;transform:translateX(-50%);background:#0e7a5a;color:#fff;padding:11px 22px;border-radius:8px;font-size:.76rem;font-weight:600;z-index:9990;box-shadow:0 8px 24px rgba(0,0,0,.2);animation:fadeInDown .3s ease;white-space:nowrap;';
-      b.innerHTML='📧 Scheduled digest triggered — use the email buttons to send';
-      document.body.appendChild(b);
-      setTimeout(function(){b.remove();},5000);
+      if(EJ_CONFIGURED){
+        /* Auto-send all emails silently */
+        var byOwner=digestByOwner();
+        var names=Object.keys(byOwner);var i=0;
+        function sendNext(){
+          if(i>=names.length){_showAdBanner('✅ Daily digest sent to '+names.length+' people via EmailJS');return;}
+          var n=names[i++];var em=memberEmail(n);
+          if(!em){sendNext();return;}
+          sendDigestEmail(n,em,byOwner[n],function(){setTimeout(sendNext,500);});
+        }
+        sendNext();
+      } else {
+        /* Open modal for manual sending */
+        openDigest();
+        _showAdBanner('📧 Scheduled digest — use the email buttons to send');
+      }
     }
-  },30000);/* check every 30 s */
+  },30000);
 }
 
 /* ══════════════════════════════════════
@@ -1210,6 +1337,7 @@ document.getElementById('phaseRow').style.display='none';
 renderContent();
 _startAdTimer();
 _updateHeaderAdBtn();
+if(EJ_CONFIGURED){try{emailjs.init(EJ_PUBLIC_KEY);}catch(e){}}
 
 /* ══════════════════════════════════════
    OPS PASSWORD GATE
