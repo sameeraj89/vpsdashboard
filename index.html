@@ -247,12 +247,25 @@ body {
 /* ─── FOOTER ──────────────────────────────────────── */
 .footer {
   background: var(--vps-blue-deep);
-  text-align: center;
-  padding: 18px;
+  padding: 14px 28px;
   font-size: 0.6rem;
   color: rgba(255,255,255,0.3);
   letter-spacing: 0.4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
 }
+.footer-center { flex: 1; text-align: center; }
+.footer-ops-link {
+  display: inline-flex; align-items: center; gap: 5px;
+  color: rgba(255,255,255,0.35); text-decoration: none;
+  font-size: 0.56rem; border: 1px solid rgba(255,255,255,0.15);
+  padding: 4px 10px; border-radius: 4px;
+  transition: color .2s, border-color .2s; white-space: nowrap;
+}
+.footer-ops-link:hover { color: rgba(255,255,255,0.75); border-color: rgba(255,255,255,0.4); }
 
 /* ─── RESPONSIVE ──────────────────────────────────── */
 @media (max-width: 720px) {
@@ -583,7 +596,9 @@ body {
 </div><!-- /main -->
 
 <div class="footer">
-  VPS Lakeshore Hospital &amp; Research Centre &nbsp;&middot;&nbsp; Confidential &mdash; Internal Use Only &nbsp;&middot;&nbsp; Last Updated: 4 March 2026
+  <div style="width:120px;"></div>
+  <div class="footer-center">VPS Lakeshore Hospital &amp; Research Centre &nbsp;&middot;&nbsp; Confidential &mdash; Internal Use Only &nbsp;&middot;&nbsp; Last Updated: 4 March 2026</div>
+  <a class="footer-ops-link" href="ops-tracker.html">⚡ Ops Tracker →</a>
 </div>
 
 

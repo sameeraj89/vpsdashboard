@@ -242,6 +242,18 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 #opsGate.out{animation:gOut .45s ease forwards;}
 @keyframes gOut{to{opacity:0;transform:scale(1.03);pointer-events:none;}}
 
+/* ── AUTO-DIGEST ── */
+.ad-status-badge{display:inline-flex;align-items:center;justify-content:center;font-size:0.6rem;font-weight:700;letter-spacing:.8px;padding:3px 10px;border-radius:3px;text-transform:uppercase;}
+.ad-on{background:#e6f6ed;color:#0e7a5a;border:1px solid rgba(14,122,90,.3);}
+.ad-off{background:#f0f4f8;color:#718096;border:1px solid #d4dce6;}
+.ad-toggle-row{display:flex;align-items:center;gap:12px;}
+.ad-toggle-btn{font-size:0.72rem;font-weight:600;color:var(--white);background:var(--blue);border:none;border-radius:6px;padding:7px 16px;cursor:pointer;transition:opacity .15s;}
+.ad-toggle-btn:hover{opacity:.88;}
+.ad-info-box{background:var(--blue-light);border:1px solid var(--blue-mid);border-radius:6px;padding:12px 14px;display:flex;flex-direction:column;gap:5px;}
+.ad-info-line{font-size:0.67rem;color:var(--muted);line-height:1.5;}
+#adNextRun{font-size:.72rem;color:var(--text);padding:7px 0;font-weight:500;}
+@keyframes fadeInDown{from{opacity:0;transform:translateX(-50%) translateY(-10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+
 /* ── RESPONSIVE ── */
 @media(max-width:900px){
   .metrics{grid-template-columns:repeat(3,1fr);}
@@ -291,6 +303,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
     <div class="hdr-btns">
       <button class="btn-sm btn-outline" onclick="openTeamSettings()">👥 Team &amp; Emails</button>
       <button class="btn-sm btn-green" onclick="openDigest()">📧 Send Digest</button>
+      <button class="btn-sm btn-outline" id="headerAdBtn" onclick="openAutoDigest()">⏰ Auto-Digest: OFF</button>
       <a class="btn-sm btn-outline" href="index.html">← Dashboard</a>
     </div>
   </div>
@@ -518,6 +531,43 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
     <div class="modal-footer">
       <button class="btn-cancel" onclick="closeTeam()">Close</button>
       <button class="btn-save" onclick="saveTeamSettings()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ AUTO-DIGEST MODAL ══════════ -->
+<div class="modal-overlay" id="autoDigestOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <div><div class="modal-header-title">⏰ Automated Daily Digest</div><div class="modal-header-sub">Schedule automatic daily email reminders to all task owners</div></div>
+      <button class="modal-close" onclick="closeAutoDigest()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group full">
+        <div class="form-label">Auto-Digest Status</div>
+        <div class="ad-toggle-row">
+          <button id="adToggleBtn" class="ad-toggle-btn" onclick="toggleAutoDigest()">Enable</button>
+          <span id="adStatusBadge" class="ad-status-badge ad-off">OFF</span>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <div class="form-label">Daily Send Time</div>
+          <input type="time" id="adTimeInput" value="09:00" style="border:1px solid var(--border);border-radius:6px;padding:7px 10px;font-size:0.77rem;font-family:inherit;color:var(--text);background:var(--white);outline:none;">
+        </div>
+        <div class="form-group">
+          <div class="form-label">Next Scheduled Run</div>
+          <div id="adNextRun">—</div>
+        </div>
+      </div>
+      <div class="ad-info-box">
+        <div class="ad-info-line">📌 <strong>Note:</strong> This tab must remain open in the browser for auto-digest to fire. The digest modal will open automatically at the scheduled time.</div>
+        <div class="ad-info-line" id="adLastSentLine">🕐 Last sent: Never</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeAutoDigest()">Cancel</button>
+      <button class="btn-save" onclick="saveAutoDigest()">Save Settings</button>
     </div>
   </div>
 </div>
@@ -1070,9 +1120,86 @@ function closeDigest(){document.getElementById('digestOverlay').classList.remove
 /* ══════════════════════════════════════
    CLOSE ON OVERLAY CLICK
 ══════════════════════════════════════ */
-['editOverlay','addOverlay','teamOverlay','digestOverlay'].forEach(function(id){
+['editOverlay','addOverlay','teamOverlay','digestOverlay','autoDigestOverlay'].forEach(function(id){
   document.getElementById(id).addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});
 });
+
+/* ══════════════════════════════════════
+   AUTO-DIGEST
+══════════════════════════════════════ */
+var adEnabled=localStorage.getItem('vps_ad_enabled')==='1';
+var adTime=localStorage.getItem('vps_ad_time')||'09:00';
+var adLastSent=localStorage.getItem('vps_ad_last_sent')||'';
+var adTimer=null;
+
+function openAutoDigest(){
+  document.getElementById('adTimeInput').value=adTime;
+  _refreshAdModal();
+  document.getElementById('autoDigestOverlay').classList.add('open');
+}
+function closeAutoDigest(){document.getElementById('autoDigestOverlay').classList.remove('open');}
+function toggleAutoDigest(){
+  adEnabled=!adEnabled;
+  _refreshAdModal();
+}
+function saveAutoDigest(){
+  adTime=document.getElementById('adTimeInput').value||'09:00';
+  localStorage.setItem('vps_ad_enabled',adEnabled?'1':'0');
+  localStorage.setItem('vps_ad_time',adTime);
+  _startAdTimer();
+  _updateHeaderAdBtn();
+  closeAutoDigest();
+}
+function _refreshAdModal(){
+  var tBtn=document.getElementById('adToggleBtn');
+  var badge=document.getElementById('adStatusBadge');
+  var nextRun=document.getElementById('adNextRun');
+  var lastLine=document.getElementById('adLastSentLine');
+  var t=document.getElementById('adTimeInput').value||adTime;
+  if(adEnabled){
+    tBtn.textContent='Disable';tBtn.style.background='var(--crimson)';
+    badge.textContent='ON';badge.className='ad-status-badge ad-on';
+    nextRun.textContent='Today at '+t+' (if not yet sent today)';
+  } else {
+    tBtn.textContent='Enable';tBtn.style.background='var(--blue)';
+    badge.textContent='OFF';badge.className='ad-status-badge ad-off';
+    nextRun.textContent='—';
+  }
+  lastLine.textContent='🕐 Last sent: '+(adLastSent||'Never');
+}
+function _updateHeaderAdBtn(){
+  var btn=document.getElementById('headerAdBtn');
+  if(adEnabled){
+    btn.textContent='⏰ Auto: '+adTime;
+    btn.style.color='var(--green)';btn.style.borderColor='rgba(14,122,90,.4)';
+  } else {
+    btn.textContent='⏰ Auto-Digest: OFF';
+    btn.style.color='';btn.style.borderColor='';
+  }
+}
+function _startAdTimer(){
+  if(adTimer)clearInterval(adTimer);
+  if(!adEnabled)return;
+  adTimer=setInterval(function(){
+    if(!adEnabled)return;
+    var now=new Date();
+    var hh=String(now.getHours()).padStart(2,'0');
+    var mm=String(now.getMinutes()).padStart(2,'0');
+    var tod=hh+':'+mm;
+    var today=now.toLocaleDateString('en-GB');
+    if(tod===adTime&&adLastSent!==today){
+      adLastSent=today;
+      localStorage.setItem('vps_ad_last_sent',today);
+      openDigest();
+      /* show a floating banner */
+      var b=document.createElement('div');
+      b.style.cssText='position:fixed;top:18px;left:50%;transform:translateX(-50%);background:#0e7a5a;color:#fff;padding:11px 22px;border-radius:8px;font-size:.76rem;font-weight:600;z-index:9990;box-shadow:0 8px 24px rgba(0,0,0,.2);animation:fadeInDown .3s ease;white-space:nowrap;';
+      b.innerHTML='📧 Scheduled digest triggered — use the email buttons to send';
+      document.body.appendChild(b);
+      setTimeout(function(){b.remove();},5000);
+    }
+  },30000);/* check every 30 s */
+}
 
 /* ══════════════════════════════════════
    INIT
@@ -1081,6 +1208,8 @@ document.getElementById('todayStamp').textContent='🕐 '+todayStr();
 populateDropdowns();
 document.getElementById('phaseRow').style.display='none';
 renderContent();
+_startAdTimer();
+_updateHeaderAdBtn();
 
 /* ══════════════════════════════════════
    OPS PASSWORD GATE
