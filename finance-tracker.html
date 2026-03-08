@@ -192,6 +192,7 @@ table.fin-tbl tr.row-total td:first-child{background:#0d2137;color:white}
     <div class="header-nav">
       <a class="hn-link" href="index.html">⬅ Dashboard</a>
       <a class="hn-link" href="LHRC_Executive_Dashboard.html">📈 Exec Dashboard</a>
+      <a class="hn-link" href="doctor-tracker.html">👨‍⚕️ Doctor Tracker</a>
     </div>
   </div>
   <div class="header-right">
@@ -638,8 +639,51 @@ table.fin-tbl tr.row-total td:first-child{background:#0d2137;color:white}
     </div>
   </div>
 
-  <div class="slabel">🏥 FY26 Revenue by Department (Estimate)</div>
+  <div class="slabel">🏥 FY26 Revenue by Department — BRM Actuals (YTD Apr-25 to Jan-26)</div>
+  <div class="info-box" style="margin-bottom:10px">
+    <strong>Source:</strong> BRM Deck FY26 — Kochi Unit · <strong>Period:</strong> 10 months YTD (Apr 2025 – Jan 2026) · <strong>Total YTD:</strong> ₹378.01 Cr · IP: ₹263.88 Cr | OP: ₹99.70 Cr | F&B: ₹14.43 Cr
+    <br>Growth % vs FY27 UC is calculated against annualised FY26 (YTD × 1.2).
+  </div>
   <div class="tbl-wrap"><table class="fin-tbl" id="fy26DeptTable"><!-- rendered by JS --></table></div>
+
+  <div class="slabel">✏️ Input Department-wise FY26 Actuals</div>
+  <div class="upload-section">
+    <div class="upload-title">Enter or update department-wise actuals for FY26 (₹ Crores)</div>
+    <div class="info-box" style="margin-bottom:12px">Use this to record the final full-year FY26 actuals per department once available (Feb-26 &amp; Mar-26 close). Values are stored in your browser session.</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Department</label>
+        <select class="form-select" id="fy26DeptSelect">
+          <option value="">Select department...</option>
+          <option>Medical Oncology</option><option>Nephrology</option><option>Neuro Surgery</option>
+          <option>GI Surgery</option><option>Joint Repl. &amp; Sports</option><option>Cardiology</option>
+          <option>Gastroenterology</option><option>Urology</option><option>Head &amp; Neck Oncology</option>
+          <option>Min. Invasive Surgery</option><option>Neurology</option><option>Surgical Oncology</option>
+          <option>Foot &amp; Ankle</option><option>Liver Care</option><option>General Medicine</option>
+          <option>Orthopedics</option><option>OB &amp; Gynaecology</option><option>Paediatrics</option>
+          <option>Radiation Oncology</option><option>Cardio Thoracic Surgery</option>
+          <option>Spine Surgery</option><option>Pulmonology</option>
+          <option>Diagnostics &amp; Imaging</option><option>Pharmacy &amp; OTC</option><option>Other Specialties</option>
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">IP Revenue (₹ Cr)</label><input class="form-input" type="number" id="fy26d_ip" step="0.01" placeholder="e.g. 38.5"></div>
+      <div class="form-group"><label class="form-label">OP Revenue (₹ Cr)</label><input class="form-input" type="number" id="fy26d_op" step="0.01" placeholder="e.g. 22.0"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Total Revenue (₹ Cr)</label><input class="form-input" type="number" id="fy26d_total" step="0.01" placeholder="Auto-sum or override"></div>
+      <div class="form-group" style="align-self:flex-end">
+        <button class="btn btn-primary" onclick="saveFY26DeptActual()">✅ Save Department</button>
+        <span id="fy26DeptSaveMsg" style="margin-left:10px;font-size:0.68rem;color:#27ae60;font-weight:700"></span>
+      </div>
+    </div>
+    <div style="margin-top:12px">
+      <div class="upload-title" style="margin-bottom:8px">Departments with full-year actuals saved:</div>
+      <div id="fy26DeptPills"><!-- rendered by JS --></div>
+    </div>
+  </div>
+  <div class="tbl-wrap" id="fy26DeptActualWrap" style="display:none">
+    <table class="fin-tbl" id="fy26DeptActualTable"><!-- rendered by JS --></table>
+  </div>
 </div>
 
 <!-- FOOTER -->
@@ -667,59 +711,123 @@ var ANN_EBITDA = 148.80;
 var ANN_DEPR   = 34.93;
 var ANN_CAPEX  = 82.21;
 
-// Department data (FY27 UC annual, ₹ Cr)
+// Department data (FY27 UC annual, ₹ Cr) — fy26 = BRM FY26 YTD actuals (10 months Apr-25 to Jan-26)
 var DEPT_DATA = [
-  {name:'Medical Oncology',       cat:'Oncology',    uc:80.0,  bc:73.1, fy26:64.0},
-  {name:'Nephrology',             cat:'Renal',       uc:69.5,  bc:60.2, fy26:53.1},
-  {name:'Neuro Surgery',          cat:'Neuro',       uc:44.5,  bc:38.1, fy26:33.7},
-  {name:'GI Surgery',             cat:'Surgery',     uc:34.5,  bc:29.8, fy26:27.0},
-  {name:'Joint Repl. & Sports',   cat:'Ortho',       uc:33.5,  bc:30.2, fy26:25.0},
-  {name:'Cardiology',             cat:'Cardio',      uc:30.0,  bc:27.3, fy26:23.8},
-  {name:'Gastroenterology',       cat:'GI',          uc:27.0,  bc:24.6, fy26:22.1},
-  {name:'Head & Neck Oncology',   cat:'Oncology',    uc:20.5,  bc:11.8, fy26:10.7},
-  {name:'Urology',                cat:'Surgery',     uc:23.5,  bc:21.3, fy26:19.3},
-  {name:'Min. Invasive Surgery',  cat:'Surgery',     uc:19.0,  bc:17.3, fy26:15.0},
-  {name:'Foot & Ankle',           cat:'Ortho',       uc:15.3,  bc:13.9, fy26:12.1},
-  {name:'Neurology',              cat:'Neuro',       uc:15.0,  bc:13.7, fy26:12.6},
-  {name:'Liver Care',             cat:'GI',          uc:14.0,  bc:12.8, fy26:11.6},
-  {name:'Surgical Oncology',      cat:'Oncology',    uc:13.5,  bc:12.1, fy26:11.2},
-  {name:'General Medicine',       cat:'Medicine',    uc:10.8,  bc:9.9,  fy26:9.0},
-  {name:'OB & Gynaecology',       cat:'OBG',         uc:9.5,   bc:8.7,  fy26:8.0},
-  {name:'Paediatrics',            cat:'Paeds',       uc:9.4,   bc:8.6,  fy26:7.7},
-  {name:'Orthopedics',            cat:'Ortho',       uc:9.4,   bc:8.5,  fy26:7.7},
-  {name:'Pulmonology',            cat:'Medicine',    uc:9.0,   bc:8.1,  fy26:6.5},
-  {name:'Radiation Oncology',     cat:'Oncology',    uc:9.2,   bc:7.8,  fy26:7.1},
-  {name:'Diagnostics & Imaging',  cat:'Diagnostics', uc:42.0,  bc:38.0, fy26:35.0},
-  {name:'Pharmacy & OTC',         cat:'Pharmacy',    uc:20.9,  bc:19.0, fy26:17.5},
-  {name:'Other Specialties',      cat:'Other',       uc:15.0,  bc:13.5, fy26:12.0}
+  {name:'Medical Oncology',       cat:'Oncology',    uc:80.0,  bc:73.1, fy26:53.18, fy26ip:34.37, fy26op:18.81},
+  {name:'Nephrology',             cat:'Renal',       uc:69.5,  bc:60.2, fy26:45.27, fy26ip:32.13, fy26op:13.14},
+  {name:'Neuro Surgery',          cat:'Neuro',       uc:44.5,  bc:38.1, fy26:28.84, fy26ip:26.10, fy26op:2.74},
+  {name:'GI Surgery',             cat:'Surgery',     uc:34.5,  bc:29.8, fy26:22.43, fy26ip:20.38, fy26op:2.05},
+  {name:'Joint Repl. & Sports',   cat:'Ortho',       uc:33.5,  bc:30.2, fy26:21.11, fy26ip:18.75, fy26op:2.36},
+  {name:'Cardiology',             cat:'Cardio',      uc:30.0,  bc:27.3, fy26:20.41, fy26ip:16.12, fy26op:4.28},
+  {name:'Gastroenterology',       cat:'GI',          uc:27.0,  bc:24.6, fy26:18.35, fy26ip:10.63, fy26op:7.72},
+  {name:'Urology',                cat:'Surgery',     uc:23.5,  bc:21.3, fy26:16.44, fy26ip:13.25, fy26op:3.19},
+  {name:'Head & Neck Oncology',   cat:'Oncology',    uc:20.5,  bc:11.8, fy26:8.67,  fy26ip:7.70,  fy26op:0.97},
+  {name:'Min. Invasive Surgery',  cat:'Surgery',     uc:19.0,  bc:17.3, fy26:12.46, fy26ip:11.71, fy26op:0.75},
+  {name:'Neurology',              cat:'Neuro',       uc:15.0,  bc:13.7, fy26:10.86, fy26ip:7.97,  fy26op:2.89},
+  {name:'Surgical Oncology',      cat:'Oncology',    uc:13.5,  bc:12.1, fy26:10.70, fy26ip:8.21,  fy26op:2.49},
+  {name:'Foot & Ankle',           cat:'Ortho',       uc:15.3,  bc:13.9, fy26:10.37, fy26ip:9.06,  fy26op:1.31},
+  {name:'Liver Care',             cat:'GI',          uc:14.0,  bc:12.8, fy26:9.72,  fy26ip:8.78,  fy26op:0.94},
+  {name:'General Medicine',       cat:'Medicine',    uc:10.8,  bc:9.9,  fy26:7.47,  fy26ip:4.59,  fy26op:2.88},
+  {name:'Orthopedics',            cat:'Ortho',       uc:9.4,   bc:8.5,  fy26:7.01,  fy26ip:6.45,  fy26op:0.56},
+  {name:'OB & Gynaecology',       cat:'OBG',         uc:9.5,   bc:8.7,  fy26:6.72,  fy26ip:4.85,  fy26op:1.87},
+  {name:'Paediatrics',            cat:'Paeds',       uc:9.4,   bc:8.6,  fy26:6.33,  fy26ip:4.25,  fy26op:2.08},
+  {name:'Radiation Oncology',     cat:'Oncology',    uc:9.2,   bc:7.8,  fy26:5.80,  fy26ip:0.12,  fy26op:5.68},
+  {name:'Cardio Thoracic Surgery',cat:'Surgery',     uc:8.5,   bc:7.5,  fy26:5.52,  fy26ip:5.21,  fy26op:0.31},
+  {name:'Spine Surgery',          cat:'Neuro',       uc:7.0,   bc:6.2,  fy26:4.61,  fy26ip:3.75,  fy26op:0.86},
+  {name:'Pulmonology',            cat:'Medicine',    uc:9.0,   bc:8.1,  fy26:5.88,  fy26ip:4.78,  fy26op:1.10},
+  {name:'Diagnostics & Imaging',  cat:'Diagnostics', uc:42.0,  bc:38.0, fy26:35.0,  fy26ip:25.0,  fy26op:10.0},
+  {name:'Pharmacy & OTC',         cat:'Pharmacy',    uc:20.9,  bc:19.0, fy26:17.5,  fy26ip:8.0,   fy26op:9.5},
+  {name:'Other Specialties',      cat:'Other',       uc:15.0,  bc:13.5, fy26:12.0,  fy26ip:6.0,   fy26op:6.0}
 ];
 
-// Consultant data (estimated, ₹ Cr FY27 UC annual)
+// Consultant data — FY26 YTD actuals + FY27 UC targets (₹ Cr)
 var CONSULTANT_DATA = [
-  {name:'Sr. Consultant 1 (Med. Oncology)',    dept:'Medical Oncology',    uc:14.0},
-  {name:'Sr. Consultant 2 (Med. Oncology)',    dept:'Medical Oncology',    uc:12.5},
-  {name:'Sr. Consultant 3 (Med. Oncology)',    dept:'Medical Oncology',    uc:10.8},
-  {name:'Sr. Consultant 1 (Nephrology)',       dept:'Nephrology',          uc:16.0},
-  {name:'Sr. Consultant 2 (Nephrology)',       dept:'Nephrology',          uc:13.5},
-  {name:'Sr. Consultant 3 (Nephrology)',       dept:'Nephrology',          uc:11.0},
-  {name:'Sr. Consultant 1 (Neuro Surgery)',    dept:'Neuro Surgery',       uc:15.5},
-  {name:'Sr. Consultant 2 (Neuro Surgery)',    dept:'Neuro Surgery',       uc:12.0},
-  {name:'Sr. Consultant 1 (H&N Oncology)',     dept:'Head & Neck Oncology',uc:12.5},
-  {name:'Sr. Consultant 2 (H&N Oncology)',     dept:'Head & Neck Oncology',uc:8.0},
-  {name:'Sr. Consultant 1 (GI Surgery)',       dept:'GI Surgery',          uc:12.0},
-  {name:'Sr. Consultant 2 (GI Surgery)',       dept:'GI Surgery',          uc:9.5},
-  {name:'Sr. Consultant 1 (Cardiology)',       dept:'Cardiology',          uc:10.0},
-  {name:'Sr. Consultant 2 (Cardiology)',       dept:'Cardiology',          uc:8.5},
-  {name:'Sr. Consultant 1 (Joint Repl.)',      dept:'Joint Repl. & Sports', uc:11.5},
-  {name:'Sr. Consultant 2 (Joint Repl.)',      dept:'Joint Repl. & Sports', uc:9.0},
-  {name:'Sr. Consultant 1 (Gastro)',           dept:'Gastroenterology',    uc:9.0},
-  {name:'Sr. Consultant 1 (Urology)',          dept:'Urology',             uc:8.5},
-  {name:'Sr. Consultant 1 (Liver Care)',       dept:'Liver Care',          uc:7.0},
-  {name:'Sr. Consultant 1 (Neurology)',        dept:'Neurology',           uc:6.5},
-  {name:'Sr. Consultant 1 (Radiation Onco)',   dept:'Radiation Oncology',  uc:5.0},
-  {name:'Sr. Consultant 1 (Paediatrics)',      dept:'Paediatrics',         uc:5.0},
-  {name:'Sr. Consultant 1 (OBG)',              dept:'OB & Gynaecology',    uc:5.5},
-  {name:'Sr. Consultant 1 (Min. Invasive)',    dept:'Min. Invasive Surgery',uc:7.0},
+  // Medical Oncology — note: Gangadharan VP is honorary, revenue credited at dept level
+  {name:'Gangadharan V P',         dept:'Medical Oncology',     fy26:52.89, uc:61.0,  ip26:34.37, op26:18.52},
+  {name:'Favaz Ali M',             dept:'Medical Oncology',     fy26:1.19,  uc:1.5,   ip26:0.80,  op26:0.39},
+  // Nephrology
+  {name:'Abi Abraham M',           dept:'Nephrology',           fy26:31.93, uc:37.0,  ip26:23.89, op26:8.04},
+  {name:'Jithin S Kumar',          dept:'Nephrology',           fy26:8.01,  uc:9.5,   ip26:6.20,  op26:1.81},
+  {name:'Kartik Ganesh',           dept:'Nephrology',           fy26:3.46,  uc:4.0,   ip26:2.80,  op26:0.66},
+  {name:'Abi Abraham',             dept:'Nephrology',           fy26:1.16,  uc:1.4,   ip26:0.90,  op26:0.26},
+  // Neuro Surgery
+  {name:'Sudish Karunakaran',      dept:'Neuro Surgery',        fy26:23.37, uc:27.0,  ip26:21.72, op26:1.65},
+  {name:'Arun Oommen',             dept:'Neuro Surgery',        fy26:2.98,  uc:3.5,   ip26:2.70,  op26:0.28},
+  {name:'Srivatsan Thirumalai',    dept:'Neuro Surgery',        fy26:1.24,  uc:1.5,   ip26:1.10,  op26:0.14},
+  {name:'Ajay Kumar Ajanvi',       dept:'Neuro Surgery',        fy26:1.23,  uc:1.4,   ip26:1.10,  op26:0.13},
+  // GI Surgery
+  {name:'Ramesh H',                dept:'GI Surgery',           fy26:16.90, uc:19.5,  ip26:15.59, op26:1.30},
+  {name:'Mahesh S',                dept:'GI Surgery',           fy26:3.98,  uc:4.6,   ip26:3.50,  op26:0.48},
+  // Joint Replacement & Sports
+  {name:'Jacob Varghese',          dept:'Joint Repl. & Sports', fy26:8.15,  uc:9.5,   ip26:7.06,  op26:1.09},
+  {name:'George Jacob',            dept:'Joint Repl. & Sports', fy26:7.11,  uc:8.2,   ip26:6.10,  op26:1.01},
+  {name:'Appu Benny Thomas',       dept:'Joint Repl. & Sports', fy26:5.86,  uc:6.8,   ip26:5.00,  op26:0.86},
+  // Cardiology
+  {name:'Anandkumar V',            dept:'Cardiology',           fy26:7.64,  uc:8.8,   ip26:5.80,  op26:1.84},
+  {name:'Cibi Issac',              dept:'Cardiology',           fy26:6.69,  uc:7.7,   ip26:5.20,  op26:1.49},
+  {name:'Aju Ajay',                dept:'Cardiology',           fy26:3.43,  uc:4.0,   ip26:2.60,  op26:0.83},
+  {name:'Harikrishna K',           dept:'Cardiology',           fy26:2.43,  uc:2.8,   ip26:1.80,  op26:0.63},
+  // Gastroenterology
+  {name:'Roy J Mukkada',           dept:'Gastroenterology',     fy26:7.96,  uc:9.2,   ip26:4.29,  op26:3.67},
+  {name:'Maya P',                  dept:'Gastroenterology',     fy26:3.50,  uc:4.0,   ip26:1.90,  op26:1.60},
+  {name:'Antony Paul Chettupuzha', dept:'Gastroenterology',     fy26:2.91,  uc:3.4,   ip26:1.50,  op26:1.41},
+  {name:'Pradeep George Mathew',   dept:'Gastroenterology',     fy26:2.67,  uc:3.1,   ip26:1.40,  op26:1.27},
+  // Urology
+  {name:'Datson George P',         dept:'Urology',              fy26:13.14, uc:15.2,  ip26:10.93, op26:2.21},
+  {name:'Gregory Pathrose',        dept:'Urology',              fy26:1.82,  uc:2.1,   ip26:1.50,  op26:0.32},
+  {name:'Karthi A P',              dept:'Urology',              fy26:1.15,  uc:1.3,   ip26:0.90,  op26:0.25},
+  // Min. Invasive Surgery
+  {name:'Padmakumar R',            dept:'Min. Invasive Surgery',fy26:12.46, uc:14.4,  ip26:11.71, op26:0.75},
+  // Head & Neck Oncology
+  {name:'Shawn T Joseph',          dept:'Head & Neck Oncology', fy26:6.76,  uc:7.8,   ip26:5.80,  op26:0.96},
+  {name:'Moni Abraham Kuriakose',  dept:'Head & Neck Oncology', fy26:1.20,  uc:1.4,   ip26:1.00,  op26:0.20},
+  // Surgical Oncology
+  {name:'Chitrathara K',           dept:'Surgical Oncology',    fy26:10.66, uc:12.3,  ip26:8.21,  op26:2.45},
+  // Liver Care
+  {name:'Fadl H Veerankutty',      dept:'Liver Care',           fy26:9.49,  uc:11.0,  ip26:8.60,  op26:0.89},
+  // Foot & Ankle
+  {name:'Rajesh Simon',            dept:'Foot & Ankle',         fy26:7.97,  uc:9.2,   ip26:6.80,  op26:1.17},
+  {name:'Dennis P Jose',           dept:'Foot & Ankle',         fy26:2.41,  uc:2.8,   ip26:2.10,  op26:0.31},
+  // Neurology
+  {name:'Bindu Varghese',          dept:'Neurology',            fy26:4.48,  uc:5.2,   ip26:3.20,  op26:1.28},
+  {name:'Vidya M V',               dept:'Neurology',            fy26:3.31,  uc:3.8,   ip26:2.30,  op26:1.01},
+  {name:'Murali Krishna Menon',    dept:'Neurology',            fy26:3.07,  uc:3.5,   ip26:2.10,  op26:0.97},
+  // General Medicine
+  {name:'John Alexander',          dept:'General Medicine',     fy26:6.15,  uc:7.1,   ip26:4.50,  op26:1.65},
+  // Radiation Oncology
+  {name:'Joseph Edison',           dept:'Radiation Oncology',   fy26:5.80,  uc:6.7,   ip26:0.12,  op26:5.68},
+  // Cardio Thoracic Surgery
+  {name:'Sujith D S',              dept:'Cardio Thoracic Surgery',fy26:5.51,uc:6.4,   ip26:5.21,  op26:0.30},
+  // Orthopedics
+  {name:'Jose Thomas Pappanacherry',dept:'Orthopedics',         fy26:4.93,  uc:5.7,   ip26:4.30,  op26:0.63},
+  {name:'Vinay Jaison Chacko',     dept:'Orthopedics',          fy26:1.48,  uc:1.7,   ip26:1.30,  op26:0.18},
+  // Spine Surgery
+  {name:'Krishna Kumar R',         dept:'Spine Surgery',        fy26:4.61,  uc:5.3,   ip26:3.75,  op26:0.86},
+  // Family Medicine
+  {name:'Shubha Achyutha',         dept:'Family Medicine',      fy26:4.20,  uc:4.8,   ip26:0.00,  op26:4.21},
+  // OB & Gynaecology
+  {name:'Smitha Joy',              dept:'OB & Gynaecology',     fy26:4.10,  uc:4.7,   ip26:3.20,  op26:0.90},
+  {name:'Thresy George',           dept:'OB & Gynaecology',     fy26:1.37,  uc:1.6,   ip26:1.00,  op26:0.37},
+  // Paediatrics
+  {name:'Arun A',                  dept:'Paediatrics',          fy26:3.24,  uc:3.7,   ip26:2.50,  op26:0.74},
+  {name:'Nirmala Thomas',          dept:'Paediatrics',          fy26:1.37,  uc:1.6,   ip26:1.00,  op26:0.37},
+  // Pulmonology
+  {name:'Mujeeb Rahman K K',       dept:'Pulmonology',          fy26:2.81,  uc:3.2,   ip26:2.21,  op26:0.60},
+  {name:'Hari Lakshmanan P',       dept:'Pulmonology',          fy26:2.75,  uc:3.2,   ip26:2.57,  op26:0.18},
+  // ENT
+  {name:'Idicula Mathews',         dept:'ENT',                  fy26:2.64,  uc:3.0,   ip26:2.34,  op26:0.30},
+  // Plastic Surgery
+  {name:'Abhijeet Wakure',         dept:'Plastic Surgery',      fy26:2.12,  uc:2.4,   ip26:1.80,  op26:0.32},
+  // Psychiatry
+  {name:'Xavier John Pulikkal',    dept:'Psychiatry',           fy26:1.88,  uc:2.2,   ip26:1.12,  op26:0.76},
+  // Dermatology
+  {name:'Abin Abraham Itty',       dept:'Dermatology',          fy26:1.85,  uc:2.1,   ip26:0.31,  op26:1.54},
+  // Endocrinology
+  {name:'Vivek Mathew',            dept:'Endocrinology',        fy26:1.54,  uc:1.8,   ip26:0.22,  op26:1.32},
+  // Rheumatology
+  {name:'Mohammed Iqbal K M',      dept:'Rheumatology',         fy26:1.36,  uc:1.6,   ip26:0.05,  op26:1.31},
+  // Ortho Oncology
+  {name:'Ebin Rahman',             dept:'Ortho Oncology',       fy26:1.34,  uc:1.6,   ip26:1.22,  op26:0.12},
 ];
 
 // Staff cost breakdown (₹ Cr FY27 UC)
@@ -848,8 +956,8 @@ var ANN_FY26_DOC    = 80.09;  // 17.69% of rev
 var ANN_FY26_PAYROLL= 77.18;
 var ANN_FY26_OTHER  = 63.41;
 var ANN_FY26_DEPR   = 25.00;
-// FY26 monthly revenue plan (sums to 452.8)
-var REV_FY26 = [34.0,35.0,36.5,37.5,37.5,38.5,39.0,39.0,38.5,38.5,38.0,40.8];
+// FY26 monthly revenue (Apr-25 to Jan-26 = BRM actuals; Feb-26 & Mar-26 = estimates)
+var REV_FY26 = [33.61,37.24,33.19,39.37,40.36,39.54,39.21,35.01,37.64,42.83,38.0,40.8];
 
 function loadState(){
   try{ ACTUALS = JSON.parse(localStorage.getItem('vps_fin_actuals')||'{}'); }catch(e){ACTUALS={};}
@@ -960,6 +1068,9 @@ function initAll(){
   buildDeptManualGrid();
   renderReqs();
   renderFY26MonthPills();
+  loadFY26DeptState();
+  renderFY26DeptPills();
+  renderFY26DeptActualTable();
 }
 </script>
 <script>
@@ -1147,7 +1258,7 @@ function renderPLCharts(plan){
         {label:'Actual',data:actRev.map(v=>v===null?0:v),backgroundColor:'rgba(230,126,34,0.85)',borderRadius:3}
       ]
     },
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{size:10}}}},scales:{y:{beginAtZero:false,min:35,ticks:{callback:v=>'₹'+v,font:{size:9}},grid:{color:'#f0f4f8'}},x:{ticks:{font:{size:9}},grid:{display:false}}}}
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{size:10}}},title:{display:true,text:'FY27 Monthly Revenue — Plan vs Actual (₹ Cr)',font:{size:11,weight:'600'},color:'#1a3a5c',padding:{bottom:6}}},scales:{y:{beginAtZero:false,min:35,title:{display:true,text:'₹ Crores',font:{size:9},color:'#718096'},ticks:{callback:v=>'₹'+v,font:{size:9}},grid:{color:'#f0f4f8'}},x:{title:{display:true,text:'Month (FY27)',font:{size:9},color:'#718096'},ticks:{font:{size:9}},grid:{display:false}}}}
   });
 
   var ctx2=document.getElementById('ebitdaChart').getContext('2d');
@@ -1160,7 +1271,7 @@ function renderPLCharts(plan){
         {label:'Actual',data:actEb.map(v=>v===null?0:v),backgroundColor:'rgba(230,126,34,0.85)',borderRadius:3}
       ]
     },
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{size:10}}}},scales:{y:{beginAtZero:false,ticks:{callback:v=>'₹'+v,font:{size:9}},grid:{color:'#f0f4f8'}},x:{ticks:{font:{size:9}},grid:{display:false}}}}
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{size:10}}},title:{display:true,text:'FY27 Monthly EBITDA — Plan vs Actual (₹ Cr)',font:{size:11,weight:'600'},color:'#1a3a5c',padding:{bottom:6}}},scales:{y:{beginAtZero:false,title:{display:true,text:'₹ Crores',font:{size:9},color:'#718096'},ticks:{callback:v=>'₹'+v,font:{size:9}},grid:{color:'#f0f4f8'}},x:{title:{display:true,text:'Month (FY27)',font:{size:9},color:'#718096'},ticks:{font:{size:9}},grid:{display:false}}}}
   });
 }
 
@@ -1181,25 +1292,33 @@ function renderDeptTab(){
         {label:'FY27 UC',data:topDepts.map(d=>d.uc),backgroundColor:'rgba(230,126,34,0.85)',borderRadius:2}
       ]
     },
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{size:10}}}},scales:{y:{beginAtZero:true,ticks:{callback:v=>'₹'+v,font:{size:9}}},x:{ticks:{font:{size:8},maxRotation:35}}}}
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{size:10}}},title:{display:true,text:'Department Revenue — FY26 YTD Actuals vs FY27 UC Plan (₹ Cr)',font:{size:11,weight:'600'},color:'#1a3a5c',padding:{bottom:6}}},scales:{y:{beginAtZero:true,title:{display:true,text:'₹ Crores',font:{size:9},color:'#718096'},ticks:{callback:v=>'₹'+v,font:{size:9}}},x:{title:{display:true,text:'Department',font:{size:9},color:'#718096'},ticks:{font:{size:8},maxRotation:35}}}}
   });
 
   // Table
   var html='<thead><tr>';
-  html+='<th style="min-width:200px">Department</th><th>Category</th><th>FY26E</th><th>FY27 BC</th><th>FY27 UC Plan</th>';
+  html+='<th style="min-width:200px">Department</th><th>Category</th>';
+  html+='<th title="BRM FY26 YTD Actuals — Apr 25 to Jan 26 (10 months)">FY26 YTD (10M)<br><span style="font-size:0.52rem;font-weight:400;opacity:0.7">Actual · IP+OP</span></th>';
+  html+='<th>FY26 YTD IP</th><th>FY26 YTD OP</th>';
+  html+='<th>FY27 BC</th><th>FY27 UC Plan</th><th>UC Growth</th>';
   MONTHS.forEach(m=>html+='<th class="month-hdr">'+m+'<br><span style="font-size:0.55rem;opacity:0.7">Plan</span></th>');
   html+='</tr></thead><tbody>';
 
   DEPT_DATA.forEach(function(d){
     var monthlyPlan=REV_PLAN.map(r=>d.uc*r/ANN_REV);
-    var growth=((d.uc-d.fy26)/d.fy26*100).toFixed(0);
-    var growCls=growth>0?'var-pos':'var-neg';
+    // Growth vs annualised FY26 (×1.2 to full year from 10-month YTD)
+    var fy26ann=d.fy26*1.2;
+    var growth=((d.uc-fy26ann)/fy26ann*100).toFixed(0);
+    var growCls=parseFloat(growth)>=0?'var-pos':'var-neg';
     html+='<tr>';
     html+='<td><strong>'+d.name+'</strong></td>';
     html+='<td><span class="pill" style="background:#e2e8f0;color:#2d3748">'+d.cat+'</span></td>';
-    html+='<td>'+d.fy26.toFixed(1)+'</td>';
+    html+='<td style="font-weight:700;color:#1a3a5c">'+d.fy26.toFixed(1)+'</td>';
+    html+='<td style="color:#2980b9">'+d.fy26ip.toFixed(1)+'</td>';
+    html+='<td style="color:#27ae60">'+d.fy26op.toFixed(1)+'</td>';
     html+='<td>'+d.bc.toFixed(1)+'</td>';
-    html+='<td style="font-weight:700;color:#e67e22">'+d.uc.toFixed(1)+' <span class="'+growCls+'" style="font-size:0.6rem">(+'+growth+'%)</span></td>';
+    html+='<td style="font-weight:700;color:#e67e22">'+d.uc.toFixed(1)+'</td>';
+    html+='<td><span class="'+growCls+'">'+(parseFloat(growth)>=0?'+':'')+growth+'%</span></td>';
     monthlyPlan.forEach(v=>html+='<td>'+v.toFixed(2)+'</td>');
     html+='</tr>';
   });
@@ -1635,6 +1754,54 @@ function deleteMonthActuals(month){
   if(confirm('Remove actuals for '+month+'?')){delete ACTUALS[month];saveState();renderUploadSummary();}
 }
 function clearAllActuals(){ACTUALS={};CAPEX_ACTUALS={};saveState();renderUploadSummary();renderCapexTab();}
+
+// ── FY26 DEPARTMENT ACTUALS ──
+var FY26_DEPT_ACTUALS = {};
+function loadFY26DeptState(){try{FY26_DEPT_ACTUALS=JSON.parse(localStorage.getItem('vps_fy26_dept')||'{}');}catch(e){FY26_DEPT_ACTUALS={};}}
+function saveFY26DeptState(){localStorage.setItem('vps_fy26_dept',JSON.stringify(FY26_DEPT_ACTUALS));}
+
+function saveFY26DeptActual(){
+  var dept=document.getElementById('fy26DeptSelect').value;
+  if(!dept){alert('Please select a department.');return;}
+  var ip=parseFloat(document.getElementById('fy26d_ip').value)||0;
+  var op=parseFloat(document.getElementById('fy26d_op').value)||0;
+  var totEl=document.getElementById('fy26d_total');
+  var total=totEl.value!==''?parseFloat(totEl.value):ip+op;
+  FY26_DEPT_ACTUALS[dept]={ip:ip,op:op,total:total};
+  saveFY26DeptState();
+  var msg=document.getElementById('fy26DeptSaveMsg');
+  msg.textContent='✅ Saved: '+dept;
+  setTimeout(()=>msg.textContent='',3000);
+  renderFY26DeptPills();
+  renderFY26DeptActualTable();
+}
+
+function renderFY26DeptPills(){
+  var keys=Object.keys(FY26_DEPT_ACTUALS);
+  if(!keys.length){document.getElementById('fy26DeptPills').innerHTML='<span style="color:#a0aec0;font-size:0.68rem">None saved yet.</span>';return;}
+  document.getElementById('fy26DeptPills').innerHTML=keys.map(k=>'<span class="pill pill-gr" style="margin:2px 4px;cursor:pointer" onclick="removeFY26DeptActual(\''+k+'\')">'+k+' ✕</span>').join('');
+}
+
+function removeFY26DeptActual(dept){
+  delete FY26_DEPT_ACTUALS[dept];saveFY26DeptState();renderFY26DeptPills();renderFY26DeptActualTable();
+}
+
+function renderFY26DeptActualTable(){
+  var keys=Object.keys(FY26_DEPT_ACTUALS);
+  var wrap=document.getElementById('fy26DeptActualWrap');
+  if(!keys.length){wrap.style.display='none';return;}
+  wrap.style.display='block';
+  var html='<thead><tr><th style="min-width:200px">Department</th><th>IP (Actual)</th><th>OP (Actual)</th><th>Total (Actual)</th><th>BRM YTD Ref</th><th>vs BRM YTD</th></tr></thead><tbody>';
+  keys.forEach(function(k){
+    var a=FY26_DEPT_ACTUALS[k];
+    var ref=DEPT_DATA.find(d=>d.name===k);
+    var ytd=ref?ref.fy26:null;
+    var diffStr=ytd?('<span class="'+(a.total>=ytd?'var-pos':'var-neg')+'">'+(a.total>=ytd?'+':'')+(a.total-ytd).toFixed(2)+'</span>'):'—';
+    html+='<tr><td><strong>'+k+'</strong></td><td style="color:#2980b9">'+a.ip.toFixed(2)+'</td><td style="color:#27ae60">'+a.op.toFixed(2)+'</td><td style="font-weight:700">'+a.total.toFixed(2)+'</td><td style="color:#a0aec0">'+(ytd?ytd.toFixed(2):'—')+'</td><td>'+diffStr+'</td></tr>';
+  });
+  html+='</tbody>';
+  document.getElementById('fy26DeptActualTable').innerHTML=html;
+}
 
 function downloadTemplate(){
   var ws=XLSX.utils.aoa_to_sheet([
