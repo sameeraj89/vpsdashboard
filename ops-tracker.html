@@ -9,254 +9,221 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --blue:        #0072BC;
-  --blue-dark:   #005a96;
-  --blue-deep:   #003f6e;
-  --crimson:     #C8103E;
-  --sky:         #5BB8E8;
-  --green:       #0e7a5a;
-  --amber:       #b06a00;
-  --purple:      #4a3a88;
-  --slate:       #2a4a5e;
-  --bg:          #f0f6fb;
-  --border:      #cddeed;
-  --white:       #ffffff;
-  --text:        #0d2535;
-  --muted:       #5a7a8a;
-  --blue-light:  #e8f4fb;
-  --blue-mid:    #c2dff0;
+  --blue:#0072BC; --blue-dark:#005a96; --blue-deep:#003f6e;
+  --crimson:#C8103E; --sky:#5BB8E8; --green:#0e7a5a;
+  --amber:#b06a00; --purple:#4a3a88; --slate:#2a4a5e;
+  --bg:#f0f6fb; --border:#cddeed; --white:#ffffff;
+  --text:#0d2535; --muted:#5a7a8a;
+  --blue-light:#e8f4fb; --blue-mid:#c2dff0;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
 
 /* ── HEADER ── */
-.header { background: var(--white); border-bottom: 1px solid var(--border); }
-.header-inner {
-  max-width: 1240px; margin: 0 auto; padding: 18px 36px;
-  display: flex; align-items: center; justify-content: space-between; gap: 24px;
-}
-.header-logo img { height: 56px; width: auto; }
-.header-center { flex: 1; }
-.header-title { font-size: 1.1rem; font-weight: 700; color: var(--blue); letter-spacing: -0.3px; }
-.header-title em { font-style: normal; font-weight: 400; font-size: 0.72em; color: var(--muted); display: block; margin-top: 2px; }
-.back-btn {
-  display: inline-flex; align-items: center; gap: 6px;
-  font-size: 0.68rem; font-weight: 600; color: var(--blue); text-decoration: none;
-  border: 1px solid var(--blue-mid); background: var(--blue-light); padding: 6px 14px;
-  border-radius: 5px; white-space: nowrap; transition: background 0.15s;
-}
-.back-btn:hover { background: var(--blue-mid); }
-.header-rule { height: 4px; background: linear-gradient(90deg, var(--crimson) 0%, var(--sky) 100%); }
+.header{background:var(--white);border-bottom:1px solid var(--border);}
+.header-inner{max-width:1280px;margin:0 auto;padding:16px 32px;display:flex;align-items:center;gap:20px;}
+.header-logo img{height:50px;width:auto;}
+.header-center{flex:1;}
+.header-title{font-size:1rem;font-weight:700;color:var(--blue);letter-spacing:-0.3px;line-height:1.2;}
+.header-title em{font-style:normal;font-weight:400;font-size:0.7em;color:var(--muted);display:block;margin-top:2px;}
+.hdr-btns{display:flex;gap:8px;align-items:center;flex-shrink:0;}
+.btn-sm{display:inline-flex;align-items:center;gap:5px;font-size:0.67rem;font-weight:600;padding:6px 13px;border-radius:5px;cursor:pointer;transition:opacity .15s,background .15s;white-space:nowrap;text-decoration:none;border:none;}
+.btn-outline{color:var(--blue);background:var(--blue-light);border:1px solid var(--blue-mid);}
+.btn-outline:hover{background:var(--blue-mid);}
+.btn-crimson{color:var(--white);background:var(--crimson);}
+.btn-crimson:hover{opacity:.88;}
+.btn-primary{color:var(--white);background:var(--blue);}
+.btn-primary:hover{opacity:.88;}
+.btn-green{color:var(--white);background:var(--green);}
+.btn-green:hover{opacity:.88;}
+.header-rule{height:4px;background:linear-gradient(90deg,var(--crimson) 0%,var(--sky) 100%);}
+
+/* ── TABS ── */
+.tab-bar{background:var(--white);border-bottom:1px solid var(--border);padding:0 32px;display:flex;gap:0;max-width:none;}
+.tab{padding:11px 22px;font-size:0.72rem;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;transition:color .15s,border-color .15s;white-space:nowrap;letter-spacing:0.1px;}
+.tab:hover{color:var(--text);}
+.tab.active{color:var(--blue);border-bottom-color:var(--blue);}
+.tab.tab-prepre{color:#8e44ad;}
+.tab.tab-prepre.active{color:#8e44ad;border-bottom-color:#8e44ad;}
 
 /* ── MAIN ── */
-.main { max-width: 1240px; margin: 0 auto; padding: 28px 36px 64px; }
+.main{max-width:1280px;margin:0 auto;padding:24px 32px 64px;}
 
-/* ── METRICS ROW ── */
-.metrics { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 24px; }
-.metric-card {
-  background: var(--white); border: 1px solid var(--border); border-top: 3px solid var(--accent, var(--blue));
-  border-radius: 8px; padding: 16px 18px;
-}
-.metric-card.m-total  { --accent: var(--blue); }
-.metric-card.m-done   { --accent: var(--green); }
-.metric-card.m-prog   { --accent: var(--sky); }
-.metric-card.m-block  { --accent: var(--crimson); }
-.metric-card.m-target { --accent: var(--amber); }
-.metric-val { font-size: 1.6rem; font-weight: 700; color: var(--text); letter-spacing: -1px; line-height: 1; }
-.metric-lbl { font-size: 0.58rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-top: 4px; }
+/* ── METRICS ── */
+.metrics{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:20px;}
+.metric-card{background:var(--white);border:1px solid var(--border);border-top:3px solid var(--accent,var(--blue));border-radius:8px;padding:14px 16px;}
+.metric-card.m-total{--accent:var(--blue);}
+.metric-card.m-done{--accent:var(--green);}
+.metric-card.m-prog{--accent:var(--sky);}
+.metric-card.m-block{--accent:var(--crimson);}
+.metric-card.m-target{--accent:var(--amber);}
+.metric-val{font-size:1.5rem;font-weight:700;color:var(--text);letter-spacing:-1px;line-height:1;}
+.metric-lbl{font-size:0.57rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-top:4px;}
 
 /* ── PHASE PROGRESS ── */
-.phase-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
-.phase-card {
-  background: var(--white); border: 1px solid var(--border); border-radius: 8px; padding: 16px 18px;
-}
-.phase-card-title { font-size: 0.72rem; font-weight: 700; color: var(--text); margin-bottom: 3px; }
-.phase-card-sub { font-size: 0.6rem; color: var(--muted); margin-bottom: 10px; }
-.progress-bar-wrap { background: #e8f0f8; border-radius: 4px; height: 7px; overflow: hidden; }
-.progress-bar-fill { height: 100%; border-radius: 4px; transition: width 0.4s ease; }
-.p1-fill { background: linear-gradient(90deg, #1a7d4b, #27ae60); }
-.p2-fill { background: linear-gradient(90deg, #c0700e, #e67e22); }
-.p3-fill { background: linear-gradient(90deg, #1a5c96, #2980b9); }
-.phase-pct { font-size: 0.65rem; font-weight: 700; color: var(--muted); margin-top: 5px; text-align: right; }
+.phase-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px;}
+.phase-card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:14px 16px;}
+.phase-card-title{font-size:0.7rem;font-weight:700;color:var(--text);margin-bottom:2px;}
+.phase-card-sub{font-size:0.59rem;color:var(--muted);margin-bottom:8px;}
+.progress-bar-wrap{background:#e8f0f8;border-radius:4px;height:6px;overflow:hidden;}
+.progress-bar-fill{height:100%;border-radius:4px;transition:width .4s ease;}
+.p0-fill{background:linear-gradient(90deg,#6a1a9a,#9b59b6);}
+.p1-fill{background:linear-gradient(90deg,#1a7d4b,#27ae60);}
+.p2-fill{background:linear-gradient(90deg,#c0700e,#e67e22);}
+.p3-fill{background:linear-gradient(90deg,#1a5c96,#2980b9);}
+.phase-pct{font-size:0.62rem;font-weight:700;color:var(--muted);margin-top:4px;text-align:right;}
 
-/* ── FILTERS ── */
-.filter-bar {
-  background: var(--white); border: 1px solid var(--border); border-radius: 8px;
-  padding: 14px 18px; margin-bottom: 16px;
-  display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
-}
-.filter-bar input[type="text"] {
-  flex: 1; min-width: 180px; border: 1px solid var(--border); border-radius: 5px;
-  padding: 7px 12px; font-size: 0.75rem; font-family: inherit; outline: none;
-  color: var(--text);
-}
-.filter-bar input[type="text"]:focus { border-color: var(--sky); box-shadow: 0 0 0 2px rgba(91,184,232,0.15); }
-.filter-bar select {
-  border: 1px solid var(--border); border-radius: 5px; padding: 7px 10px;
-  font-size: 0.72rem; font-family: inherit; color: var(--text); background: var(--white);
-  outline: none; cursor: pointer;
-}
-.filter-bar select:focus { border-color: var(--sky); }
-.reset-btn {
-  font-size: 0.68rem; font-weight: 600; color: var(--muted); background: none;
-  border: 1px solid var(--border); border-radius: 5px; padding: 7px 12px; cursor: pointer;
-  transition: background 0.15s;
-}
-.reset-btn:hover { background: var(--bg); }
-.add-task-btn {
-  font-size: 0.68rem; font-weight: 600; color: var(--white); background: var(--blue);
-  border: none; border-radius: 5px; padding: 7px 14px; cursor: pointer; transition: opacity 0.15s;
-  margin-left: auto;
-}
-.add-task-btn:hover { opacity: 0.88; }
+/* ── FILTER BAR ── */
+.filter-bar{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin-bottom:14px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
+.filter-bar input[type="text"]{flex:1;min-width:160px;border:1px solid var(--border);border-radius:5px;padding:6px 10px;font-size:0.72rem;font-family:inherit;outline:none;color:var(--text);}
+.filter-bar input:focus{border-color:var(--sky);box-shadow:0 0 0 2px rgba(91,184,232,.15);}
+.filter-bar select{border:1px solid var(--border);border-radius:5px;padding:6px 9px;font-size:0.7rem;font-family:inherit;color:var(--text);background:var(--white);outline:none;cursor:pointer;}
+.filter-bar select:focus{border-color:var(--sky);}
+.reset-btn{font-size:0.66rem;font-weight:600;color:var(--muted);background:none;border:1px solid var(--border);border-radius:5px;padding:6px 11px;cursor:pointer;transition:background .15s;}
+.reset-btn:hover{background:var(--bg);}
+.add-task-btn{font-size:0.66rem;font-weight:600;color:var(--white);background:var(--blue);border:none;border-radius:5px;padding:6px 13px;cursor:pointer;margin-left:auto;transition:opacity .15s;}
+.add-task-btn:hover{opacity:.88;}
 
 /* ── TABLE ── */
-.table-wrap { background: var(--white); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
-.task-table { width: 100%; border-collapse: collapse; }
-.task-table thead tr { background: #f7fbff; border-bottom: 2px solid var(--border); }
-.task-table th {
-  padding: 11px 14px; text-align: left; font-size: 0.59rem; font-weight: 700;
-  text-transform: uppercase; letter-spacing: 1px; color: var(--muted); white-space: nowrap;
-}
-.task-table th.right { text-align: right; }
-.task-table td { padding: 11px 14px; font-size: 0.73rem; border-bottom: 1px solid #edf3f8; vertical-align: middle; }
-.task-table tr:last-child td { border-bottom: none; }
-.task-table tr:hover td { background: #f8fcff; cursor: pointer; }
-.task-table tr.gate-row td { background: #fffbf0; }
-.task-table tr.gate-row:hover td { background: #fff5dc; }
+.table-wrap{background:var(--white);border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+.task-table{width:100%;border-collapse:collapse;}
+.task-table thead tr{background:#f7fbff;border-bottom:2px solid var(--border);}
+.task-table th{padding:10px 13px;text-align:left;font-size:0.58rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);white-space:nowrap;}
+.task-table th.right{text-align:right;}
+.task-table td{padding:10px 13px;font-size:0.72rem;border-bottom:1px solid #edf3f8;vertical-align:middle;}
+.task-table tr:last-child td{border-bottom:none;}
+.task-table tr:hover td{background:#f8fcff;cursor:pointer;}
+.task-table tr.gate-row td{background:#fffbf0;}
+.task-table tr.gate-row:hover td{background:#fff5dc;}
 
-/* ── PHASE PILL ── */
-.phase-pill {
-  display: inline-block; font-size: 0.55rem; font-weight: 700; text-transform: uppercase;
-  letter-spacing: 0.5px; padding: 3px 7px; border-radius: 3px; white-space: nowrap;
-}
-.pp-1 { background: #e6f6ed; color: #1a7d4b; border: 1px solid rgba(26,125,75,0.25); }
-.pp-2 { background: #fff4e6; color: #c0700e; border: 1px solid rgba(192,112,14,0.25); }
-.pp-3 { background: #e8f0f8; color: #1a5c96; border: 1px solid rgba(26,92,150,0.25); }
-.pp-gate { background: #fff8e6; color: #8a5a00; border: 1px solid rgba(138,90,0,0.25); }
+/* ── PILLS & BADGES ── */
+.phase-pill{display:inline-block;font-size:0.54rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;padding:3px 7px;border-radius:3px;white-space:nowrap;}
+.pp-0{background:#f0e8ff;color:#6a1a9a;border:1px solid rgba(106,26,154,.25);}
+.pp-1{background:#e6f6ed;color:#1a7d4b;border:1px solid rgba(26,125,75,.25);}
+.pp-2{background:#fff4e6;color:#c0700e;border:1px solid rgba(192,112,14,.25);}
+.pp-3{background:#e8f0f8;color:#1a5c96;border:1px solid rgba(26,92,150,.25);}
+.pp-gate{background:#fff8e6;color:#8a5a00;border:1px solid rgba(138,90,0,.25);}
 
-/* ── STATUS BADGE ── */
-.status-badge {
-  display: inline-flex; align-items: center; gap: 5px;
-  font-size: 0.62rem; font-weight: 600; padding: 4px 9px; border-radius: 20px; white-space: nowrap;
-}
-.sb-not-started { background: #f0f4f8; color: #718096; border: 1px solid #d4dce6; }
-.sb-in-progress { background: #e8f4fb; color: #0072BC; border: 1px solid rgba(0,114,188,0.25); }
-.sb-complete    { background: #e6f6ed; color: #0e7a5a; border: 1px solid rgba(14,122,90,0.25); }
-.sb-blocked     { background: #fce8ed; color: #C8103E; border: 1px solid rgba(200,16,62,0.25); }
-.sb-deferred    { background: #f5f0ff; color: #4a3a88; border: 1px solid rgba(74,58,136,0.25); }
+.status-badge{display:inline-flex;align-items:center;gap:5px;font-size:0.61rem;font-weight:600;padding:3px 8px;border-radius:20px;white-space:nowrap;}
+.sb-not-started{background:#f0f4f8;color:#718096;border:1px solid #d4dce6;}
+.sb-in-progress{background:#e8f4fb;color:#0072BC;border:1px solid rgba(0,114,188,.25);}
+.sb-complete{background:#e6f6ed;color:#0e7a5a;border:1px solid rgba(14,122,90,.25);}
+.sb-blocked{background:#fce8ed;color:#C8103E;border:1px solid rgba(200,16,62,.25);}
+.sb-deferred{background:#f5f0ff;color:#4a3a88;border:1px solid rgba(74,58,136,.25);}
 
-/* ── TYPE BADGE ── */
-.type-badge {
-  display: inline-block; font-size: 0.55rem; font-weight: 700; padding: 3px 7px;
-  border-radius: 3px; text-transform: uppercase; letter-spacing: 0.4px;
-}
-.tb-revenue   { background: #e6f6ed; color: #0e7a5a; border: 1px solid rgba(14,122,90,0.2); }
-.tb-cost      { background: #e8f0f8; color: #1a5c96; border: 1px solid rgba(26,92,150,0.2); }
-.tb-strategic { background: #f5f0ff; color: #4a3a88; border: 1px solid rgba(74,58,136,0.2); }
-.tb-gate      { background: #fff4e6; color: #c0700e; border: 1px solid rgba(192,112,14,0.2); }
+.type-badge{display:inline-block;font-size:0.54rem;font-weight:700;padding:3px 7px;border-radius:3px;text-transform:uppercase;letter-spacing:.3px;}
+.tb-revenue{background:#e6f6ed;color:#0e7a5a;border:1px solid rgba(14,122,90,.2);}
+.tb-cost{background:#e8f0f8;color:#1a5c96;border:1px solid rgba(26,92,150,.2);}
+.tb-strategic{background:#f5f0ff;color:#4a3a88;border:1px solid rgba(74,58,136,.2);}
+.tb-gate{background:#fff4e6;color:#c0700e;border:1px solid rgba(192,112,14,.2);}
+.tb-bd{background:#fce8ed;color:#C8103E;border:1px solid rgba(200,16,62,.2);}
+.tb-brand{background:#fff0f8;color:#8e44ad;border:1px solid rgba(142,68,173,.2);}
 
-/* ── VALUE ── */
-.val-text { font-size: 0.7rem; font-weight: 600; font-family: 'IBM Plex Mono', monospace, sans-serif; white-space: nowrap; }
+.assignee-chip{display:inline-flex;align-items:center;gap:5px;background:var(--blue-light);border:1px solid var(--blue-mid);border-radius:20px;padding:3px 10px;font-size:0.61rem;font-weight:500;color:var(--blue-dark);white-space:nowrap;}
+.assignee-chip.unassigned{background:#f0f4f8;border-color:#d4dce6;color:#718096;font-style:italic;}
+.avatar{width:17px;height:17px;border-radius:50%;background:var(--blue);color:white;font-size:0.48rem;font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;}
 
-/* ── ASSIGNEE ── */
-.assignee-chip {
-  display: inline-flex; align-items: center; gap: 5px; background: var(--blue-light);
-  border: 1px solid var(--blue-mid); border-radius: 20px; padding: 3px 10px;
-  font-size: 0.62rem; font-weight: 500; color: var(--blue-dark); white-space: nowrap;
-}
-.assignee-chip.unassigned { background: #f0f4f8; border-color: #d4dce6; color: #718096; font-style: italic; }
-.avatar { width: 18px; height: 18px; border-radius: 50%; background: var(--blue); color: white; font-size: 0.5rem; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; }
+.val-text{font-size:0.68rem;font-weight:600;font-family:monospace;white-space:nowrap;}
+.deadline-text{font-size:0.65rem;color:var(--muted);font-family:monospace;white-space:nowrap;}
+.notes-snip{font-size:0.64rem;color:var(--muted);font-style:italic;max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.empty-row td{text-align:center;padding:48px;color:var(--muted);font-size:.8rem;}
 
-/* ── NOTES SNIPPET ── */
-.notes-snip { font-size: 0.65rem; color: var(--muted); font-style: italic; max-width: 180px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* ── PRE-PHASE 1 WEEKLY CARDS ── */
+.week-section{margin-bottom:28px;}
+.week-header{display:flex;align-items:center;gap:14px;margin-bottom:12px;}
+.week-badge{background:#f0e8ff;color:#6a1a9a;border:1px solid rgba(106,26,154,.3);font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;padding:4px 12px;border-radius:4px;white-space:nowrap;}
+.week-title{font-size:0.75rem;font-weight:700;color:var(--text);}
+.week-range{font-size:0.62rem;color:var(--muted);margin-left:6px;}
+.week-line{flex:1;height:1px;background:var(--border);}
+.week-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px;}
+.pp-card{background:var(--white);border:1px solid var(--border);border-left:3px solid var(--pp-accent,var(--blue));border-radius:6px;padding:14px 16px;cursor:pointer;transition:box-shadow .15s,transform .15s;}
+.pp-card:hover{box-shadow:0 4px 16px rgba(0,114,188,.1);transform:translateY(-1px);}
+.pp-card.acc-bd{--pp-accent:#C8103E;}
+.pp-card.acc-occ{--pp-accent:var(--green);}
+.pp-card.acc-hr{--pp-accent:var(--amber);}
+.pp-card.acc-brand{--pp-accent:#8e44ad;}
+.pp-card.acc-strategic{--pp-accent:var(--slate);}
+.pp-card-title{font-size:0.73rem;font-weight:600;color:var(--text);line-height:1.35;margin-bottom:8px;}
+.pp-card-meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center;}
+.focus-tag{font-size:0.56rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;padding:2px 7px;border-radius:3px;}
+.focus-bd{background:#fce8ed;color:#C8103E;border:1px solid rgba(200,16,62,.2);}
+.focus-occ{background:#e6f6ed;color:#0e7a5a;border:1px solid rgba(14,122,90,.2);}
+.focus-hr{background:#fff4e6;color:#c0700e;border:1px solid rgba(192,112,14,.2);}
+.focus-brand{background:#f5f0ff;color:#6a1a9a;border:1px solid rgba(106,26,154,.2);}
+.focus-strategic{background:#f0f4f8;color:#2a4a5e;border:1px solid rgba(42,74,94,.2);}
 
-/* ── EMPTY STATE ── */
-.empty-row td { text-align: center; padding: 48px; color: var(--muted); font-size: 0.8rem; }
+/* ── PRIORITY BANNER ── */
+.priority-banner{background:linear-gradient(135deg,#003f6e,#005a96);border-radius:8px;padding:16px 20px;margin-bottom:20px;display:flex;align-items:flex-start;gap:16px;}
+.pb-icon{font-size:1.4rem;flex-shrink:0;margin-top:1px;}
+.pb-title{font-size:0.75rem;font-weight:700;color:var(--white);margin-bottom:4px;}
+.pb-desc{font-size:0.68rem;color:rgba(255,255,255,.65);line-height:1.6;}
+.pb-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
+.pb-tag{font-size:0.55rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:3px 8px;border-radius:3px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.8);}
 
-/* ── MODAL OVERLAY ── */
-.modal-overlay {
-  position: fixed; inset: 0; z-index: 1000;
-  background: rgba(0,20,40,0.55); backdrop-filter: blur(4px);
-  display: flex; align-items: center; justify-content: center; padding: 24px;
-  opacity: 0; pointer-events: none; transition: opacity 0.2s;
-}
-.modal-overlay.open { opacity: 1; pointer-events: all; }
-.modal {
-  background: var(--white); border-radius: 12px; width: 100%; max-width: 560px;
-  box-shadow: 0 24px 80px rgba(0,20,60,0.25); overflow: hidden;
-  transform: translateY(16px) scale(0.98); transition: transform 0.2s;
-}
-.modal-overlay.open .modal { transform: none; }
-.modal-header {
-  background: var(--blue-deep); padding: 18px 22px; display: flex; align-items: flex-start;
-  justify-content: space-between; gap: 12px;
-}
-.modal-header-title { font-size: 0.85rem; font-weight: 700; color: var(--white); line-height: 1.4; flex: 1; }
-.modal-header-sub { font-size: 0.62rem; color: rgba(255,255,255,0.5); margin-top: 3px; }
-.modal-close {
-  background: rgba(255,255,255,0.1); border: none; color: rgba(255,255,255,0.7); width: 26px; height: 26px;
-  border-radius: 50%; cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0; margin-top: 1px; transition: background 0.15s;
-}
-.modal-close:hover { background: rgba(255,255,255,0.2); }
-.modal-body { padding: 22px; display: flex; flex-direction: column; gap: 16px; }
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.form-group { display: flex; flex-direction: column; gap: 5px; }
-.form-group.full { grid-column: 1 / -1; }
-.form-label { font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); }
-.form-group select, .form-group textarea, .form-group input[type="text"] {
-  border: 1px solid var(--border); border-radius: 6px; padding: 8px 10px;
-  font-size: 0.78rem; font-family: inherit; color: var(--text); background: var(--white);
-  outline: none; transition: border-color 0.15s;
-}
-.form-group select:focus, .form-group textarea:focus, .form-group input[type="text"]:focus {
-  border-color: var(--sky); box-shadow: 0 0 0 2px rgba(91,184,232,0.15);
-}
-.form-group textarea { resize: vertical; min-height: 72px; line-height: 1.55; }
-.add-member-row { display: flex; gap: 8px; }
-.add-member-row input { flex: 1; }
-.add-member-btn {
-  background: var(--blue-light); border: 1px solid var(--blue-mid); color: var(--blue);
-  border-radius: 6px; padding: 8px 12px; font-size: 0.72rem; font-weight: 600; cursor: pointer;
-  white-space: nowrap; transition: background 0.15s;
-}
-.add-member-btn:hover { background: var(--blue-mid); }
-.modal-footer { padding: 14px 22px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 10px; }
-.btn-cancel {
-  background: none; border: 1px solid var(--border); border-radius: 6px; padding: 9px 18px;
-  font-size: 0.75rem; font-weight: 600; color: var(--muted); cursor: pointer; transition: background 0.15s;
-}
-.btn-cancel:hover { background: var(--bg); }
-.btn-save {
-  background: var(--blue); border: none; border-radius: 6px; padding: 9px 22px;
-  font-size: 0.75rem; font-weight: 600; color: var(--white); cursor: pointer; transition: opacity 0.15s;
-}
-.btn-save:hover { opacity: 0.88; }
+/* ── MODALS ── */
+.modal-overlay{position:fixed;inset:0;z-index:1000;background:rgba(0,20,40,.55);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity .2s;}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal{background:var(--white);border-radius:12px;width:100%;max-width:560px;box-shadow:0 24px 80px rgba(0,20,60,.25);overflow:hidden;transform:translateY(16px) scale(.98);transition:transform .2s;max-height:90vh;display:flex;flex-direction:column;}
+.modal-overlay.open .modal{transform:none;}
+.modal-lg{max-width:680px;}
+.modal-header{background:var(--blue-deep);padding:16px 20px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-shrink:0;}
+.modal-header-title{font-size:0.85rem;font-weight:700;color:var(--white);line-height:1.4;flex:1;}
+.modal-header-sub{font-size:0.61rem;color:rgba(255,255,255,.5);margin-top:3px;}
+.modal-close{background:rgba(255,255,255,.1);border:none;color:rgba(255,255,255,.7);width:26px;height:26px;border-radius:50%;cursor:pointer;font-size:.9rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .15s;}
+.modal-close:hover{background:rgba(255,255,255,.2);}
+.modal-body{padding:20px;display:flex;flex-direction:column;gap:14px;overflow-y:auto;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.form-group{display:flex;flex-direction:column;gap:4px;}
+.form-group.full{grid-column:1/-1;}
+.form-label{font-size:0.59rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);}
+.form-group select,.form-group textarea,.form-group input[type="text"]{border:1px solid var(--border);border-radius:6px;padding:7px 10px;font-size:0.77rem;font-family:inherit;color:var(--text);background:var(--white);outline:none;transition:border-color .15s;}
+.form-group select:focus,.form-group textarea:focus,.form-group input:focus{border-color:var(--sky);box-shadow:0 0 0 2px rgba(91,184,232,.15);}
+.form-group textarea{resize:vertical;min-height:68px;line-height:1.55;}
+.add-member-row{display:flex;gap:8px;}
+.add-member-row input{flex:1;}
+.add-member-btn{background:var(--blue-light);border:1px solid var(--blue-mid);color:var(--blue);border-radius:6px;padding:7px 11px;font-size:0.7rem;font-weight:600;cursor:pointer;white-space:nowrap;transition:background .15s;}
+.add-member-btn:hover{background:var(--blue-mid);}
+.modal-footer{padding:12px 20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px;flex-shrink:0;}
+.btn-cancel{background:none;border:1px solid var(--border);border-radius:6px;padding:8px 16px;font-size:0.73rem;font-weight:600;color:var(--muted);cursor:pointer;transition:background .15s;}
+.btn-cancel:hover{background:var(--bg);}
+.btn-save{background:var(--blue);border:none;border-radius:6px;padding:8px 20px;font-size:0.73rem;font-weight:600;color:var(--white);cursor:pointer;transition:opacity .15s;}
+.btn-save:hover{opacity:.88;}
 
-/* ── ADD TASK MODAL ── */
-.new-task-modal { max-width: 520px; }
+/* ── DIGEST MODAL ── */
+.digest-owner-block{border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:10px;}
+.digest-owner-header{background:var(--blue-light);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.digest-owner-name{font-size:0.75rem;font-weight:700;color:var(--blue-dark);}
+.digest-owner-email{font-size:0.62rem;color:var(--muted);}
+.digest-task-list{padding:8px 14px;}
+.digest-task-row{display:flex;align-items:baseline;gap:8px;padding:5px 0;border-bottom:1px solid #f0f6fb;font-size:0.68rem;}
+.digest-task-row:last-child{border-bottom:none;}
+.digest-task-title{flex:1;color:var(--text);}
+.digest-task-dl{color:var(--muted);font-family:monospace;font-size:0.62rem;white-space:nowrap;}
+.mailto-btn{display:inline-flex;align-items:center;gap:4px;font-size:0.62rem;font-weight:600;color:var(--blue);background:var(--blue-light);border:1px solid var(--blue-mid);border-radius:4px;padding:4px 9px;cursor:pointer;text-decoration:none;transition:background .15s;}
+.mailto-btn:hover{background:var(--blue-mid);}
+.digest-copy-bar{background:#f7fbff;border:1px solid var(--border);border-radius:6px;padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.digest-copy-lbl{font-size:0.67rem;color:var(--muted);}
 
-/* ── TIMING CELL ── */
-.timing-text { font-size: 0.65rem; color: var(--muted); font-family: 'IBM Plex Mono', monospace, sans-serif; }
-
-/* ── COUNT BADGE ── */
-.count-badge {
-  display: inline-flex; align-items: center; justify-content: center;
-  background: var(--blue-light); color: var(--blue); border: 1px solid var(--blue-mid);
-  font-size: 0.6rem; font-weight: 700; padding: 2px 7px; border-radius: 10px; margin-left: 6px;
-}
+/* ── TEAM SETTINGS MODAL ── */
+.team-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #f0f6fb;}
+.team-row:last-child{border-bottom:none;}
+.team-name-fixed{font-size:0.74rem;font-weight:600;color:var(--text);width:160px;flex-shrink:0;}
+.team-email-inp{flex:1;border:1px solid var(--border);border-radius:5px;padding:6px 9px;font-size:0.72rem;font-family:inherit;color:var(--text);outline:none;}
+.team-email-inp:focus{border-color:var(--sky);}
+.team-remove-btn{background:none;border:none;color:#ccc;cursor:pointer;font-size:1rem;padding:0 4px;transition:color .15s;}
+.team-remove-btn:hover{color:var(--crimson);}
 
 /* ── RESPONSIVE ── */
-@media(max-width: 900px) {
-  .metrics { grid-template-columns: repeat(3, 1fr); }
-  .phase-row { grid-template-columns: 1fr; }
-  .main { padding: 20px 16px 48px; }
-  .header-inner { padding: 14px 16px; }
-  .filter-bar { gap: 8px; }
+@media(max-width:900px){
+  .metrics{grid-template-columns:repeat(3,1fr);}
+  .phase-row{grid-template-columns:1fr;}
+  .main{padding:18px 16px 48px;}
+  .header-inner{padding:12px 16px;}
+  .tab-bar{padding:0 16px;overflow-x:auto;}
 }
-@media(max-width: 600px) {
-  .metrics { grid-template-columns: 1fr 1fr; }
+@media(max-width:600px){
+  .metrics{grid-template-columns:1fr 1fr;}
+  .week-cards{grid-template-columns:1fr;}
 }
 </style>
 </head>
@@ -269,18 +236,30 @@ body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color
       <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAsICAoIBwsKCQoNDAsNERwSEQ8PESIZGhQcKSQrKigkJyctMkA3LTA9MCcnOEw5PUNFSElIKzZPVU5GVEBHSEX/2wBDAQwNDREPESESEiFFLicuRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUX/wAARCACTAPUDASIAAhEBAxEB/8QAGwABAAIDAQEAAAAAAAAAAAAAAAUGAwQHAgH/xAA6EAABBAIABAQDBgUBCQAAAAABAAIDBAURBhIhMRMiQVEUYYEVMnGRobEHFjNCUiMkJTZicnOzwdH/xAAZAQEAAwEBAAAAAAAAAAAAAAAAAQIEAwX/xAArEQACAgECBAUDBQAAAAAAAAAAAQIRAwQSEyExQSJRcYGhFGGRBRVCsfD/2gAMAwEAAhEDEQA/AOuIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiLzI8RxueezQSgNWxlaNWdkE9qJkzyGtjLvMSe3Rbi41irDp+IqtiZxc6S017nE99uXW5cjTgJE1uBhHo6QArRmwcJpLmZcGo4qbfKjaRaLc1jXHTb1cn/uBbrXBzQ5pBB6ghcGmuppUk+jPqIigkIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAKtZHiymzOQ4SEeLNM/wpXg6bESOg+Z7fgrKuSYzhPK3eJrRDvCFS0XPsP67dzcw0PUkaP1Q16XFiybnldJIhWtMby13QtOj8iFvVa8th2oIXyH/kYXfspriiWvw9mJW18XDJLP/rCeyS9vU9eVnYaPvtWHgXPuy+PmgslnxUD9kNaGgsPY6Ht1C9KWtX8UeV+yZo4ePNrb+SuQ4HKOGxQm1826/dXfhplmHFCC3E+N8Ty1oeP7e4Uwiy5dQ8ipoYdNHFLcmERFnNQREQBERAFCfzVRGeOIeJWTh3IHEDlLtbA3tTapP8QMcWRVstWHLNBIGvc0dep20n8CP1XXDGM5bZdzjnlKEd0exO5zibH8P+ELxl5pQSwRs5t61/8AVEN/iThSxpLbQJ9PDHT9VW+O83Dl6WMZCGkujEzzrq0npy7+h/RWvhLA45nDNVz6sMz7MfPI57A4u36dfZVlFx5M9HCtPLCs0rfOuX5M0/HGFhqR2G2HTeJ2jjb5x+IPb6rLh+L8bmrArwGSOcglrJW65texHRc3NOXF8YXGY+qLbKkjnCJzecco9x8tq14K9hczxBFadBLSyTR5Yg4eG8gEHXTvr3XaOOLx7qf++xh1alh1GyL8Lpq/J/fzL2vEJJj2Tvqf3K9rHB/T+p/crMXKdxbk7tPiTFQVrUsUUvLzsY7Qd5wOv0VsuZCrj42vuWI4GOOgZHa2fZUnjb/ivDfiz/yBTPF97DV4a8WXrvtOc4viijJB9tnqPdanBSUFXXyMim4vI76V1Jipmsdfl8Kpdgmk/wAGPBP5KscGZO7dzWUitWpZmRfca92w3zkdFWJH14+JMZLQx1jHN8VnkmJ27zgbG/TXRa7MxPirGXZV22Sy8x+ID1YOc718yu8dMtrUe/n6meWpe5OXby9DrUOTpWJnQwW4ZJW7JYyQEjXdYG57FOseC3I1jLvXL4o7+ypdnHx4HgJ01aRr7F/kEk8Z/tPXlB9tdPzUC9+HdgWQxUbX2joEzkeQnfX17a+S5x00Zc03V0dZ6mUeTSurOt27tajF4lueOFnbmkcAFrNzNC5FI2neglk5HEBkgJ7ey5vlIb89LC3LtaexVZAGOHUHo49z6EjXVSnD0/Dk+QBq1LFS82N/htfJzNd5Tsfjraj6dKO7r6E/Uty21XqbnBnEX+wW5MzkhsSNDDYkG+3ornXtQW4GzVpWSxO7PY4EFc34K4doZunbkuse58bg1ha8jl2N+i0MdenpcM5qvFI4Ayxs2D22XB35hqvlwRnN7Xz5fJzxZ5QhHcuXP4Omfb2K8fwPtGr4u9cvijv7LYs36lNzG2bMMJf90SPDeb8Nqgfytj/5F+0eV3xfg+P4nMdf9Ou2tKGyM8t/CYNsri5zXSwhzuvQOaB+h/RVjpoSfhfei8tTOK8S7WdYgyFSzK6KvahlkZ95jJA4j6Baxz2JjsGE5Cq2UnRb4g7/ADVayuAqcLcP3bdB03xL4hAZHP8ARzhs69FUY5MN9gmF1K07JEEicfcB30Gt9tfJRDTxmtybroTPUTg9rSvqdD4vwH29itwAG3Bt8J/y92/X99LlmHy8/D2YjtMaQY3FksR6FzfVp+f/ALC6pwTJPJwzW+ID9sLmsLx1LQeiljiqBtGyaVc2CdmUxjmJ/FZZx2ycfI9zSfqG3A8c43FmWpZjuVYrEO/DlaHt5ho6PuFmRFUwBERAEREAREQBamTpMyWOsVJPuzMLd+x9D+a20Up07RDSapnIchwpdxWHtW8gxjOTkbGGvDtku6np8v3UlhMjxTjMRDBTxvxVaRnPBJyl3ID19D+hV14lxEmcw0lKGRkT3Pa7meCR0O/RbOHovxuJqU5HNe+CMMLm9jpXyZJZJbpG7TZMWn0ixJKXibp+hQKGH4owNx2XZXbYnsg+LH0e4bOzsD137Lex2My+a4ngyuQpNoxwEOPl5S8jt07k/M+iv6K0c22NJK/M8/UReoy8Sb9uwWOD+n9T+5WRAAOy4lyqcV8OXcrdpXce+Lxa/TkkOh0OwfzWlmeHc5lIaF17q5yVYkPa06aRzbaR6Kdv5qWlnqlLwmGvK0GSQk8zS5xa35a3r80jzUsvErsc2Jnw7WO/1dnmL2hpI9teYLTGeSKVVyMsoY5N23z/ALK7Y4d4jyeUoXci+q4wvaS1jtcjQ4Ejt1Kz4rg2YTZZmUbGYLn3Cx+3NPMSD26EbVnGZoOu/BiwPG5uTXKdc3fl5ta38trUzfEMGNgsMheH3Img8nI5wBJGuYjoOnuVPFyvwpURwsUfE3ZAUuFMoMRcw9ySE1XHnryh2yx4Ox09j+nVeKeO40x8DKleWsII/KwuLXaH1G1cRZ/3ma3PH/R8Tl68/wB7W/bX6rzTy1O/K6OrKZC3e3BjuU6Ojp2tH6KONPnaT9ieBBVTa9yBv1uLRHUdStQOkbCBOPLpz9nqNj20tDGcMZifOfamYfC2RjTprCNudykDsNAdVbK2YpW7Pw8MrvF0XBro3N5gO5GwN/RfMTdkvQzvlDQY7EsQ5fZriAoWWcYtJJexLxQlJNtv3IfgvBXMFVtR3fD5pXtc3kdzdANKNxXBdoUstVvujYLfKYnsdzcrmkkE/mFYrN67LlX0ce2uDDE2SWSfmI8xOgAPwPVbU+Rix8EJyEjWyv6csbXO5na68oA2UeXJbfd0Fix0l2VlJ/l3ir7O+yPGr/A71vnHbe9dt6+S2snwZaNbEV6Do3sp8xlc93KXEuBJA+hVrkzFGKnFbdYb8PMQ2N4BPMT2A1130KxTZ2qzEWchCTKyuHBzeUtPMP7SCNj09FbjZLTS+O5XgYkmm/nsZczjm5bFWKT3cvit0Hf4kdQfzCp1LFcY4qAU6klY12E8pJaQOvpsbVubnKPwEVyWYRQvcGc0gLQHa7dR+q9TZmjXrwzSTeScc0YDHFzh33ygb0qQnOC21fqi84Qm910/sz1iWXo8dE3JyMktjfO5nY9enoPRbqxwTx2YGTQvbJFIA5rmnYIWRcW7Z3XJBERQSEREAREQBERAEREAREQBERAEREBBZTETX8hPI3lax1PwmO31EgfzN6e3QdV4x+Jt171CxOI3PbHO6w5p6eJI5p6e46a+gVgRX4jqjnw43ZVquGsxXRHYisSwMtOnY9tkCMbcXAlnfY2vuRxuRczLVq9Zksd6RsjZjKG8vRoIIPX+3orQitxXdkcFVRGOpSuzzrWgIXU/B3vrzc2+34LDg4r9ShFQsVWx/DxcjZxIHNeR0B13HuplFTc6otsV2VfHY/KNylCzdikc6Fj2TSPsh4cXAeZrfQbHbv1+Sl8PUmpwWGzAAyWZZG6O/K5xIUiimU3IiONRIaeC7TzM12rWFqOxExj2CQMcxzSdHr0IIP6LFlqV23PQuQxyB8THtkiinDHjm12ceh1pTyIptOw8aaqyBbipW0cZFDE6PwLYnkbJKHOA8xJ36nZXt+LsSV87H5R8aT4R5veMN6+3UKbRN7HDiQctW5do4xslYRSV7Mb5GOkDvK0EEgjuvmZx9uXI1rlUTPDInRPbDMI3jZBB2ehHTt+CnURTadh401Rp4qqKeNggbG6IMb9xz+cjZ31PqtxEVW7dl0qVBERQSEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQH//Z" alt="VPS Lakeshore">
     </div>
     <div class="header-center">
-      <div class="header-title">
-        12-Month Efficiency Plan — Operations Tracker
+      <div class="header-title">12-Month Efficiency Plan — Operations Tracker
         <em>FY27 · 3 Phases · 10 Workstreams · ₹38–50 Cr EBITDA Uplift Target</em>
       </div>
     </div>
-    <a class="back-btn" href="index.html">← Main Dashboard</a>
+    <div class="hdr-btns">
+      <button class="btn-sm btn-outline" onclick="openTeamSettings()">👥 Team &amp; Emails</button>
+      <button class="btn-sm btn-green" onclick="openDigest()">📧 Send Digest</button>
+      <a class="btn-sm btn-outline" href="index.html">← Dashboard</a>
+    </div>
   </div>
 </div>
 <div class="header-rule"></div>
-<div style="background:#f0f6fb;border-bottom:1px solid #dde6f0;padding:6px 36px;font-size:0.65rem;color:#718096;display:flex;justify-content:space-between;align-items:center;letter-spacing:0.3px;">
-  <span>VPS Lakeshore Hospital &amp; Research Centre &nbsp;·&nbsp; Confidential — Internal Use Only</span>
-  <span>🕐 FY27 Plan · Apr 2026 – Mar 2027</span>
+<div style="background:#f0f6fb;border-bottom:1px solid #dde6f0;padding:5px 32px;font-size:0.63rem;color:#718096;display:flex;justify-content:space-between;">
+  <span>VPS Lakeshore Hospital &amp; Research Centre · Confidential — Internal Use Only</span>
+  <span id="todayStamp"></span>
+</div>
+
+<!-- ── TABS ── -->
+<div class="tab-bar">
+  <div class="tab tab-prepre active" data-tab="pre" onclick="switchTab('pre',this)">⚡ Pre-Phase 1</div>
+  <div class="tab" data-tab="p1" onclick="switchTab('p1',this)">📗 Phase 1</div>
+  <div class="tab" data-tab="p2" onclick="switchTab('p2',this)">📙 Phase 2</div>
+  <div class="tab" data-tab="p3" onclick="switchTab('p3',this)">📘 Phase 3</div>
+  <div class="tab" data-tab="all" onclick="switchTab('all',this)">☰ All Tasks</div>
 </div>
 
 <!-- ── MAIN ── -->
@@ -288,65 +267,40 @@ body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color
 
   <!-- METRICS -->
   <div class="metrics" id="metricsRow">
-    <div class="metric-card m-total">
-      <div class="metric-val" id="mTotal">—</div>
-      <div class="metric-lbl">Total Tasks</div>
-    </div>
-    <div class="metric-card m-done">
-      <div class="metric-val" id="mDone">—</div>
-      <div class="metric-lbl">Complete</div>
-    </div>
-    <div class="metric-card m-prog">
-      <div class="metric-val" id="mProg">—</div>
-      <div class="metric-lbl">In Progress</div>
-    </div>
-    <div class="metric-card m-block">
-      <div class="metric-val" id="mBlock">—</div>
-      <div class="metric-lbl">Blocked</div>
-    </div>
-    <div class="metric-card m-target">
-      <div class="metric-val">₹50Cr</div>
-      <div class="metric-lbl">EBITDA Target</div>
-    </div>
+    <div class="metric-card m-total"><div class="metric-val" id="mTotal">—</div><div class="metric-lbl">Total Tasks</div></div>
+    <div class="metric-card m-done"><div class="metric-val" id="mDone">—</div><div class="metric-lbl">Complete</div></div>
+    <div class="metric-card m-prog"><div class="metric-val" id="mProg">—</div><div class="metric-lbl">In Progress</div></div>
+    <div class="metric-card m-block"><div class="metric-val" id="mBlock">—</div><div class="metric-lbl">Blocked</div></div>
+    <div class="metric-card m-target"><div class="metric-val">₹50Cr</div><div class="metric-lbl">EBITDA Target</div></div>
   </div>
 
-  <!-- PHASE PROGRESS -->
+  <!-- PHASE PROGRESS (hidden on pre-phase tab) -->
   <div class="phase-row" id="phaseRow">
     <div class="phase-card">
       <div class="phase-card-title">📗 Phase 1 — Low-Hanging Fruit &amp; Board Prep</div>
-      <div class="phase-card-sub" id="p1sub">Apr–May 2026 · Days 1–60</div>
+      <div class="phase-card-sub">Apr–May 2026 · Days 1–60</div>
       <div class="progress-bar-wrap"><div class="progress-bar-fill p1-fill" id="p1bar" style="width:0%"></div></div>
       <div class="phase-pct" id="p1pct">0% complete</div>
     </div>
     <div class="phase-card">
       <div class="phase-card-title">📙 Phase 2 — Procurement, Costs &amp; Revenue Ramp</div>
-      <div class="phase-card-sub" id="p2sub">Jun–Sep 2026 · Days 61–180</div>
+      <div class="phase-card-sub">Jun–Sep 2026 · Days 61–180</div>
       <div class="progress-bar-wrap"><div class="progress-bar-fill p2-fill" id="p2bar" style="width:0%"></div></div>
       <div class="phase-pct" id="p2pct">0% complete</div>
     </div>
     <div class="phase-card">
       <div class="phase-card-title">📘 Phase 3 — Revenue Ramp, New Specialists &amp; Infra</div>
-      <div class="phase-card-sub" id="p3sub">Oct 2026–Mar 2027 · Days 181–360</div>
+      <div class="phase-card-sub">Oct 2026–Mar 2027 · Days 181–360</div>
       <div class="progress-bar-wrap"><div class="progress-bar-fill p3-fill" id="p3bar" style="width:0%"></div></div>
       <div class="phase-pct" id="p3pct">0% complete</div>
     </div>
   </div>
 
-  <!-- FILTERS -->
-  <div class="filter-bar">
+  <!-- FILTER BAR -->
+  <div class="filter-bar" id="filterBar">
     <input type="text" id="filterSearch" placeholder="🔍  Search tasks…" oninput="applyFilters()">
-    <select id="filterPhase" onchange="applyFilters()">
-      <option value="">All Phases</option>
-      <option value="Phase 1">Phase 1</option>
-      <option value="Phase 2">Phase 2</option>
-      <option value="Phase 3">Phase 3</option>
-    </select>
-    <select id="filterWorkstream" onchange="applyFilters()">
-      <option value="">All Workstreams</option>
-    </select>
-    <select id="filterAssignee" onchange="applyFilters()">
-      <option value="">All Assignees</option>
-    </select>
+    <select id="filterWorkstream" onchange="applyFilters()"><option value="">All Workstreams</option></select>
+    <select id="filterAssignee" onchange="applyFilters()"><option value="">All Assignees</option></select>
     <select id="filterStatus" onchange="applyFilters()">
       <option value="">All Statuses</option>
       <option value="not-started">Not Started</option>
@@ -355,51 +309,24 @@ body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color
       <option value="blocked">Blocked</option>
       <option value="deferred">Deferred</option>
     </select>
-    <select id="filterType" onchange="applyFilters()">
-      <option value="">All Types</option>
-      <option value="revenue">Revenue</option>
-      <option value="cost">Cost</option>
-      <option value="strategic">Strategic</option>
-      <option value="gate">Gate</option>
-    </select>
     <button class="reset-btn" onclick="resetFilters()">Reset</button>
     <button class="add-task-btn" onclick="openAddModal()">+ Add Task</button>
   </div>
 
-  <!-- TABLE -->
-  <div class="table-wrap">
-    <table class="task-table">
-      <thead>
-        <tr>
-          <th>Phase</th>
-          <th>Task</th>
-          <th>Workstream</th>
-          <th>Timing</th>
-          <th>Assignee</th>
-          <th>Status</th>
-          <th>Type</th>
-          <th class="right">Value</th>
-          <th>Notes</th>
-        </tr>
-      </thead>
-      <tbody id="taskBody"></tbody>
-    </table>
-  </div>
+  <!-- CONTENT AREA -->
+  <div id="contentArea"></div>
 
 </div><!-- /main -->
 
-<div class="footer" style="background:var(--blue-deep);text-align:center;padding:18px;font-size:0.6rem;color:rgba(255,255,255,0.3);letter-spacing:0.4px;">
+<div style="background:var(--blue-deep);text-align:center;padding:16px;font-size:0.6rem;color:rgba(255,255,255,.3);letter-spacing:.4px;">
   VPS Lakeshore Hospital &amp; Research Centre &nbsp;·&nbsp; Confidential — Internal Use Only &nbsp;·&nbsp; FY27 Operations Tracker
 </div>
 
-<!-- ── EDIT MODAL ── -->
+<!-- ══════════ EDIT MODAL ══════════ -->
 <div class="modal-overlay" id="editOverlay">
   <div class="modal">
     <div class="modal-header">
-      <div>
-        <div class="modal-header-title" id="editTitle">Task Title</div>
-        <div class="modal-header-sub" id="editSub">Phase · Workstream · Timing</div>
-      </div>
+      <div><div class="modal-header-title" id="editTitle">Task</div><div class="modal-header-sub" id="editSub"></div></div>
       <button class="modal-close" onclick="closeEdit()">✕</button>
     </div>
     <div class="modal-body">
@@ -416,13 +343,18 @@ body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color
         </div>
         <div class="form-group">
           <div class="form-label">Assignee</div>
-          <select id="editAssignee"></select>
+          <select id="editAssignee" onchange="showAssigneeEmail()"></select>
         </div>
+      </div>
+      <div class="form-group full">
+        <div class="form-label">Assignee Email</div>
+        <input type="text" id="editAssigneeEmail" placeholder="email@vpslakeshore.in">
       </div>
       <div class="form-group full">
         <div class="form-label">Add New Team Member</div>
         <div class="add-member-row">
-          <input type="text" id="newMemberInput" placeholder="Type name and press Add…">
+          <input type="text" id="newMemberName" placeholder="Name">
+          <input type="text" id="newMemberEmail" placeholder="email@vpslakeshore.in" style="flex:1.5;">
           <button class="add-member-btn" onclick="addNewMember()">+ Add</button>
         </div>
       </div>
@@ -438,64 +370,41 @@ body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color
   </div>
 </div>
 
-<!-- ── ADD TASK MODAL ── -->
+<!-- ══════════ ADD TASK MODAL ══════════ -->
 <div class="modal-overlay" id="addOverlay">
-  <div class="modal new-task-modal">
+  <div class="modal">
     <div class="modal-header">
-      <div>
-        <div class="modal-header-title">Add New Task</div>
-        <div class="modal-header-sub">Custom task for the FY27 plan</div>
-      </div>
+      <div><div class="modal-header-title">Add New Task</div><div class="modal-header-sub">Custom task for the FY27 plan</div></div>
       <button class="modal-close" onclick="closeAdd()">✕</button>
     </div>
     <div class="modal-body">
-      <div class="form-group full">
-        <div class="form-label">Task Title *</div>
-        <input type="text" id="addTitle" placeholder="Describe the task…">
-      </div>
+      <div class="form-group full"><div class="form-label">Task Title *</div><input type="text" id="addTitle" placeholder="Describe the task…"></div>
       <div class="form-row">
-        <div class="form-group">
-          <div class="form-label">Phase *</div>
+        <div class="form-group"><div class="form-label">Phase *</div>
           <select id="addPhase">
+            <option value="Pre-Phase 1">Pre-Phase 1 (Mar 2026)</option>
             <option value="Phase 1">Phase 1 (Apr–May)</option>
             <option value="Phase 2">Phase 2 (Jun–Sep)</option>
             <option value="Phase 3">Phase 3 (Oct–Mar)</option>
           </select>
         </div>
-        <div class="form-group">
-          <div class="form-label">Workstream *</div>
-          <select id="addWorkstream"></select>
-        </div>
+        <div class="form-group"><div class="form-label">Workstream *</div><select id="addWorkstream"></select></div>
       </div>
       <div class="form-row">
-        <div class="form-group">
-          <div class="form-label">Type</div>
+        <div class="form-group"><div class="form-label">Type</div>
           <select id="addType">
-            <option value="revenue">Revenue</option>
-            <option value="cost">Cost</option>
-            <option value="strategic">Strategic</option>
-            <option value="gate">Gate</option>
+            <option value="revenue">Revenue</option><option value="cost">Cost</option>
+            <option value="strategic">Strategic</option><option value="bd">Business Dev</option>
+            <option value="brand">Web &amp; Brand</option><option value="gate">Gate</option>
           </select>
         </div>
-        <div class="form-group">
-          <div class="form-label">Value / Impact</div>
-          <input type="text" id="addValue" placeholder="e.g. ₹3 Cr, ARPOB ↑">
-        </div>
+        <div class="form-group"><div class="form-label">Value / Impact</div><input type="text" id="addValue" placeholder="e.g. ₹3 Cr, ARPOB ↑"></div>
       </div>
       <div class="form-row">
-        <div class="form-group">
-          <div class="form-label">Assignee</div>
-          <select id="addAssignee"></select>
-        </div>
-        <div class="form-group">
-          <div class="form-label">Timing</div>
-          <input type="text" id="addTiming" placeholder="e.g. W1–2, Jun, Oct+">
-        </div>
+        <div class="form-group"><div class="form-label">Assignee</div><select id="addAssignee"></select></div>
+        <div class="form-group"><div class="form-label">Deadline</div><input type="text" id="addTiming" placeholder="e.g. Mar 14, Apr 1"></div>
       </div>
-      <div class="form-group full">
-        <div class="form-label">Notes</div>
-        <textarea id="addNotes" placeholder="Description or context…"></textarea>
-      </div>
+      <div class="form-group full"><div class="form-label">Notes</div><textarea id="addNotes" placeholder="Description or context…"></textarea></div>
     </div>
     <div class="modal-footer">
       <button class="btn-cancel" onclick="closeAdd()">Cancel</button>
@@ -504,367 +413,563 @@ body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color
   </div>
 </div>
 
+<!-- ══════════ TEAM SETTINGS MODAL ══════════ -->
+<div class="modal-overlay" id="teamOverlay">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <div><div class="modal-header-title">Team &amp; Email Settings</div><div class="modal-header-sub">Edit names and email addresses for digest distribution</div></div>
+      <button class="modal-close" onclick="closeTeam()">✕</button>
+    </div>
+    <div class="modal-body" id="teamBody"></div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeTeam()">Close</button>
+      <button class="btn-save" onclick="saveTeamSettings()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ DIGEST MODAL ══════════ -->
+<div class="modal-overlay" id="digestOverlay">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <div><div class="modal-header-title">📧 Daily Ops Digest</div><div class="modal-header-sub" id="digestDate">Generating…</div></div>
+      <button class="modal-close" onclick="closeDigest()">✕</button>
+    </div>
+    <div class="modal-body" id="digestBody"></div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeDigest()">Close</button>
+    </div>
+  </div>
+</div>
+
 <script>
-/* ═══════════════════════════════════════════
+/* ══════════════════════════════════════
    TEAM MEMBERS
-═══════════════════════════════════════════ */
-var teamMembers = [
-  'Unassigned',
-  'Abhishek',
-  'Lakshman',
-  'Sameeraj',
-  'Jayesh (CEO)',
-  'Jithin (CFO)',
-  'Suresh (CHRO)',
-  'CIO',
-  'Anil (Comms)',
-  'MS',
-  'Bincy (Nursing Lead)',
-  'CNO',
-  'Dilshad'
+══════════════════════════════════════ */
+var team = [
+  {name:'Unassigned',        email:''},
+  {name:'Abhishek',          email:'abhishek@vpslakeshore.in'},
+  {name:'Lakshman',          email:'lakshman@vpslakeshore.in'},
+  {name:'Sameeraj',          email:'sameeraj@vpslakeshore.in'},
+  {name:'Jayesh (CEO)',      email:'jayesh@vpslakeshore.in'},
+  {name:'Jithin (CFO)',      email:'jithin@vpslakeshore.in'},
+  {name:'Suresh (CHRO)',     email:'suresh@vpslakeshore.in'},
+  {name:'CIO',               email:'cio@vpslakeshore.in'},
+  {name:'Anil (Comms)',      email:'anil@vpslakeshore.in'},
+  {name:'MS',                email:'ms@vpslakeshore.in'},
+  {name:'Bincy (Nursing)',   email:'bincy@vpslakeshore.in'},
+  {name:'CNO',               email:'cno@vpslakeshore.in'},
+  {name:'Dilshad',           email:'dilshad@vpslakeshore.in'},
 ];
 
-/* ═══════════════════════════════════════════
+function findMember(name){ return team.find(function(m){return m.name===name;})||{name:name,email:''}; }
+function memberEmail(name){ return findMember(name).email; }
+
+/* ══════════════════════════════════════
    WORKSTREAMS
-═══════════════════════════════════════════ */
-var WORKSTREAMS = [
-  'Staffing Rationalisation',
-  'Procurement & Consolidation',
-  'Material Cost (COGS)',
-  'Revenue / ARPOB Growth',
-  'Specialist & Clinical Capability',
-  'Referral & Occupancy',
-  'TPA & Payor Mix',
-  'HIS / ERP & Technology',
-  'Energy & Utilities',
-  'Infrastructure & Capex',
-  'International Patient Programme',
-  'Phase Gates'
+══════════════════════════════════════ */
+var WORKSTREAMS=[
+  'Occupancy & Referral','Business Development','Staff Rationalisation','Web & Brand',
+  'Specialist Onboarding','Procurement & Consolidation','Material Cost (COGS)',
+  'Revenue / ARPOB Growth','TPA & Payor Mix','HIS / ERP & Technology',
+  'Energy & Utilities','Infrastructure & Capex','International Patient Programme','Phase Gates'
 ];
 
-/* ═══════════════════════════════════════════
-   TASK DATA
-═══════════════════════════════════════════ */
-var tasks = [
-  /* ── PHASE 1 ── */
-  { id:1,  phase:'Phase 1', workstream:'Staffing Rationalisation',         timing:'W1–2 (Apr 1–14)',  type:'cost',      value:'₹11 Cr',     status:'not-started', assignee:'Suresh (CHRO)',  notes:'', title:'Initiate Staffing Rationalisation — Nursing & Pharmacy',            desc:'Nursing: 630→569. Pharmacy: 93→50 via natural attrition and redeployment. ICU reorganisation and barcode scanning automation. ₹6.19 Cr identified in HR data. Annualised target: ₹11 Cr.' },
-  { id:2,  phase:'Phase 1', workstream:'Revenue / ARPOB Growth',           timing:'W1–2 (Apr 1–14)',  type:'revenue',   value:'ARPOB ↑',    status:'not-started', assignee:'Jithin (CFO)',   notes:'', title:'Rate Revision — OP Consultations, Procedures & Packages',            desc:'Revise fee schedules across OP consultations, surgical packages and procedures. No capital required. Immediate ARPOB lever.' },
-  { id:3,  phase:'Phase 1', workstream:'Specialist & Clinical Capability',  timing:'W2 (Apr 7–13)',    type:'revenue',   value:'High ARPOB', status:'not-started', assignee:'Abhishek',       notes:'', title:'Onboard 1 New Specialist — Phase 1 Clinical Capability',             desc:'First high-value specialist joining in Phase 1. OT allocation, support team and referral pipeline must be ready from Day 1. Medical Director + COO to lead.' },
-  { id:4,  phase:'Phase 1', workstream:'Referral & Occupancy',             timing:'W2–3 (Apr 7–21)',  type:'revenue',   value:'Occupancy ↑',status:'not-started', assignee:'Lakshman',       notes:'', title:'Referral Channel Activation — GP Network & Institutional Partners',  desc:'Structured outreach to GP network, specialist referrers and institutional partners. Dedicated liaison appointed. Pipeline tracking live. Monthly coordination cadence established.' },
-  { id:5,  phase:'Phase 1', workstream:'Procurement & Consolidation',      timing:'W3–4 (Apr 14–28)', type:'cost',      value:'₹3 Cr',      status:'not-started', assignee:'Unassigned',     notes:'', title:'Vendor Consolidation & Procurement Rationalisation',                desc:'Top 3 consumable suppliers consolidated. Single pharmacy distributor appointed. 6-month bulk contracts in place. Implant cost benchmarked. Target: ₹3 Cr EBITDA saving annualised.' },
-  { id:6,  phase:'Phase 1', workstream:'Material Cost (COGS)',             timing:'W3–5 (Apr 14–May 9)',type:'cost',    value:'₹4 Cr',      status:'not-started', assignee:'Jithin (CFO)',   notes:'', title:'Material Cost Rationalisation Programme — Launch',                   desc:'Rate contracts, credit period discounts, BOQ standardisation, 3-level formulary, wastage reduction. COGS target: 28.5%→26.5%. Target: ₹4 Cr EBITDA saving.' },
-  { id:7,  phase:'Phase 1', workstream:'Staffing Rationalisation',         timing:'W4–5 (Apr 21–May 5)',type:'cost',   value:'Plan Lock',  status:'not-started', assignee:'Suresh (CHRO)',  notes:'', title:'HR Rationalisation — Departmental Audit & Plan Sign-Off',            desc:'Validate bottom-up HR data. Nursing 630→569, Pharmacy 93→50 via attrition. ICU reorganisation design finalised. Barcode scanning rollout confirmed. No forced exits.' },
-  { id:8,  phase:'Phase 1', workstream:'TPA & Payor Mix',                  timing:'W4–5 (Apr 21–May 5)',type:'revenue', value:'₹3 Cr',     status:'not-started', assignee:'Jithin (CFO)',   notes:'', title:'TPA Renegotiation — Top 5 Insurers, 3 New TPA Agreements',           desc:'Renegotiate package rates with top 5 TPA partners. Onboard 3 new TPAs. Insurance mix: 26%→30%. Reduces bad debt and improves collection efficiency. CFO + Billing Head to lead.' },
-  { id:9,  phase:'Phase 1', workstream:'Infrastructure & Capex',           timing:'W4–8 (Apr–May)',    type:'strategic', value:'Strategic', status:'not-started', assignee:'Jayesh (CEO)',   notes:'', title:'Present Consolidated Board Pack — Capex, Infra & IT Plan',           desc:'Full FY27 capex plan, floor-level transformation roadmap, LINAC Upgrade AERB timeline and HIS/ERP cost-benefit analysis with vendor shortlist. AERB application must start immediately.' },
-  { id:10, phase:'Phase 1', workstream:'Procurement & Consolidation',      timing:'W6–8 (May 10–31)', type:'cost',      value:'₹1.5–2 Cr', status:'not-started', assignee:'Unassigned',     notes:'', title:'HK Vendor Contracts Signed & Capex Release Committee Live',           desc:'All vendor negotiations concluded. New HK contract(s) signed at ₹20K/head benchmark. Capex release committee live and operational. Energy audit RFP issued.' },
-  { id:11, phase:'Phase 1', workstream:'Referral & Occupancy',             timing:'W6–8 (May 10–31)', type:'revenue',   value:'₹2–4 Cr',   status:'not-started', assignee:'Lakshman',       notes:'', title:'Referral Doctor Portal & Telemedicine Outreach Launch',              desc:'CRM platform live for referral tracking. Tier-2 Kerala outreach commenced (Thrissur, Kozhikode, Trivandrum). Referral fee structure approved. First telemedicine OPDs operational.' },
-  { id:12, phase:'Phase 1', workstream:'Phase Gates',                      timing:'W8 (May 31)',       type:'gate',      value:'GATE',       status:'not-started', assignee:'Jayesh (CEO)',   notes:'', title:'DAY 60 PHASE GATE — Formal Review & Sign-Off',                      desc:'CEO + CFO review: (1) All structural decisions taken, (2) Procurement savings in contracts, (3) HR rationalisation plan approved, (4) CRM/IT timeline confirmed, (5) Phase 2 kick-off approved.' },
+/* ══════════════════════════════════════
+   PRE-PHASE 1 TASKS  (Mar 8 – Apr 1 2026)
+══════════════════════════════════════ */
+var preTasks=[
+  /* WEEK 1 — Mar 8–14 */
+  {id:'pp1', phase:'Pre-Phase 1', week:'Week 1', weekRange:'Mar 8–14',
+   workstream:'Occupancy & Referral', type:'revenue', focus:'occ',
+   title:'Audit current bed occupancy by ward and specialty — establish baseline',
+   assignee:'Abhishek', deadline:'Mar 14', status:'not-started', value:'Baseline', notes:'',
+   desc:'Ward-by-ward occupancy audit. Identify lowest-utilisation beds and highest-demand specialties. Output: data sheet and 1-page summary for CEO.'},
+  {id:'pp2', phase:'Pre-Phase 1', week:'Week 1', weekRange:'Mar 8–14',
+   workstream:'Occupancy & Referral', type:'revenue', focus:'occ',
+   title:'Map current referral gaps — identify top 10 referring doctors and key gaps',
+   assignee:'Lakshman', deadline:'Mar 14', status:'not-started', value:'Referral map', notes:'',
+   desc:'Review existing referral data. Identify top current referrers, inactive referrers, and geography gaps. Shortlist 20 GPs for outreach in Week 2.'},
+  {id:'pp3', phase:'Pre-Phase 1', week:'Week 1', weekRange:'Mar 8–14',
+   workstream:'Business Development', type:'bd', focus:'bd',
+   title:'Define Business Development Manager JD and post position on job portals',
+   assignee:'Suresh (CHRO)', deadline:'Mar 14', status:'not-started', value:'Hire pipeline', notes:'',
+   desc:'Draft JD for BD Manager (hospital referral, institutional partnerships, GCC). Post on LinkedIn, Naukri, and relevant healthcare job boards. Brief headhunter if required.'},
+  {id:'pp4', phase:'Pre-Phase 1', week:'Week 1', weekRange:'Mar 8–14',
+   workstream:'Web & Brand', type:'brand', focus:'brand',
+   title:'Audit external website — gaps, UX, content quality, mobile experience',
+   assignee:'Anil (Comms)', deadline:'Mar 14', status:'not-started', value:'Audit report', notes:'',
+   desc:'Full UX and content audit of vpslakeshore.com. Identify broken links, outdated content, SEO gaps, mobile responsiveness issues. Benchmark against Apollo, Aster, Amrita. Deliverable: 1-page findings sheet.'},
+  {id:'pp5', phase:'Pre-Phase 1', week:'Week 1', weekRange:'Mar 8–14',
+   workstream:'Staff Rationalisation', type:'cost', focus:'hr',
+   title:'Brief all department heads on FY27 transformation — expectations and targets',
+   assignee:'Jayesh (CEO)', deadline:'Mar 14', status:'not-started', value:'Alignment', notes:'',
+   desc:'Town-hall or cascade briefing to all department heads on the FY27 plan, EBITDA target, and transformation roadmap. Set expectation on data submission for HR audit in Week 2.'},
 
-  /* ── PHASE 2 ── */
-  { id:13, phase:'Phase 2', workstream:'Procurement & Consolidation',      timing:'Jun 2026',          type:'cost',      value:'₹3 Cr',      status:'not-started', assignee:'Unassigned',     notes:'', title:'Vendor Consolidation — Full Contracts Live',                         desc:'Top 3 consumable supplier contracts fully executed. Single pharmacy distributor agreement signed. 6-month bulk pricing in force. Implant benchmarking completed. Savings flowing through P&L.' },
-  { id:14, phase:'Phase 2', workstream:'Material Cost (COGS)',             timing:'Jun–Jul 2026',      type:'cost',      value:'₹4 Cr',      status:'not-started', assignee:'Jithin (CFO)',   notes:'', title:'Material Cost Programme — Full Execution',                           desc:'Rate contracts, credit discounts, BOQ standardisation, 3-level formulary and wastage control all active. COGS: 28.5%→26.5%. Inventory optimisation delivering working capital improvement.' },
-  { id:15, phase:'Phase 2', workstream:'Referral & Occupancy',             timing:'Jun–Jul 2026',      type:'revenue',   value:'Occupancy ↑',status:'not-started', assignee:'Lakshman',       notes:'', title:'North Kerala & Border District Referral Programme Launch',           desc:'Dedicated outreach to Malappuram and Kozhikode border districts. Referral doctor portal live. Telemedicine follow-ups converting to IP admissions. 62%→68% occupancy pathway.' },
-  { id:16, phase:'Phase 2', workstream:'HIS / ERP & Technology',           timing:'Aug 2026',          type:'revenue',   value:'₹2–5 Cr',   status:'not-started', assignee:'CIO',            notes:'', title:'HIS / ERP Vendor Selected & Implementation Kick-Off',                desc:'Vendor selection complete. Implementation kicked off. Billing and revenue cycle module prioritised. Expected leakage recovery: ₹2–5 Cr.' },
-  { id:17, phase:'Phase 2', workstream:'Energy & Utilities',               timing:'Aug–Sep 2026',      type:'cost',      value:'₹1 Cr',      status:'not-started', assignee:'Unassigned',     notes:'', title:'Utilities Optimisation — Solar 500KW Rooftop + HVAC IoT',            desc:'Solar rooftop phase 1 (500 KW) and HVAC IoT optimisation. ₹1 Cr energy saving target.' },
-  { id:18, phase:'Phase 2', workstream:'Referral & Occupancy',             timing:'Sep 2026',          type:'revenue',   value:'₹8 Cr',      status:'not-started', assignee:'Abhishek',       notes:'', title:'Occupancy Push 53%→62% — Referral Network Operational',             desc:'Foundation for Phase 3 occupancy push. All referral channels active. Telemedicine at scale. CRM tracking live. Occupancy target 53%→62%.' },
-  { id:19, phase:'Phase 2', workstream:'Phase Gates',                      timing:'Day 180 (Sep 30)',  type:'gate',      value:'GATE',       status:'not-started', assignee:'Jayesh (CEO)',   notes:'', title:'DAY 180 PHASE GATE — Mid-Year Review & Phase 3 Launch',             desc:'Mid-year review. Phase 2 savings locked. Phase 3 kick-off approved. EBITDA trajectory confirmed. Cancer Centre Board decision finalised.' },
+  /* WEEK 2 — Mar 15–21 */
+  {id:'pp6', phase:'Pre-Phase 1', week:'Week 2', weekRange:'Mar 15–21',
+   workstream:'Business Development', type:'bd', focus:'bd',
+   title:'Shortlist BD candidates — target 3–5 interview-ready profiles by end of week',
+   assignee:'Suresh (CHRO)', deadline:'Mar 21', status:'not-started', value:'Shortlist', notes:'',
+   desc:'Review applications. Shortlist 3–5 profiles with hospital BD or pharma/medical device sales background. Share shortlist with CEO. Schedule interviews for Week 3.'},
+  {id:'pp7', phase:'Pre-Phase 1', week:'Week 2', weekRange:'Mar 15–21',
+   workstream:'Occupancy & Referral', type:'revenue', focus:'occ',
+   title:'Initiate outreach to top 20 GP referral networks — calls + emails this week',
+   assignee:'Lakshman', deadline:'Mar 21', status:'not-started', value:'20 GPs contacted', notes:'',
+   desc:'Use referral map from Week 1. Personal call + follow-up email to top 20 GPs. Track response rate. Identify 5 who can visit hospital in April. Log all contacts in tracker.'},
+  {id:'pp8', phase:'Pre-Phase 1', week:'Week 2', weekRange:'Mar 15–21',
+   workstream:'Specialist Onboarding', type:'revenue', focus:'occ',
+   title:'Contact 2–3 target specialist doctors for onboarding conversations',
+   assignee:'Abhishek', deadline:'Mar 21', status:'not-started', value:'Pipeline', notes:'',
+   desc:'Identify and reach out to 2-3 high-value specialists (complex oncology, interventional cardiology, or IR). Initial conversation to gauge interest. Target: at least 1 confirmed for April onboarding.'},
+  {id:'pp9', phase:'Pre-Phase 1', week:'Week 2', weekRange:'Mar 15–21',
+   workstream:'Web & Brand', type:'brand', focus:'brand',
+   title:'Get quotes from 2–3 web design agencies for external + internal redesign',
+   assignee:'Anil (Comms)', deadline:'Mar 21', status:'not-started', value:'3 quotes', notes:'',
+   desc:'Based on Week 1 audit, issue brief to 2-3 agencies for website redesign (external patient-facing) AND internal intranet / staff comms redesign. Request turnaround times and cost estimates.'},
+  {id:'pp10', phase:'Pre-Phase 1', week:'Week 2', weekRange:'Mar 15–21',
+   workstream:'Staff Rationalisation', type:'cost', focus:'hr',
+   title:'Complete department-by-department HR headcount audit — submit to CFO',
+   assignee:'Suresh (CHRO)', deadline:'Mar 21', status:'not-started', value:'Audit complete', notes:'',
+   desc:'Validate HR data for all departments. Identify roles where headcount is above benchmark. Focus on Nursing (630) and Pharmacy (93) for Phase 1 targets. Submit findings to Jithin (CFO) by Mar 21.'},
 
-  /* ── PHASE 3 ── */
-  { id:20, phase:'Phase 3', workstream:'Specialist & Clinical Capability',  timing:'Oct 2026+',        type:'revenue',   value:'ARPOB ↑↑',  status:'not-started', assignee:'Abhishek',       notes:'', title:'New Specialist Doctors Onboarded — Complex Cases & IR',             desc:'High-value specialists in complex oncology, interventional radiology and other premium specialties. 85%+ ARPOB premium cases. OT allocation and referral pipelines ready.' },
-  { id:21, phase:'Phase 3', workstream:'Specialist & Clinical Capability',  timing:'Oct 2026+',        type:'revenue',   value:'High ARPOB', status:'not-started', assignee:'Abhishek',       notes:'', title:'New Specialties Launched — IR-DSA, Cosmetology, Wellness, Geriatric',desc:'IR-DSA, Cosmetology, Wellness, Geriatric and Palliative Care services launched. Each adds new revenue streams and improves ARPOB mix.' },
-  { id:22, phase:'Phase 3', workstream:'HIS / ERP & Technology',           timing:'Oct 2026+',         type:'revenue',   value:'₹5–8 Cr',   status:'not-started', assignee:'CIO',            notes:'', title:'HIS Phase 1 Go-Live — Billing & Revenue Cycle',                     desc:'HIS Phase 1 live: billing, revenue cycle, leakage plugging. Expected ₹5–8 Cr leakage recovery.' },
-  { id:23, phase:'Phase 3', workstream:'International Patient Programme',   timing:'Oct 2026+',        type:'revenue',   value:'Mix ↑',      status:'not-started', assignee:'Anil (Comms)',   notes:'', title:'International Patient Programme — Dedicated Desk & GCC Engagement', desc:'Dedicated international patient desk. GCC engagement programme. International mix: 9.2%→12%.' },
-  { id:24, phase:'Phase 3', workstream:'Referral & Occupancy',             timing:'Oct 2026–Mar 2027', type:'revenue',   value:'₹8 Cr',      status:'not-started', assignee:'Lakshman',       notes:'', title:'Occupancy Push to 68% — Referral & Telemedicine at Full Scale',     desc:'All referral and telemedicine channels at full scale. Occupancy target 68%. Foundation laid in Phases 1 and 2.' },
-  { id:25, phase:'Phase 3', workstream:'TPA & Payor Mix',                  timing:'Oct 2026–Mar 2027', type:'revenue',   value:'₹5 Cr',      status:'not-started', assignee:'Jithin (CFO)',   notes:'', title:'Insurance Mix 26%→30% + International Mix 9.2%→12%',               desc:'Full payor transformation. Insurance mix and international mix both at target levels. Combined ₹5 Cr revenue impact.' },
-  { id:26, phase:'Phase 3', workstream:'Specialist & Clinical Capability',  timing:'Oct 2026+',        type:'cost',      value:'₹1–2 Cr',   status:'not-started', assignee:'Jayesh (CEO)',   notes:'', title:'Bottom-Quartile Doctor MG Review & Renegotiation',                  desc:'Review minimum guarantee structures for bottom-quartile doctors. Renegotiate to performance-linked arrangements. Target: ₹1–2 Cr cost saving.' },
-  { id:27, phase:'Phase 3', workstream:'Infrastructure & Capex',           timing:'Oct 2026+',         type:'strategic', value:'Phase 3+',   status:'not-started', assignee:'Jayesh (CEO)',   notes:'', title:'Cancer Centre Conversion — Board Approval & Phase 3 Commencement',  desc:'Main block floors 6–8 conversion to surgical oncology, medical oncology wards and palliative care. Deferred from Phase 2 pending Board approval and capex sign-off.' },
-  { id:28, phase:'Phase 3', workstream:'Infrastructure & Capex',           timing:'Dec 2026+',         type:'strategic', value:'FY28 Setup', status:'not-started', assignee:'CIO',            notes:'', title:'LINAC Upgrade AERB Application Submitted',                          desc:'AERB application for LINAC Upgrade in B2 New Building. AERB approval takes 12–18 months — filing now is critical for FY28 commissioning.' },
-  { id:29, phase:'Phase 3', workstream:'Staffing Rationalisation',         timing:'Mar 2027',           type:'cost',      value:'₹11 Cr',     status:'not-started', assignee:'Suresh (CHRO)',  notes:'', title:'HR Rationalisation — Full Run-Rate Achieved (₹11 Cr Target)',       desc:'Full annualised ₹11 Cr staffing rationalisation target achieved. Nursing and Pharmacy headcount at target levels. ICU nursing efficiency ratios confirmed.' },
-  { id:30, phase:'Phase 3', workstream:'Phase Gates',                      timing:'Mar 31 2027',        type:'gate',      value:'YEAR END',   status:'not-started', assignee:'Jayesh (CEO)',   notes:'', title:'DAY 360 FINAL GATE — FY27 UC vs BC Scorecard & FY28 Plan',          desc:'Full FY27 review. UC vs BC scorecard finalised. All workstream leads present results. FY28 plan approved. LINAC status, Cancer Centre status, HIS Phase 2 plan locked.' },
+  /* WEEK 3 — Mar 22–28 */
+  {id:'pp11', phase:'Pre-Phase 1', week:'Week 3', weekRange:'Mar 22–28',
+   workstream:'Business Development', type:'bd', focus:'bd',
+   title:'Interview BD candidates — shortlist to final 2 for CEO decision',
+   assignee:'Jayesh (CEO)', deadline:'Mar 28', status:'not-started', value:'Final 2', notes:'',
+   desc:'Conduct interviews with shortlisted candidates. Suresh (CHRO) to run first round. CEO + Sameeraj to run final round. Shortlist to 2 candidates. Reference checks initiated.'},
+  {id:'pp12', phase:'Pre-Phase 1', week:'Week 3', weekRange:'Mar 22–28',
+   workstream:'Occupancy & Referral', type:'revenue', focus:'occ',
+   title:'Activate specialist referral programme — formal outreach to 30+ referrers',
+   assignee:'Lakshman', deadline:'Mar 28', status:'not-started', value:'30 outreached', notes:'',
+   desc:'Scale up from Week 2. Use structured outreach kit (email template + case stats + visiting consultant schedule). Track in referral log. Target: 5 GPs commit to sending patients in April.'},
+  {id:'pp13', phase:'Pre-Phase 1', week:'Week 3', weekRange:'Mar 22–28',
+   workstream:'Specialist Onboarding', type:'revenue', focus:'occ',
+   title:'Finalise offer for 1 specialist — target confirmed joining by end of week',
+   assignee:'Abhishek', deadline:'Mar 28', status:'not-started', value:'1 confirmed', notes:'',
+   desc:'Convert best specialist prospect to confirmed offer. Agree OT schedule, MG structure, support team allocation. Coordinate with COO and Medical Director. Joining date in April locked.'},
+  {id:'pp14', phase:'Pre-Phase 1', week:'Week 3', weekRange:'Mar 22–28',
+   workstream:'Web & Brand', type:'brand', focus:'brand',
+   title:'Select web design agency and issue full design brief',
+   assignee:'Anil (Comms)', deadline:'Mar 28', status:'not-started', value:'Agency selected', notes:'',
+   desc:'Review quotes from Week 2. Select best-value agency for both external and internal redesign. Issue full brief including brand guidelines, content requirements, and delivery timeline.'},
+  {id:'pp15', phase:'Pre-Phase 1', week:'Week 3', weekRange:'Mar 22–28',
+   workstream:'Staff Rationalisation', type:'cost', focus:'hr',
+   title:'Submit staff rationalisation plan to CEO — no-forced-exit, attrition model',
+   assignee:'Suresh (CHRO)', deadline:'Mar 28', status:'not-started', value:'Plan submitted', notes:'',
+   desc:'Build final plan: roles to reduce, timeline, attrition projections, redeployment map, annualised saving. Confirm no forced exits in Phase 1. Submit to CEO for sign-off before Apr 1.'},
+
+  /* WEEK 4 — Mar 29 – Apr 1 */
+  {id:'pp16', phase:'Pre-Phase 1', week:'Week 4', weekRange:'Mar 29 – Apr 1',
+   workstream:'Business Development', type:'bd', focus:'bd',
+   title:'Make BD offer — confirm hire by Apr 1 so BD person joins in April',
+   assignee:'Jayesh (CEO)', deadline:'Apr 1', status:'not-started', value:'BD hired', notes:'',
+   desc:'Final offer to selected BD candidate. Agree start date (target: Apr 7 or Apr 14). Pre-onboarding briefing scheduled. BD brief and first 30-day target prepared.'},
+  {id:'pp17', phase:'Pre-Phase 1', week:'Week 4', weekRange:'Mar 29 – Apr 1',
+   workstream:'Occupancy & Referral', type:'revenue', focus:'occ',
+   title:'Launch first structured referral calls — target 10 confirmed follow-up visits',
+   assignee:'Lakshman', deadline:'Apr 1', status:'not-started', value:'10 follow-ups', notes:'',
+   desc:'Based on outreach from Weeks 2-3, convert warm contacts to committed visits or patient referrals in April. Confirm telemedicine OPD slot schedule for April launch.'},
+  {id:'pp18', phase:'Pre-Phase 1', week:'Week 4', weekRange:'Mar 29 – Apr 1',
+   workstream:'Specialist Onboarding', type:'revenue', focus:'occ',
+   title:'Confirm specialist Day 1 readiness — OT, team, referral pipeline all set',
+   assignee:'Abhishek', deadline:'Apr 1', status:'not-started', value:'Day 1 ready', notes:'',
+   desc:'Confirm all operational readiness for new specialist joining in April: OT scheduling, equipment, support nursing team, EMR setup, referral network introductions. Day 1 brief prepared.'},
+  {id:'pp19', phase:'Pre-Phase 1', week:'Week 4', weekRange:'Mar 29 – Apr 1',
+   workstream:'Web & Brand', type:'brand', focus:'brand',
+   title:'Web redesign kickoff meeting with agency — project plan and milestones agreed',
+   assignee:'Anil (Comms)', deadline:'Apr 1', status:'not-started', value:'Project started', notes:'',
+   desc:'Kickoff meeting with selected agency. Agree project timeline, content deliverables, review cycles, and go-live target date. Assign internal content point-of-contact.'},
+  {id:'pp20', phase:'Pre-Phase 1', week:'Week 4', weekRange:'Mar 29 – Apr 1',
+   workstream:'Staff Rationalisation', type:'cost', focus:'hr',
+   title:'Communicate rationalisation plan to all dept heads — Phase 1 attrition begins',
+   assignee:'Suresh (CHRO)', deadline:'Apr 1', status:'not-started', value:'Plan live', notes:'',
+   desc:'CEO-approved plan communicated to all dept heads. Attrition tracking begins Apr 1. Monthly reporting to CFO. CHRO owns weekly headcount dashboard.'},
 ];
 
-/* ═══════════════════════════════════════════
-   STATE
-═══════════════════════════════════════════ */
+/* ══════════════════════════════════════
+   MAIN TASKS (Phases 1–3)
+══════════════════════════════════════ */
+var mainTasks=[
+  /* PHASE 1 */
+  {id:1, phase:'Phase 1', workstream:'Staff Rationalisation', deadline:'Apr 14', type:'cost', value:'₹11 Cr', status:'not-started', assignee:'Suresh (CHRO)', notes:'', title:'Initiate Staffing Rationalisation — Nursing & Pharmacy', desc:'Nursing 630→569, Pharmacy 93→50 via attrition. ICU reorganisation and barcode scanning. ₹6.19 Cr identified. Annualised target: ₹11 Cr.'},
+  {id:2, phase:'Phase 1', workstream:'Revenue / ARPOB Growth', deadline:'Apr 14', type:'revenue', value:'ARPOB ↑', status:'not-started', assignee:'Jithin (CFO)', notes:'', title:'Rate Revision — OP Consultations, Procedures & Packages', desc:'Revise fee schedules across OP, surgical packages, procedures. No capital required. Immediate ARPOB lever.'},
+  {id:3, phase:'Phase 1', workstream:'Specialist Onboarding', deadline:'Apr 13', type:'revenue', value:'High ARPOB', status:'not-started', assignee:'Abhishek', notes:'', title:'Onboard 1 New Specialist — Phase 1 Clinical Capability', desc:'First high-value specialist Day 1. OT, support team, and referral pipeline ready from Day 1. Medical Director + COO to lead.'},
+  {id:4, phase:'Phase 1', workstream:'Occupancy & Referral', deadline:'Apr 21', type:'revenue', value:'Occupancy ↑', status:'not-started', assignee:'Lakshman', notes:'', title:'Referral Channel Activation — GP Network & Institutional Partners', desc:'Structured outreach. Dedicated liaison appointed. Pipeline tracking live. Monthly coordination cadence.'},
+  {id:5, phase:'Phase 1', workstream:'Procurement & Consolidation', deadline:'Apr 28', type:'cost', value:'₹3 Cr', status:'not-started', assignee:'Unassigned', notes:'', title:'Vendor Consolidation & Procurement Rationalisation', desc:'Top 3 consumable suppliers consolidated. Single pharmacy distributor. 6-month bulk contracts. ₹3 Cr target.'},
+  {id:6, phase:'Phase 1', workstream:'Material Cost (COGS)', deadline:'May 9', type:'cost', value:'₹4 Cr', status:'not-started', assignee:'Jithin (CFO)', notes:'', title:'Material Cost Rationalisation Programme — Launch', desc:'Rate contracts, BOQ standardisation, 3-level formulary, wastage reduction. COGS: 28.5%→26.5%. ₹4 Cr target.'},
+  {id:7, phase:'Phase 1', workstream:'Staff Rationalisation', deadline:'May 5', type:'cost', value:'Plan Lock', status:'not-started', assignee:'Suresh (CHRO)', notes:'', title:'HR Rationalisation — Departmental Audit & Plan Sign-Off', desc:'Validate HR data. ICU reorganisation design finalised. Barcode scanning rollout confirmed. No forced exits.'},
+  {id:8, phase:'Phase 1', workstream:'TPA & Payor Mix', deadline:'May 5', type:'revenue', value:'₹3 Cr', status:'not-started', assignee:'Jithin (CFO)', notes:'', title:'TPA Renegotiation — Top 5 Insurers, 3 New TPA Agreements', desc:'Renegotiate with top 5 TPAs. Onboard 3 new TPAs. Insurance mix: 26%→30%. ₹3 Cr impact.'},
+  {id:9, phase:'Phase 1', workstream:'Infrastructure & Capex', deadline:'May 31', type:'strategic', value:'Strategic', status:'not-started', assignee:'Jayesh (CEO)', notes:'', title:'Present Consolidated Board Pack — Capex, Infra & IT Plan', desc:'Full capex plan, floor-level transformation roadmap, LINAC Upgrade AERB timeline, HIS/ERP shortlist. AERB application must start immediately.'},
+  {id:10, phase:'Phase 1', workstream:'Procurement & Consolidation', deadline:'May 31', type:'cost', value:'₹1.5–2 Cr', status:'not-started', assignee:'Unassigned', notes:'', title:'HK Vendor Contracts Signed & Capex Release Committee Live', desc:'All vendor negotiations concluded. HK at ₹20K/head. Capex committee live. Energy audit RFP issued.'},
+  {id:11, phase:'Phase 1', workstream:'Occupancy & Referral', deadline:'May 31', type:'revenue', value:'₹2–4 Cr', status:'not-started', assignee:'Lakshman', notes:'', title:'Referral Doctor Portal & Telemedicine Outreach Launch', desc:'CRM live for referral tracking. Tier-2 Kerala outreach (Thrissur, Kozhikode, Trivandrum). First telemedicine OPDs operational.'},
+  {id:12, phase:'Phase 1', workstream:'Phase Gates', deadline:'May 31', type:'gate', value:'GATE', status:'not-started', assignee:'Jayesh (CEO)', notes:'', title:'DAY 60 PHASE GATE — Formal Review & Sign-Off', desc:'CEO + CFO review: structural decisions, procurement savings, HR plan, CRM/IT timeline, Phase 2 kick-off approved.'},
+  /* PHASE 2 */
+  {id:13, phase:'Phase 2', workstream:'Procurement & Consolidation', deadline:'Jun 30', type:'cost', value:'₹3 Cr', status:'not-started', assignee:'Unassigned', notes:'', title:'Vendor Consolidation — Full Contracts Live', desc:'All supplier contracts executed. Single pharmacy distributor live. Savings flowing through P&L.'},
+  {id:14, phase:'Phase 2', workstream:'Material Cost (COGS)', deadline:'Jul 31', type:'cost', value:'₹4 Cr', status:'not-started', assignee:'Jithin (CFO)', notes:'', title:'Material Cost Programme — Full Execution', desc:'Formulary, wastage control, BOQ all active. COGS: 28.5%→26.5%. Inventory optimisation delivering working capital improvement.'},
+  {id:15, phase:'Phase 2', workstream:'Occupancy & Referral', deadline:'Jul 31', type:'revenue', value:'Occupancy ↑', status:'not-started', assignee:'Lakshman', notes:'', title:'North Kerala & Border District Referral Programme Launch', desc:'Malappuram and Kozhikode border districts outreach. Referral doctor portal live. Telemedicine follow-ups converting to IP.'},
+  {id:16, phase:'Phase 2', workstream:'HIS / ERP & Technology', deadline:'Aug 31', type:'revenue', value:'₹2–5 Cr', status:'not-started', assignee:'CIO', notes:'', title:'HIS / ERP Vendor Selected & Implementation Kick-Off', desc:'Vendor selection complete. Implementation kicked off. Billing and revenue cycle module prioritised.'},
+  {id:17, phase:'Phase 2', workstream:'Energy & Utilities', deadline:'Sep 30', type:'cost', value:'₹1 Cr', status:'not-started', assignee:'Unassigned', notes:'', title:'Utilities Optimisation — Solar 500KW Rooftop + HVAC IoT', desc:'Solar rooftop phase 1 (500 KW) and HVAC IoT. ₹1 Cr energy saving target.'},
+  {id:18, phase:'Phase 2', workstream:'Occupancy & Referral', deadline:'Sep 30', type:'revenue', value:'₹8 Cr', status:'not-started', assignee:'Abhishek', notes:'', title:'Occupancy Push 53%→62% — Referral Network Operational', desc:'All referral channels active. Telemedicine at scale. CRM tracking live. Occupancy target 53%→62%.'},
+  {id:19, phase:'Phase 2', workstream:'Phase Gates', deadline:'Sep 30', type:'gate', value:'GATE', status:'not-started', assignee:'Jayesh (CEO)', notes:'', title:'DAY 180 PHASE GATE — Mid-Year Review & Phase 3 Launch', desc:'Mid-year review. Phase 2 savings locked. Phase 3 kick-off approved. EBITDA trajectory confirmed.'},
+  /* PHASE 3 */
+  {id:20, phase:'Phase 3', workstream:'Specialist Onboarding', deadline:'Oct 31', type:'revenue', value:'ARPOB ↑↑', status:'not-started', assignee:'Abhishek', notes:'', title:'New Specialists Onboarded — Complex Cases & IR', desc:'High-value specialists in complex oncology and interventional radiology. 85%+ ARPOB premium cases.'},
+  {id:21, phase:'Phase 3', workstream:'Specialist Onboarding', deadline:'Oct 31', type:'revenue', value:'High ARPOB', status:'not-started', assignee:'Abhishek', notes:'', title:'New Specialties Launched — IR-DSA, Cosmetology, Wellness, Geriatric', desc:'New revenue streams and improved ARPOB mix across new specialties.'},
+  {id:22, phase:'Phase 3', workstream:'HIS / ERP & Technology', deadline:'Nov 30', type:'revenue', value:'₹5–8 Cr', status:'not-started', assignee:'CIO', notes:'', title:'HIS Phase 1 Go-Live — Billing & Revenue Cycle', desc:'HIS Phase 1 live: billing, revenue cycle, leakage plugging. ₹5–8 Cr leakage recovery.'},
+  {id:23, phase:'Phase 3', workstream:'International Patient Programme', deadline:'Oct 31', type:'revenue', value:'Mix ↑', status:'not-started', assignee:'Anil (Comms)', notes:'', title:'International Patient Programme — Dedicated Desk & GCC Engagement', desc:'Dedicated international patient desk. GCC engagement. International mix: 9.2%→12%.'},
+  {id:24, phase:'Phase 3', workstream:'Occupancy & Referral', deadline:'Mar 31', type:'revenue', value:'₹8 Cr', status:'not-started', assignee:'Lakshman', notes:'', title:'Occupancy Push to 68% — Referral & Telemedicine at Full Scale', desc:'All referral and telemedicine channels at full scale. Occupancy target 68%.'},
+  {id:25, phase:'Phase 3', workstream:'TPA & Payor Mix', deadline:'Mar 31', type:'revenue', value:'₹5 Cr', status:'not-started', assignee:'Jithin (CFO)', notes:'', title:'Insurance Mix 26%→30% + International Mix 9.2%→12%', desc:'Full payor transformation. Combined ₹5 Cr revenue impact.'},
+  {id:26, phase:'Phase 3', workstream:'Specialist Onboarding', deadline:'Dec 31', type:'cost', value:'₹1–2 Cr', status:'not-started', assignee:'Jayesh (CEO)', notes:'', title:'Bottom-Quartile Doctor MG Review & Renegotiation', desc:'Performance-linked MG restructuring. Target: ₹1–2 Cr cost saving.'},
+  {id:27, phase:'Phase 3', workstream:'Infrastructure & Capex', deadline:'Nov 30', type:'strategic', value:'Phase 3+', status:'not-started', assignee:'Jayesh (CEO)', notes:'', title:'Cancer Centre Conversion — Board Approval & Commencement', desc:'Main block floors 6-8 conversion to surgical oncology, medical oncology, palliative care.'},
+  {id:28, phase:'Phase 3', workstream:'Infrastructure & Capex', deadline:'Dec 31', type:'strategic', value:'FY28 Setup', status:'not-started', assignee:'CIO', notes:'', title:'LINAC Upgrade AERB Application Submitted', desc:'AERB application for LINAC Upgrade in B2 New Building. 12–18 month approval timeline.'},
+  {id:29, phase:'Phase 3', workstream:'Staff Rationalisation', deadline:'Mar 31', type:'cost', value:'₹11 Cr', status:'not-started', assignee:'Suresh (CHRO)', notes:'', title:'HR Rationalisation — Full Run-Rate Achieved (₹11 Cr Target)', desc:'Full ₹11 Cr annualised staffing rationalisation target achieved.'},
+  {id:30, phase:'Phase 3', workstream:'Phase Gates', deadline:'Mar 31', type:'gate', value:'YEAR END', status:'not-started', assignee:'Jayesh (CEO)', notes:'', title:'DAY 360 FINAL GATE — FY27 Scorecard & FY28 Plan', desc:'Full FY27 review. UC vs BC scorecard. FY28 plan approved. All workstream leads present.'},
+];
+
+/* ══════════════════════════════════════
+   COMBINED + STATE
+══════════════════════════════════════ */
+var allTasks = preTasks.concat(mainTasks);
 var editingId = null;
-var nextId    = 31;
+var nextId    = 100;
+var activeTab = 'pre';
 
-/* ═══════════════════════════════════════════
+/* ══════════════════════════════════════
    HELPERS
-═══════════════════════════════════════════ */
-function phasePill(p) {
-  if (p === 'Phase 1') return '<span class="phase-pill pp-1">P1</span>';
-  if (p === 'Phase 2') return '<span class="phase-pill pp-2">P2</span>';
-  if (p === 'Phase 3') return '<span class="phase-pill pp-3">P3</span>';
+══════════════════════════════════════ */
+function phasePill(p){
+  if(p==='Pre-Phase 1') return '<span class="phase-pill pp-0">Pre-1</span>';
+  if(p==='Phase 1')     return '<span class="phase-pill pp-1">P1</span>';
+  if(p==='Phase 2')     return '<span class="phase-pill pp-2">P2</span>';
+  if(p==='Phase 3')     return '<span class="phase-pill pp-3">P3</span>';
   return '<span class="phase-pill pp-gate">Gate</span>';
 }
-
-function statusBadge(s) {
-  var map = {
-    'not-started': ['sb-not-started', '○ Not Started'],
-    'in-progress': ['sb-in-progress', '◑ In Progress'],
-    'complete':    ['sb-complete',    '✓ Complete'],
-    'blocked':     ['sb-blocked',     '✕ Blocked'],
-    'deferred':    ['sb-deferred',    '⏸ Deferred'],
-  };
-  var d = map[s] || map['not-started'];
-  return '<span class="status-badge ' + d[0] + '">' + d[1] + '</span>';
+function statusBadge(s){
+  var m={'not-started':['sb-not-started','○ Not Started'],'in-progress':['sb-in-progress','◑ In Progress'],'complete':['sb-complete','✓ Complete'],'blocked':['sb-blocked','✕ Blocked'],'deferred':['sb-deferred','⏸ Deferred']};
+  var d=m[s]||m['not-started'];
+  return '<span class="status-badge '+d[0]+'">'+d[1]+'</span>';
+}
+function typeBadge(t){
+  var m={'revenue':['tb-revenue','Revenue'],'cost':['tb-cost','Cost'],'strategic':['tb-strategic','Strategic'],'gate':['tb-gate','Gate'],'bd':['tb-bd','Biz Dev'],'brand':['tb-brand','Web/Brand']};
+  var d=m[t]||['tb-strategic',t];
+  return '<span class="type-badge '+d[0]+'">'+d[1]+'</span>';
+}
+function assigneeChip(a){
+  if(!a||a==='Unassigned') return '<span class="assignee-chip unassigned">Unassigned</span>';
+  var init=a.replace(/\(.*?\)/g,'').trim().split(' ').map(function(w){return w[0]||'';}).join('').substring(0,2).toUpperCase();
+  return '<span class="assignee-chip"><span class="avatar">'+init+'</span>'+a+'</span>';
+}
+function getTask(id){ return allTasks.find(function(t){return t.id==id;}); }
+function tasksForPhase(phase){ return allTasks.filter(function(t){return t.phase===phase;}); }
+function todayStr(){
+  var d=new Date();
+  return d.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
 }
 
-function typeBadge(t) {
-  var map = {
-    'revenue':   ['tb-revenue',   'Revenue'],
-    'cost':      ['tb-cost',      'Cost'],
-    'strategic': ['tb-strategic', 'Strategic'],
-    'gate':      ['tb-gate',      'Gate'],
-  };
-  var d = map[t] || ['tb-strategic', t];
-  return '<span class="type-badge ' + d[0] + '">' + d[1] + '</span>';
+/* ══════════════════════════════════════
+   METRICS
+══════════════════════════════════════ */
+function updateMetrics(list){
+  var src=list||allTasks;
+  var done=src.filter(function(t){return t.status==='complete';}).length;
+  var prog=src.filter(function(t){return t.status==='in-progress';}).length;
+  var block=src.filter(function(t){return t.status==='blocked';}).length;
+  document.getElementById('mTotal').textContent=src.length;
+  document.getElementById('mDone').textContent=done+' ('+Math.round(done/src.length*100||0)+'%)';
+  document.getElementById('mProg').textContent=prog;
+  document.getElementById('mBlock').textContent=block;
+  function ps(p){var pt=mainTasks.filter(function(t){return t.phase===p;});var pd=pt.filter(function(t){return t.status==='complete';});var pct=pt.length?Math.round(pd.length/pt.length*100):0;return{total:pt.length,done:pd.length,pct:pct};}
+  var s1=ps('Phase 1'),s2=ps('Phase 2'),s3=ps('Phase 3');
+  document.getElementById('p1bar').style.width=s1.pct+'%'; document.getElementById('p1pct').textContent=s1.done+'/'+s1.total+' complete ('+s1.pct+'%)';
+  document.getElementById('p2bar').style.width=s2.pct+'%'; document.getElementById('p2pct').textContent=s2.done+'/'+s2.total+' complete ('+s2.pct+'%)';
+  document.getElementById('p3bar').style.width=s3.pct+'%'; document.getElementById('p3pct').textContent=s3.done+'/'+s3.total+' complete ('+s3.pct+'%)';
 }
 
-function assigneeChip(a) {
-  if (!a || a === 'Unassigned') return '<span class="assignee-chip unassigned">Unassigned</span>';
-  var init = a.split(' ').map(function(w){ return w[0]; }).join('').substring(0,2).toUpperCase();
-  return '<span class="assignee-chip"><span class="avatar">' + init + '</span>' + a + '</span>';
+/* ══════════════════════════════════════
+   TAB SWITCHING
+══════════════════════════════════════ */
+function switchTab(tab, el){
+  activeTab=tab;
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
+  el.classList.add('active');
+  document.getElementById('phaseRow').style.display=(tab==='all')?'grid':'none';
+  renderContent();
 }
 
-function getTask(id) {
-  for (var i = 0; i < tasks.length; i++) { if (tasks[i].id === id) return tasks[i]; }
-  return null;
+/* ══════════════════════════════════════
+   PRE-PHASE 1 RENDER
+══════════════════════════════════════ */
+function renderPrePhase(){
+  var weeks=[
+    {key:'Week 1',range:'Mar 8–14',label:'Week 1 · Mar 8–14',priority:'Audit, map gaps, post BD role, website audit, brief dept heads'},
+    {key:'Week 2',range:'Mar 15–21',label:'Week 2 · Mar 15–21',priority:'BD shortlist, GP outreach, specialist contact, agency quotes, HR audit'},
+    {key:'Week 3',range:'Mar 22–28',label:'Week 3 · Mar 22–28',priority:'BD interviews, referral activation, specialist offer, agency selection, HR plan sign-off'},
+    {key:'Week 4',range:'Mar 29–Apr 1',label:'Week 4 · Mar 29–Apr 1',priority:'BD offer confirmed, referral warm leads, specialist Day 1 readiness, web kickoff'},
+  ];
+  var focusMap={occ:'focus-occ',bd:'focus-bd',hr:'focus-hr',brand:'focus-brand',strategic:'focus-strategic'};
+  var focusLabel={occ:'Occupancy / Referral',bd:'Business Development',hr:'Staff Rationalisation',brand:'Web & Brand',strategic:'Strategic'};
+  var accMap={occ:'acc-occ',bd:'acc-bd',hr:'acc-hr',brand:'acc-brand',strategic:'acc-strategic'};
+
+  var html='<div class="priority-banner"><div class="pb-icon">🎯</div><div><div class="pb-title">Pre-Phase 1 Priority Focus — Mar 8 to Apr 1, 2026</div><div class="pb-desc">Four parallel tracks this month, all owned and time-bound. Every task below is a blocker for Phase 1 Day 1 readiness (Apr 1).</div><div class="pb-tags"><span class="pb-tag">🛏 Drive Bed Occupancy</span><span class="pb-tag">👨‍⚕️ Onboard 1 Specialist</span><span class="pb-tag">💼 Hire BD Manager</span><span class="pb-tag">📉 Staff Rationalisation</span><span class="pb-tag">🌐 Website Redesign</span></div></div></div>';
+
+  weeks.forEach(function(w){
+    var wTasks=preTasks.filter(function(t){return t.week===w.key;});
+    html+='<div class="week-section"><div class="week-header"><span class="week-badge">'+w.key+'</span><span class="week-title">'+w.range+'</span><span class="week-range">— '+w.priority+'</span><div class="week-line"></div></div><div class="week-cards">';
+    wTasks.forEach(function(t){
+      var acc=accMap[t.focus]||'';
+      var fc=focusMap[t.focus]||'focus-strategic';
+      var fl=focusLabel[t.focus]||'Strategic';
+      html+='<div class="pp-card '+acc+'" onclick="openEdit(\''+t.id+'\')">';
+      html+='<div class="pp-card-title">'+t.title+'</div>';
+      html+='<div class="pp-card-meta">'+assigneeChip(t.assignee)+'<span class="focus-tag '+fc+'">'+fl+'</span>'+statusBadge(t.status)+'<span style="font-size:.6rem;color:var(--muted);margin-left:auto;">📅 '+t.deadline+'</span></div>';
+      if(t.notes) html+='<div style="margin-top:6px;font-size:.63rem;color:var(--muted);font-style:italic;">'+t.notes+'</div>';
+      html+='</div>';
+    });
+    html+='</div></div>';
+  });
+  return html;
 }
 
-/* ═══════════════════════════════════════════
-   RENDER TABLE
-═══════════════════════════════════════════ */
-function renderTable(list) {
-  var tbody = document.getElementById('taskBody');
-  if (!list || list.length === 0) {
-    tbody.innerHTML = '<tr class="empty-row"><td colspan="9">No tasks match the current filters.</td></tr>';
-    return;
+/* ══════════════════════════════════════
+   TABLE RENDER
+══════════════════════════════════════ */
+function renderTable(list){
+  if(!list||!list.length) return '<div class="table-wrap"><table class="task-table"><thead><tr><th>Phase</th><th>Task</th><th>Workstream</th><th>Deadline</th><th>Assignee</th><th>Status</th><th>Type</th><th class="right">Value</th><th>Notes</th></tr></thead><tbody><tr class="empty-row"><td colspan="9">No tasks match the current filters.</td></tr></tbody></table></div>';
+  var rows='';
+  list.forEach(function(t){
+    var isGate=(t.type==='gate');
+    rows+='<tr '+(isGate?'class="gate-row"':'')+' onclick="openEdit(\''+t.id+'\')">';
+    rows+='<td>'+phasePill(t.phase)+'</td>';
+    rows+='<td><div style="font-size:.73rem;font-weight:600;color:var(--text);line-height:1.3;">'+t.title+'</div></td>';
+    rows+='<td><div style="font-size:.64rem;color:var(--muted);">'+t.workstream+'</div></td>';
+    rows+='<td><div class="deadline-text">'+t.deadline+'</div></td>';
+    rows+='<td>'+assigneeChip(t.assignee)+'</td>';
+    rows+='<td>'+statusBadge(t.status)+'</td>';
+    rows+='<td>'+typeBadge(t.type)+'</td>';
+    rows+='<td class="right"><span class="val-text">'+(t.value||'—')+'</span></td>';
+    rows+='<td>'+(t.notes?'<div class="notes-snip">'+t.notes+'</div>':'<span style="color:#ccc;font-size:.63rem;">—</span>')+'</td>';
+    rows+='</tr>';
+  });
+  return '<div class="table-wrap"><table class="task-table"><thead><tr><th>Phase</th><th>Task</th><th>Workstream</th><th>Deadline</th><th>Assignee</th><th>Status</th><th>Type</th><th class="right">Value</th><th>Notes</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
+}
+
+/* ══════════════════════════════════════
+   MAIN RENDER
+══════════════════════════════════════ */
+function renderContent(){
+  var ca=document.getElementById('contentArea');
+  var fb=document.getElementById('filterBar');
+  if(activeTab==='pre'){
+    fb.style.display='none';
+    ca.innerHTML=renderPrePhase();
+    updateMetrics(preTasks);
+  } else {
+    fb.style.display='flex';
+    var phase={'p1':'Phase 1','p2':'Phase 2','p3':'Phase 3','all':null}[activeTab];
+    var list=phase?mainTasks.filter(function(t){return t.phase===phase;}):mainTasks;
+    ca.innerHTML=renderTable(applyFiltersTo(list));
+    updateMetrics(list);
   }
-  var html = '';
-  for (var i = 0; i < list.length; i++) {
-    var t = list[i];
-    var isGate = (t.type === 'gate');
-    html += '<tr ' + (isGate ? 'class="gate-row"' : '') + ' onclick="openEdit(' + t.id + ')">';
-    html += '<td>' + phasePill(t.phase) + '</td>';
-    html += '<td><div style="font-size:0.73rem;font-weight:600;color:var(--text);line-height:1.3;">' + t.title + '</div></td>';
-    html += '<td><div style="font-size:0.65rem;color:var(--muted);">' + t.workstream + '</div></td>';
-    html += '<td><div class="timing-text">' + t.timing + '</div></td>';
-    html += '<td>' + assigneeChip(t.assignee) + '</td>';
-    html += '<td>' + statusBadge(t.status) + '</td>';
-    html += '<td>' + typeBadge(t.type) + '</td>';
-    html += '<td class="right"><span class="val-text">' + (t.value || '—') + '</span></td>';
-    html += '<td>' + (t.notes ? '<div class="notes-snip">' + t.notes + '</div>' : '<span style="color:#ccc;font-size:0.65rem;">—</span>') + '</td>';
-    html += '</tr>';
-  }
-  tbody.innerHTML = html;
 }
 
-/* ═══════════════════════════════════════════
-   METRICS & PHASE PROGRESS
-═══════════════════════════════════════════ */
-function updateMetrics() {
-  var total = tasks.length;
-  var done  = tasks.filter(function(t){ return t.status === 'complete'; }).length;
-  var prog  = tasks.filter(function(t){ return t.status === 'in-progress'; }).length;
-  var block = tasks.filter(function(t){ return t.status === 'blocked'; }).length;
-
-  document.getElementById('mTotal').textContent = total;
-  document.getElementById('mDone').textContent  = done + ' (' + Math.round(done/total*100) + '%)';
-  document.getElementById('mProg').textContent  = prog;
-  document.getElementById('mBlock').textContent = block;
-
-  function phaseStats(phase) {
-    var pt = tasks.filter(function(t){ return t.phase === phase; });
-    var pd = pt.filter(function(t){ return t.status === 'complete'; });
-    var pct = pt.length ? Math.round(pd.length / pt.length * 100) : 0;
-    return { total: pt.length, done: pd.length, pct: pct };
-  }
-
-  var s1 = phaseStats('Phase 1');
-  var s2 = phaseStats('Phase 2');
-  var s3 = phaseStats('Phase 3');
-
-  document.getElementById('p1bar').style.width = s1.pct + '%';
-  document.getElementById('p2bar').style.width = s2.pct + '%';
-  document.getElementById('p3bar').style.width = s3.pct + '%';
-  document.getElementById('p1pct').textContent = s1.done + '/' + s1.total + ' tasks complete (' + s1.pct + '%)';
-  document.getElementById('p2pct').textContent = s2.done + '/' + s2.total + ' tasks complete (' + s2.pct + '%)';
-  document.getElementById('p3pct').textContent = s3.done + '/' + s3.total + ' tasks complete (' + s3.pct + '%)';
-}
-
-/* ═══════════════════════════════════════════
+/* ══════════════════════════════════════
    FILTERS
-═══════════════════════════════════════════ */
-function populateFilters() {
-  var wsEl = document.getElementById('filterWorkstream');
-  wsEl.innerHTML = '<option value="">All Workstreams</option>';
-  WORKSTREAMS.forEach(function(ws) {
-    wsEl.innerHTML += '<option value="' + ws + '">' + ws + '</option>';
-  });
-
-  var addWsEl = document.getElementById('addWorkstream');
-  addWsEl.innerHTML = '';
-  WORKSTREAMS.forEach(function(ws) {
-    addWsEl.innerHTML += '<option value="' + ws + '">' + ws + '</option>';
-  });
-
+══════════════════════════════════════ */
+function populateDropdowns(){
+  var wsEl=document.getElementById('filterWorkstream');
+  wsEl.innerHTML='<option value="">All Workstreams</option>';
+  WORKSTREAMS.forEach(function(ws){wsEl.innerHTML+='<option value="'+ws+'">'+ws+'</option>';});
+  var addWs=document.getElementById('addWorkstream');
+  addWs.innerHTML='';
+  WORKSTREAMS.forEach(function(ws){addWs.innerHTML+='<option value="'+ws+'">'+ws+'</option>';});
   rebuildAssigneeDropdowns();
 }
-
-function rebuildAssigneeDropdowns() {
-  ['filterAssignee', 'editAssignee', 'addAssignee'].forEach(function(id) {
-    var el = document.getElementById(id);
-    if (!el) return;
-    var cur = el.value;
-    if (id === 'filterAssignee') {
-      el.innerHTML = '<option value="">All Assignees</option>';
-      teamMembers.forEach(function(m) { el.innerHTML += '<option value="' + m + '">' + m + '</option>'; });
-    } else {
-      el.innerHTML = '';
-      teamMembers.forEach(function(m) { el.innerHTML += '<option value="' + m + '">' + m + '</option>'; });
-    }
-    if (cur) el.value = cur;
+function rebuildAssigneeDropdowns(){
+  ['filterAssignee','editAssignee','addAssignee'].forEach(function(id){
+    var el=document.getElementById(id);if(!el)return;
+    var cur=el.value;
+    if(id==='filterAssignee'){el.innerHTML='<option value="">All Assignees</option>';}else{el.innerHTML='';}
+    team.forEach(function(m){el.innerHTML+='<option value="'+m.name+'">'+m.name+'</option>';});
+    if(cur)el.value=cur;
   });
 }
-
-function applyFilters() {
-  var search = document.getElementById('filterSearch').value.toLowerCase();
-  var phase  = document.getElementById('filterPhase').value;
-  var ws     = document.getElementById('filterWorkstream').value;
-  var asgn   = document.getElementById('filterAssignee').value;
-  var status = document.getElementById('filterStatus').value;
-  var type   = document.getElementById('filterType').value;
-
-  var filtered = tasks.filter(function(t) {
-    if (phase  && t.phase      !== phase)  return false;
-    if (ws     && t.workstream !== ws)     return false;
-    if (asgn   && t.assignee   !== asgn)   return false;
-    if (status && t.status     !== status) return false;
-    if (type   && t.type       !== type)   return false;
-    if (search && t.title.toLowerCase().indexOf(search) === -1 &&
-                  t.workstream.toLowerCase().indexOf(search) === -1 &&
-                  (t.notes || '').toLowerCase().indexOf(search) === -1) return false;
+function applyFiltersTo(list){
+  var search=document.getElementById('filterSearch').value.toLowerCase();
+  var ws=document.getElementById('filterWorkstream').value;
+  var asgn=document.getElementById('filterAssignee').value;
+  var status=document.getElementById('filterStatus').value;
+  return list.filter(function(t){
+    if(ws&&t.workstream!==ws)return false;
+    if(asgn&&t.assignee!==asgn)return false;
+    if(status&&t.status!==status)return false;
+    if(search&&t.title.toLowerCase().indexOf(search)===-1&&(t.notes||'').toLowerCase().indexOf(search)===-1)return false;
     return true;
   });
-
-  renderTable(filtered);
+}
+function applyFilters(){renderContent();}
+function resetFilters(){
+  document.getElementById('filterSearch').value='';
+  document.getElementById('filterWorkstream').value='';
+  document.getElementById('filterAssignee').value='';
+  document.getElementById('filterStatus').value='';
+  renderContent();
 }
 
-function resetFilters() {
-  document.getElementById('filterSearch').value = '';
-  document.getElementById('filterPhase').value  = '';
-  document.getElementById('filterWorkstream').value = '';
-  document.getElementById('filterAssignee').value   = '';
-  document.getElementById('filterStatus').value     = '';
-  document.getElementById('filterType').value       = '';
-  renderTable(tasks);
-}
-
-/* ═══════════════════════════════════════════
+/* ══════════════════════════════════════
    EDIT MODAL
-═══════════════════════════════════════════ */
-function openEdit(id) {
-  var t = getTask(id);
-  if (!t) return;
-  editingId = id;
-  document.getElementById('editTitle').textContent = t.title;
-  document.getElementById('editSub').textContent   = t.phase + ' · ' + t.workstream + ' · ' + t.timing;
-  document.getElementById('editStatus').value      = t.status;
+══════════════════════════════════════ */
+function openEdit(id){
+  var t=getTask(id);if(!t)return;
+  editingId=id;
+  document.getElementById('editTitle').textContent=t.title;
+  document.getElementById('editSub').textContent=(t.phase||'')+' · '+(t.workstream||'')+' · Deadline: '+(t.deadline||'—');
+  document.getElementById('editStatus').value=t.status;
   rebuildAssigneeDropdowns();
-  document.getElementById('editAssignee').value    = t.assignee || 'Unassigned';
-  document.getElementById('editNotes').value       = t.notes || '';
-  document.getElementById('newMemberInput').value  = '';
+  document.getElementById('editAssignee').value=t.assignee||'Unassigned';
+  document.getElementById('editAssigneeEmail').value=memberEmail(t.assignee||'');
+  document.getElementById('editNotes').value=t.notes||'';
+  document.getElementById('newMemberName').value='';
+  document.getElementById('newMemberEmail').value='';
   document.getElementById('editOverlay').classList.add('open');
 }
-
-function closeEdit() {
-  document.getElementById('editOverlay').classList.remove('open');
-  editingId = null;
+function showAssigneeEmail(){
+  var sel=document.getElementById('editAssignee').value;
+  document.getElementById('editAssigneeEmail').value=memberEmail(sel);
+}
+function closeEdit(){document.getElementById('editOverlay').classList.remove('open');editingId=null;}
+function saveEdit(){
+  var t=getTask(editingId);if(!t)return;
+  t.status=document.getElementById('editStatus').value;
+  var newAsgn=document.getElementById('editAssignee').value;
+  var newEmail=document.getElementById('editAssigneeEmail').value.trim();
+  t.assignee=newAsgn;
+  var m=findMember(newAsgn);
+  if(m&&newEmail)m.email=newEmail;
+  t.notes=document.getElementById('editNotes').value;
+  closeEdit();renderContent();
 }
 
-function saveEdit() {
-  var t = getTask(editingId);
-  if (!t) return;
-  t.status   = document.getElementById('editStatus').value;
-  t.assignee = document.getElementById('editAssignee').value;
-  t.notes    = document.getElementById('editNotes').value;
-  closeEdit();
-  updateMetrics();
-  applyFilters();
-}
-
-/* ═══════════════════════════════════════════
+/* ══════════════════════════════════════
    ADD NEW MEMBER
-═══════════════════════════════════════════ */
-function addNewMember() {
-  var inp = document.getElementById('newMemberInput');
-  var name = inp.value.trim();
-  if (!name) return;
-  if (teamMembers.indexOf(name) === -1) {
-    teamMembers.push(name);
+══════════════════════════════════════ */
+function addNewMember(){
+  var name=document.getElementById('newMemberName').value.trim();
+  var email=document.getElementById('newMemberEmail').value.trim();
+  if(!name)return;
+  if(!team.find(function(m){return m.name===name;})){
+    team.push({name:name,email:email});
     rebuildAssigneeDropdowns();
   }
-  document.getElementById('editAssignee').value = name;
-  inp.value = '';
+  document.getElementById('editAssignee').value=name;
+  document.getElementById('editAssigneeEmail').value=email;
+  document.getElementById('newMemberName').value='';
+  document.getElementById('newMemberEmail').value='';
 }
 
-/* ═══════════════════════════════════════════
+/* ══════════════════════════════════════
    ADD TASK MODAL
-═══════════════════════════════════════════ */
-function openAddModal() {
-  document.getElementById('addTitle').value    = '';
-  document.getElementById('addPhase').value    = 'Phase 1';
-  document.getElementById('addType').value     = 'revenue';
-  document.getElementById('addValue').value    = '';
-  document.getElementById('addTiming').value   = '';
-  document.getElementById('addNotes').value    = '';
-  rebuildAssigneeDropdowns();
-  document.getElementById('addOverlay').classList.add('open');
+══════════════════════════════════════ */
+function openAddModal(){
+  document.getElementById('addTitle').value='';document.getElementById('addValue').value='';
+  document.getElementById('addTiming').value='';document.getElementById('addNotes').value='';
+  rebuildAssigneeDropdowns();document.getElementById('addOverlay').classList.add('open');
+}
+function closeAdd(){document.getElementById('addOverlay').classList.remove('open');}
+function saveNewTask(){
+  var title=document.getElementById('addTitle').value.trim();
+  if(!title){document.getElementById('addTitle').focus();return;}
+  var t={id:nextId++,phase:document.getElementById('addPhase').value,workstream:document.getElementById('addWorkstream').value,
+    deadline:document.getElementById('addTiming').value||'—',type:document.getElementById('addType').value,
+    value:document.getElementById('addValue').value||'—',status:'not-started',
+    assignee:document.getElementById('addAssignee').value||'Unassigned',
+    notes:document.getElementById('addNotes').value,title:title,desc:document.getElementById('addNotes').value,};
+  if(t.phase==='Pre-Phase 1'){t.week='Week 1';t.weekRange='Mar 2026';t.focus='strategic';preTasks.push(t);}
+  else{mainTasks.push(t);}
+  allTasks=preTasks.concat(mainTasks);
+  closeAdd();renderContent();
 }
 
-function closeAdd() {
-  document.getElementById('addOverlay').classList.remove('open');
-}
-
-function saveNewTask() {
-  var title = document.getElementById('addTitle').value.trim();
-  if (!title) { document.getElementById('addTitle').focus(); return; }
-  tasks.push({
-    id:          nextId++,
-    phase:       document.getElementById('addPhase').value,
-    workstream:  document.getElementById('addWorkstream').value,
-    timing:      document.getElementById('addTiming').value || '—',
-    type:        document.getElementById('addType').value,
-    value:       document.getElementById('addValue').value || '—',
-    status:      'not-started',
-    assignee:    document.getElementById('addAssignee').value || 'Unassigned',
-    notes:       document.getElementById('addNotes').value,
-    title:       title,
-    desc:        document.getElementById('addNotes').value,
+/* ══════════════════════════════════════
+   TEAM SETTINGS MODAL
+══════════════════════════════════════ */
+function openTeamSettings(){
+  var html='';
+  team.forEach(function(m,i){
+    if(m.name==='Unassigned')return;
+    html+='<div class="team-row"><div class="team-name-fixed">'+m.name+'</div><input class="team-email-inp" id="temail_'+i+'" type="text" value="'+m.email+'" placeholder="email@vpslakeshore.in"></div>';
   });
-  closeAdd();
-  updateMetrics();
-  applyFilters();
+  document.getElementById('teamBody').innerHTML=html;
+  document.getElementById('teamOverlay').classList.add('open');
+}
+function closeTeam(){document.getElementById('teamOverlay').classList.remove('open');}
+function saveTeamSettings(){
+  team.forEach(function(m,i){
+    if(m.name==='Unassigned')return;
+    var inp=document.getElementById('temail_'+i);
+    if(inp)m.email=inp.value.trim();
+  });
+  closeTeam();
 }
 
-/* ═══════════════════════════════════════════
+/* ══════════════════════════════════════
+   DIGEST MODAL
+══════════════════════════════════════ */
+function openDigest(){
+  document.getElementById('digestDate').textContent='Daily Ops Digest — '+todayStr();
+  var byOwner={};
+  allTasks.forEach(function(t){
+    if(t.status==='complete'||!t.assignee||t.assignee==='Unassigned')return;
+    if(!byOwner[t.assignee])byOwner[t.assignee]=[];
+    byOwner[t.assignee].push(t);
+  });
+
+  var html='<div class="digest-copy-bar"><span class="digest-copy-lbl">Click a person\'s 📧 button to open their individual email in your mail client.</span></div>';
+
+  Object.keys(byOwner).sort().forEach(function(name){
+    var tasks=byOwner[name];
+    var email=memberEmail(name);
+    var subj=encodeURIComponent('VPS Lakeshore Ops Digest — '+new Date().toLocaleDateString('en-GB'));
+    var body=encodeURIComponent(
+      'Hi '+name.replace(/\s*\(.*\)/,'').trim()+',\n\nHere is your VPS Lakeshore operations task update for '+new Date().toLocaleDateString('en-GB')+':\n\n'+
+      tasks.map(function(t){return '• '+t.title+'\n  Deadline: '+t.deadline+'  |  Status: '+t.status.replace(/-/g,' ')+(t.notes?'\n  Note: '+t.notes:'');}).join('\n\n')+
+      '\n\nPlease update your task statuses and flag any blockers.\n\n—\nVPS Lakeshore Ops Tracker\nhttps://vpslakeshoretdx.in/ops-tracker.html'
+    );
+    var mailtoHref=email?'mailto:'+email+'?subject='+subj+'&body='+body:'';
+
+    html+='<div class="digest-owner-block">';
+    html+='<div class="digest-owner-header"><div><div class="digest-owner-name">'+name+'</div><div class="digest-owner-email">'+(email||'<em style="color:#aaa">No email set — click Team & Emails to add</em>')+'</div></div>';
+    if(email){html+='<a class="mailto-btn" href="'+mailtoHref+'">📧 Email '+name.replace(/\s*\(.*\)/,'').trim()+'</a>';}
+    html+='</div><div class="digest-task-list">';
+    tasks.forEach(function(t){
+      html+='<div class="digest-task-row"><span style="font-size:.65rem;margin-right:2px;">'+({'not-started':'○','in-progress':'◑','blocked':'✕','deferred':'⏸'}[t.status]||'○')+'</span><span class="digest-task-title">'+t.title+'</span><span class="digest-task-dl">'+t.deadline+'</span>'+statusBadge(t.status)+'</div>';
+    });
+    html+='</div></div>';
+  });
+
+  if(Object.keys(byOwner).length===0){
+    html+='<div style="text-align:center;padding:32px;color:var(--muted);font-size:.8rem;">All tasks are complete or unassigned — nothing to send today! 🎉</div>';
+  }
+
+  document.getElementById('digestBody').innerHTML=html;
+  document.getElementById('digestOverlay').classList.add('open');
+}
+function closeDigest(){document.getElementById('digestOverlay').classList.remove('open');}
+
+/* ══════════════════════════════════════
    CLOSE ON OVERLAY CLICK
-═══════════════════════════════════════════ */
-document.getElementById('editOverlay').addEventListener('click', function(e) {
-  if (e.target === this) closeEdit();
-});
-document.getElementById('addOverlay').addEventListener('click', function(e) {
-  if (e.target === this) closeAdd();
+══════════════════════════════════════ */
+['editOverlay','addOverlay','teamOverlay','digestOverlay'].forEach(function(id){
+  document.getElementById(id).addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});
 });
 
-/* ═══════════════════════════════════════════
+/* ══════════════════════════════════════
    INIT
-═══════════════════════════════════════════ */
-populateFilters();
-updateMetrics();
-renderTable(tasks);
+══════════════════════════════════════ */
+document.getElementById('todayStamp').textContent='🕐 '+todayStr();
+populateDropdowns();
+document.getElementById('phaseRow').style.display='none';
+renderContent();
 </script>
 </body>
 </html>
