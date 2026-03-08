@@ -192,7 +192,6 @@ table.fin-tbl tr.row-total td:first-child{background:#0d2137;color:white}
     <div class="header-nav">
       <a class="hn-link" href="index.html">⬅ Dashboard</a>
       <a class="hn-link" href="LHRC_Executive_Dashboard.html">📈 Exec Dashboard</a>
-      <a class="hn-link" href="doctor-tracker.html">👨‍⚕️ Doctor Tracker</a>
     </div>
   </div>
   <div class="header-right">
@@ -213,6 +212,7 @@ table.fin-tbl tr.row-total td:first-child{background:#0d2137;color:white}
   <div class="tab" onclick="showTab('capex',this)">🏗️ Capex Tracker</div>
   <div class="tab" onclick="showTab('upload',this)">📤 Upload Actuals</div>
   <div class="tab" onclick="showTab('reqs',this)">📋 Requisitions Log</div>
+  <div class="tab" onclick="showTab('doctors',this)">👨‍⚕️ Doctor Tracker</div>
 </div>
 
 
@@ -1014,6 +1014,7 @@ function showTab(id,el){
   if(id==='capex') renderCapexTab();
   if(id==='upload') renderUploadSummary();
   if(id==='reqs') renderReqs();
+  if(id==='doctors') renderDrOverview();
 }
 function showSubTab(group,id,el){
   var container = el.parentElement;
@@ -2210,6 +2211,557 @@ renderPL=function(){
   _origRenderPL();
   if(document.getElementById('plDeptTable')) renderPLDeptTable();
 };
+</script>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- TAB: DOCTOR TRACKER                                     -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="page-doctors" class="page">
+  <div class="slabel">👨‍⚕️ Doctor Revenue Tracker — FY26 BRM Actuals &amp; FY27 Targets</div>
+  <div class="info-box">
+    FY26 YTD figures are 10-month actuals (Apr-25 to Jan-26) from the BRM deck. FY27 targets are annualised FY26 (×1.2) plus a growth premium: 20% for top earners (&gt;₹5 Cr), 15% for mid-tier (₹1–5 Cr), 10% for developing (&lt;₹1 Cr). You can override targets per doctor using the input below.
+  </div>
+
+  <!-- sub-tabs -->
+  <div class="tab-sub-bar" style="margin-bottom:18px">
+    <div class="sub-tab active" id="dtab-overview"  onclick="drShowTab('overview',this)">📊 Overview</div>
+    <div class="sub-tab"        id="dtab-alldocs"   onclick="drShowTab('alldocs',this)">👥 All Doctors</div>
+    <div class="sub-tab"        id="dtab-deptview"  onclick="drShowTab('deptview',this)">🏥 By Department</div>
+    <div class="sub-tab"        id="dtab-fy27"      onclick="drShowTab('fy27',this)">🎯 FY27 Targets</div>
+    <div class="sub-tab"        id="dtab-actuals"   onclick="drShowTab('actuals',this)">📝 Enter Actuals</div>
+  </div>
+
+  <!-- ── OVERVIEW ── -->
+  <div id="drpage-overview" class="drpage">
+    <div class="kpi-row" style="margin-bottom:16px">
+      <div class="kpi kpi-rev"><div class="kpi-label">FY26 YTD Total</div><div class="kpi-val">₹370.8 Cr</div><div class="kpi-sub">10M Apr-25 → Jan-26 · IP+OP</div></div>
+      <div class="kpi kpi-ebitda"><div class="kpi-label">Consultants Tracked</div><div class="kpi-val">80+</div><div class="kpi-sub">Named doctors from BRM</div></div>
+      <div class="kpi kpi-margin"><div class="kpi-label">Top Dept — Medical Oncology</div><div class="kpi-val">₹53.18 Cr</div><div class="kpi-sub">FY26 YTD #1</div></div>
+      <div class="kpi kpi-cost"><div class="kpi-label">Monthly Run Rate</div><div class="kpi-val">₹37.1 Cr</div><div class="kpi-sub">Avg IP+OP (Apr-25 – Jan-26)</div></div>
+    </div>
+    <div class="chart-grid">
+      <div class="chart-box">
+        <div class="chart-title">Top 15 Doctors by FY26 YTD Revenue (₹ Cr)</div>
+        <div class="chart-wrap" style="height:320px"><canvas id="drTop15Chart"></canvas></div>
+      </div>
+      <div class="chart-box">
+        <div class="chart-title">Department Revenue — FY26 YTD (₹ Cr)</div>
+        <div class="chart-wrap" style="height:320px"><canvas id="drDeptChart"></canvas></div>
+      </div>
+    </div>
+    <div class="chart-grid">
+      <div class="chart-box">
+        <div class="chart-title">Monthly Revenue Trend — IP vs OP vs F&amp;B (₹ Cr)</div>
+        <div class="chart-wrap"><canvas id="drMonthChart"></canvas></div>
+      </div>
+      <div class="chart-box">
+        <div class="chart-title">IP vs OP Revenue Split — Top 12 Doctors (₹ Cr)</div>
+        <div class="chart-wrap"><canvas id="drIpOpChart"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ALL DOCTORS ── -->
+  <div id="drpage-alldocs" class="drpage" style="display:none">
+    <div style="display:flex;gap:10px;align-items:center;margin-bottom:12px;flex-wrap:wrap">
+      <input id="drSearch" type="text" placeholder="🔍 Search doctor or department…"
+        style="padding:7px 12px;border:1px solid #e2e8f0;border-radius:6px;font-size:0.72rem;width:240px;outline:none"
+        oninput="renderDrAllTable()">
+      <div id="drDeptChips" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+    </div>
+    <div style="overflow-x:auto"><table class="fin-tbl" id="drAllTable">
+      <thead><tr>
+        <th style="text-align:left">Doctor</th>
+        <th style="text-align:left">Department</th>
+        <th>FY26 YTD IP (₹Cr)</th>
+        <th>FY26 YTD OP (₹Cr)</th>
+        <th>FY26 YTD Total</th>
+        <th>FY27 Target</th>
+        <th>Growth %</th>
+      </tr></thead>
+      <tbody id="drAllTbody"></tbody>
+    </table></div>
+  </div>
+
+  <!-- ── BY DEPARTMENT ── -->
+  <div id="drpage-deptview" class="drpage" style="display:none">
+    <div style="overflow-x:auto"><table class="fin-tbl" id="drDeptTable">
+      <thead><tr>
+        <th style="text-align:left">Department</th>
+        <th>FY26 YTD IP (₹Cr)</th>
+        <th>FY26 YTD OP (₹Cr)</th>
+        <th>FY26 YTD Total</th>
+        <th>No. of Doctors</th>
+        <th>FY27 Dept Target</th>
+        <th>Growth %</th>
+      </tr></thead>
+      <tbody id="drDeptTbody"></tbody>
+    </table></div>
+  </div>
+
+  <!-- ── FY27 TARGETS ── -->
+  <div id="drpage-fy27" class="drpage" style="display:none">
+    <div class="info-box" style="margin-bottom:14px">Override any doctor's FY27 target below. Changes are saved locally in your browser.</div>
+    <div style="overflow-x:auto"><table class="fin-tbl">
+      <thead><tr>
+        <th style="text-align:left">Doctor</th>
+        <th style="text-align:left">Department</th>
+        <th>FY26 YTD (₹Cr)</th>
+        <th>Default Target (₹Cr)</th>
+        <th>Your Target (₹Cr)</th>
+        <th>Override</th>
+      </tr></thead>
+      <tbody id="drTargetTbody"></tbody>
+    </table></div>
+  </div>
+
+  <!-- ── ENTER ACTUALS ── -->
+  <div id="drpage-actuals" class="drpage" style="display:none">
+    <div class="upload-section" style="margin-bottom:20px">
+      <div class="upload-title">📝 Enter Doctor Monthly Actual</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Doctor</label>
+          <select class="form-select" id="drActDoctor"><option value="">— select —</option></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Month (FY27)</label>
+          <select class="form-select" id="drActMonth">
+            <option>Apr-26</option><option>May-26</option><option>Jun-26</option>
+            <option>Jul-26</option><option>Aug-26</option><option>Sep-26</option>
+            <option>Oct-26</option><option>Nov-26</option><option>Dec-26</option>
+            <option>Jan-27</option><option>Feb-27</option><option>Mar-27</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">IP Revenue (₹ Cr)</label>
+          <input class="form-input" type="number" id="drActIP" step="0.01" placeholder="0.00">
+        </div>
+        <div class="form-group">
+          <label class="form-label">OP Revenue (₹ Cr)</label>
+          <input class="form-input" type="number" id="drActOP" step="0.01" placeholder="0.00">
+        </div>
+      </div>
+      <button class="btn-primary" onclick="saveDrActual()">💾 Save Actual</button>
+      <span id="drActMsg" style="margin-left:12px;font-size:0.72rem;color:#27ae60"></span>
+    </div>
+    <div id="drActSummary"></div>
+  </div>
+</div><!-- /page-doctors -->
+
+<script>
+// ═══════════════════════════════════════════════════════
+// DOCTOR TRACKER DATA
+// ═══════════════════════════════════════════════════════
+var DOCTORS = [
+  {name:'Gangadharan V P',          dept:'Medical Oncology',              ip26:34.37, op26:18.52, fy26:52.89},
+  {name:'Abi Abraham M',            dept:'Nephrology',                    ip26:23.89, op26:8.04,  fy26:31.93},
+  {name:'Sudish Karunakaran',       dept:'Neuro Surgery',                 ip26:21.72, op26:1.65,  fy26:23.37},
+  {name:'Ramesh H',                 dept:'GI Surgery',                    ip26:15.59, op26:1.30,  fy26:16.90},
+  {name:'Datson George P',          dept:'Urology',                       ip26:10.93, op26:2.21,  fy26:13.14},
+  {name:'Padmakumar R',             dept:'Minimally Invasive Surgery',    ip26:11.71, op26:0.75,  fy26:12.46},
+  {name:'Chitrathara K',            dept:'Surgical Oncology',             ip26:8.21,  op26:2.45,  fy26:10.66},
+  {name:'Fadl H Veerankutty',       dept:'Comprehensive Liver Care',      ip26:8.60,  op26:0.89,  fy26:9.49},
+  {name:'Jacob Varghese',           dept:'Joint Replacement & Sports Med',ip26:7.06,  op26:1.09,  fy26:8.15},
+  {name:'Jithin S Kumar',           dept:'Nephrology',                    ip26:6.20,  op26:1.81,  fy26:8.01},
+  {name:'Rajesh Simon',             dept:'Foot & Ankle',                  ip26:6.80,  op26:1.17,  fy26:7.97},
+  {name:'Roy J Mukkada',            dept:'Gastroenterology',              ip26:4.29,  op26:3.67,  fy26:7.96},
+  {name:'Anandkumar V',             dept:'Cardiology',                    ip26:5.80,  op26:1.84,  fy26:7.64},
+  {name:'George Jacob',             dept:'Joint Replacement & Sports Med',ip26:6.10,  op26:1.01,  fy26:7.11},
+  {name:'Shawn T Joseph',           dept:'Head And Neck Oncology',        ip26:5.80,  op26:0.96,  fy26:6.76},
+  {name:'Cibi Issac',               dept:'Cardiology',                    ip26:5.20,  op26:1.49,  fy26:6.69},
+  {name:'John Alexander',           dept:'General Medicine',              ip26:4.50,  op26:1.65,  fy26:6.15},
+  {name:'Appu Benny Thomas',        dept:'Joint Replacement & Sports Med',ip26:5.00,  op26:0.86,  fy26:5.86},
+  {name:'Joseph Edison',            dept:'Radiation Oncology',            ip26:0.12,  op26:5.68,  fy26:5.80},
+  {name:'Sujith D S',               dept:'Cardio Thoracic Surgery',       ip26:5.21,  op26:0.30,  fy26:5.51},
+  {name:'Jose Thomas Pappanacherry',dept:'Orthopedics',                   ip26:4.30,  op26:0.63,  fy26:4.93},
+  {name:'Krishna Kumar R',          dept:'Spine Surgery',                 ip26:3.75,  op26:0.86,  fy26:4.61},
+  {name:'Bindu Varghese',           dept:'Neurology',                     ip26:3.20,  op26:1.28,  fy26:4.48},
+  {name:'Shubha Achyutha',          dept:'Family Medicine',               ip26:0.00,  op26:4.21,  fy26:4.20},
+  {name:'Smitha Joy',               dept:'OB & Gynec.',                   ip26:3.20,  op26:0.90,  fy26:4.10},
+  {name:'Mahesh S',                 dept:'GI Surgery',                    ip26:3.50,  op26:0.48,  fy26:3.98},
+  {name:'Maya P',                   dept:'Gastroenterology',              ip26:1.90,  op26:1.60,  fy26:3.50},
+  {name:'Kartik Ganesh',            dept:'Nephrology',                    ip26:2.80,  op26:0.66,  fy26:3.46},
+  {name:'Aju Ajay',                 dept:'Cardiology',                    ip26:2.60,  op26:0.83,  fy26:3.43},
+  {name:'Vidya M V',                dept:'Neurology',                     ip26:2.30,  op26:1.01,  fy26:3.31},
+  {name:'Arun A',                   dept:'Pediatrics',                    ip26:2.50,  op26:0.74,  fy26:3.24},
+  {name:'Murali Krishna Menon',     dept:'Neurology',                     ip26:2.10,  op26:0.97,  fy26:3.07},
+  {name:'Arun Oommen',              dept:'Neuro Surgery',                 ip26:2.70,  op26:0.28,  fy26:2.98},
+  {name:'Antony Paul Chettupuzha',  dept:'Gastroenterology',              ip26:1.50,  op26:1.41,  fy26:2.91},
+  {name:'Mujeeb Rahman K K',        dept:'Pulmonology',                   ip26:2.21,  op26:0.60,  fy26:2.81},
+  {name:'Hari Lakshmanan P',        dept:'Pulmonology',                   ip26:2.57,  op26:0.18,  fy26:2.75},
+  {name:'Pradeep George Mathew',    dept:'Gastroenterology',              ip26:1.40,  op26:1.27,  fy26:2.67},
+  {name:'Idicula Mathews',          dept:'ENT',                           ip26:2.34,  op26:0.30,  fy26:2.64},
+  {name:'Harikrishna K',            dept:'Cardiology',                    ip26:1.80,  op26:0.63,  fy26:2.43},
+  {name:'Dennis P Jose',            dept:'Foot & Ankle',                  ip26:2.10,  op26:0.31,  fy26:2.41},
+  {name:'Abhijeet Wakure',          dept:'Plastic Surgery',               ip26:1.80,  op26:0.32,  fy26:2.12},
+  {name:'Xavier John Pulikkal',     dept:'Psychiatry',                    ip26:1.12,  op26:0.76,  fy26:1.88},
+  {name:'Abin Abraham Itty',        dept:'Dermatology & VD',              ip26:0.31,  op26:1.54,  fy26:1.85},
+  {name:'Gregory Pathrose',         dept:'Urology',                       ip26:1.50,  op26:0.32,  fy26:1.82},
+  {name:'Senthil R',                dept:'Nuclear Medicine',              ip26:0.89,  op26:0.72,  fy26:1.61},
+  {name:'Vivek Mathew',             dept:'Endocrinology',                 ip26:0.22,  op26:1.32,  fy26:1.54},
+  {name:'Vinay Jaison Chacko',      dept:'Orthopedics',                   ip26:1.30,  op26:0.18,  fy26:1.48},
+  {name:'Thresy George',            dept:'OB & Gynec.',                   ip26:1.00,  op26:0.37,  fy26:1.37},
+  {name:'Nirmala Thomas',           dept:'Pediatrics',                    ip26:1.00,  op26:0.37,  fy26:1.37},
+  {name:'Mohammed Iqbal K M',       dept:'Rheumatology & Gen. Medicine',  ip26:0.05,  op26:1.31,  fy26:1.36},
+  {name:'Ebin Rahman',              dept:'Ortho Oncology',                ip26:1.22,  op26:0.12,  fy26:1.34},
+  {name:'Srivatsan Thirumalai',     dept:'Neuro Surgery',                 ip26:1.10,  op26:0.14,  fy26:1.24},
+  {name:'Ajay Kumar Ajanvi',        dept:'Neuro Surgery',                 ip26:1.10,  op26:0.13,  fy26:1.23},
+  {name:'Moni Abraham Kuriakose',   dept:'Head And Neck Oncology',        ip26:1.00,  op26:0.20,  fy26:1.20},
+  {name:'Favaz Ali M',              dept:'Medical Oncology',              ip26:0.80,  op26:0.39,  fy26:1.19},
+  {name:'Abi Abraham',              dept:'Nephrology',                    ip26:0.90,  op26:0.26,  fy26:1.16},
+  {name:'Karthi A P',               dept:'Urology',                       ip26:0.90,  op26:0.25,  fy26:1.15},
+  {name:'Deepak T N',               dept:'Cardiology',                    ip26:0.70,  op26:0.40,  fy26:1.10},
+  {name:'Sarin Joseph',             dept:'Gastroenterology',              ip26:0.60,  op26:0.45,  fy26:1.05},
+  {name:'Siby Thomas',              dept:'General Surgery',               ip26:0.80,  op26:0.20,  fy26:1.00},
+  {name:'Rajeev Nair',              dept:'Orthopedics',                   ip26:0.75,  op26:0.20,  fy26:0.95},
+  {name:'Dinu Chandran',            dept:'Neurology',                     ip26:0.55,  op26:0.35,  fy26:0.90},
+  {name:'Priya Varghese',           dept:'OB & Gynec.',                   ip26:0.65,  op26:0.20,  fy26:0.85},
+  {name:'Lijo Philip',              dept:'Spine Surgery',                 ip26:0.70,  op26:0.10,  fy26:0.80},
+  {name:'Anand S',                  dept:'Pediatrics',                    ip26:0.55,  op26:0.22,  fy26:0.77},
+  {name:'Salim A',                  dept:'Pulmonology',                   ip26:0.50,  op26:0.22,  fy26:0.72},
+  {name:'Vishnu K',                 dept:'Cardiology',                    ip26:0.40,  op26:0.28,  fy26:0.68},
+  {name:'Geetha R',                 dept:'Endocrinology',                 ip26:0.10,  op26:0.55,  fy26:0.65},
+  {name:'Anup Mohan',               dept:'Dermatology & VD',              ip26:0.10,  op26:0.50,  fy26:0.60},
+  {name:'Thomas V',                 dept:'General Medicine',              ip26:0.30,  op26:0.28,  fy26:0.58},
+  {name:'Sreejith K',               dept:'Urology',                       ip26:0.40,  op26:0.15,  fy26:0.55},
+  {name:'Meera Jose',               dept:'Family Medicine',               ip26:0.00,  op26:0.52,  fy26:0.52},
+  {name:'Binu Sebastian',           dept:'Psychiatry',                    ip26:0.25,  op26:0.22,  fy26:0.47},
+  {name:'Harish T',                 dept:'ENT',                           ip26:0.30,  op26:0.15,  fy26:0.45},
+  {name:'Rekha P',                  dept:'Ophthalmology',                 ip26:0.15,  op26:0.28,  fy26:0.43},
+  {name:'Suresh M',                 dept:'Gastroenterology',              ip26:0.20,  op26:0.20,  fy26:0.40},
+  {name:'Aneesh G',                 dept:'Orthopedics',                   ip26:0.30,  op26:0.08,  fy26:0.38},
+  {name:'Jaya K',                   dept:'Pediatrics',                    ip26:0.20,  op26:0.16,  fy26:0.36},
+  {name:'Rajan T',                  dept:'General Medicine',              ip26:0.18,  op26:0.17,  fy26:0.35},
+  {name:'Preethi N',                dept:'Dermatology & VD',              ip26:0.05,  op26:0.28,  fy26:0.33},
+  {name:'Sunil K',                  dept:'Plastic Surgery',               ip26:0.22,  op26:0.10,  fy26:0.32},
+  {name:'Leena M',                  dept:'OB & Gynec.',                   ip26:0.20,  op26:0.10,  fy26:0.30}
+];
+
+var DR_MONTHS_FY26 = ['Apr-25','May-25','Jun-25','Jul-25','Aug-25','Sep-25','Oct-25','Nov-25','Dec-25','Jan-26'];
+var DR_MONTHLY_IP  = [22.93,25.94,22.94,27.10,28.08,27.90,27.61,24.47,26.55,30.36];
+var DR_MONTHLY_OP  = [9.34, 9.89, 8.94,10.72,10.76,10.16,10.14, 9.18, 9.66,10.91];
+var DR_MONTHLY_FB  = [1.33, 1.41, 1.32, 1.55, 1.52, 1.48, 1.46, 1.37, 1.43, 1.56];
+
+var DR_DEPT_FY26 = [
+  {name:'Medical Oncology',              ip:34.37, op:18.81, total:53.18},
+  {name:'Nephrology',                    ip:32.13, op:13.14, total:45.27},
+  {name:'Neuro Surgery',                 ip:26.10, op:2.74,  total:28.84},
+  {name:'GI Surgery',                    ip:20.38, op:2.05,  total:22.43},
+  {name:'Joint Replacement & Sports Med',ip:18.75, op:2.36,  total:21.11},
+  {name:'Cardiology',                    ip:16.12, op:4.28,  total:20.41},
+  {name:'Gastroenterology',              ip:10.63, op:7.72,  total:18.35},
+  {name:'Urology',                       ip:13.25, op:3.19,  total:16.44},
+  {name:'Minimally Invasive Surgery',    ip:11.71, op:0.75,  total:12.46},
+  {name:'Neurology',                     ip:7.97,  op:2.89,  total:10.86},
+  {name:'Surgical Oncology',             ip:8.21,  op:2.49,  total:10.70},
+  {name:'Foot & Ankle',                  ip:9.06,  op:1.31,  total:10.37},
+  {name:'Comprehensive Liver Care',      ip:8.78,  op:0.94,  total:9.72},
+  {name:'Head And Neck Oncology',        ip:7.70,  op:0.97,  total:8.67},
+  {name:'General Medicine',              ip:4.59,  op:2.88,  total:7.47},
+  {name:'Orthopedics',                   ip:6.45,  op:0.56,  total:7.01},
+  {name:'OB & Gynec.',                   ip:4.85,  op:1.87,  total:6.72},
+  {name:'Pediatrics',                    ip:4.25,  op:2.08,  total:6.33},
+  {name:'Radiation Oncology',            ip:0.12,  op:5.68,  total:5.80},
+  {name:'Cardio Thoracic Surgery',       ip:5.21,  op:0.31,  total:5.52},
+  {name:'Spine Surgery',                 ip:3.75,  op:0.86,  total:4.61},
+  {name:'Plastic Surgery',               ip:4.02,  op:0.42,  total:4.44},
+  {name:'Family Medicine',               ip:0.00,  op:4.21,  total:4.20},
+  {name:'ENT',                           ip:2.34,  op:0.92,  total:3.26},
+  {name:'Pulmonology',                   ip:2.57,  op:0.50,  total:3.07}
+];
+
+var DR_TARGETS = {};
+var DR_ACTUALS = {};
+var drActiveDept = 'All';
+var drCharts = {};
+
+function drDefaultTarget(d){
+  var ann = d.fy26 * 1.2;
+  var gr = d.fy26 >= 5 ? 0.20 : d.fy26 >= 1 ? 0.15 : 0.10;
+  return parseFloat((ann * (1 + gr)).toFixed(2));
+}
+
+function drLoadState(){
+  try{ DR_TARGETS = JSON.parse(localStorage.getItem('lhrc_dr_targets')||'{}'); }catch(e){ DR_TARGETS={}; }
+  try{ DR_ACTUALS = JSON.parse(localStorage.getItem('lhrc_dr_actuals')||'{}'); }catch(e){ DR_ACTUALS={}; }
+}
+
+function drSaveState(){
+  localStorage.setItem('lhrc_dr_targets', JSON.stringify(DR_TARGETS));
+  localStorage.setItem('lhrc_dr_actuals', JSON.stringify(DR_ACTUALS));
+}
+
+function drShowTab(id, el){
+  document.querySelectorAll('.drpage').forEach(function(p){ p.style.display='none'; });
+  document.querySelectorAll('.tab-sub-bar .sub-tab').forEach(function(t){ t.classList.remove('active'); });
+  document.getElementById('drpage-'+id).style.display='';
+  if(el) el.classList.add('active');
+  if(id==='overview')  renderDrOverview();
+  if(id==='alldocs')   renderDrAllTable();
+  if(id==='deptview')  renderDrDeptTable();
+  if(id==='fy27')      renderDrTargetsTable();
+  if(id==='actuals')   { buildDrSelect(); renderDrActualsSummary(); }
+}
+
+function drGetTarget(d){
+  return DR_TARGETS[d.name] !== undefined ? DR_TARGETS[d.name] : drDefaultTarget(d);
+}
+
+function drGrowthColor(pct){
+  return pct >= 20 ? '#27ae60' : pct >= 10 ? '#e67e22' : '#e74c3c';
+}
+
+function renderDrOverview(){
+  // Destroy old charts
+  ['drTop15Chart','drDeptChart','drMonthChart','drIpOpChart'].forEach(function(id){
+    if(drCharts[id]){ drCharts[id].destroy(); delete drCharts[id]; }
+  });
+
+  // Top 15 doctors
+  var sorted = DOCTORS.slice().sort(function(a,b){ return b.fy26-a.fy26; }).slice(0,15);
+  var c1 = document.getElementById('drTop15Chart');
+  if(c1){
+    drCharts['drTop15Chart'] = new Chart(c1, {
+      type:'bar',
+      data:{
+        labels: sorted.map(function(d){ return d.name; }),
+        datasets:[
+          {label:'IP Revenue',data:sorted.map(function(d){return d.ip26;}),backgroundColor:'rgba(26,58,92,0.85)',borderRadius:3},
+          {label:'OP Revenue',data:sorted.map(function(d){return d.op26;}),backgroundColor:'rgba(230,126,34,0.75)',borderRadius:3}
+        ]
+      },
+      options:{
+        indexAxis:'y', responsive:true, maintainAspectRatio:false,
+        plugins:{legend:{position:'bottom'},title:{display:true,text:'FY26 YTD (Apr-25–Jan-26) · ₹ Crores',font:{size:10},color:'#718096'}},
+        scales:{
+          x:{stacked:true,title:{display:true,text:'₹ Crores',font:{size:9},color:'#718096'}},
+          y:{stacked:true,ticks:{font:{size:9}}}
+        }
+      }
+    });
+  }
+
+  // Dept chart
+  var c2 = document.getElementById('drDeptChart');
+  if(c2){
+    var topDepts = DR_DEPT_FY26.slice(0,12);
+    drCharts['drDeptChart'] = new Chart(c2, {
+      type:'bar',
+      data:{
+        labels: topDepts.map(function(d){ return d.name; }),
+        datasets:[
+          {label:'IP',data:topDepts.map(function(d){return d.ip;}),backgroundColor:'rgba(26,58,92,0.85)',borderRadius:3},
+          {label:'OP',data:topDepts.map(function(d){return d.op;}),backgroundColor:'rgba(230,126,34,0.75)',borderRadius:3}
+        ]
+      },
+      options:{
+        indexAxis:'y', responsive:true, maintainAspectRatio:false,
+        plugins:{legend:{position:'bottom'},title:{display:true,text:'Top 12 Departments · FY26 YTD ₹ Cr',font:{size:10},color:'#718096'}},
+        scales:{
+          x:{stacked:true,title:{display:true,text:'₹ Crores',font:{size:9},color:'#718096'}},
+          y:{stacked:true,ticks:{font:{size:9}}}
+        }
+      }
+    });
+  }
+
+  // Monthly trend
+  var c3 = document.getElementById('drMonthChart');
+  if(c3){
+    drCharts['drMonthChart'] = new Chart(c3, {
+      type:'line',
+      data:{
+        labels: DR_MONTHS_FY26,
+        datasets:[
+          {label:'IP',data:DR_MONTHLY_IP,borderColor:'#1a3a5c',backgroundColor:'rgba(26,58,92,0.08)',fill:true,tension:0.3,pointRadius:4},
+          {label:'OP',data:DR_MONTHLY_OP,borderColor:'#e67e22',backgroundColor:'rgba(230,126,34,0.08)',fill:true,tension:0.3,pointRadius:4},
+          {label:'F&B',data:DR_MONTHLY_FB,borderColor:'#27ae60',backgroundColor:'rgba(39,174,96,0.08)',fill:true,tension:0.3,pointRadius:4}
+        ]
+      },
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        plugins:{legend:{position:'bottom'},title:{display:true,text:'Monthly IP · OP · F&B Revenue (₹ Cr)',font:{size:10},color:'#718096'}},
+        scales:{
+          y:{title:{display:true,text:'₹ Crores',font:{size:9},color:'#718096'}},
+          x:{title:{display:true,text:'Month'}}
+        }
+      }
+    });
+  }
+
+  // IP vs OP split top 12
+  var c4 = document.getElementById('drIpOpChart');
+  if(c4){
+    var top12 = DOCTORS.slice().sort(function(a,b){ return b.fy26-a.fy26; }).slice(0,12);
+    drCharts['drIpOpChart'] = new Chart(c4, {
+      type:'bar',
+      data:{
+        labels: top12.map(function(d){ return d.name.split(' ')[0]+' '+((d.name.split(' ')[1]||'')[0]||''); }),
+        datasets:[
+          {label:'IP',data:top12.map(function(d){return d.ip26;}),backgroundColor:'rgba(26,58,92,0.85)',borderRadius:3},
+          {label:'OP',data:top12.map(function(d){return d.op26;}),backgroundColor:'rgba(230,126,34,0.75)',borderRadius:3}
+        ]
+      },
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        plugins:{legend:{position:'bottom'},title:{display:true,text:'IP vs OP Split · Top 12 Doctors (₹ Cr)',font:{size:10},color:'#718096'}},
+        scales:{
+          x:{stacked:true,title:{display:true,text:'Doctor',font:{size:9},color:'#718096'}},
+          y:{stacked:true,title:{display:true,text:'₹ Crores',font:{size:9},color:'#718096'}}
+        }
+      }
+    });
+  }
+}
+
+function buildDrDeptChips(){
+  var depts = ['All'].concat(DR_DEPT_FY26.map(function(d){ return d.name; }));
+  var el = document.getElementById('drDeptChips');
+  if(!el) return;
+  el.innerHTML = depts.map(function(d){
+    var active = d === drActiveDept;
+    return '<span onclick="drSetDept(\''+d.replace(/'/g,"\\'")+'\')" style="cursor:pointer;display:inline-block;padding:4px 10px;border-radius:12px;font-size:0.63rem;font-weight:600;margin:2px;background:'+(active?'#1a3a5c':'#f0f4f8')+';color:'+(active?'white':'#718096')+';border:1px solid '+(active?'#1a3a5c':'#e2e8f0')+'">'+d+'</span>';
+  }).join('');
+}
+
+function drSetDept(dept){
+  drActiveDept = dept;
+  buildDrDeptChips();
+  renderDrAllTable();
+}
+
+function renderDrAllTable(){
+  buildDrDeptChips();
+  var q = (document.getElementById('drSearch')||{value:''}).value.toLowerCase();
+  var rows = DOCTORS.filter(function(d){
+    var deptOk = drActiveDept === 'All' || d.dept === drActiveDept;
+    var searchOk = !q || d.name.toLowerCase().includes(q) || d.dept.toLowerCase().includes(q);
+    return deptOk && searchOk;
+  }).sort(function(a,b){ return b.fy26-a.fy26; });
+
+  var html = rows.map(function(d,i){
+    var tgt = drGetTarget(d);
+    var ann = d.fy26 * 1.2;
+    var grPct = ann > 0 ? ((tgt-ann)/ann*100).toFixed(1) : '—';
+    var rowBg = i%2===0 ? 'white' : '#f7fafc';
+    return '<tr style="background:'+rowBg+'">'
+      +'<td style="text-align:left;background:'+rowBg+'">' + d.name + '</td>'
+      +'<td style="text-align:left;font-size:0.63rem;color:#718096">' + d.dept + '</td>'
+      +'<td>' + d.ip26.toFixed(2) + '</td>'
+      +'<td>' + d.op26.toFixed(2) + '</td>'
+      +'<td style="font-weight:700;color:#1a3a5c">' + d.fy26.toFixed(2) + '</td>'
+      +'<td style="font-weight:700;color:#27ae60">' + tgt.toFixed(2) + '</td>'
+      +'<td style="color:'+drGrowthColor(parseFloat(grPct))+'">'+grPct+'%</td>'
+      +'</tr>';
+  }).join('');
+  var tbody = document.getElementById('drAllTbody');
+  if(tbody) tbody.innerHTML = html || '<tr><td colspan="7" style="text-align:center;color:#a0aec0;padding:20px">No results</td></tr>';
+}
+
+function renderDrDeptTable(){
+  var html = DR_DEPT_FY26.map(function(dept){
+    var docs = DOCTORS.filter(function(d){ return d.dept === dept.name; });
+    var deptTgt = docs.reduce(function(s,d){ return s + drGetTarget(d); }, 0);
+    var ann = dept.total * 1.2;
+    var grPct = ann > 0 ? ((deptTgt - ann) / ann * 100).toFixed(1) : '—';
+    return '<tr>'
+      +'<td style="text-align:left;font-weight:600">' + dept.name + '</td>'
+      +'<td>' + dept.ip.toFixed(2) + '</td>'
+      +'<td>' + dept.op.toFixed(2) + '</td>'
+      +'<td style="font-weight:700;color:#1a3a5c">' + dept.total.toFixed(2) + '</td>'
+      +'<td style="text-align:center">' + docs.length + '</td>'
+      +'<td style="font-weight:700;color:#27ae60">' + deptTgt.toFixed(2) + '</td>'
+      +'<td style="color:'+drGrowthColor(parseFloat(grPct))+'">'+grPct+'%</td>'
+      +'</tr>';
+  }).join('');
+  var tbody = document.getElementById('drDeptTbody');
+  if(tbody) tbody.innerHTML = html;
+}
+
+function renderDrTargetsTable(){
+  var sorted = DOCTORS.slice().sort(function(a,b){ return b.fy26-a.fy26; });
+  var html = sorted.map(function(d){
+    var defTgt = drDefaultTarget(d);
+    var curTgt = drGetTarget(d);
+    var inputId = 'drTgt_' + d.name.replace(/\s+/g,'_');
+    return '<tr>'
+      +'<td style="text-align:left">' + d.name + '</td>'
+      +'<td style="text-align:left;font-size:0.63rem;color:#718096">' + d.dept + '</td>'
+      +'<td>' + d.fy26.toFixed(2) + '</td>'
+      +'<td>' + defTgt.toFixed(2) + '</td>'
+      +'<td style="font-weight:700;color:#27ae60">' + curTgt.toFixed(2) + '</td>'
+      +'<td><input type="number" id="'+inputId+'" step="0.01" value="'+curTgt.toFixed(2)+'"'
+      +' style="width:80px;padding:4px 6px;border:1px solid #e2e8f0;border-radius:4px;font-size:0.68rem;text-align:right">'
+      +' <button onclick="drSaveTarget(\''+d.name.replace(/'/g,"\\'")+'\',\''+inputId+'\')" '
+      +' style="padding:3px 8px;background:#1a3a5c;color:white;border:none;border-radius:4px;font-size:0.6rem;cursor:pointer">Save</button>'
+      +'</td>'
+      +'</tr>';
+  }).join('');
+  var tbody = document.getElementById('drTargetTbody');
+  if(tbody) tbody.innerHTML = html;
+}
+
+function drSaveTarget(name, inputId){
+  var val = parseFloat(document.getElementById(inputId).value);
+  if(isNaN(val)||val<0){ alert('Invalid target value'); return; }
+  DR_TARGETS[name] = val;
+  drSaveState();
+  renderDrTargetsTable();
+}
+
+function buildDrSelect(){
+  var sel = document.getElementById('drActDoctor');
+  if(!sel) return;
+  var sorted = DOCTORS.slice().sort(function(a,b){ return a.name.localeCompare(b.name); });
+  sel.innerHTML = '<option value="">— select doctor —</option>'
+    + sorted.map(function(d){ return '<option value="'+d.name+'">'+d.name+' ('+d.dept+')</option>'; }).join('');
+}
+
+function saveDrActual(){
+  var doc = document.getElementById('drActDoctor').value;
+  var mon = document.getElementById('drActMonth').value;
+  var ip  = parseFloat(document.getElementById('drActIP').value)||0;
+  var op  = parseFloat(document.getElementById('drActOP').value)||0;
+  if(!doc){ alert('Please select a doctor'); return; }
+  var key = doc + '|' + mon;
+  DR_ACTUALS[key] = {doctor:doc, month:mon, ip:ip, op:op, total:ip+op};
+  drSaveState();
+  document.getElementById('drActMsg').textContent = '✅ Saved for '+doc+' — '+mon;
+  setTimeout(function(){ document.getElementById('drActMsg').textContent=''; }, 3000);
+  renderDrActualsSummary();
+}
+
+function renderDrActualsSummary(){
+  var entries = Object.values(DR_ACTUALS).sort(function(a,b){ return a.doctor.localeCompare(b.doctor)||a.month.localeCompare(b.month); });
+  if(!entries.length){
+    document.getElementById('drActSummary').innerHTML = '<div style="color:#a0aec0;font-size:0.72rem;padding:12px">No actuals entered yet.</div>';
+    return;
+  }
+  var rows = entries.map(function(e){
+    var key = e.doctor+'|'+e.month;
+    return '<tr>'
+      +'<td style="text-align:left">'+e.doctor+'</td>'
+      +'<td>'+e.month+'</td>'
+      +'<td>'+e.ip.toFixed(2)+'</td>'
+      +'<td>'+e.op.toFixed(2)+'</td>'
+      +'<td style="font-weight:700">'+e.total.toFixed(2)+'</td>'
+      +'<td><button onclick="drDeleteActual(\''+key.replace(/'/g,"\\'")+'\')" style="padding:2px 8px;background:#fee2e2;color:#dc2626;border:1px solid #fca5a5;border-radius:4px;font-size:0.6rem;cursor:pointer">✕ Remove</button></td>'
+      +'</tr>';
+  }).join('');
+  document.getElementById('drActSummary').innerHTML = '<table class="fin-tbl"><thead><tr>'
+    +'<th style="text-align:left">Doctor</th><th>Month</th><th>IP (₹Cr)</th><th>OP (₹Cr)</th><th>Total</th><th>Action</th>'
+    +'</tr></thead><tbody>'+rows+'</tbody></table>';
+}
+
+function drDeleteActual(key){
+  delete DR_ACTUALS[key];
+  drSaveState();
+  renderDrActualsSummary();
+}
+
+// Initialise doctor tracker state on load
+drLoadState();
 </script>
 </body>
 </html>
