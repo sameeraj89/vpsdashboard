@@ -593,7 +593,8 @@ body {
   /* ─────────────────────────────────
      SET YOUR PASSWORD BELOW
   ───────────────────────────────── */
-  var PASSWORD = 'Lakeshore2026';
+  var PW_DASHBOARD = 'Lakeshore2026';
+  var PW_OPS       = 'Lakeshoreops2026';
   /* ─────────────────────────────────*/
 
   var KEY  = 'vps_si_auth';
@@ -616,12 +617,24 @@ body {
     setTimeout(function(){ gate.remove(); }, 460);
   }
 
+  function redirectOps() {
+    gate.classList.add('out');
+    document.body.style.overflow = '';
+    setTimeout(function(){ window.location.href = 'ops-tracker.html'; }, 460);
+  }
+
   function attempt() {
-    if (pw.value === PASSWORD) {
+    var val = pw.value;
+    if (val === PW_DASHBOARD) {
       err.classList.remove('show');
       btn.disabled = true;
       btn.textContent = '✓ Access Granted';
       unlock();
+    } else if (val === PW_OPS) {
+      err.classList.remove('show');
+      btn.disabled = true;
+      btn.textContent = '✓ Opening Ops Tracker…';
+      redirectOps();
     } else {
       err.classList.add('show');
       pw.classList.add('err');
