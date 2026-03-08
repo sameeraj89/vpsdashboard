@@ -82,6 +82,8 @@ table.fin-tbl tr.row-gross td{background:#f0fdf4;font-weight:600;color:#27ae60}
 table.fin-tbl tr.row-gross td:first-child{background:#f0fdf4;color:#27ae60}
 table.fin-tbl tr.row-total td{background:#1a3a5c;color:white;font-weight:700;border-top:2px solid #e67e22}
 table.fin-tbl tr.row-total td:first-child{background:#0d2137;color:white}
+table.fin-tbl tr.row-sub td{background:#fafbfd;color:#718096;font-size:0.63rem;border-bottom:1px solid #f0f4f8}
+table.fin-tbl tr.row-sub td:first-child{background:#fafbfd;color:#718096}
 .var-pos{color:#27ae60}.var-neg{color:#e74c3c}.act-empty{color:#cbd5e0;font-style:italic}
 
 /* ── CHART CONTAINERS ── */
@@ -713,31 +715,32 @@ var ANN_CAPEX  = 82.21;
 
 // Department data (FY27 UC annual, ₹ Cr) — fy26 = BRM FY26 YTD actuals (10 months Apr-25 to Jan-26)
 var DEPT_DATA = [
-  {name:'Medical Oncology',       cat:'Oncology',    uc:80.0,  bc:73.1, fy26:53.18, fy26ip:34.37, fy26op:18.81},
-  {name:'Nephrology',             cat:'Renal',       uc:69.5,  bc:60.2, fy26:45.27, fy26ip:32.13, fy26op:13.14},
-  {name:'Neuro Surgery',          cat:'Neuro',       uc:44.5,  bc:38.1, fy26:28.84, fy26ip:26.10, fy26op:2.74},
-  {name:'GI Surgery',             cat:'Surgery',     uc:34.5,  bc:29.8, fy26:22.43, fy26ip:20.38, fy26op:2.05},
-  {name:'Joint Repl. & Sports',   cat:'Ortho',       uc:33.5,  bc:30.2, fy26:21.11, fy26ip:18.75, fy26op:2.36},
-  {name:'Cardiology',             cat:'Cardio',      uc:30.0,  bc:27.3, fy26:20.41, fy26ip:16.12, fy26op:4.28},
-  {name:'Gastroenterology',       cat:'GI',          uc:27.0,  bc:24.6, fy26:18.35, fy26ip:10.63, fy26op:7.72},
-  {name:'Urology',                cat:'Surgery',     uc:23.5,  bc:21.3, fy26:16.44, fy26ip:13.25, fy26op:3.19},
-  {name:'Head & Neck Oncology',   cat:'Oncology',    uc:20.5,  bc:11.8, fy26:8.67,  fy26ip:7.70,  fy26op:0.97},
-  {name:'Min. Invasive Surgery',  cat:'Surgery',     uc:19.0,  bc:17.3, fy26:12.46, fy26ip:11.71, fy26op:0.75},
-  {name:'Neurology',              cat:'Neuro',       uc:15.0,  bc:13.7, fy26:10.86, fy26ip:7.97,  fy26op:2.89},
-  {name:'Surgical Oncology',      cat:'Oncology',    uc:13.5,  bc:12.1, fy26:10.70, fy26ip:8.21,  fy26op:2.49},
-  {name:'Foot & Ankle',           cat:'Ortho',       uc:15.3,  bc:13.9, fy26:10.37, fy26ip:9.06,  fy26op:1.31},
-  {name:'Liver Care',             cat:'GI',          uc:14.0,  bc:12.8, fy26:9.72,  fy26ip:8.78,  fy26op:0.94},
-  {name:'General Medicine',       cat:'Medicine',    uc:10.8,  bc:9.9,  fy26:7.47,  fy26ip:4.59,  fy26op:2.88},
-  {name:'Orthopedics',            cat:'Ortho',       uc:9.4,   bc:8.5,  fy26:7.01,  fy26ip:6.45,  fy26op:0.56},
-  {name:'OB & Gynaecology',       cat:'OBG',         uc:9.5,   bc:8.7,  fy26:6.72,  fy26ip:4.85,  fy26op:1.87},
-  {name:'Paediatrics',            cat:'Paeds',       uc:9.4,   bc:8.6,  fy26:6.33,  fy26ip:4.25,  fy26op:2.08},
-  {name:'Radiation Oncology',     cat:'Oncology',    uc:9.2,   bc:7.8,  fy26:5.80,  fy26ip:0.12,  fy26op:5.68},
-  {name:'Cardio Thoracic Surgery',cat:'Surgery',     uc:8.5,   bc:7.5,  fy26:5.52,  fy26ip:5.21,  fy26op:0.31},
-  {name:'Spine Surgery',          cat:'Neuro',       uc:7.0,   bc:6.2,  fy26:4.61,  fy26ip:3.75,  fy26op:0.86},
-  {name:'Pulmonology',            cat:'Medicine',    uc:9.0,   bc:8.1,  fy26:5.88,  fy26ip:4.78,  fy26op:1.10},
-  {name:'Diagnostics & Imaging',  cat:'Diagnostics', uc:42.0,  bc:38.0, fy26:35.0,  fy26ip:25.0,  fy26op:10.0},
-  {name:'Pharmacy & OTC',         cat:'Pharmacy',    uc:20.9,  bc:19.0, fy26:17.5,  fy26ip:8.0,   fy26op:9.5},
-  {name:'Other Specialties',      cat:'Other',       uc:15.0,  bc:13.5, fy26:12.0,  fy26ip:6.0,   fy26op:6.0}
+  // UC sums to 575.0 Cr · BC sums to 525.7 Cr
+  {name:'Medical Oncology',       cat:'Oncology',    uc:77.9,  bc:73.6, fy26:53.18, fy26ip:34.37, fy26op:18.81},
+  {name:'Nephrology',             cat:'Renal',       uc:67.7,  bc:60.6, fy26:45.27, fy26ip:32.13, fy26op:13.14},
+  {name:'Neuro Surgery',          cat:'Neuro',       uc:43.3,  bc:38.4, fy26:28.84, fy26ip:26.10, fy26op:2.74},
+  {name:'GI Surgery',             cat:'Surgery',     uc:33.6,  bc:30.0, fy26:22.43, fy26ip:20.38, fy26op:2.05},
+  {name:'Joint Repl. & Sports',   cat:'Ortho',       uc:32.6,  bc:30.4, fy26:21.11, fy26ip:18.75, fy26op:2.36},
+  {name:'Cardiology',             cat:'Cardio',      uc:29.2,  bc:27.5, fy26:20.41, fy26ip:16.12, fy26op:4.28},
+  {name:'Gastroenterology',       cat:'GI',          uc:26.3,  bc:24.8, fy26:18.35, fy26ip:10.63, fy26op:7.72},
+  {name:'Urology',                cat:'Surgery',     uc:22.9,  bc:21.5, fy26:16.44, fy26ip:13.25, fy26op:3.19},
+  {name:'Head & Neck Oncology',   cat:'Oncology',    uc:20.0,  bc:11.9, fy26:8.67,  fy26ip:7.70,  fy26op:0.97},
+  {name:'Min. Invasive Surgery',  cat:'Surgery',     uc:18.5,  bc:17.4, fy26:12.46, fy26ip:11.71, fy26op:0.75},
+  {name:'Neurology',              cat:'Neuro',       uc:14.6,  bc:13.8, fy26:10.86, fy26ip:7.97,  fy26op:2.89},
+  {name:'Surgical Oncology',      cat:'Oncology',    uc:13.1,  bc:12.2, fy26:10.70, fy26ip:8.21,  fy26op:2.49},
+  {name:'Foot & Ankle',           cat:'Ortho',       uc:14.9,  bc:14.0, fy26:10.37, fy26ip:9.06,  fy26op:1.31},
+  {name:'Liver Care',             cat:'GI',          uc:13.6,  bc:12.9, fy26:9.72,  fy26ip:8.78,  fy26op:0.94},
+  {name:'General Medicine',       cat:'Medicine',    uc:10.5,  bc:10.0, fy26:7.47,  fy26ip:4.59,  fy26op:2.88},
+  {name:'Orthopedics',            cat:'Ortho',       uc:9.2,   bc:8.6,  fy26:7.01,  fy26ip:6.45,  fy26op:0.56},
+  {name:'OB & Gynaecology',       cat:'OBG',         uc:9.3,   bc:8.7,  fy26:6.72,  fy26ip:4.85,  fy26op:1.87},
+  {name:'Paediatrics',            cat:'Paeds',       uc:9.2,   bc:8.6,  fy26:6.33,  fy26ip:4.25,  fy26op:2.08},
+  {name:'Radiation Oncology',     cat:'Oncology',    uc:9.0,   bc:7.9,  fy26:5.80,  fy26ip:0.12,  fy26op:5.68},
+  {name:'Cardio Thoracic Surgery',cat:'Surgery',     uc:8.3,   bc:7.6,  fy26:5.52,  fy26ip:5.21,  fy26op:0.31},
+  {name:'Spine Surgery',          cat:'Neuro',       uc:6.8,   bc:6.2,  fy26:4.61,  fy26ip:3.75,  fy26op:0.86},
+  {name:'Pulmonology',            cat:'Medicine',    uc:8.8,   bc:8.2,  fy26:5.88,  fy26ip:4.78,  fy26op:1.10},
+  {name:'Diagnostics & Imaging',  cat:'Diagnostics', uc:40.9,  bc:38.3, fy26:35.0,  fy26ip:25.0,  fy26op:10.0},
+  {name:'Pharmacy & OTC',         cat:'Pharmacy',    uc:20.3,  bc:19.1, fy26:17.5,  fy26ip:8.0,   fy26op:9.5},
+  {name:'Other Specialties',      cat:'Other',       uc:14.5,  bc:13.5, fy26:12.0,  fy26ip:6.0,   fy26op:6.0}
 ];
 
 // Consultant data — FY26 YTD actuals + FY27 UC targets (₹ Cr)
@@ -1040,6 +1043,10 @@ function sum(arr){return arr.reduce((a,b)=>a+b,0);}
 function getMonthlyPlan(){
   var p={};
   p.revenue = REV_PLAN.slice();
+  // Revenue sub-components (FY26 BRM mix: IP 69.8%, OP 26.4%, F&B 3.8%)
+  p.rev_ip   = REV_PLAN.map(function(r){ return parseFloat((r*0.698).toFixed(2)); });
+  p.rev_op   = REV_PLAN.map(function(r){ return parseFloat((r*0.264).toFixed(2)); });
+  p.rev_fb   = REV_PLAN.map(function(r){ return parseFloat((r*0.038).toFixed(2)); });
   p.cogs = REV_PLAN.map(r=>r*(ANN_COGS/ANN_REV));
   p.grossProfit = p.revenue.map((r,i)=>r-p.cogs[i]);
   p.doctorCost = REV_PLAN.map(r=>r*(ANN_DOC/ANN_REV));
@@ -1122,6 +1129,9 @@ function renderPL(){
   // Build P&L table
   var rows=[
     {key:'revenue',     label:'Revenue',             section:false, gross:false, ebitda:false, isCost:false},
+    {key:'rev_ip',      label:'     ↳ IP Revenue',   section:false, gross:false, ebitda:false, isCost:false, sub:true},
+    {key:'rev_op',      label:'     ↳ OP Revenue',   section:false, gross:false, ebitda:false, isCost:false, sub:true},
+    {key:'rev_fb',      label:'     ↳ Food & Bev.',  section:false, gross:false, ebitda:false, isCost:false, sub:true},
     {key:'cogs',        label:'  — Consumption/COGS',section:false, gross:false, ebitda:false, isCost:true},
     {key:'grossProfit', label:'Gross Profit',         section:false, gross:true,  ebitda:false, isCost:false},
     {key:'doctorCost',  label:'  — Doctor Cost',      section:false, gross:false, ebitda:false, isCost:true},
@@ -1193,8 +1203,9 @@ function renderPL(){
       return a;
     });
 
+    if(row.sub) cls='row-sub';
     html+='<tr class="'+cls+'">';
-    html+='<td>'+row.label+'</td>';
+    html+='<td style="'+(row.sub?'font-size:0.63rem;color:#718096;font-weight:400':'')+'">'+row.label+'</td>';
 
     var fyActSum=0, fyActCount=0;
     MONTHS.forEach(function(m,i){
