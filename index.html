@@ -258,14 +258,14 @@ body {
   flex-wrap: wrap;
 }
 .footer-center { flex: 1; text-align: center; }
-.footer-ops-link {
+.footer-link {
   display: inline-flex; align-items: center; gap: 5px;
   color: rgba(255,255,255,0.35); text-decoration: none;
   font-size: 0.56rem; border: 1px solid rgba(255,255,255,0.15);
-  padding: 4px 10px; border-radius: 4px;
-  transition: color .2s, border-color .2s; white-space: nowrap;
+  padding: 4px 10px; border-radius: 4px; transition: color .2s, border-color .2s;
+  white-space: nowrap;
 }
-.footer-ops-link:hover { color: rgba(255,255,255,0.75); border-color: rgba(255,255,255,0.4); }
+.footer-link:hover { color: rgba(255,255,255,0.75); border-color: rgba(255,255,255,0.4); }
 
 /* ─── RESPONSIVE ──────────────────────────────────── */
 @media (max-width: 720px) {
@@ -596,9 +596,9 @@ body {
 </div><!-- /main -->
 
 <div class="footer">
-  <div style="width:120px;"></div>
+  <a class="footer-link" href="LHRC_Executive_Dashboard.html">📈 Exec Dashboard</a>
   <div class="footer-center">VPS Lakeshore Hospital &amp; Research Centre &nbsp;&middot;&nbsp; Confidential &mdash; Internal Use Only &nbsp;&middot;&nbsp; Last Updated: 4 March 2026</div>
-  <a class="footer-ops-link" href="ops-tracker.html">⚡ Ops Tracker →</a>
+  <a class="footer-link" href="finance-tracker.html">📊 Finance Tracker →</a>
 </div>
 
 
@@ -608,8 +608,7 @@ body {
   /* ─────────────────────────────────
      SET YOUR PASSWORD BELOW
   ───────────────────────────────── */
-  var PW_DASHBOARD = 'Lakeshore2026';
-  var PW_OPS       = 'Ops@vpsls';
+  var PASSWORD = 'Lakeshore2026';
   /* ─────────────────────────────────*/
 
   var KEY  = 'vps_si_auth';
@@ -632,25 +631,12 @@ body {
     setTimeout(function(){ gate.remove(); }, 460);
   }
 
-  function redirectOps() {
-    sessionStorage.setItem('vps_ops_auth', 'ok');
-    gate.classList.add('out');
-    document.body.style.overflow = '';
-    setTimeout(function(){ window.location.href = 'ops-tracker.html'; }, 460);
-  }
-
   function attempt() {
-    var val = pw.value;
-    if (val === PW_DASHBOARD) {
+    if (pw.value === PASSWORD) {
       err.classList.remove('show');
       btn.disabled = true;
       btn.textContent = '✓ Access Granted';
       unlock();
-    } else if (val === PW_OPS) {
-      err.classList.remove('show');
-      btn.disabled = true;
-      btn.textContent = '✓ Opening Ops Tracker…';
-      redirectOps();
     } else {
       err.classList.add('show');
       pw.classList.add('err');
