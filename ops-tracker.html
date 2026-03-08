@@ -213,6 +213,35 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .team-remove-btn{background:none;border:none;color:#ccc;cursor:pointer;font-size:1rem;padding:0 4px;transition:color .15s;}
 .team-remove-btn:hover{color:var(--crimson);}
 
+/* ── OPS GATE ── */
+#opsGate{position:fixed;inset:0;z-index:9999;background:linear-gradient(135deg,#001228 0%,#003060 50%,#00101f 100%);display:flex;align-items:center;justify-content:center;padding:24px;}
+#opsGate::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 60% 40% at 20% 80%,rgba(0,114,188,.18) 0%,transparent 70%),radial-gradient(ellipse 40% 60% at 80% 20%,rgba(91,184,232,.12) 0%,transparent 70%);}
+#opsGate::after{content:'';position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(0,114,188,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(0,114,188,.05) 1px,transparent 1px);background-size:48px 48px;}
+.og-card{background:rgba(255,255,255,.05);border:1px solid rgba(91,184,232,.22);border-radius:16px;padding:44px 44px 36px;width:100%;max-width:420px;position:relative;z-index:1;backdrop-filter:blur(20px);box-shadow:0 0 0 1px rgba(255,255,255,.04) inset,0 24px 80px rgba(0,0,0,.6);animation:gIn .5s cubic-bezier(.22,1,.36,1) both;}
+@keyframes gIn{from{opacity:0;transform:translateY(20px) scale(.97)}to{opacity:1;transform:none}}
+.og-mark{display:flex;align-items:center;justify-content:center;width:160px;height:56px;border-radius:8px;margin:0 auto 18px;background:#fff;box-shadow:0 8px 24px rgba(0,114,188,.35);padding:8px 12px;}
+.og-mark img{width:100%;height:100%;object-fit:contain;}
+.og-title{font-size:1.05rem;font-weight:700;color:#fff;text-align:center;letter-spacing:-.3px;margin-bottom:4px;}
+.og-sub{font-size:.62rem;color:#5BB8E8;text-align:center;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:22px;}
+.og-rule{height:1px;background:linear-gradient(90deg,transparent,rgba(91,184,232,.4),transparent);margin-bottom:22px;}
+.og-lbl{font-size:.64rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:8px;}
+.og-wrap{position:relative;margin-bottom:10px;}
+#ogpw{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(91,184,232,.25);border-radius:8px;padding:13px 44px 13px 14px;font-size:.92rem;color:#fff;font-family:'Inter',system-ui,sans-serif;letter-spacing:3px;outline:none;transition:border-color .2s,box-shadow .2s;}
+#ogpw::placeholder{letter-spacing:0;color:rgba(255,255,255,.25);font-size:.8rem;}
+#ogpw:focus{border-color:rgba(91,184,232,.6);box-shadow:0 0 0 3px rgba(91,184,232,.12);background:rgba(255,255,255,.09);}
+#ogpw.err{border-color:rgba(200,16,62,.7);box-shadow:0 0 0 3px rgba(200,16,62,.15);animation:gShake .4s ease;}
+@keyframes gShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+.og-eye{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:rgba(255,255,255,.35);font-size:.9rem;padding:2px;line-height:1;transition:color .2s;}
+.og-eye:hover{color:rgba(255,255,255,.7);}
+#ogerr{font-size:.7rem;color:#ff6b86;min-height:16px;margin-bottom:8px;opacity:0;transition:opacity .2s;display:flex;align-items:center;gap:5px;}
+#ogerr.show{opacity:1;}
+#ogsub{width:100%;background:linear-gradient(135deg,#0072BC,#0088d8);color:#fff;border:none;border-radius:8px;padding:13px;font-size:.86rem;font-weight:600;font-family:'Inter',system-ui,sans-serif;cursor:pointer;margin-top:4px;box-shadow:0 4px 16px rgba(0,114,188,.4);transition:opacity .2s,transform .15s;}
+#ogsub:hover{opacity:.9;transform:translateY(-1px);}
+#ogsub:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+.og-note{margin-top:18px;text-align:center;font-size:.6rem;color:rgba(255,255,255,.2);letter-spacing:.3px;line-height:1.7;}
+#opsGate.out{animation:gOut .45s ease forwards;}
+@keyframes gOut{to{opacity:0;transform:scale(1.03);pointer-events:none;}}
+
 /* ── RESPONSIVE ── */
 @media(max-width:900px){
   .metrics{grid-template-columns:repeat(3,1fr);}
@@ -228,6 +257,25 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 </style>
 </head>
 <body>
+
+<!-- ══════════ OPS PASSWORD GATE ══════════ -->
+<div id="opsGate">
+  <div class="og-card">
+    <div class="og-mark"><img src="data:image/jpeg;base64,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0KxTZ2qzEWchCTKyuHBzeUtPMP7SCNj09FbjZLTS+O5XgYkmm/nsZczjm5bFWKT3cvit0Hf4kdQfzCp1LFcY4qAU6klY12E8pJaQOvpsbVubnKPwEVyWYRQvcGc0gLQHa7dR+q9TZmjXrwzSTeScc0YDHFzh33ygb0qQnOC21fqi84Qm910/sz1iWXo8dE3JyMktjfO5nY9enoPRbqxwTx2YGTQvbJFIA5rmnYIWRcW7Z3XJBERQSEREAREQBERAEREAREQBERAEREBBZTETX8hPI3lax1PwmO31EgfzN6e3QdV4x+Jt171CxOI3PbHO6w5p6eJI5p6e46a+gVgRX4jqjnw43ZVquGsxXRHYisSwMtOnY9tkCMbcXAlnfY2vuRxuRczLVq9Zksd6RsjZjKG8vRoIIPX+3orQitxXdkcFVRGOpSuzzrWgIXU/B3vrzc2+34LDg4r9ShFQsVWx/DxcjZxIHNeR0B13HuplFTc6otsV2VfHY/KNylCzdikc6Fj2TSPsh4cXAeZrfQbHbv1+Sl8PUmpwWGzAAyWZZG6O/K5xIUiimU3IiONRIaeC7TzM12rWFqOxExj2CQMcxzSdHr0IIP6LFlqV23PQuQxyB8THtkiinDHjm12ceh1pTyIptOw8aaqyBbipW0cZFDE6PwLYnkbJKHOA8xJ36nZXt+LsSV87H5R8aT4R5veMN6+3UKbRN7HDiQctW5do4xslYRSV7Mb5GOkDvK0EEgjuvmZx9uXI1rlUTPDInRPbDMI3jZBB2ehHTt+CnURTadh401Rp4qqKeNggbG6IMb9xz+cjZ31PqtxEVW7dl0qVBERQSEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQH//Z" alt="VPS Lakeshore"></div>
+    <div class="og-title">Operations Tracker</div>
+    <div class="og-sub">VPS Lakeshore · FY27</div>
+    <div class="og-rule"></div>
+    <div class="og-lbl">Access Password</div>
+    <div class="og-wrap">
+      <input type="password" id="ogpw" placeholder="Enter ops password" autocomplete="current-password" spellcheck="false">
+      <button class="og-eye" id="ogeye" type="button">👁</button>
+    </div>
+    <div id="ogerr">⚠&nbsp; Incorrect password — please try again.</div>
+    <button id="ogsub">Unlock Ops Tracker →</button>
+    <div class="og-note">Confidential · Internal Use Only<br>Authorised personnel only</div>
+  </div>
+</div>
+<!-- ═══════════════════════════════════ -->
 
 <!-- ── HEADER ── -->
 <div class="header">
@@ -330,7 +378,47 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
       <button class="modal-close" onclick="closeEdit()">✕</button>
     </div>
     <div class="modal-body">
+      <div class="form-group full">
+        <div class="form-label">Task Title</div>
+        <input type="text" id="editTaskTitle" placeholder="Task title…">
+      </div>
       <div class="form-row">
+        <div class="form-group">
+          <div class="form-label">Phase</div>
+          <select id="editPhase">
+            <option value="Pre-Phase 1">Pre-Phase 1 (Mar 2026)</option>
+            <option value="Phase 1">Phase 1 (Apr–May)</option>
+            <option value="Phase 2">Phase 2 (Jun–Sep)</option>
+            <option value="Phase 3">Phase 3 (Oct–Mar)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <div class="form-label">Workstream</div>
+          <select id="editWorkstream"></select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <div class="form-label">Type</div>
+          <select id="editType">
+            <option value="revenue">Revenue</option>
+            <option value="cost">Cost</option>
+            <option value="strategic">Strategic</option>
+            <option value="bd">Business Dev</option>
+            <option value="brand">Web &amp; Brand</option>
+            <option value="gate">Gate</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <div class="form-label">Value / Impact</div>
+          <input type="text" id="editValue" placeholder="e.g. ₹3 Cr, ARPOB ↑">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <div class="form-label">Deadline</div>
+          <input type="text" id="editDeadline" placeholder="e.g. Mar 14, Apr 1">
+        </div>
         <div class="form-group">
           <div class="form-label">Status</div>
           <select id="editStatus">
@@ -341,25 +429,31 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
             <option value="deferred">Deferred</option>
           </select>
         </div>
+      </div>
+      <div class="form-row">
         <div class="form-group">
           <div class="form-label">Assignee</div>
           <select id="editAssignee" onchange="showAssigneeEmail()"></select>
         </div>
-      </div>
-      <div class="form-group full">
-        <div class="form-label">Assignee Email</div>
-        <input type="text" id="editAssigneeEmail" placeholder="email@vpslakeshore.in">
+        <div class="form-group">
+          <div class="form-label">Assignee Email</div>
+          <input type="text" id="editAssigneeEmail" placeholder="email@lakeshorehospital.org">
+        </div>
       </div>
       <div class="form-group full">
         <div class="form-label">Add New Team Member</div>
         <div class="add-member-row">
           <input type="text" id="newMemberName" placeholder="Name">
-          <input type="text" id="newMemberEmail" placeholder="email@vpslakeshore.in" style="flex:1.5;">
+          <input type="text" id="newMemberEmail" placeholder="email@lakeshorehospital.org" style="flex:1.5;">
           <button class="add-member-btn" onclick="addNewMember()">+ Add</button>
         </div>
       </div>
       <div class="form-group full">
-        <div class="form-label">Notes / Updates</div>
+        <div class="form-label">Description</div>
+        <textarea id="editDesc" placeholder="Full task description or background…" style="min-height:56px;"></textarea>
+      </div>
+      <div class="form-group full">
+        <div class="form-label">Progress Notes / Updates</div>
         <textarea id="editNotes" placeholder="Add progress notes, blockers, or context…"></textarea>
       </div>
     </div>
@@ -448,18 +542,18 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 ══════════════════════════════════════ */
 var team = [
   {name:'Unassigned',        email:''},
-  {name:'Abhishek',          email:'abhishek@vpslakeshore.in'},
-  {name:'Lakshman',          email:'lakshman@vpslakeshore.in'},
-  {name:'Sameeraj',          email:'sameeraj@vpslakeshore.in'},
-  {name:'Jayesh (CEO)',      email:'jayesh@vpslakeshore.in'},
-  {name:'Jithin (CFO)',      email:'jithin@vpslakeshore.in'},
-  {name:'Suresh (CHRO)',     email:'suresh@vpslakeshore.in'},
-  {name:'CIO',               email:'cio@vpslakeshore.in'},
-  {name:'Anil (Comms)',      email:'anil@vpslakeshore.in'},
-  {name:'MS',                email:'ms@vpslakeshore.in'},
-  {name:'Bincy (Nursing)',   email:'bincy@vpslakeshore.in'},
-  {name:'CNO',               email:'cno@vpslakeshore.in'},
-  {name:'Dilshad',           email:'dilshad@vpslakeshore.in'},
+  {name:'Abhishek',          email:'abhishek@lakeshorehospital.org'},
+  {name:'Lakshman',          email:'lakshman@lakeshorehospital.org'},
+  {name:'Sameeraj',          email:'sameeraj@lakeshorehospital.org'},
+  {name:'Jayesh (CEO)',      email:'jayesh@lakeshorehospital.org'},
+  {name:'Jithin (CFO)',      email:'jithin@lakeshorehospital.org'},
+  {name:'Suresh (CHRO)',     email:'suresh@lakeshorehospital.org'},
+  {name:'CIO',               email:'cio@lakeshorehospital.org'},
+  {name:'Anil (Comms)',      email:'anil@lakeshorehospital.org'},
+  {name:'MS',                email:'ms@lakeshorehospital.org'},
+  {name:'Bincy (Nursing)',   email:'bincy@lakeshorehospital.org'},
+  {name:'CNO',               email:'cno@lakeshorehospital.org'},
+  {name:'Dilshad',           email:'dilshad@lakeshorehospital.org'},
 ];
 
 function findMember(name){ return team.find(function(m){return m.name===name;})||{name:name,email:''}; }
@@ -783,6 +877,8 @@ function populateDropdowns(){
   var addWs=document.getElementById('addWorkstream');
   addWs.innerHTML='';
   WORKSTREAMS.forEach(function(ws){addWs.innerHTML+='<option value="'+ws+'">'+ws+'</option>';});
+  var editWs=document.getElementById('editWorkstream');
+  if(editWs){editWs.innerHTML='';WORKSTREAMS.forEach(function(ws){editWs.innerHTML+='<option value="'+ws+'">'+ws+'</option>';});}
   rebuildAssigneeDropdowns();
 }
 function rebuildAssigneeDropdowns(){
@@ -824,10 +920,17 @@ function openEdit(id){
   editingId=id;
   document.getElementById('editTitle').textContent=t.title;
   document.getElementById('editSub').textContent=(t.phase||'')+' · '+(t.workstream||'')+' · Deadline: '+(t.deadline||'—');
-  document.getElementById('editStatus').value=t.status;
-  rebuildAssigneeDropdowns();
+  document.getElementById('editTaskTitle').value=t.title||'';
+  document.getElementById('editPhase').value=t.phase||'Phase 1';
+  populateDropdowns();
+  document.getElementById('editWorkstream').value=t.workstream||WORKSTREAMS[0];
+  document.getElementById('editType').value=t.type||'strategic';
+  document.getElementById('editValue').value=(t.value&&t.value!=='—')?t.value:'';
+  document.getElementById('editDeadline').value=(t.deadline&&t.deadline!=='—')?t.deadline:'';
+  document.getElementById('editStatus').value=t.status||'not-started';
   document.getElementById('editAssignee').value=t.assignee||'Unassigned';
   document.getElementById('editAssigneeEmail').value=memberEmail(t.assignee||'');
+  document.getElementById('editDesc').value=t.desc||'';
   document.getElementById('editNotes').value=t.notes||'';
   document.getElementById('newMemberName').value='';
   document.getElementById('newMemberEmail').value='';
@@ -840,12 +943,20 @@ function showAssigneeEmail(){
 function closeEdit(){document.getElementById('editOverlay').classList.remove('open');editingId=null;}
 function saveEdit(){
   var t=getTask(editingId);if(!t)return;
+  var newTitle=document.getElementById('editTaskTitle').value.trim();
+  if(newTitle) t.title=newTitle;
+  t.phase=document.getElementById('editPhase').value;
+  t.workstream=document.getElementById('editWorkstream').value;
+  t.type=document.getElementById('editType').value;
+  t.value=document.getElementById('editValue').value||'—';
+  t.deadline=document.getElementById('editDeadline').value||'—';
   t.status=document.getElementById('editStatus').value;
   var newAsgn=document.getElementById('editAssignee').value;
   var newEmail=document.getElementById('editAssigneeEmail').value.trim();
   t.assignee=newAsgn;
   var m=findMember(newAsgn);
   if(m&&newEmail)m.email=newEmail;
+  t.desc=document.getElementById('editDesc').value;
   t.notes=document.getElementById('editNotes').value;
   closeEdit();renderContent();
 }
@@ -897,7 +1008,7 @@ function openTeamSettings(){
   var html='';
   team.forEach(function(m,i){
     if(m.name==='Unassigned')return;
-    html+='<div class="team-row"><div class="team-name-fixed">'+m.name+'</div><input class="team-email-inp" id="temail_'+i+'" type="text" value="'+m.email+'" placeholder="email@vpslakeshore.in"></div>';
+    html+='<div class="team-row"><div class="team-name-fixed">'+m.name+'</div><input class="team-email-inp" id="temail_'+i+'" type="text" value="'+m.email+'" placeholder="email@lakeshorehospital.org"></div>';
   });
   document.getElementById('teamBody').innerHTML=html;
   document.getElementById('teamOverlay').classList.add('open');
@@ -970,6 +1081,46 @@ document.getElementById('todayStamp').textContent='🕐 '+todayStr();
 populateDropdowns();
 document.getElementById('phaseRow').style.display='none';
 renderContent();
+
+/* ══════════════════════════════════════
+   OPS PASSWORD GATE
+══════════════════════════════════════ */
+(function(){
+  var GATE_PW='Ops@vpsls';
+  var gate=document.getElementById('opsGate');
+  var ogpw=document.getElementById('ogpw');
+  var ogsub=document.getElementById('ogsub');
+  var ogerr=document.getElementById('ogerr');
+  var ogeye=document.getElementById('ogeye');
+  if(sessionStorage.getItem('vps_ops_auth')==='ok'){
+    gate.style.display='none';
+    document.body.style.overflow='';
+    return;
+  }
+  document.body.style.overflow='hidden';
+  function tryUnlock(){
+    if(ogpw.value===GATE_PW){
+      sessionStorage.setItem('vps_ops_auth','ok');
+      ogsub.disabled=true;
+      ogsub.textContent='✓ Access Granted';
+      ogerr.classList.remove('show');
+      gate.classList.add('out');
+      setTimeout(function(){gate.style.display='none';document.body.style.overflow='';},460);
+    } else {
+      ogerr.classList.add('show');
+      ogpw.classList.add('err');
+      ogpw.value='';
+      ogpw.focus();
+      setTimeout(function(){ogpw.classList.remove('err');},600);
+    }
+  }
+  ogsub.addEventListener('click',tryUnlock);
+  ogpw.addEventListener('keydown',function(e){if(e.key==='Enter')tryUnlock();});
+  ogeye.addEventListener('click',function(){
+    ogpw.type=ogpw.type==='password'?'text':'password';
+    ogeye.textContent=ogpw.type==='password'?'👁':'🙈';
+  });
+})();
 </script>
 </body>
 </html>

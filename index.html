@@ -618,6 +618,7 @@ body {
   }
 
   function redirectOps() {
+    sessionStorage.setItem('vps_ops_auth', 'ok');
     gate.classList.add('out');
     document.body.style.overflow = '';
     setTimeout(function(){ window.location.href = 'ops-tracker.html'; }, 460);

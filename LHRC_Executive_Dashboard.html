@@ -202,7 +202,10 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f4f6f9;color:#
 .fp-embed{border-radius:8px;overflow:hidden;border:1px solid #e2e8f0;background:#0a0e1a}
 
 /* ── FOOTER ── */
-.footer{background:#1a3a5c;color:rgba(255,255,255,0.3);text-align:center;padding:11px;font-size:0.58rem;margin-top:20px;font-family:'IBM Plex Mono',monospace}
+.footer{background:#1a3a5c;color:rgba(255,255,255,0.3);padding:11px 24px;font-size:0.58rem;margin-top:20px;font-family:'IBM Plex Mono',monospace;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+.footer-center{flex:1;text-align:center;}
+.footer-ops-link{display:inline-flex;align-items:center;gap:5px;color:rgba(255,255,255,0.35);text-decoration:none;font-size:0.56rem;border:1px solid rgba(255,255,255,0.15);padding:4px 10px;border-radius:4px;transition:color .2s,border-color .2s;white-space:nowrap;}
+.footer-ops-link:hover{color:rgba(255,255,255,0.7);border-color:rgba(255,255,255,0.35);}
 
 @media(max-width:1100px){.ks-7{grid-template-columns:repeat(4,1fr)}.ks-6{grid-template-columns:repeat(3,1fr)}.m4{grid-template-columns:repeat(2,1fr)}.g2,.g3,.g21,.g12,.g-hist,.g-lev{grid-template-columns:1fr}}
 @media(max-width:700px){.ks-7,.ks-6,.ks-5,.ks-4{grid-template-columns:repeat(2,1fr)}}
@@ -1765,13 +1768,17 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f4f6f9;color:#
 
 <!-- ══════════════════════════════ FOOTER ══════════════════════════════ -->
 <div class="footer">
-  VPS Lakeshore Hospital &amp; Research Centre
-  <span class="f-sep">&middot;</span>
-  Executive Dashboard &amp; FY27 Strategy
-  <span class="f-sep">&middot;</span>
-  Confidential — Board Use Only
-  <span class="f-sep">&middot;</span>
-  Last Updated: 3 March 2026
+  <div style="width:140px;"></div>
+  <div class="footer-center">
+    VPS Lakeshore Hospital &amp; Research Centre
+    <span class="f-sep">&middot;</span>
+    Executive Dashboard &amp; FY27 Strategy
+    <span class="f-sep">&middot;</span>
+    Confidential — Board Use Only
+    <span class="f-sep">&middot;</span>
+    Last Updated: 3 March 2026
+  </div>
+  <a class="footer-ops-link" href="ops-tracker.html">⚡ Ops Tracker →</a>
 </div>
 
 
