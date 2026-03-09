@@ -1219,6 +1219,18 @@ function sendDigestEmail(name,email,tasks,onDone){
     task_list:buildTaskText(tasks)
   }).then(function(){onDone&&onDone(true);},function(err){onDone&&onDone(false,err);});
 }
+function sendDigestToOne(name){
+  var email=memberEmail(name);
+  var tasks=(digestByOwner()||{})[name];
+  var statusId='ds_'+name.replace(/[^a-z0-9]/gi,'_');
+  var el=document.getElementById(statusId);
+  if(!email||!tasks){if(el){el.textContent='⚠ No data';el.style.color='red';}return;}
+  if(el){el.textContent='⏳';el.style.color='#888';}
+  sendDigestEmail(name,email,tasks,function(ok,err){
+    if(el){el.textContent=ok?'✓ Sent':'⚠ Failed';el.style.color=ok?'green':'red';}
+    if(!ok){console.error('EmailJS send failed for '+name+':',err);}
+  });
+}
 
 /* ══════════════════════════════════════
    DIGEST MODAL
@@ -1246,7 +1258,7 @@ function openDigest(){
     html+='<div class="digest-owner-header"><div><div class="digest-owner-name">'+name+'</div><div class="digest-owner-email">'+(email||'<em style="color:#aaa">No email — click Team &amp; Emails to add</em>')+'</div></div>';
     if(email){
       if(EJ_CONFIGURED){
-        html+='<button class="mailto-btn" onclick="sendDigestEmail(\''+name+'\',\''+email+'\',digestByOwner()[\''+name+'\'],function(ok){var el=document.getElementById(\'ds_'+name.replace(/[^a-z0-9]/gi,'_')+'\');el.textContent=ok?\'✓ Sent\':\'⚠ Failed\';el.style.color=ok?\'green\':\'red\';})">📤 Send</button>';
+        html+='<button class="mailto-btn" onclick="sendDigestToOne('+JSON.stringify(name)+')">📤 Send</button>';
         html+='<span id="ds_'+name.replace(/[^a-z0-9]/gi,'_')+'" style="font-size:.6rem;margin-left:6px;"></span>';
       } else {
         html+='<a class="mailto-btn" href="'+mailtoHref+'">📧 Email '+firstName+'</a>';
@@ -1275,12 +1287,19 @@ function openDigest(){
 function closeDigest(){document.getElementById('digestOverlay').classList.remove('open');}
 function sendAllDigests(){
   var byOwner=digestByOwner();
-  var names=Object.keys(byOwner);var i=0;
+  var names=Object.keys(byOwner);var i=0;var failed=[];
   function next(){
-    if(i>=names.length){alert('All digest emails dispatched via EmailJS!');return;}
+    if(i>=names.length){
+      if(failed.length){alert('⚠️ EmailJS errors for: '+failed.join(', ')+'\nCheck the browser console for details.');}
+      else{alert('All digest emails dispatched via EmailJS!');}
+      return;
+    }
     var name=names[i++];var email=memberEmail(name);
     if(!email){next();return;}
-    sendDigestEmail(name,email,byOwner[name],function(){setTimeout(next,400);});
+    sendDigestEmail(name,email,byOwner[name],function(ok,err){
+      if(!ok){console.error('EmailJS send failed for '+name+':',err);failed.push(name);}
+      setTimeout(next,400);
+    });
   }
   next();
 }
@@ -1402,7 +1421,7 @@ document.getElementById('phaseRow').style.display='none';
 renderContent();
 _startAdTimer();
 _updateHeaderAdBtn();
-if(EJ_CONFIGURED){try{emailjs.init(EJ_PUBLIC_KEY);}catch(e){}}
+if(EJ_CONFIGURED){try{emailjs.init({publicKey:EJ_PUBLIC_KEY});}catch(e){console.error('EmailJS init failed:',e);}}
 
 /* ══════════════════════════════════════
    OPS PASSWORD GATE
