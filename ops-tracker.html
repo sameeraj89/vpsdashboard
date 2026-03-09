@@ -1254,40 +1254,50 @@ function openDigest(){
   var dateLabel=todayStr();
   document.getElementById('digestDate').textContent='Daily Ops Digest — '+dateLabel+' · Deadlines within 60 days';
   var byOwner=digestByOwner();
-  var names=Object.keys(byOwner).sort();
+
+  /* Show ALL team members (excluding Unassigned), sorted by name */
+  var allMembers=team.filter(function(m){return m.name!=='Unassigned';})
+    .slice().sort(function(a,b){return a.name.localeCompare(b.name);});
 
   var html='<table style="width:100%;border-collapse:collapse;">'
     +'<thead><tr style="border-bottom:2px solid var(--border);">'
     +'<th style="text-align:left;padding:8px 10px;font-size:0.7rem;color:var(--muted);font-weight:600;">NAME</th>'
     +'<th style="text-align:left;padding:8px 10px;font-size:0.7rem;color:var(--muted);font-weight:600;">EMAIL</th>'
-    +'<th style="text-align:center;padding:8px 10px;font-size:0.7rem;color:var(--muted);font-weight:600;">TASKS</th>'
+    +'<th style="text-align:center;padding:8px 10px;font-size:0.7rem;color:var(--muted);font-weight:600;">TASKS DUE</th>'
     +'<th style="text-align:right;padding:8px 10px;font-size:0.7rem;color:var(--muted);font-weight:600;">ACTION</th>'
     +'</tr></thead><tbody>';
 
-  if(names.length===0){
-    html+='<tr><td colspan="4" style="text-align:center;padding:32px;color:var(--muted);font-size:.8rem;">No open tasks with deadlines in the next 60 days — nothing to send today! 🎉</td></tr>';
-  }
-
-  names.forEach(function(name){
-    var tasks=byOwner[name];
-    var email=memberEmail(name);
+  allMembers.forEach(function(m){
+    var name=m.name;
+    var email=m.email;
+    var tasks=byOwner[name]||[];
+    var taskCount=tasks.length;
     var statusId='ds_'+name.replace(/[^a-z0-9]/gi,'_');
     var actionHtml;
     if(!email){
-      actionHtml='<em style="color:#aaa;font-size:.65rem;">No email set</em>';
+      actionHtml='<em style="color:#aaa;font-size:.65rem;">No email — add in Team &amp; Emails</em>';
     } else if(EJ_CONFIGURED){
-      actionHtml='<button class="mailto-btn" onclick="sendDigestToOne('+JSON.stringify(name)+')" style="white-space:nowrap;">📤 Send</button>'
-        +'<span id="'+statusId+'" style="font-size:.65rem;margin-left:6px;"></span>';
+      if(taskCount>0){
+        actionHtml='<button class="mailto-btn" onclick="sendDigestToOne('+JSON.stringify(name)+')" style="white-space:nowrap;">📤 Send</button>'
+          +'<span id="'+statusId+'" style="font-size:.65rem;margin-left:6px;"></span>';
+      } else {
+        actionHtml='<span style="font-size:.65rem;color:#bbb;">No tasks due</span>';
+      }
     } else {
-      var firstName=name.replace(/\s*\(.*\)/,'').trim();
-      var subj=encodeURIComponent('VPS Lakeshore Ops Digest — '+new Date().toLocaleDateString('en-GB'));
-      var bodyTxt='Hi '+firstName+',\n\nYour VPS Lakeshore task update for '+new Date().toLocaleDateString('en-GB')+':\n\n'+buildTaskText(tasks)+'\n\nPlease update statuses and flag any blockers.\n\n—\nVPS Lakeshore Ops Tracker\nhttps://vpslakeshoretdx.in/ops-tracker.html';
-      actionHtml='<a class="mailto-btn" href="mailto:'+email+'?subject='+subj+'&body='+encodeURIComponent(bodyTxt)+'">📧 Email</a>';
+      if(taskCount>0){
+        var firstName=name.replace(/\s*\(.*\)/,'').trim();
+        var subj=encodeURIComponent('VPS Lakeshore Ops Digest — '+new Date().toLocaleDateString('en-GB'));
+        var bodyTxt='Hi '+firstName+',\n\nYour VPS Lakeshore task update for '+new Date().toLocaleDateString('en-GB')+':\n\n'+buildTaskText(tasks)+'\n\nPlease update statuses and flag any blockers.\n\n—\nVPS Lakeshore Ops Tracker\nhttps://vpslakeshoretdx.in/ops-tracker.html';
+        actionHtml='<a class="mailto-btn" href="mailto:'+email+'?subject='+subj+'&body='+encodeURIComponent(bodyTxt)+'">📧 Email</a>';
+      } else {
+        actionHtml='<span style="font-size:.65rem;color:#bbb;">No tasks due</span>';
+      }
     }
-    html+='<tr style="border-bottom:1px solid var(--border);">'
+    var rowStyle=taskCount>0?'border-bottom:1px solid var(--border);':'border-bottom:1px solid var(--border);opacity:0.6;';
+    html+='<tr style="'+rowStyle+'">'
       +'<td style="padding:10px 10px;font-size:0.75rem;font-weight:600;color:var(--blue-dark);">'+name+'</td>'
       +'<td style="padding:10px 10px;font-size:0.7rem;color:var(--muted);">'+(email||'—')+'</td>'
-      +'<td style="padding:10px 10px;font-size:0.7rem;color:var(--muted);text-align:center;">'+tasks.length+'</td>'
+      +'<td style="padding:10px 10px;font-size:0.7rem;color:var(--muted);text-align:center;">'+(taskCount||'—')+'</td>'
       +'<td style="padding:10px 10px;text-align:right;">'+actionHtml+'</td>'
       +'</tr>';
   });
@@ -1295,9 +1305,10 @@ function openDigest(){
   html+='</tbody></table>';
   document.getElementById('digestBody').innerHTML=html;
 
-  /* show/hide "Send All" footer button */
+  /* show/hide "Send All" button — only sends to members with tasks */
+  var hasAnyTasks=Object.keys(byOwner).length>0;
   var sendAllBtn=document.getElementById('digestSendAll');
-  if(sendAllBtn) sendAllBtn.style.display=EJ_CONFIGURED&&names.length?'inline-flex':'none';
+  if(sendAllBtn) sendAllBtn.style.display=EJ_CONFIGURED&&hasAnyTasks?'inline-flex':'none';
 
   document.getElementById('digestOverlay').classList.add('open');
 }
