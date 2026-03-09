@@ -1239,11 +1239,28 @@ function sendDigestToOne(name){
   var tasks=(digestByOwner()||{})[name];
   var statusId='ds_'+name.replace(/[^a-z0-9]/gi,'_');
   var el=document.getElementById(statusId);
-  if(!email||!tasks){if(el){el.textContent='⚠ No data';el.style.color='red';}return;}
-  if(el){el.textContent='⏳';el.style.color='#888';}
+  console.log('[Digest] sendDigestToOne →',{name:name,email:email,taskCount:tasks?tasks.length:0});
+  if(!email){
+    alert('⚠️ No email address found for '+name+'.\nPlease add one in Team & Emails and try again.');
+    if(el){el.textContent='⚠ No email';el.style.color='red';}
+    return;
+  }
+  if(!tasks||tasks.length===0){
+    alert('⚠️ No open tasks found for '+name+' in the next 60 days. Nothing to send.');
+    if(el){el.textContent='⚠ No tasks';el.style.color='orange';}
+    return;
+  }
+  if(el){el.textContent='⏳ Sending…';el.style.color='#888';}
   sendDigestEmail(name,email,tasks,function(ok,err){
-    if(el){el.textContent=ok?'✓ Sent':'⚠ Failed';el.style.color=ok?'green':'red';}
-    if(!ok){console.error('EmailJS send failed for '+name+':',err);}
+    if(ok){
+      if(el){el.textContent='✓ Sent';el.style.color='green';}
+      alert('✅ Digest sent to '+name+' ('+email+')');
+    } else {
+      if(el){el.textContent='⚠ Failed';el.style.color='red';}
+      var errMsg=err?(typeof err==='object'?JSON.stringify(err):String(err)):'Unknown error';
+      console.error('[Digest] EmailJS send failed for '+name+':',err);
+      alert('❌ Failed to send to '+name+' ('+email+')\n\nError: '+errMsg+'\n\nCheck the browser console (F12) for more detail.');
+    }
   });
 }
 
