@@ -1186,7 +1186,16 @@ function _saveTeamToStorage(){
 function _loadTeamFromStorage(){
   try{
     var stored=JSON.parse(localStorage.getItem('vps_ops_team'));
-    if(stored&&stored.length){team=[{name:'Unassigned',email:''}].concat(stored);}
+    if(stored&&stored.length){
+      /* Merge: keep stored data but fall back to hardcoded email if stored entry has none */
+      var defaults=team.slice();
+      var merged=stored.map(function(m){
+        if(m.email)return m;
+        var def=defaults.find(function(d){return d.name===m.name;});
+        return{name:m.name,email:(def&&def.email)||''};
+      });
+      team=[{name:'Unassigned',email:''}].concat(merged);
+    }
   }catch(e){}
 }
 
