@@ -1065,6 +1065,8 @@ function saveEdit(){
   if(m&&newEmail)m.email=newEmail;
   t.desc=document.getElementById('editDesc').value;
   t.notes=document.getElementById('editNotes').value;
+  allTasks=preTasks.concat(mainTasks);
+  _saveTasksToStorage();
   closeEdit();renderContent();
 }
 
@@ -1105,6 +1107,7 @@ function saveNewTask(){
   if(t.phase==='Pre-Phase 1'){t.week='Week 1';t.weekRange='Mar 2026';t.focus='strategic';preTasks.push(t);}
   else{mainTasks.push(t);}
   allTasks=preTasks.concat(mainTasks);
+  _saveTasksToStorage();
   closeAdd();renderContent();
 }
 
@@ -1176,6 +1179,7 @@ function saveTeamSettings(){
   });
   team=newTeam;
   _saveTeamToStorage();
+  _saveTasksToStorage();
   closeTeam();
   rebuildAssigneeDropdowns();
   renderContent();
@@ -1206,6 +1210,28 @@ function _loadTeamFromStorage(){
 }
 
 /* ══════════════════════════════════════
+   TASK PERSISTENCE
+══════════════════════════════════════ */
+function _saveTasksToStorage(){
+  try{
+    localStorage.setItem('vps_ops_tasks',JSON.stringify({
+      pre:preTasks, main:mainTasks, nextId:nextId
+    }));
+  }catch(e){console.error('Task save failed:',e);}
+}
+function _loadTasksFromStorage(){
+  try{
+    var stored=JSON.parse(localStorage.getItem('vps_ops_tasks'));
+    if(stored){
+      if(stored.pre&&stored.pre.length) preTasks=stored.pre;
+      if(stored.main&&stored.main.length) mainTasks=stored.main;
+      if(stored.nextId) nextId=stored.nextId;
+      allTasks=preTasks.concat(mainTasks);
+    }
+  }catch(e){console.error('Task load failed:',e);}
+}
+
+/* ══════════════════════════════════════
    DIGEST HELPERS
 ══════════════════════════════════════ */
 function buildTaskText(tasks){
@@ -1230,7 +1256,7 @@ function sendDigestEmail(name,email,tasks,onDone){
   emailjs.send(EJ_SERVICE_ID,EJ_TEMPLATE_ID,{
     to_name:firstName,
     to_email:email,
-    date:new Date().toLocaleDateString('en-GB'),
+    date:new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}),
     task_list:buildTaskText(tasks)
   }).then(function(){onDone&&onDone(true);},function(err){onDone&&onDone(false,err);});
 }
@@ -1304,8 +1330,8 @@ function openDigest(){
     } else {
       if(taskCount>0){
         var firstName=name.replace(/\s*\(.*\)/,'').trim();
-        var subj=encodeURIComponent('VPS Lakeshore Ops Digest — '+new Date().toLocaleDateString('en-GB'));
-        var bodyTxt='Hi '+firstName+',\n\nYour VPS Lakeshore task update for '+new Date().toLocaleDateString('en-GB')+':\n\n'+buildTaskText(tasks)+'\n\nPlease update statuses and flag any blockers.\n\n—\nVPS Lakeshore Ops Tracker\nhttps://vpslakeshoretdx.in/ops-tracker.html';
+        var subj=encodeURIComponent('VPS Lakeshore Ops Digest — '+new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}));
+        var bodyTxt='Hi '+firstName+',\n\nYour VPS Lakeshore task update for '+new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})+':\n\n'+buildTaskText(tasks)+'\n\nPlease update statuses and flag any blockers.\n\n—\nVPS Lakeshore Ops Tracker\nhttps://vpslakeshoretdx.in/ops-tracker.html';
         actionHtml='<a class="mailto-btn" href="mailto:'+email+'?subject='+subj+'&body='+encodeURIComponent(bodyTxt)+'">📧 Email</a>';
       } else {
         actionHtml='<span style="font-size:.65rem;color:#bbb;">No tasks due</span>';
@@ -1469,6 +1495,7 @@ function _startAdTimer(){
 ══════════════════════════════════════ */
 document.getElementById('todayStamp').textContent='🕐 '+todayStr();
 _loadTeamFromStorage();
+_loadTasksFromStorage();
 populateDropdowns();
 document.getElementById('phaseRow').style.display='none';
 renderContent();
