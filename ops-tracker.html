@@ -1295,7 +1295,8 @@ function openDigest(){
       actionHtml='<em style="color:#aaa;font-size:.65rem;">No email — add in Team &amp; Emails</em>';
     } else if(EJ_CONFIGURED){
       if(taskCount>0){
-        actionHtml='<button class="mailto-btn" onclick="sendDigestToOne('+JSON.stringify(name)+')" style="white-space:nowrap;">📤 Send</button>'
+        var safeNameAttr=name.replace(/&/g,'&amp;').replace(/"/g,'&quot;');
+        actionHtml='<button class="mailto-btn digest-send-btn" data-member="'+safeNameAttr+'" style="white-space:nowrap;">📤 Send</button>'
           +'<span id="'+statusId+'" style="font-size:.65rem;margin-left:6px;"></span>';
       } else {
         actionHtml='<span style="font-size:.65rem;color:#bbb;">No tasks due</span>';
@@ -1320,7 +1321,14 @@ function openDigest(){
   });
 
   html+='</tbody></table>';
-  document.getElementById('digestBody').innerHTML=html;
+  var digestBody=document.getElementById('digestBody');
+  digestBody.innerHTML=html;
+
+  /* Wire up individual Send buttons via event delegation */
+  digestBody.onclick=function(e){
+    var btn=e.target.closest('.digest-send-btn');
+    if(btn) sendDigestToOne(btn.getAttribute('data-member'));
+  };
 
   /* show/hide "Send All" button — only sends to members with tasks */
   var hasAnyTasks=Object.keys(byOwner).length>0;
