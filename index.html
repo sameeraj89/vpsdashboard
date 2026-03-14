@@ -284,6 +284,71 @@ body {
   color: #c9a84c;
 }
 
+/* ─── PASSWORD GATE ───────────────────────────────── */
+#gate {
+  position: fixed; inset: 0; z-index: 9999;
+  background: linear-gradient(135deg, #001228 0%, #003060 50%, #00101f 100%);
+  display: flex; align-items: center; justify-content: center; padding: 24px;
+}
+#gate::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 60% 40% at 20% 80%, rgba(0,114,188,.18) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 60% at 80% 20%, rgba(91,184,232,.12) 0%, transparent 70%);
+}
+#gate::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background-image: linear-gradient(rgba(0,114,188,.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,114,188,.05) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+.g-card {
+  background: rgba(255,255,255,.05); border: 1px solid rgba(91,184,232,.22);
+  border-radius: 16px; padding: 48px 48px 40px; width: 100%; max-width: 430px;
+  position: relative; z-index: 1; backdrop-filter: blur(20px);
+  box-shadow: 0 0 0 1px rgba(255,255,255,.04) inset, 0 24px 80px rgba(0,0,0,.6), 0 0 60px rgba(0,114,188,.1);
+  animation: gIn .5s cubic-bezier(.22,1,.36,1) both;
+}
+@keyframes gIn { from { opacity:0; transform:translateY(20px) scale(.97) } to { opacity:1; transform:none } }
+.g-mark {
+  display: flex; align-items: center; justify-content: center;
+  width: 180px; height: 64px; border-radius: 10px; margin: 0 auto 20px;
+  background: #fff; box-shadow: 0 8px 24px rgba(0,114,188,.35);
+  padding: 8px 14px; overflow: hidden;
+}
+.g-mark img { width: 100%; height: 100%; object-fit: contain; }
+.g-org { font-size:.6rem; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:#5BB8E8; text-align:center; margin-bottom:4px; }
+.g-sys { font-size:1.2rem; font-weight:700; color:#fff; text-align:center; letter-spacing:-.3px; }
+.g-rule { height:1px; background:linear-gradient(90deg,transparent,rgba(91,184,232,.4),transparent); margin:26px 0; }
+.g-lbl { font-size:.68rem; font-weight:600; letter-spacing:1px; text-transform:uppercase; color:rgba(255,255,255,.4); margin-bottom:10px; }
+.g-wrap { position:relative; margin-bottom:12px; }
+#gpw {
+  width:100%; background:rgba(255,255,255,.06); border:1px solid rgba(91,184,232,.25);
+  border-radius:8px; padding:14px 46px 14px 16px; font-size:.95rem; color:#fff;
+  font-family:'Inter',system-ui,sans-serif; letter-spacing:3px; outline:none;
+  transition: border-color .2s, box-shadow .2s;
+}
+#gpw::placeholder { letter-spacing:0; color:rgba(255,255,255,.25); font-size:.82rem; }
+#gpw:focus { border-color:rgba(91,184,232,.6); box-shadow:0 0 0 3px rgba(91,184,232,.12); background:rgba(255,255,255,.09); }
+#gpw.err { border-color:rgba(200,16,62,.7); box-shadow:0 0 0 3px rgba(200,16,62,.15); animation:gShake .4s ease; }
+@keyframes gShake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 40%{transform:translateX(8px)} 60%{transform:translateX(-5px)} 80%{transform:translateX(5px)} }
+.g-eye { position:absolute; right:13px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:rgba(255,255,255,.35); font-size:.95rem; padding:2px; line-height:1; transition:color .2s; }
+.g-eye:hover { color:rgba(255,255,255,.7); }
+#gerr { font-size:.73rem; color:#ff6b86; min-height:18px; margin-bottom:8px; opacity:0; transition:opacity .2s; display:flex; align-items:center; gap:5px; }
+#gerr.show { opacity:1; }
+#gsub {
+  width:100%; background:linear-gradient(135deg,#0072BC,#0088d8); color:#fff; border:none; border-radius:8px;
+  padding:14px; font-size:.88rem; font-weight:600; font-family:'Inter',system-ui,sans-serif;
+  letter-spacing:.3px; cursor:pointer; margin-top:4px;
+  box-shadow:0 4px 16px rgba(0,114,188,.4); transition:opacity .2s, transform .15s, box-shadow .2s;
+}
+#gsub:hover { opacity:.9; transform:translateY(-1px); box-shadow:0 6px 24px rgba(0,114,188,.5); }
+#gsub:active { transform:none; }
+#gsub:disabled { opacity:.5; cursor:not-allowed; transform:none; }
+.g-note { margin-top:22px; text-align:center; font-size:.62rem; color:rgba(255,255,255,.22); letter-spacing:.3px; line-height:1.7; }
+#gate.out { animation:gOut .45s ease forwards; }
+@keyframes gOut { to { opacity:0; transform:scale(1.03); pointer-events:none; } }
+
 /* ─── FOOTER ──────────────────────────────────────── */
 .footer {
   background: var(--vps-blue-deep);
@@ -342,7 +407,23 @@ body {
 </head>
 <body>
 
-
+<!-- ══════════  PASSWORD GATE  ══════════ -->
+<div id="gate">
+  <div class="g-card">
+    <div class="g-mark"><img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAsICAoIBwsKCQoNDAsNERwSEQ8PESIZGhQcKSQrKigkJyctMkA3LTA9MCcnOEw5PUNFSElIKzZPVU5GVEBHSEX/2wBDAQwNDREPESESEiFFLicuRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUX/wAARCACTAPUDASIAAhEBAxEB/8QAGwABAAIDAQEAAAAAAAAAAAAAAAUGAwQHAgH/xAA6EAABBAIABAQDBgUBCQAAAAABAAIDBAURBhIhMRMiQVEUYYEVMnGRobEHFjNCUiMkJTZicnOzwdH/xAAZAQEAAwEBAAAAAAAAAAAAAAAAAQIEAwX/xAArEQACAgECBAUDBQAAAAAAAAAAAQIRAwQSEyExQSJRcYGhFGGRBRVCsfD/2gAMAwEAAhEDEQA/AOuIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiLzI8RxueezQSgNWxlaNWdkE9qJkzyGtjLvMSe3Rbi41irDp+IqtiZxc6S017nE99uXW5cjTgJE1uBhHo6QArRmwcJpLmZcGo4qbfKjaRaLc1jXHTb1cn/uBbrXBzQ5pBB6ghcGmuppUk+jPqIigkIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAKtZHiymzOQ4SEeLNM/wpXg6bESOg+Z7fgrKuSYzhPK3eJrRDvCFS0XPsP67dzcw0PUkaP1Q16XFiybnldJIhWtMby13QtOj8iFvVa8th2oIXyH/kYXfspriiWvw9mJW18XDJLP/rCeyS9vU9eVnYaPvtWHgXPuy+PmgslnxUD9kNaGgsPY6Ht1C9KWtX8UeV+yZo4ePNrb+SuQ4HKOGxQm1826/dXfhplmHFCC3E+N8Ty1oeP7e4Uwiy5dQ8ipoYdNHFLcmERFnNQREQBERAFCfzVRGeOIeJWTh3IHEDlLtbA3tTapP8QMcWRVstWHLNBIGvc0dep20n8CP1XXDGM5bZdzjnlKEd0exO5zibH8P+ELxl5pQSwRs5t61/8AVEN/iThSxpLbQJ9PDHT9VW+O83Dl6WMZCGkujEzzrq0npy7+h/RWvhLA45nDNVz6sMz7MfPI57A4u36dfZVlFx5M9HCtPLCs0rfOuX5M0/HGFhqR2G2HTeJ2jjb5x+IPb6rLh+L8bmrArwGSOcglrJW65texHRc3NOXF8YXGY+qLbKkjnCJzecco9x8tq14K9hczxBFadBLSyTR5Yg4eG8gEHXTvr3XaOOLx7qf++xh1alh1GyL8Lpq/J/fzL2vEJJj2Tvqf3K9rHB/T+p/crMXKdxbk7tPiTFQVrUsUUvLzsY7Qd5wOv0VsuZCrj42vuWI4GOOgZHa2fZUnjb/ivDfiz/yBTPF97DV4a8WXrvtOc4viijJB9tnqPdanBSUFXXyMim4vI76V1Jipmsdfl8Kpdgmk/wAGPBP5KscGZO7dzWUitWpZmRfca92w3zkdFWJH14+JMZLQx1jHN8VnkmJ27zgbG/TXRa7MxPirGXZV22Sy8x+ID1YOc718yu8dMtrUe/n6meWpe5OXby9DrUOTpWJnQwW4ZJW7JYyQEjXdYG57FOseC3I1jLvXL4o7+ypdnHx4HgJ01aRr7F/kEk8Z/tPXlB9tdPzUC9+HdgWQxUbX2joEzkeQnfX17a+S5x00Zc03V0dZ6mUeTSurOt27tajF4lueOFnbmkcAFrNzNC5FI2neglk5HEBkgJ7ey5vlIb89LC3LtaexVZAGOHUHo49z6EjXVSnD0/Dk+QBq1LFS82N/htfJzNd5Tsfjraj6dKO7r6E/Uty21XqbnBnEX+wW5MzkhsSNDDYkG+3ornXtQW4GzVpWSxO7PY4EFc34K4doZunbkuse58bg1ha8jl2N+i0MdenpcM5qvFI4Ayxs2D22XB35hqvlwRnN7Xz5fJzxZ5QhHcuXP4Omfb2K8fwPtGr4u9cvijv7LYs36lNzG2bMMJf90SPDeb8Nqgfytj/5F+0eV3xfg+P4nMdf9Ou2tKGyM8t/CYNsri5zXSwhzuvQOaB+h/RVjpoSfhfei8tTOK8S7WdYgyFSzK6KvahlkZ95jJA4j6Baxz2JjsGE5Cq2UnRb4g7/ADVayuAqcLcP3bdB03xL4hAZHP8ARzhs69FUY5MN9gmF1K07JEEicfcB30Gt9tfJRDTxmtybroTPUTg9rSvqdD4vwH29itwAG3Bt8J/y92/X99LlmHy8/D2YjtMaQY3FksR6FzfVp+f/ALC6pwTJPJwzW+ID9sLmsLx1LQeiljiqBtGyaVc2CdmUxjmJ/FZZx2ycfI9zSfqG3A8c43FmWpZjuVYrEO/DlaHt5ho6PuFmRFUwBERAEREAREQBamTpMyWOsVJPuzMLd+x9D+a20Up07RDSapnIchwpdxWHtW8gxjOTkbGGvDtku6np8v3UlhMjxTjMRDBTxvxVaRnPBJyl3ID19D+hV14lxEmcw0lKGRkT3Pa7meCR0O/RbOHovxuJqU5HNe+CMMLm9jpXyZJZJbpG7TZMWn0ixJKXibp+hQKGH4owNx2XZXbYnsg+LH0e4bOzsD137Lex2My+a4ngyuQpNoxwEOPl5S8jt07k/M+iv6K0c22NJK/M8/UReoy8Sb9uwWOD+n9T+5WRAAOy4lyqcV8OXcrdpXce+Lxa/TkkOh0OwfzWlmeHc5lIaF17q5yVYkPa06aRzbaR6Kdv5qWlnqlLwmGvK0GSQk8zS5xa35a3r80jzUsvErsc2Jnw7WO/1dnmL2hpI9teYLTGeSKVVyMsoY5N23z/ALK7Y4d4jyeUoXci+q4wvaS1jtcjQ4Ejt1Kz4rg2YTZZmUbGYLn3Cx+3NPMSD26EbVnGZoOu/BiwPG5uTXKdc3fl5ta38trUzfEMGNgsMheH3Img8nI5wBJGuYjoOnuVPFyvwpURwsUfE3ZAUuFMoMRcw9ySE1XHnryh2yx4Ox09j+nVeKeO40x8DKleWsII/KwuLXaH1G1cRZ/3ma3PH/R8Tl68/wB7W/bX6rzTy1O/K6OrKZC3e3BjuU6Ojp2tH6KONPnaT9ieBBVTa9yBv1uLRHUdStQOkbCBOPLpz9nqNj20tDGcMZifOfamYfC2RjTprCNudykDsNAdVbK2YpW7Pw8MrvF0XBro3N5gO5GwN/RfMTdkvQzvlDQY7EsQ5fZriAoWWcYtJJexLxQlJNtv3IfgvBXMFVtR3fD5pXtc3kdzdANKNxXBdoUstVvujYLfKYnsdzcrmkkE/mFYrN67LlX0ce2uDDE2SWSfmI8xOgAPwPVbU+Rix8EJyEjWyv6csbXO5na68oA2UeXJbfd0Fix0l2VlJ/l3ir7O+yPGr/A71vnHbe9dt6+S2snwZaNbEV6Do3sp8xlc93KXEuBJA+hVrkzFGKnFbdYb8PMQ2N4BPMT2A1130KxTZ2qzEWchCTKyuHBzeUtPMP7SCNj09FbjZLTS+O5XgYkmm/nsZczjm5bFWKT3cvit0Hf4kdQfzCp1LFcY4qAU6klY12E8pJaQOvpsbVubnKPwEVyWYRQvcGc0gLQHa7dR+q9TZmjXrwzSTeScc0YDHFzh33ygb0qQnOC21fqi84Qm910/sz1iWXo8dE3JyMktjfO5nY9enoPRbqxwTx2YGTQvbJFIA5rmnYIWRcW7Z3XJBERQSEREAREQBERAEREAREQBERAEREBBZTETX8hPI3lax1PwmO31EgfzN6e3QdV4x+Jt171CxOI3PbHO6w5p6eJI5p6e46a+gVgRX4jqjnw43ZVquGsxXRHYisSwMtOnY9tkCMbcXAlnfY2vuRxuRczLVq9Zksd6RsjZjKG8vRoIIPX+3orQitxXdkcFVRGOpSuzzrWgIXU/B3vrzc2+34LDg4r9ShFQsVWx/DxcjZxIHNeR0B13HuplFTc6otsV2VfHY/KNylCzdikc6Fj2TSPsh4cXAeZrfQbHbv1+Sl8PUmpwWGzAAyWZZG6O/K5xIUiimU3IiONRIaeC7TzM12rWFqOxExj2CQMcxzSdHr0IIP6LFlqV23PQuQxyB8THtkiinDHjm12ceh1pTyIptOw8aaqyBbipW0cZFDE6PwLYnkbJKHOA8xJ36nZXt+LsSV87H5R8aT4R5veMN6+3UKbRN7HDiQctW5do4xslYRSV7Mb5GOkDvK0EEgjuvmZx9uXI1rlUTPDInRPbDMI3jZBB2ehHTt+CnURTadh401Rp4qqKeNggbG6IMb9xz+cjZ31PqtxEVW7dl0qVBERQSEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQH//Z" alt="VPS Lakeshore"></div>
+    <div class="g-sys">VPS Transformation and Strategic Intelligence Dashboard</div>
+    <div class="g-rule"></div>
+    <div class="g-lbl">Access Password</div>
+    <div class="g-wrap">
+      <input type="password" id="gpw" placeholder="Enter access password" autocomplete="current-password" spellcheck="false">
+      <button class="g-eye" id="geye" type="button" aria-label="Toggle password visibility">👁</button>
+    </div>
+    <div id="gerr">⚠&nbsp; Incorrect password — please try again.</div>
+    <button id="gsub">Unlock Dashboard →</button>
+    <div class="g-note">Confidential · Internal Use Only<br>Unauthorised access is strictly prohibited</div>
+  </div>
+</div>
+<!-- ═════════════════════════════════════ -->
 
 <!-- ═══ HEADER ═══ -->
 <div class="header">
@@ -574,5 +655,50 @@ body {
 
 
 
+<!-- ══════════  GATE LOGIC  ══════════ -->
+<script>
+(function(){
+  var PASSWORD = 'Lakeshore2026';
+  var KEY  = 'vps_si_auth';
+  var gate = document.getElementById('gate');
+  var pw   = document.getElementById('gpw');
+  var btn  = document.getElementById('gsub');
+  var err  = document.getElementById('gerr');
+  var eye  = document.getElementById('geye');
+  if (sessionStorage.getItem(KEY) === 'ok') { gate.style.display = 'none'; return; }
+  document.body.style.overflow = 'hidden';
+  function unlock() {
+    sessionStorage.setItem(KEY, 'ok');
+    gate.classList.add('out');
+    document.body.style.overflow = '';
+    setTimeout(function(){ gate.remove(); }, 460);
+  }
+  function attempt() {
+    if (pw.value === PASSWORD) {
+      err.classList.remove('show');
+      btn.disabled = true;
+      btn.textContent = '✓ Access Granted';
+      unlock();
+    } else {
+      err.classList.add('show');
+      pw.classList.add('err');
+      pw.value = '';
+      pw.focus();
+      setTimeout(function(){ pw.classList.remove('err'); }, 600);
+    }
+  }
+  btn.addEventListener('click', attempt);
+  pw.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') attempt();
+    err.classList.remove('show');
+  });
+  eye.addEventListener('click', function() {
+    pw.type = (pw.type === 'password') ? 'text' : 'password';
+    eye.textContent = (pw.type === 'password') ? '👁' : '🙈';
+    pw.focus();
+  });
+  pw.focus();
+})();
+</script>
 </body>
 </html>

@@ -258,8 +258,8 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f4f6f9;color:#
 
 <!-- ══════════════════════════════ TABS ══════════════════════════════ -->
 <div class="tab-bar">
-  <div class="tab active" onclick="chairmanTabClick(this)">&#x1F451; Chairman Update</div>
-  <div class="tab" onclick="showTab('overview',this)" style="border-left:2px solid #e2e8f0">&#x1F3AF; Overview</div>
+  <div class="tab" onclick="chairmanTabClick(this)" style="border-right:2px solid #e2e8f0">&#x1F451; Chairman Update</div>
+  <div class="tab active" onclick="showTab('overview',this)">&#x1F3AF; Overview</div>
   <div class="tab" onclick="showTab('capex',this)">&#x1F3D7;&#xFE0F; Capex Transformation</div>
   <div class="tab" onclick="showTab('revenue',this)">&#x1F4C8; Revenue Levers</div>
   <div class="tab" onclick="showTab('cost',this)">&#x2702;&#xFE0F; Cost Levers</div>
@@ -270,7 +270,7 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f4f6f9;color:#
 <!-- ══════════════════════════════════════════════════════════════════
      TAB 1: OVERVIEW
 ══════════════════════════════════════════════════════════════════ -->
-<div id="page-overview" class="page">
+<div id="page-overview" class="page active">
 
 <!-- ── Legend row ─────────────────────────────────── -->
   <div style="display:flex;align-items:center;gap:18px;margin-bottom:12px;padding:8px 14px;background:#f7fafc;border-radius:8px;border:1px solid #e2e8f0">
@@ -1775,7 +1775,7 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f4f6f9;color:#
 <!-- ══════════════════════════════════════════════════════════════════
      TAB 7: CHAIRMAN'S BOARD UPDATE
 ══════════════════════════════════════════════════════════════════ -->
-<div id="page-chairman" class="page active">
+<div id="page-chairman" class="page">
 
   <!-- ─── LOCK SCREEN ────────────────────────────────────────────── -->
   <div id="chmLock" style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(240,244,248,0.97);z-index:999;display:flex;align-items:center;justify-content:center">
