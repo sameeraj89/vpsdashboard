@@ -2154,17 +2154,22 @@ function chmBuildCard(u,isLatest){
     ?`<button onclick="chmToggle('${bodyId}')" id="btn${bodyId}" style="background:none;border:1px solid #d1d9e0;color:#718096;padding:3px 12px;border-radius:4px;font-size:0.62rem;cursor:pointer;font-family:'IBM Plex Sans',sans-serif">▼ Expand</button>`
     :'';
 
+  const adminBtns=chmAuthLevel==='admin'
+    ?`<button onclick="chmEditUpdate(${u.id})" style="background:none;border:1px solid #c8d8e8;color:#4a7fa5;padding:3px 10px;border-radius:4px;font-size:0.6rem;cursor:pointer;font-family:'IBM Plex Sans',sans-serif;font-weight:600">✏ Edit</button>
+      <button onclick="chmDeleteUpdate(${u.id})" style="background:none;border:1px solid #f5c6c6;color:#c0392b;padding:3px 10px;border-radius:4px;font-size:0.6rem;cursor:pointer;font-family:'IBM Plex Sans',sans-serif;font-weight:600">✕ Delete</button>`
+    :'';
+
   return `<div style="background:white;border-radius:6px;margin-bottom:14px;overflow:hidden;border:1px solid ${isLatest?'#c8d8e8':'#e2e8f0'}">
 
     <!-- Card header: clean document style -->
-    <div style="padding:12px 22px 11px;border-bottom:2px solid #0d2137;display:flex;align-items:baseline;justify-content:space-between;background:white">
+    <div style="padding:12px 22px 11px;border-bottom:2px solid #0d2137;display:flex;align-items:center;justify-content:space-between;background:white">
       <div>
         <div style="font-size:0.75rem;font-weight:800;color:#0d2137">
           ${isLatest?'<span style="font-size:0.56rem;background:#0d2137;color:white;padding:2px 7px;border-radius:2px;font-weight:700;letter-spacing:0.6px;margin-right:9px;vertical-align:middle;font-family:\'IBM Plex Mono\',monospace">CURRENT</span>':''}Board Update — Week of ${u.weekOf}
         </div>
         <div style="font-size:0.58rem;color:#a0aec0;margin-top:4px;font-family:'IBM Plex Mono',monospace">${u.refNo} &nbsp;&middot;&nbsp; ${u.addedOn} &nbsp;&middot;&nbsp; ${u.addedBy}</div>
       </div>
-      ${toggleBtn}
+      <div style="display:flex;align-items:center;gap:6px">${adminBtns}${toggleBtn}</div>
     </div>
 
     <!-- Expandable body -->
@@ -2194,34 +2199,37 @@ function chmToggle(bodyId){
   else{el.style.display='none';if(btn)btn.innerHTML='▼ Expand';}
 }
 
-function chmShowAddForm(){
+function chmShowAddForm(existing){
+  const isEdit=!!existing;
   const today=new Date();
   const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
-  const dateStr=today.getDate()+' '+months[today.getMonth()]+' '+today.getFullYear();
+  const dateStr=existing?existing.weekOf:today.getDate()+' '+months[today.getMonth()]+' '+today.getFullYear();
   const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
-  const statusOpts=[
+  const statusOpts=s=>[
     ['in-progress','◉ In Progress'],['planning','◈ Planning'],['on-track','● On Track'],
     ['immediate','⚡ Immediate Action'],['at-risk','⚠ At Risk'],['approved','✓ Approved'],
     ['complete','✔ Complete'],['monitoring','◉ Monitoring'],['draft','○ Draft'],
     ['concept','○ Concept'],['deferred','⏸ Deferred']
-  ].map(([v,l])=>`<option value="${v}">${l}</option>`).join('');
+  ].map(([v,l])=>`<option value="${v}"${s===v?' selected':''}>${l}</option>`).join('');
 
   const catForms=CHM_TEMPLATE.map(cat=>{
-    const rows=cat.items.map(item=>`<tr>
+    const rows=cat.items.map(item=>{
+      const ex=existing&&existing.data?existing.data[item.key]:{};
+      return `<tr>
       <td style="padding:8px 10px;vertical-align:top;border-bottom:1px solid #f0f4f8;width:26%">
         <div style="font-size:0.7rem;font-weight:700;color:#1a202c">${item.name}</div>
         <div style="font-size:0.58rem;color:#a0aec0;margin-top:2px">${item.sub}</div>
       </td>
       <td style="padding:8px 10px;vertical-align:top;border-bottom:1px solid #f0f4f8;width:17%">
-        <select id="fm_${item.key}_status" style="width:100%;padding:6px 7px;border:1px solid #e2e8f0;border-radius:5px;font-size:0.66rem;font-family:'IBM Plex Sans',sans-serif">${statusOpts}</select>
+        <select id="fm_${item.key}_status" style="width:100%;padding:6px 7px;border:1px solid #e2e8f0;border-radius:5px;font-size:0.66rem;font-family:'IBM Plex Sans',sans-serif">${statusOpts(ex.status||'draft')}</select>
       </td>
       <td style="padding:8px 10px;vertical-align:top;border-bottom:1px solid #f0f4f8;width:28%">
-        <input id="fm_${item.key}_impact" type="text" placeholder="Impact / savings target…" style="width:100%;padding:6px 8px;border:1px solid #e2e8f0;border-radius:5px;font-size:0.68rem;font-family:'IBM Plex Sans',sans-serif">
+        <input id="fm_${item.key}_impact" type="text" value="${(ex.impact&&ex.impact!=='—')?ex.impact:''}" placeholder="Impact / savings target…" style="width:100%;padding:6px 8px;border:1px solid #e2e8f0;border-radius:5px;font-size:0.68rem;font-family:'IBM Plex Sans',sans-serif">
       </td>
       <td style="padding:8px 10px;vertical-align:top;border-bottom:1px solid #f0f4f8">
-        <input id="fm_${item.key}_notes" type="text" placeholder="Key actions, owner, next steps…" style="width:100%;padding:6px 8px;border:1px solid #e2e8f0;border-radius:5px;font-size:0.68rem;font-family:'IBM Plex Sans',sans-serif">
+        <input id="fm_${item.key}_notes" type="text" value="${(ex.notes&&ex.notes!=='—')?ex.notes:''}" placeholder="Key actions, owner, next steps…" style="width:100%;padding:6px 8px;border:1px solid #e2e8f0;border-radius:5px;font-size:0.68rem;font-family:'IBM Plex Sans',sans-serif">
       </td>
-    </tr>`).join('');
+    </tr>`;}).join('');
     return `<div style="margin-bottom:16px;border-radius:8px;overflow:hidden;border:1px solid #e2e8f0">
       <div style="background:${cat.bg};border-left:4px solid ${cat.color};padding:8px 14px;display:flex;align-items:center;gap:8px">
         <span style="font-size:0.9rem">${cat.icon}</span>
@@ -2239,7 +2247,11 @@ function chmShowAddForm(){
     </div>`;
   }).join('');
 
-  document.getElementById('chmModalBody').innerHTML=`
+  const modalBody=document.getElementById('chmModalBody');
+  modalBody.dataset.editId=isEdit?existing.id:'';
+  document.getElementById('chmModal').querySelector('div div').firstChild.nextSibling.textContent=isEdit?'Edit Weekly Board Update':'New Weekly Board Update';
+
+  modalBody.innerHTML=`
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px">
       <div>
         <label style="display:block;font-size:0.61rem;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:#718096;margin-bottom:5px">Week Of</label>
@@ -2247,12 +2259,12 @@ function chmShowAddForm(){
       </div>
       <div>
         <label style="display:block;font-size:0.61rem;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:#718096;margin-bottom:5px">Prepared By</label>
-        <input id="fm_prepby" type="text" value="${cap(chmAdminUsername)}" style="width:100%;padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:0.8rem;font-family:'IBM Plex Sans',sans-serif;outline:none" onfocus="this.style.borderColor='#1a3a5c'" onblur="this.style.borderColor='#e2e8f0'">
+        <input id="fm_prepby" type="text" value="${existing?existing.addedBy:cap(chmAdminUsername)}" style="width:100%;padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:0.8rem;font-family:'IBM Plex Sans',sans-serif;outline:none" onfocus="this.style.borderColor='#1a3a5c'" onblur="this.style.borderColor='#e2e8f0'">
       </div>
     </div>
     <div style="margin-bottom:20px">
       <label style="display:block;font-size:0.61rem;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:#718096;margin-bottom:5px">Chairman's Note / Executive Summary</label>
-      <textarea id="fm_execsummary" rows="3" placeholder="Brief summary of this week's highlights, overall programme status and chairman's observations…" style="width:100%;padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:0.78rem;font-family:'IBM Plex Sans',sans-serif;line-height:1.65;resize:vertical;outline:none" onfocus="this.style.borderColor='#1a3a5c'" onblur="this.style.borderColor='#e2e8f0'"></textarea>
+      <textarea id="fm_execsummary" rows="3" placeholder="Brief summary of this week's highlights, overall programme status and chairman's observations…" style="width:100%;padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:0.78rem;font-family:'IBM Plex Sans',sans-serif;line-height:1.65;resize:vertical;outline:none" onfocus="this.style.borderColor='#1a3a5c'" onblur="this.style.borderColor='#e2e8f0'">${existing?existing.execSummary:''}</textarea>
     </div>
     <div style="background:#edf2f7;border-left:4px solid #1a3a5c;border-radius:0 6px 6px 0;padding:8px 14px;margin-bottom:16px;font-size:0.68rem;color:#4a5568">
       <strong>Initiative Status Updates</strong> — Set the current status, quantified impact, and key actions for each initiative below.
@@ -2271,11 +2283,6 @@ function chmSaveUpdate(){
   const prepBy=(document.getElementById('fm_prepby').value||'').trim()||chmAdminUsername;
   const execSummary=(document.getElementById('fm_execsummary').value||'').trim();
   const updates=chmGetUpdates();
-  const newId=updates.length>0?Math.max(...updates.map(u=>u.id))+1:1;
-  const padded=String(newId).padStart(3,'0');
-  const today=new Date();
-  const mons=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  const addedOn=today.getDate()+' '+mons[today.getMonth()]+' '+today.getFullYear();
   const data={};
   CHM_TEMPLATE.forEach(cat=>{
     cat.items.forEach(item=>{
@@ -2286,10 +2293,33 @@ function chmSaveUpdate(){
       };
     });
   });
-  const newUpdate={id:newId,weekOf,refNo:'LHRC/BU/2026/'+padded,addedBy:prepBy,addedOn,execSummary,data};
-  updates.unshift(newUpdate);
+  const editId=document.getElementById('chmModalBody').dataset.editId;
+  if(editId){
+    const idx=updates.findIndex(u=>u.id===parseInt(editId));
+    if(idx>-1) updates[idx]={...updates[idx],weekOf,addedBy:prepBy,execSummary,data};
+  } else {
+    const newId=updates.length>0?Math.max(...updates.map(u=>u.id))+1:1;
+    const padded=String(newId).padStart(3,'0');
+    const today=new Date();
+    const mons=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const addedOn=today.getDate()+' '+mons[today.getMonth()]+' '+today.getFullYear();
+    updates.unshift({id:newId,weekOf,refNo:'LHRC/BU/2026/'+padded,addedBy:prepBy,addedOn,execSummary,data});
+  }
   localStorage.setItem(CHM_STORE_KEY,JSON.stringify(updates));
   chmCloseModal();
+  chmRenderUpdates();
+}
+
+function chmEditUpdate(id){
+  const updates=chmGetUpdates();
+  const u=updates.find(x=>x.id===id);
+  if(u) chmShowAddForm(u);
+}
+
+function chmDeleteUpdate(id){
+  if(!confirm('Delete this update? This cannot be undone.')) return;
+  const updates=chmGetUpdates().filter(u=>u.id!==id);
+  localStorage.setItem(CHM_STORE_KEY,JSON.stringify(updates));
   chmRenderUpdates();
 }
 
