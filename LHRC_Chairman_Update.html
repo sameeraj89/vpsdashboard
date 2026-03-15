@@ -100,11 +100,21 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
 .sub-section { margin-top: 20px; padding-top: 18px; border-top: 1px solid #f0f2f5; }
 .sub-sec-title { font-size: 0.72rem; font-weight: 700; color: #0d2137; margin-bottom: 7px; letter-spacing: -0.1px; }
 
-/* ── HIGHLIGHTS ── */
-.highlights { list-style: none; padding: 0; margin: 0; }
-.highlights li { font-size: 0.74rem; color: #2d3748; line-height: 1.75; padding: 6px 0 6px 16px; border-bottom: 1px solid #f5f5f5; position: relative; }
-.highlights li:last-child { border-bottom: none; }
-.highlights li::before { content: '—'; position: absolute; left: 0; color: #a0aec0; font-size: 0.7rem; }
+/* ── HIGHLIGHTS GRID ── */
+.hl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1px solid #e8ecf0; }
+.hl-cell { padding: 16px 18px; border-right: 1px solid #e8ecf0; border-bottom: 1px solid #e8ecf0; }
+.hl-cell:nth-child(2n) { border-right: none; }
+.hl-cell:nth-last-child(-n+2) { border-bottom: none; }
+.hl-cell-label { font-size: 0.53rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.6px; color: #a0aec0; font-family: 'IBM Plex Mono', monospace; margin-bottom: 10px; }
+.hl-cell-body { font-size: 0.72rem; color: #2d3748; line-height: 1.75; }
+
+/* ── PLAIN TABLE ── */
+.plain-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.69rem; }
+.plain-table th { text-align: left; font-size: 0.54rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #a0aec0; padding: 0 10px 7px 0; border-bottom: 1px solid #e8ecf0; font-family: 'IBM Plex Mono', monospace; }
+.plain-table td { padding: 7px 10px 7px 0; color: #4a5568; border-bottom: 1px solid #f5f5f5; vertical-align: top; line-height: 1.55; }
+.plain-table tr:last-child td { border-bottom: none; }
+.plain-table td:first-child { color: #1a202c; font-weight: 500; }
+.plain-table td.amt { font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem; color: #0d2137; white-space: nowrap; }
 
 /* ── FOOTER ── */
 .footer { background: #0d2137; color: rgba(255,255,255,0.25); text-align: center; padding: 10px; font-size: 0.56rem; font-family: 'IBM Plex Mono', monospace; }
@@ -114,6 +124,10 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
   .dateline { flex-direction: column; gap: 8px; }
   .dateline-right { text-align: left; }
   .hdr { padding: 12px 18px; flex-direction: column; align-items: flex-start; }
+  .hl-grid { grid-template-columns: 1fr; }
+  .hl-cell { border-right: none; }
+  .hl-cell:nth-last-child(-n+2) { border-bottom: 1px solid #e8ecf0; }
+  .hl-cell:last-child { border-bottom: none; }
 }
 </style>
 </head>
@@ -146,11 +160,65 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
 
     <!-- Note Summary -->
     <div class="note-label">Note Summary</div>
-    <ul class="highlights" id="highlights-list">
-      <li data-edit-id="hl-1" data-placeholder="Add highlight…">FY27 capex budget approved at ₹82.2 Cr with ₹7 Cr of non-critical spend deferred across three items.</li>
-      <li data-edit-id="hl-2" data-placeholder="Add highlight…">Compliance diagnostic complete: 27 of 62 items past due, 6 requiring immediate action — governance response, not a tracking fix, is needed.</li>
-      <li data-edit-id="hl-3" data-placeholder="Add highlight…">Revenue levers (rate revision, new specialties, care packages) remain below activation line — Q1 sign-off is the critical deadline.</li>
-    </ul>
+    <div class="hl-grid">
+
+      <!-- Cost -->
+      <div class="hl-cell">
+        <div class="hl-cell-label">Cost Rationalisation</div>
+        <div class="hl-cell-body">
+          <table class="plain-table">
+            <thead>
+              <tr>
+                <th>Initiative</th>
+                <th>Amount</th>
+                <th>Status / Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td data-edit-id="ct1-name">Manufacturer negotiations</td>
+                <td class="amt" data-edit-id="ct1-amt">₹2.4 Cr</td>
+                <td data-edit-id="ct1-note">Immediate savings</td>
+              </tr>
+              <tr>
+                <td data-edit-id="ct2-name">Drug substitution (brand → generic)</td>
+                <td class="amt" data-edit-id="ct2-amt">₹4.6 Cr</td>
+                <td data-edit-id="ct2-note">Projected additional profit next year</td>
+              </tr>
+              <tr>
+                <td data-edit-id="ct3-name">Distributor savings</td>
+                <td class="amt" data-edit-id="ct3-amt">₹20 L</td>
+                <td data-edit-id="ct3-note">Immediate (assumed)</td>
+              </tr>
+              <tr>
+                <td data-edit-id="ct4-name">Payroll reduction</td>
+                <td class="amt" data-edit-id="ct4-amt">₹7.6 Cr target</td>
+                <td data-edit-id="ct4-note">₹4.7 Cr identified so far</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Revenue -->
+      <div class="hl-cell">
+        <div class="hl-cell-label">Revenue</div>
+        <div class="hl-cell-body" data-edit-id="hl-revenue" data-placeholder="Add revenue highlights…">Rate revision in draft — sign-off targeted 31 March. New specialties (IR-DSA, Cosmetology, Geriatric Care) at business case stage. Care packages conceptual; clinical sign-off is the next gate. All three levers must activate in Q1 to protect the ₹575 Cr revenue target.</div>
+      </div>
+
+      <!-- Compliance -->
+      <div class="hl-cell">
+        <div class="hl-cell-label">Compliance</div>
+        <div class="hl-cell-body" data-edit-id="hl-compliance" data-placeholder="Add compliance highlights…">27 of 62 items past due. 6 require action within days. FY25 IT return 4 months overdue; GSTR-9 72 days past deadline; board minutes unsigned for 3 meetings, blocking director filings due in 22 days. Dedicated compliance champion with 60-day mandate required.</div>
+      </div>
+
+      <!-- Brand Uplift -->
+      <div class="hl-cell">
+        <div class="hl-cell-label">Brand Uplift</div>
+        <div class="hl-cell-body" data-edit-id="hl-brand" data-placeholder="Add brand highlights…">New org chart drafted; final version expected 20 March. Website RFP issued to 3 agencies — shortlist by 25 March. HR, Finance and Ops process mapping complete; quick-win implementation commencing 17 March.</div>
+      </div>
+
+    </div>
 
     <hr class="rule-heavy">
 
