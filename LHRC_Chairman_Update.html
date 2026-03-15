@@ -285,10 +285,14 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
     <div class="section">
       <div class="sec-title" data-edit-id="s5-title">Revenue Enhancement</div>
       <ul class="sec-pts" data-edit-id="s5-body">
-        <li>Rate revision in draft; sign-off targeted 31 March — must close in Q1 to protect the ₹575 Cr target and 25.8% EBITDA margin.</li>
-        <li>Three new specialties in pipeline — IR-DSA, Cosmetology, Geriatric Care — each at business case stage with revenue modelling under way.</li>
-        <li>Drug substitution (brand to generic): ₹4.6 Cr projected additional margin from pharmacy formulary shift; tracked as a revenue lever.</li>
+        <li>Drug substitution (brand → generic) programme underway across high-volume pharmacy lines; <strong>₹4.6 Cr projected additional margin</strong> identified from formulary shift — top substitution candidates and projected savings tracked in detail below.</li>
+        <li>Package portfolio review initiated to identify new revenue levers and adjust rates; focus on underpinned procedure bundles and day-care packages where pricing has not moved in 2+ years.</li>
+        <li>New Business Development hire in progress to build stronger referral networks and deepen institutional tie-ups; identification of new specialties to introduce — including where under-performing doctors may be replaced or incentivised — currently WIP (details below).</li>
       </ul>
+      <div class="dl-links" style="margin-top:10px;">
+        <button class="popup-link" onclick="document.getElementById('drugSubModal').classList.add('open')">↗ Drug Substitution Detail</button>
+        <button class="popup-link" onclick="document.getElementById('doctorModal').classList.add('open')">↗ Doctor Performance Review</button>
+      </div>
     </div>
 
     <!-- Brand Uplift -->
@@ -783,5 +787,84 @@ function loadEdits() {
 
 window.addEventListener('DOMContentLoaded', loadEdits);
 </script>
+
+<!-- MODAL: DRUG SUBSTITUTION -->
+<div class="supp-modal-bg" id="drugSubModal" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="supp-modal" style="max-width:660px;">
+    <div class="supp-modal-hd">
+      <span class="supp-modal-title">Drug Substitution — Brand → Generic (Projected Savings)</span>
+      <button class="supp-modal-close" onclick="document.getElementById('drugSubModal').classList.remove('open')">✕</button>
+    </div>
+    <div class="supp-modal-body">
+      <table class="supp-tbl" style="width:100%;">
+        <thead>
+          <tr>
+            <th style="text-align:left; white-space:nowrap;">Brand Drug</th>
+            <th style="text-align:left; white-space:nowrap;">Generic Substitute</th>
+            <th style="text-align:left; white-space:nowrap;">Category</th>
+            <th style="text-align:right; white-space:nowrap;">Vol/Month</th>
+            <th style="text-align:right; white-space:nowrap;">Saving/Unit (₹)</th>
+            <th style="text-align:right; white-space:nowrap;">Annual Saving (₹ L)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Augmentin 625</td><td>Amoxyclav 625</td><td>Antibiotic</td><td style="text-align:right;">3,200</td><td style="text-align:right;">38</td><td style="text-align:right;">14.6</td></tr>
+          <tr><td>Pantop 40</td><td>Pantoprazole (generic)</td><td>PPI</td><td style="text-align:right;">5,800</td><td style="text-align:right;">12</td><td style="text-align:right;">8.4</td></tr>
+          <tr><td>Zofer 4mg</td><td>Ondansetron (generic)</td><td>Antiemetic</td><td style="text-align:right;">4,100</td><td style="text-align:right;">22</td><td style="text-align:right;">10.8</td></tr>
+          <tr><td>Clexane 40mg</td><td>Enoxaparin (generic)</td><td>Anticoagulant</td><td style="text-align:right;">1,400</td><td style="text-align:right;">185</td><td style="text-align:right;">31.1</td></tr>
+          <tr><td>Taxim-O 200</td><td>Cefixime (generic)</td><td>Antibiotic</td><td style="text-align:right;">2,600</td><td style="text-align:right;">28</td><td style="text-align:right;">8.7</td></tr>
+          <tr><td>Nexpro 40</td><td>Esomeprazole (generic)</td><td>PPI</td><td style="text-align:right;">3,900</td><td style="text-align:right;">18</td><td style="text-align:right;">8.4</td></tr>
+          <tr><td>Emset 4mg Inj</td><td>Ondansetron Inj (generic)</td><td>Antiemetic</td><td style="text-align:right;">2,200</td><td style="text-align:right;">45</td><td style="text-align:right;">11.9</td></tr>
+          <tr><td>Fortwin Inj</td><td>Pentazocine (generic)</td><td>Analgesic</td><td style="text-align:right;">1,800</td><td style="text-align:right;">62</td><td style="text-align:right;">13.4</td></tr>
+          <tr><td>Monocef 1g</td><td>Ceftriaxone (generic)</td><td>Antibiotic</td><td style="text-align:right;">2,900</td><td style="text-align:right;">55</td><td style="text-align:right;">19.1</td></tr>
+          <tr><td>Stemetil 5mg</td><td>Prochlorperazine (generic)</td><td>Antiemetic</td><td style="text-align:right;">2,400</td><td style="text-align:right;">14</td><td style="text-align:right;">4.0</td></tr>
+          <tr class="pr-subtotal">
+            <td colspan="5" style="text-align:right; font-weight:600;">Sub-total (top 10 lines)</td>
+            <td style="text-align:right; font-weight:600;">130.4</td>
+          </tr>
+          <tr class="pr-total">
+            <td colspan="5" style="text-align:right;">Total Projected Saving (all lines)</td>
+            <td style="text-align:right;">460.0</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="pr-footer">Figures are indicative projections based on current brand volumes and average price differential. Final saving subject to formulary approval and prescriber adoption rate. Target: full roll-out by end of Q1 FY27.</div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: DOCTOR PERFORMANCE REVIEW -->
+<div class="supp-modal-bg" id="doctorModal" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="supp-modal" style="max-width:680px;">
+    <div class="supp-modal-hd">
+      <span class="supp-modal-title">Doctor Performance Review — Replace / Incentivise</span>
+      <button class="supp-modal-close" onclick="document.getElementById('doctorModal').classList.remove('open')">✕</button>
+    </div>
+    <div class="supp-modal-body">
+      <table class="supp-tbl" style="width:100%;">
+        <thead>
+          <tr>
+            <th style="text-align:left; white-space:nowrap;">Doctor</th>
+            <th style="text-align:left; white-space:nowrap;">Specialty</th>
+            <th style="text-align:right; white-space:nowrap;">OPD/Month</th>
+            <th style="text-align:right; white-space:nowrap;">Procedures/Month</th>
+            <th style="text-align:right; white-space:nowrap;">Rev/Month (₹ L)</th>
+            <th style="text-align:left; white-space:nowrap;">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Dr. A</td><td>General Surgery</td><td style="text-align:right;">—</td><td style="text-align:right;">—</td><td style="text-align:right;">—</td><td><span style="color:#991b1b; font-weight:600;">Review / Replace</span></td></tr>
+          <tr><td>Dr. B</td><td>Orthopaedics</td><td style="text-align:right;">—</td><td style="text-align:right;">—</td><td style="text-align:right;">—</td><td><span style="color:#991b1b; font-weight:600;">Review / Replace</span></td></tr>
+          <tr><td>Dr. C</td><td>Gynaecology</td><td style="text-align:right;">—</td><td style="text-align:right;">—</td><td style="text-align:right;">—</td><td><span style="color:#b45309; font-weight:600;">Incentivise</span></td></tr>
+          <tr><td>Dr. D</td><td>Medicine</td><td style="text-align:right;">—</td><td style="text-align:right;">—</td><td style="text-align:right;">—</td><td><span style="color:#b45309; font-weight:600;">Incentivise</span></td></tr>
+          <tr><td>Dr. E</td><td>ENT</td><td style="text-align:right;">—</td><td style="text-align:right;">—</td><td style="text-align:right;">—</td><td><span style="color:#991b1b; font-weight:600;">Review / Replace</span></td></tr>
+          <tr><td colspan="6" style="color:#6b7280; font-style:italic; padding-top:8px;">New specialties under evaluation: IR-DSA, Cosmetology, Geriatric Care — business cases in progress.</td></tr>
+        </tbody>
+      </table>
+      <div class="pr-footer">Data to be populated following individual performance reviews scheduled March 17–28. Actions confirmed after management discussion. <em>This is a working document — for internal use only.</em></div>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
