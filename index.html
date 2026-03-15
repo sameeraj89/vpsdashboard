@@ -601,7 +601,8 @@ body {
 <!-- ══════════  GATE LOGIC  ══════════ -->
 <script>
 (function(){
-  var PASSWORD = 'Lakeshore2026';
+  var PASSWORD          = 'Lakeshore2026';
+  var PASSWORD_CHAIRMAN = 'vpslakeshoreupdate';
   var KEY  = 'vps_si_auth';
   var gate = document.getElementById('gate');
   var pw   = document.getElementById('gpw');
@@ -617,7 +618,15 @@ body {
     setTimeout(function(){ gate.remove(); }, 460);
   }
   function attempt() {
-    if (pw.value === PASSWORD) {
+    if (pw.value === PASSWORD_CHAIRMAN) {
+      err.classList.remove('show');
+      btn.disabled = true;
+      btn.textContent = '✓ Access Granted';
+      sessionStorage.setItem(KEY, 'ok');
+      gate.classList.add('out');
+      document.body.style.overflow = '';
+      setTimeout(function(){ window.location.href = 'LHRC_Chairman_Update.html'; }, 460);
+    } else if (pw.value === PASSWORD) {
       err.classList.remove('show');
       btn.disabled = true;
       btn.textContent = '✓ Access Granted';
