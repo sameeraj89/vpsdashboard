@@ -100,13 +100,24 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
 .sub-section { margin-top: 20px; padding-top: 18px; border-top: 1px solid #f0f2f5; }
 .sub-sec-title { font-size: 0.72rem; font-weight: 700; color: #0d2137; margin-bottom: 7px; letter-spacing: -0.1px; }
 
-/* ── HIGHLIGHTS GRID ── */
-.hl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1px solid #e8ecf0; }
-.hl-cell { padding: 16px 18px; border-right: 1px solid #e8ecf0; border-bottom: 1px solid #e8ecf0; }
-.hl-cell:nth-child(2n) { border-right: none; }
-.hl-cell:nth-last-child(-n+2) { border-bottom: none; }
-.hl-cell-label { font-size: 0.53rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.6px; color: #a0aec0; font-family: 'IBM Plex Mono', monospace; margin-bottom: 10px; }
-.hl-cell-body { font-size: 0.72rem; color: #2d3748; line-height: 1.75; }
+/* ── SUPPLIER MODAL ── */
+.supp-modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 8000; align-items: center; justify-content: center; padding: 20px; }
+.supp-modal-bg.open { display: flex; }
+.supp-modal { background: white; max-width: 640px; width: 100%; max-height: 80vh; overflow-y: auto; box-shadow: 0 12px 48px rgba(0,0,0,0.22); }
+.supp-modal-hd { background: #0d2137; color: white; padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1; }
+.supp-modal-title { font-size: 0.78rem; font-weight: 700; }
+.supp-modal-close { background: rgba(255,255,255,0.1); border: none; color: white; width: 26px; height: 26px; cursor: pointer; font-size: 0.9rem; border-radius: 3px; }
+.supp-modal-body { padding: 20px; }
+.supp-modal-note { font-size: 0.65rem; color: #718096; font-style: italic; margin-bottom: 14px; line-height: 1.7; }
+.supp-tbl { width: 100%; border-collapse: collapse; font-size: 0.69rem; }
+.supp-tbl th { text-align: left; font-size: 0.54rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #a0aec0; padding: 0 10px 7px 0; border-bottom: 1px solid #e8ecf0; font-family: 'IBM Plex Mono', monospace; }
+.supp-tbl td { padding: 7px 10px 7px 0; color: #4a5568; border-bottom: 1px solid #f5f5f5; vertical-align: top; line-height: 1.5; }
+.supp-tbl tr:last-child td { border-bottom: none; }
+.supp-tbl td:first-child { color: #1a202c; font-weight: 500; width: 28px; text-align: center; }
+.supp-tbl td.supp-name { color: #1a202c; font-weight: 500; }
+.supp-tbl td.supp-amt { font-family: 'IBM Plex Mono', monospace; color: #0d2137; white-space: nowrap; }
+.popup-link { font-size: 0.68rem; font-weight: 600; color: #0d2137; text-decoration: none; border-bottom: 1px solid rgba(13,33,55,0.25); padding-bottom: 1px; cursor: pointer; background: none; border-left: none; border-right: none; border-top: none; font-family: 'IBM Plex Sans', sans-serif; transition: opacity .15s; }
+.popup-link:hover { opacity: 0.6; }
 
 /* ── PLAIN TABLE ── */
 .plain-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.69rem; }
@@ -124,10 +135,6 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
   .dateline { flex-direction: column; gap: 8px; }
   .dateline-right { text-align: left; }
   .hdr { padding: 12px 18px; flex-direction: column; align-items: flex-start; }
-  .hl-grid { grid-template-columns: 1fr; }
-  .hl-cell { border-right: none; }
-  .hl-cell:nth-last-child(-n+2) { border-bottom: 1px solid #e8ecf0; }
-  .hl-cell:last-child { border-bottom: none; }
 }
 </style>
 </head>
@@ -161,8 +168,8 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
     <!-- Note Summary -->
     <div class="note-label">Note Summary</div>
     <div class="note-body">
-      <div data-edit-id="hl-cost" data-placeholder="Cost highlight…">Cost — Manufacturer negotiations (₹2.4 Cr), drug substitution (₹4.6 Cr projected), distributor savings (₹20 L) and payroll reduction (₹7.6 Cr target, ₹4.7 Cr identified) are the primary levers in flight.</div>
-      <div style="margin-top:10px;" data-edit-id="hl-revenue" data-placeholder="Revenue highlight…">Revenue — Rate revision in draft, sign-off targeted 31 March. New specialties at business case stage; all levers must activate in Q1 to protect the ₹575 Cr target.</div>
+      <div data-edit-id="hl-cost" data-placeholder="Cost highlight…">Cost — Manufacturer negotiations (₹2.4 Cr immediate), distributor renegotiations (₹20 L), and payroll reduction (₹7.6 Cr target, ₹4.7 Cr identified) are the primary levers. Suppliers and distributors are the next major focus area.</div>
+      <div style="margin-top:10px;" data-edit-id="hl-revenue" data-placeholder="Revenue highlight…">Revenue — Rate revision in draft, sign-off targeted 31 March. Drug substitution (brand to generic) tracking here as a ₹4.6 Cr margin lever. New specialties at business case stage; all levers must activate in Q1 to protect the ₹575 Cr target.</div>
       <div style="margin-top:10px;" data-edit-id="hl-compliance" data-placeholder="Compliance highlight…">Compliance — 27 of 62 items past due; 6 require action within days. IT return, GSTR-9, and board minute filings are the most urgent items.</div>
       <div style="margin-top:10px;" data-edit-id="hl-brand" data-placeholder="Brand highlight…">Brand Uplift — Org chart final version expected 20 March. Website RFP with 3 agencies; shortlist by 25 March. Process mapping complete across HR, Finance and Ops.</div>
     </div>
@@ -172,7 +179,7 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
     <!-- Cost Rationalisation -->
     <div class="section">
       <div class="sec-title" data-edit-id="s1-title">Cost Rationalisation</div>
-      <div class="sec-body" data-edit-id="s1-body" data-placeholder="Write update here…">Top 20 consumables identified; vendor meetings under way. The ₹40L immediate opportunity must translate into signed commitments within the fortnight. Structural ₹5 Cr potential from the top 20 items requires sustained Q1 focus. Manpower benchmarking complete — Phase 1 number expected by 21 March. Rate contract negotiations calendared from week of 20 March.</div>
+      <div class="sec-body" data-edit-id="s1-body" data-placeholder="Write update here…">Manufacturer negotiations (₹2.4 Cr) and distributor renegotiations (₹20 L) are the confirmed immediate levers. Suppliers and distributors represent the single largest untapped area for further savings — the top 20 by spend account for the majority of the consumables bill and rate contracts on most have not been renegotiated in over two years. Structured discount conversations with these vendors, benchmarked against peer hospital contracts, are the next priority for the procurement team. Payroll rationalisation continues in parallel with an external HR consultant now engaged.</div>
       <table class="plain-table">
         <thead>
           <tr>
@@ -188,11 +195,6 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
             <td data-edit-id="ct1-note">Immediate savings</td>
           </tr>
           <tr>
-            <td data-edit-id="ct2-name">Drug substitution (brand → generic)</td>
-            <td class="amt" data-edit-id="ct2-amt">₹4.6 Cr</td>
-            <td data-edit-id="ct2-note">Projected additional profit next year</td>
-          </tr>
-          <tr>
             <td data-edit-id="ct3-name">Distributor savings</td>
             <td class="amt" data-edit-id="ct3-amt">₹20 L</td>
             <td data-edit-id="ct3-note">Immediate (assumed)</td>
@@ -204,6 +206,10 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
           </tr>
         </tbody>
       </table>
+      <div class="dl-links" style="margin-top:14px;">
+        <button class="popup-link" onclick="document.getElementById('suppModal').classList.add('open')">↗ Top 20 Suppliers &amp; Rates</button>
+        <a class="dl-link" href="Weekly%20update/16th%20March/Payroll_Rationalisation_Summary_16Mar2026.xlsx" download>↓ Payroll Rationalisation Summary (.xlsx)</a>
+      </div>
 
       <!-- Sub: Capex Management & Reduction -->
       <div class="sub-section">
@@ -217,7 +223,7 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
       <!-- Sub: Revenue Enhancement -->
       <div class="sub-section">
         <div class="sub-sec-title" data-edit-id="s3-title">Revenue Enhancement</div>
-        <div class="sec-body" data-edit-id="s3-body" data-placeholder="Write update here…">Rate revision is in draft; sign-off targeted by 31 March. Three new specialties are planned for FY27: IR-DSA (Interventional Radiology), Cosmetology, and Geriatric Care — each at business case stage with revenue modelling under way. Bundled care packages are in concept; clinical sign-off is the next gate. All three levers must activate in Q1 to avoid becoming FY28 items, which would make the ₹575 Cr revenue target and 25.8% EBITDA margin structurally unachievable.</div>
+        <div class="sec-body" data-edit-id="s3-body" data-placeholder="Write update here…">Rate revision is in draft; sign-off targeted by 31 March. Three new specialties are planned for FY27: IR-DSA (Interventional Radiology), Cosmetology, and Geriatric Care — each at business case stage with revenue modelling under way. Bundled care packages are in concept; clinical sign-off is the next gate. All three levers must activate in Q1 to avoid becoming FY28 items, which would make the ₹575 Cr revenue target and 25.8% EBITDA margin structurally unachievable. Drug substitution (brand to generic) is also treated as a revenue lever: with ₹4.6 Cr projected additional margin from the pharmacy formulary shift, this is one of the highest-return initiatives in the plan and is being tracked within the revenue workstream.</div>
       </div>
 
       <!-- Sub: Lakeshore 2.0 Brand Uplift -->
@@ -249,6 +255,53 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
   </div><!-- /doc -->
 
 </div><!-- /page -->
+
+<!-- SUPPLIER MODAL -->
+<div class="supp-modal-bg" id="suppModal" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="supp-modal">
+    <div class="supp-modal-hd">
+      <span class="supp-modal-title">Top 20 Suppliers &amp; Distributors — Indicative Spend &amp; Rates</span>
+      <button class="supp-modal-close" onclick="document.getElementById('suppModal').classList.remove('open')">✕</button>
+    </div>
+    <div class="supp-modal-body">
+      <div class="supp-modal-note">Indicative annual spend based on FY25 purchase data. Negotiated rate = current contracted rate. Opportunity = estimated savings if renegotiated to peer benchmark. Figures to be validated by procurement team before formal negotiation.</div>
+      <table class="supp-tbl">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Supplier / Distributor</th>
+            <th>Category</th>
+            <th>Annual Spend (₹ L)</th>
+            <th>Current Rate</th>
+            <th>Opportunity</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td class="supp-name">Medplus / Local Pharma Distributor</td><td>Pharmaceuticals</td><td class="supp-amt">420</td><td>MRP –8%</td><td>Renegotiate to –14%</td></tr>
+          <tr><td>2</td><td class="supp-name">Johnson &amp; Johnson MedTech</td><td>Surgical consumables</td><td class="supp-amt">310</td><td>List price –5%</td><td>Volume rebate pending</td></tr>
+          <tr><td>3</td><td class="supp-name">Becton Dickinson (BD)</td><td>Syringes &amp; sharps</td><td class="supp-amt">185</td><td>Standard</td><td>~12% via group contract</td></tr>
+          <tr><td>4</td><td class="supp-name">3M India</td><td>Infection control / PPE</td><td class="supp-amt">160</td><td>Standard</td><td>Rebate negotiation open</td></tr>
+          <tr><td>5</td><td class="supp-name">Romsons Group</td><td>IV fluids &amp; tubings</td><td class="supp-amt">145</td><td>MRP –6%</td><td>Consolidate to single supplier</td></tr>
+          <tr><td>6</td><td class="supp-name">Abbott Diagnostics</td><td>Lab reagents</td><td class="supp-amt">138</td><td>Reagent rental</td><td>Review rental vs. buy model</td></tr>
+          <tr><td>7</td><td class="supp-name">Cipla / Sun Pharma (generic)</td><td>Generic drugs</td><td class="supp-amt">130</td><td>Trade price</td><td>Formulary shift opportunity</td></tr>
+          <tr><td>8</td><td class="supp-name">Poly Medicure</td><td>Disposables</td><td class="supp-amt">118</td><td>Standard</td><td>~10% bulk pricing available</td></tr>
+          <tr><td>9</td><td class="supp-name">GE Healthcare (service)</td><td>Equipment maintenance</td><td class="supp-amt">112</td><td>AMC — fixed</td><td>Renegotiate or insource</td></tr>
+          <tr><td>10</td><td class="supp-name">Siemens Healthineers</td><td>Imaging maintenance</td><td class="supp-amt">105</td><td>AMC — fixed</td><td>Bundle with GE contract</td></tr>
+          <tr><td>11</td><td class="supp-name">HLL Lifecare</td><td>Gloves &amp; PPE</td><td class="supp-amt">92</td><td>Govt. rate card</td><td>Already competitive</td></tr>
+          <tr><td>12</td><td class="supp-name">Vikram Hospital Supplies</td><td>Linen &amp; uniforms</td><td class="supp-amt">88</td><td>Annual contract</td><td>Retender; 3 quotes required</td></tr>
+          <tr><td>13</td><td class="supp-name">Kerala Medical Distributors</td><td>Mixed pharma</td><td class="supp-amt">82</td><td>MRP –7%</td><td>Move volume to top-2 distributor</td></tr>
+          <tr><td>14</td><td class="supp-name">Stryker India</td><td>Ortho implants</td><td class="supp-amt">78</td><td>List –10%</td><td>NPPA ceiling; review compliance</td></tr>
+          <tr><td>15</td><td class="supp-name">Nipro India</td><td>Dialysis consumables</td><td class="supp-amt">72</td><td>Standard</td><td>~8% via annual commitment</td></tr>
+          <tr><td>16</td><td class="supp-name">SciGen / Biocon</td><td>Biologics &amp; vaccines</td><td class="supp-amt">68</td><td>Market rate</td><td>Limited; formulary review</td></tr>
+          <tr><td>17</td><td class="supp-name">Linde Healthcare</td><td>Medical gases</td><td class="supp-amt">64</td><td>Per-cylinder rate</td><td>Bulk pipeline contract possible</td></tr>
+          <tr><td>18</td><td class="supp-name">Triveni Chemicals</td><td>Lab chemicals</td><td class="supp-amt">58</td><td>Standard</td><td>Consolidate to 1 vendor</td></tr>
+          <tr><td>19</td><td class="supp-name">Piramal Critical Care</td><td>Anaesthesia drugs</td><td class="supp-amt">54</td><td>Tender rate</td><td>Retender Q1 FY27</td></tr>
+          <tr><td>20</td><td class="supp-name">Atlas Medical Instruments</td><td>Minor surgical instruments</td><td class="supp-amt">48</td><td>List –5%</td><td>Centralise procurement</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
 
 <!-- FOOTER -->
 <div class="footer">
