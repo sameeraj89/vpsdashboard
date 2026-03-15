@@ -255,33 +255,11 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
       <div class="sub-section">
         <div class="sub-sec-title" data-edit-id="s3-title">Capex Management &amp; Reduction</div>
         <ul class="sec-pts" data-edit-id="s3-body">
-          <li>FY27 Capex budget reviewed end-to-end; <strong>₹14.7 Cr in potential savings identified</strong> through item deferrals, rejections and scope reductions — freeing capital for priority infrastructure and working-capital headroom.</li>
-          <li>Five highest-value items deferred or removed are shown below; combined they account for ₹8.2 Cr of the total saving.</li>
+          <li>FY27 Capex budget reviewed end-to-end; <strong>₹14.7 Cr in potential savings identified</strong> through item deferrals, rejections and scope reductions — analysis covers 5–6 departments to date, with the remaining departments to follow.</li>
+          <li>Top 5 deferred or removed items account for ₹8.2 Cr of the total saving; details available below.</li>
         </ul>
-        <!-- Capex top-5 table -->
-        <div style="overflow-x:auto; margin:10px 0 6px 0;">
-          <table class="supp-tbl" style="width:100%; font-size:0.82rem;">
-            <thead>
-              <tr>
-                <th style="text-align:left; white-space:nowrap;">#</th>
-                <th style="text-align:left; white-space:nowrap;">Item</th>
-                <th style="text-align:left; white-space:nowrap;">Department</th>
-                <th style="text-align:right; white-space:nowrap;">Saving (₹ Cr)</th>
-                <th style="text-align:left; white-space:nowrap;">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td>1</td><td>Digital Pathology System</td><td>Pathology</td><td style="text-align:right;">3.00</td><td><span style="color:#b45309; font-weight:600;">On Hold</span></td></tr>
-              <tr><td>2</td><td>Digital Slide Scanner</td><td>Pathology</td><td style="text-align:right;">2.50</td><td><span style="color:#b45309; font-weight:600;">On Hold</span></td></tr>
-              <tr><td>3</td><td>LASER Equipment</td><td>Surgical</td><td style="text-align:right;">1.50</td><td><span style="color:#b45309; font-weight:600;">On Hold</span></td></tr>
-              <tr><td>4</td><td>Portable DR Unit</td><td>Radiology</td><td style="text-align:right;">0.60</td><td><span style="color:#b45309; font-weight:600;">On Hold</span></td></tr>
-              <tr><td>5</td><td>WAB for Ultrasound</td><td>Radiology</td><td style="text-align:right;">0.60</td><td><span style="color:#b45309; font-weight:600;">On Hold</span></td></tr>
-              <tr class="pr-subtotal"><td colspan="3" style="text-align:right; font-weight:600;">Top 5 Sub-total</td><td style="text-align:right; font-weight:600;">8.20</td><td></td></tr>
-              <tr class="pr-total"><td colspan="3" style="text-align:right;">Grand Total Savings (all items)</td><td style="text-align:right;">14.70</td><td></td></tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="dl-links" style="margin-top:8px;">
+        <div class="dl-links" style="margin-top:10px;">
+          <button class="popup-link" onclick="document.getElementById('capexModal').classList.add('open')">↗ Top 5 Capex Savings</button>
           <a class="dl-link" href="Weekly%20update/16th%20March/Capex%20Budget%20FY%202026-27%20V2.1.xlsx" download>↓ Capex Budget FY27 V2.1 (.xlsx)</a>
         </div>
       </div>
@@ -348,6 +326,45 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
   </div><!-- /doc -->
 
 </div><!-- /page -->
+
+<!-- MODAL: CAPEX TOP 5 SAVINGS -->
+<div class="supp-modal-bg" id="capexModal" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="supp-modal" style="max-width:580px;">
+    <div class="supp-modal-hd">
+      <span class="supp-modal-title">Capex Savings — Top 5 Deferred / Removed Items</span>
+      <button class="supp-modal-close" onclick="document.getElementById('capexModal').classList.remove('open')">✕</button>
+    </div>
+    <div class="supp-modal-body">
+      <table class="supp-tbl" style="width:100%;">
+        <thead>
+          <tr>
+            <th style="text-align:left; white-space:nowrap;">#</th>
+            <th style="text-align:left; white-space:nowrap;">Item</th>
+            <th style="text-align:left; white-space:nowrap;">Department</th>
+            <th style="text-align:right; white-space:nowrap;">Saving (₹ Cr)</th>
+            <th style="text-align:left; white-space:nowrap;">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td>Digital Pathology System</td><td>Pathology</td><td style="text-align:right;">3.00</td><td><span style="color:#b45309; font-weight:600;">On Hold</span></td></tr>
+          <tr><td>2</td><td>Digital Slide Scanner</td><td>Pathology</td><td style="text-align:right;">2.50</td><td><span style="color:#b45309; font-weight:600;">On Hold</span></td></tr>
+          <tr><td>3</td><td>LASER Equipment</td><td>Surgical</td><td style="text-align:right;">1.50</td><td><span style="color:#b45309; font-weight:600;">On Hold</span></td></tr>
+          <tr><td>4</td><td>Portable DR Unit</td><td>Radiology</td><td style="text-align:right;">0.60</td><td><span style="color:#b45309; font-weight:600;">On Hold</span></td></tr>
+          <tr><td>5</td><td>WAB for Ultrasound</td><td>Radiology</td><td style="text-align:right;">0.60</td><td><span style="color:#b45309; font-weight:600;">On Hold</span></td></tr>
+          <tr class="pr-subtotal">
+            <td colspan="3" style="text-align:right; font-weight:600;">Top 5 Sub-total</td>
+            <td style="text-align:right; font-weight:600;">8.20</td><td></td>
+          </tr>
+          <tr class="pr-total">
+            <td colspan="3" style="text-align:right;">Grand Total Savings (all items)</td>
+            <td style="text-align:right;">14.70</td><td></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="pr-footer">Analysis covers 5–6 departments to date. Remaining departments under review — full budget sweep to be completed by end of Q1 FY27.</div>
+    </div>
+  </div>
+</div>
 
 <!-- MODAL 1: DRUG COMPANY DISCOUNTS -->
 <div class="supp-modal-bg" id="drugCoModal" onclick="if(event.target===this)this.classList.remove('open')">
