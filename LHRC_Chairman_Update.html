@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chairman's Board Update — VPS Lakeshore</title>
+<title>Weekly Transformation Update — VPS Lakeshore</title>
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-MMR68PDD2K"></script>
 <script>
@@ -96,6 +96,16 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
 .modal-err { display: none; font-size: 0.65rem; color: #c0392b; padding: 6px 9px; background: #fdf2f2; border-radius: 3px; border-left: 2px solid #c0392b; margin-bottom: 10px; }
 .modal-submit { width: 100%; background: #0d2137; color: white; padding: 10px; border: none; border-radius: 4px; font-size: 0.74rem; font-weight: 700; cursor: pointer; font-family: 'IBM Plex Sans', sans-serif; }
 
+/* ── SUB-SECTIONS ── */
+.sub-section { margin-top: 20px; padding-top: 18px; border-top: 1px solid #f0f2f5; }
+.sub-sec-title { font-size: 0.72rem; font-weight: 700; color: #0d2137; margin-bottom: 7px; letter-spacing: -0.1px; }
+
+/* ── HIGHLIGHTS ── */
+.highlights { list-style: none; padding: 0; margin: 0; }
+.highlights li { font-size: 0.74rem; color: #2d3748; line-height: 1.75; padding: 6px 0 6px 16px; border-bottom: 1px solid #f5f5f5; position: relative; }
+.highlights li:last-child { border-bottom: none; }
+.highlights li::before { content: '—'; position: absolute; left: 0; color: #a0aec0; font-size: 0.7rem; }
+
 /* ── FOOTER ── */
 .footer { background: #0d2137; color: rgba(255,255,255,0.25); text-align: center; padding: 10px; font-size: 0.56rem; font-family: 'IBM Plex Mono', monospace; }
 
@@ -112,8 +122,8 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
 <!-- HEADER -->
 <div class="hdr">
   <div>
-    <div class="hdr-title">Chairman's Board Update</div>
-    <div class="hdr-sub">VPS Lakeshore Hospital &amp; Research Centre &nbsp;·&nbsp; Lakeshore 2.0 Transformation Programme</div>
+    <div class="hdr-title">Weekly Transformation Update</div>
+    <div class="hdr-sub">VPS Lakeshore Hospital &amp; Research Centre</div>
   </div>
   <div class="hdr-right">Weekly Cadence<br>Confidential</div>
 </div>
@@ -128,46 +138,53 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
     <!-- Dateline -->
     <div class="dateline">
       <div class="dateline-left">
-        <div class="dateline-eyebrow">VPS Lakeshore · Lakeshore 2.0</div>
+        <div class="dateline-eyebrow">VPS Lakeshore Hospital &amp; Research Centre</div>
         <div class="dateline-week" data-edit-id="doc-week">Week of 16 March 2026</div>
       </div>
-      <div class="dateline-right" data-edit-id="doc-ref">LHRC/BU/2026/002<br>Chairman's Office<br>Strictly Confidential</div>
+      <div class="dateline-right" data-edit-id="doc-ref">LHRC/BU/2026/002<br>Strictly Confidential</div>
     </div>
 
-    <!-- Chairman's Note -->
-    <div class="note-label">Chairman's Note</div>
-    <div class="note-body" data-edit-id="doc-note" data-placeholder="Write the chairman's note here…">FY27 capex budget crystallised at ₹82.2 Cr with ₹7 Cr of non-critical spend deferred. Consumables rationalisation has moved to vendor engagement — the ₹40L immediate opportunity must be contracted within the fortnight. Compliance diagnostic is complete: 62 items reviewed, 27 confirmed non-compliances, 6 requiring immediate action. Revenue levers remain in early design; pace must accelerate to avoid slipping to FY28.</div>
+    <!-- Note Summary -->
+    <div class="note-label">Note Summary</div>
+    <ul class="highlights" id="highlights-list">
+      <li data-edit-id="hl-1" data-placeholder="Add highlight…">FY27 capex budget approved at ₹82.2 Cr with ₹7 Cr of non-critical spend deferred across three items.</li>
+      <li data-edit-id="hl-2" data-placeholder="Add highlight…">Compliance diagnostic complete: 27 of 62 items past due, 6 requiring immediate action — governance response, not a tracking fix, is needed.</li>
+      <li data-edit-id="hl-3" data-placeholder="Add highlight…">Revenue levers (rate revision, new specialties, care packages) remain below activation line — Q1 sign-off is the critical deadline.</li>
+    </ul>
 
     <hr class="rule-heavy">
 
     <!-- Cost Rationalisation -->
     <div class="section">
       <div class="sec-title" data-edit-id="s1-title">Cost Rationalisation</div>
-      <div class="sec-body" data-edit-id="s1-body" data-placeholder="Write update here…">Top 20 consumables identified; vendor meetings under way. The ₹40L immediate opportunity must translate into signed commitments within the fortnight. Structural ₹5 Cr potential from the top 20 items requires sustained Q1 focus. Manpower benchmarking is complete — Phase 1 number expected by 21 March. Rate contract negotiations are calendared from the week of 20 March but not yet under way.</div>
-    </div>
+      <div class="sec-body" data-edit-id="s1-body" data-placeholder="Write update here…">Top 20 consumables identified; vendor meetings under way. The ₹40L immediate opportunity must translate into signed commitments within the fortnight. Structural ₹5 Cr potential from the top 20 items requires sustained Q1 focus. Manpower benchmarking complete — Phase 1 number expected by 21 March. Rate contract negotiations calendared from week of 20 March.</div>
 
-    <!-- Capex Management -->
-    <div class="section">
-      <div class="sec-title" data-edit-id="s2-title">Capex Management</div>
-      <div class="sec-body" data-edit-id="s2-body" data-placeholder="Write update here…">FY27 budget set at ₹82.2 Cr. Three items deferred: Digital Pathology ₹3 Cr, Digital Slide Scanner ₹2.5 Cr, LASER Equipment ₹1.5 Cr. Quantity reductions approved on four biomedical items. Active projects on defined timelines: Casualty Redesign ₹3.8 Cr (July–November), Multi-Level Parking ₹4.4 Cr (January–June), Renal Transplant Centre ₹1.5 Cr (July–October).</div>
-    </div>
+      <!-- Sub: Capex Management & Reduction -->
+      <div class="sub-section">
+        <div class="sub-sec-title" data-edit-id="s2-title">Capex Management &amp; Reduction</div>
+        <div class="sec-body" data-edit-id="s2-body" data-placeholder="Write update here…">FY27 budget set at ₹82.2 Cr. Three items deferred: Digital Pathology ₹3 Cr, Digital Slide Scanner ₹2.5 Cr, LASER Equipment ₹1.5 Cr. Quantity reductions approved on four biomedical items. Active projects on defined timelines: Casualty Redesign ₹3.8 Cr (July–November), Multi-Level Parking ₹4.4 Cr (January–June), Renal Transplant Centre ₹1.5 Cr (July–October).</div>
+        <div class="dl-links">
+          <a class="dl-link" href="Weekly%20update/16th%20March/Capex%20Budget%20FY%202026-27%20V2.1.xlsx" download>↓ Capex Budget FY27 V2.1 (.xlsx)</a>
+        </div>
+      </div>
 
-    <!-- Revenue Enhancement -->
-    <div class="section">
-      <div class="sec-title" data-edit-id="s3-title">Revenue Enhancement</div>
-      <div class="sec-body" data-edit-id="s3-body" data-placeholder="Write update here…">Rate revision is in draft; sign-off targeted by 31 March. New specialties — IR-DSA, Cosmetology, and Geriatric Care — are at business case stage. Care packages remain conceptual. All three levers must activate in Q1; slippage to April converts them into FY28 items, making the ₹575 Cr revenue target and 25.8% EBITDA margin structurally unachievable.</div>
-    </div>
+      <!-- Sub: Revenue Enhancement -->
+      <div class="sub-section">
+        <div class="sub-sec-title" data-edit-id="s3-title">Revenue Enhancement</div>
+        <div class="sec-body" data-edit-id="s3-body" data-placeholder="Write update here…">Rate revision is in draft; sign-off targeted by 31 March. Three new specialties are planned for FY27: IR-DSA (Interventional Radiology), Cosmetology, and Geriatric Care — each at business case stage with revenue modelling under way. Bundled care packages are in concept; clinical sign-off is the next gate. All three levers must activate in Q1 to avoid becoming FY28 items, which would make the ₹575 Cr revenue target and 25.8% EBITDA margin structurally unachievable.</div>
+      </div>
 
-    <!-- Lakeshore 2.0 -->
-    <div class="section">
-      <div class="sec-title" data-edit-id="s4-title">Lakeshore 2.0 — Organisation &amp; Brand</div>
-      <div class="sec-body" data-edit-id="s4-body" data-placeholder="Write update here…">New org chart drafted; final version expected by 20 March. Website RFP issued to three digital agencies — shortlist by 25 March. HR, Finance, and Operations process mapping is complete; quick-win implementation commencing 17 March.</div>
+      <!-- Sub: Lakeshore 2.0 Brand Uplift -->
+      <div class="sub-section">
+        <div class="sub-sec-title" data-edit-id="s4-title">Lakeshore 2.0 — Brand Uplift</div>
+        <div class="sec-body" data-edit-id="s4-body" data-placeholder="Write update here…">Three workstreams are active. Organisation restructure: a new org chart is drafted with revised reporting lines and accountability mapping — final version expected by 20 March. Digital and web: RFP issued to three agencies for a full website and patient digital experience overhaul; shortlist by 25 March. See current platform: <a href="https://github.com/sameeraj89" target="_blank" class="dl-link">github.com/sameeraj89</a>. HR, Finance and Operations streamlining: process mapping workshops are complete across all three functions; quick-win implementation commencing 17 March with a focus on reducing cycle times and standardising procedures.</div>
+      </div>
     </div>
 
     <!-- Compliance -->
     <div class="section">
       <div class="sec-title" data-edit-id="s5-title">Compliance</div>
-      <div class="sec-body" data-edit-id="s5-body" data-placeholder="Write update here…">Diagnostic complete across 62 items: 27 are past due, 6 require action within days, and 16 internal contradictions exist between tracking sheets — meaning the true renewal status of key licences (AERB, Fire NOC, Pharmacy, BMW) cannot be confirmed with certainty. The most material exposures: FY25 income tax return four months overdue (Sec 271B penalty risk up to ₹1.5 Cr); GSTR-9 annual return 72 days past deadline with daily penalties accruing; board minutes for three meetings unsigned, blocking DIR-12 and MGT-14 filings due in 22 days. A dedicated compliance champion with a 60-day mandate is required — not a shared tracking responsibility.</div>
+      <div class="sec-body" data-edit-id="s5-body" data-placeholder="Write update here…">Diagnostic complete across 62 items: 27 are past due, 6 require action within days, and 16 internal contradictions exist between tracking sheets — meaning the true renewal status of key licences (AERB, Fire NOC, Pharmacy, BMW) cannot be confirmed with certainty. Most material exposures: FY25 income tax return four months overdue (Sec 271B penalty risk up to ₹1.5 Cr); GSTR-9 annual return 72 days past deadline with daily penalties accruing; board minutes for three meetings unsigned, blocking DIR-12 and MGT-14 filings due in 22 days. A dedicated compliance champion with a 60-day mandate is required.</div>
       <div class="dl-links">
         <a class="dl-link" href="Weekly%20update/16th%20March/Complicance%20Tracker/Hospital_Compliance_Tracker_%2013%2003%2026%20final%20%282%29.xlsx" download>↓ Compliance Tracker (.xlsx)</a>
         <a class="dl-link" href="Weekly%20update/16th%20March/Complicance%20Tracker/Lakeshore_Compliance_Gap_Report_13Mar2026%20%281%29.docx" download>↓ Gap Analysis Report (.docx)</a>
@@ -176,11 +193,11 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
 
     <hr class="rule-heavy">
 
-    <!-- Commentary -->
-    <div class="commentary-label" data-edit-id="comm-label">Commentary</div>
-    <div class="commentary-hed" data-edit-id="comm-hed" data-placeholder="Write a headline here…">Structural momentum is building — but revenue activation and compliance cannot wait.</div>
-    <div class="commentary-para" data-edit-id="comm-p1" data-placeholder="Write your first paragraph here…">The Lakeshore 2.0 agenda is three weeks in. The programme has correctly identified its highest-value near-term levers and the FY27 capex budget reflects disciplined capital allocation. What is now critical is execution velocity. Two areas — revenue activation and compliance — are running materially below the pace required to deliver FY27 impact.</div>
-    <div class="commentary-para" data-edit-id="comm-p2" data-placeholder="Write your second paragraph here…">Three decisions this week will determine whether this programme delivers FY27 impact or defers it: commission a dedicated compliance task force with a single named officer and 60-day closure mandate; set 31 March as a non-negotiable deadline for tariff revision sign-off; and require a firm, contractable cost savings number from the rationalisation team before the next board update.</div>
+    <!-- Other Notes -->
+    <div class="commentary-label" data-edit-id="comm-label">Other Notes</div>
+    <div class="commentary-hed" data-edit-id="comm-hed" data-placeholder="Write a headline here…">UNA Strike — Situation and Response</div>
+    <div class="commentary-para" data-edit-id="comm-p1" data-placeholder="Write your first paragraph here…">The United Nurses Association (UNA) called a strike affecting nursing staff across Kerala hospitals, including Lakeshore. The immediate impact has been felt on routine ward staffing and OT scheduling. Lakeshore has activated its contingency staffing protocol: agency nursing has been deployed to critical care and ICU, senior nurses have been redeployed to higher-acuity areas, and elective procedures have been rescheduled to minimise patient impact. Emergency and critical services have remained fully operational throughout.</div>
+    <div class="commentary-para" data-edit-id="comm-p2" data-placeholder="Write your second paragraph here…">Discussions with UNA leadership are ongoing. Management has engaged a mediator and a resolution framework covering the key demands — pay revision, duty hour norms, and leave entitlements — is being drafted for presentation to both parties. The administration's position is to resolve this through structured negotiation rather than contractual displacement. A resolution is expected to be tabled by end of the week. In the interim, patient safety remains the non-negotiable priority and all critical rosters are covered.</div>
 
   </div><!-- /doc -->
 
@@ -188,7 +205,7 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
 
 <!-- FOOTER -->
 <div class="footer">
-  VPS Lakeshore Hospital &amp; Research Centre &nbsp;·&nbsp; Chairman's Board Update &nbsp;·&nbsp; Strictly Confidential
+  VPS Lakeshore Hospital &amp; Research Centre &nbsp;·&nbsp; Weekly Transformation Update &nbsp;·&nbsp; Strictly Confidential
 </div>
 
 <!-- EDIT BAR -->
