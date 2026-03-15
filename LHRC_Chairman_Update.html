@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Chairman's Board Update — VPS Lakeshore</title>
 
-<!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-MMR68PDD2K"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -16,7 +15,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&family=IBM+Plex+Mono:wght@400;600&family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -33,27 +32,122 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f4f6f9;color:#
 .hb-nav{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.6);border:1px solid rgba(255,255,255,0.15)}
 .header-right{text-align:right;opacity:0.4;font-size:0.62rem;line-height:1.9;white-space:nowrap;flex-shrink:0;font-family:'IBM Plex Mono',monospace}
 
+/* ── INNER TAB BAR ── */
+.inner-tabs{background:white;border-bottom:2px solid #e2e8f0;display:flex;gap:0;box-shadow:0 1px 3px rgba(0,0,0,0.04);margin-bottom:20px}
+.itab{padding:12px 22px;font-size:0.72rem;font-weight:600;color:#718096;cursor:pointer;border-bottom:3px solid transparent;transition:all 0.18s;white-space:nowrap;margin-bottom:-2px;font-family:'IBM Plex Sans',sans-serif;display:flex;align-items:center;gap:6px}
+.itab:hover{color:#1a3a5c;background:#f7fafc}
+.itab.active{color:#1a3a5c;border-bottom-color:#c9a84c;background:white;font-weight:700}
+.itab-pane{display:none}.itab-pane.active{display:block}
+
 /* ── PAGE WRAPPER ── */
-.page-wrap{max-width:1280px;margin:0 auto;padding:24px 28px 60px}
+.page-wrap{max-width:1280px;margin:0 auto;padding:0 28px 80px}
 
-/* ── CHAIRMAN STATUS BADGES ── */
+/* ── STATUS BADGES ── */
 .chm-status-badge{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;border-radius:4px;font-size:0.6rem;font-weight:700;white-space:nowrap}
-.csb-green{background:#e8f5e9;color:#1b5e20}
-.csb-amber{background:#fff8e1;color:#e65100}
-.csb-red{background:#fce4ec;color:#c62828}
-.csb-blue{background:#e3f2fd;color:#1565c0}
-.csb-grey{background:#f5f5f5;color:#616161}
+.csb-green{background:#e8f5e9;color:#1b5e20}.csb-amber{background:#fff8e1;color:#e65100}
+.csb-red{background:#fce4ec;color:#c62828}.csb-blue{background:#e3f2fd;color:#1565c0}.csb-grey{background:#f5f5f5;color:#616161}
 
-/* ── FOOTER ── */
-.footer{background:#1a3a5c;color:rgba(255,255,255,0.3);text-align:center;padding:11px;font-size:0.58rem;margin-top:20px;font-family:'IBM Plex Mono',monospace}
+/* ── COMPLIANCE ALERT ── */
+.compliance-alert{background:#fff8f0;border:1px solid rgba(230,126,34,0.35);border-left:4px solid #e67e22;border-radius:7px;padding:14px 18px;margin-bottom:16px}
+.ca-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:8px}
+.ca-title{font-size:0.72rem;font-weight:800;color:#b45309;text-transform:uppercase;letter-spacing:0.6px}
+.ca-links{display:flex;gap:8px;flex-wrap:wrap}
+.ca-link{display:inline-flex;align-items:center;gap:5px;font-size:0.63rem;font-weight:600;padding:4px 10px;border-radius:4px;border:1px solid;text-decoration:none;transition:opacity .15s}
+.ca-link:hover{opacity:.78}
+.ca-link-xl{color:#1a3a5c;border-color:#1a3a5c;background:#edf2f7}
+.ca-link-doc{color:#6a1b9a;border-color:#6a1b9a;background:#f3e8ff}
+.ca-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:2px}
+.cas{background:white;border-radius:6px;padding:8px 12px;border:1px solid #e2e8f0;text-align:center}
+.cas-v{font-size:1.1rem;font-weight:800;font-family:'IBM Plex Mono',monospace}
+.cas-l{font-size:0.55rem;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:#a0aec0;margin-top:2px}
+
+/* ── SUMMARY CARDS ── */
+.summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.sum-card{background:white;border-radius:8px;padding:16px 18px;border:1px solid #e2e8f0}
+.sum-card-head{display:flex;align-items:center;gap:8px;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #f0f4f8}
+.sum-card-icon{font-size:1rem}
+.sum-card-title{font-size:0.66rem;font-weight:800;text-transform:uppercase;letter-spacing:0.7px;color:#1a3a5c}
+.sum-rows{display:flex;flex-direction:column;gap:5px}
+.sum-row{display:flex;justify-content:space-between;align-items:baseline;font-size:0.68rem}
+.sum-row span:first-child{color:#4a5568}
+.sum-row span:last-child{font-weight:700;font-family:'IBM Plex Mono',monospace;color:#1a3a5c}
+.sum-row.highlight span:last-child{color:#c9a84c}
+.sum-note{font-size:0.6rem;color:#a0aec0;margin-top:8px;line-height:1.6;font-style:italic}
+
+/* ── PARTNER BRIEF ARTICLE ── */
+.brief-wrap{background:white;border-radius:8px;border:1px solid #e2e8f0;overflow:hidden;margin-bottom:20px}
+.brief-header{background:linear-gradient(135deg,#0d2137,#1a3a5c);padding:28px 36px;border-bottom:3px solid #c9a84c}
+.brief-meta{font-size:0.58rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:rgba(201,168,76,0.8);margin-bottom:8px;font-family:'IBM Plex Mono',monospace}
+.brief-headline{font-family:'Lora',Georgia,serif;font-size:1.35rem;font-weight:700;color:#fff;line-height:1.35;letter-spacing:-0.2px;max-width:820px}
+.brief-deck{font-size:0.74rem;color:rgba(255,255,255,0.55);margin-top:8px;line-height:1.7;max-width:720px;font-style:italic}
+.brief-body{padding:30px 36px}
+.brief-section{margin-bottom:26px}
+.brief-section-title{font-size:0.62rem;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:#c9a84c;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.brief-section-title::after{content:'';flex:1;height:1px;background:#f0f4f8}
+.brief-section-head{font-family:'Lora',Georgia,serif;font-size:1rem;font-weight:600;color:#0d2137;margin-bottom:8px;line-height:1.3}
+.brief-p{font-size:0.76rem;color:#2d3748;line-height:1.85;margin-bottom:8px}
+.brief-p strong{color:#0d2137;font-weight:700}
+.brief-p em{color:#4a5568}
+.brief-callout{background:#f7fafc;border-left:3px solid #c9a84c;border-radius:0 6px 6px 0;padding:12px 16px;margin:10px 0 14px;font-size:0.72rem;color:#2d3748;line-height:1.75}
+.brief-callout strong{color:#0d2137}
+.brief-number-list{list-style:none;padding:0;margin:8px 0;display:flex;flex-direction:column;gap:7px}
+.brief-number-list li{display:flex;gap:12px;font-size:0.74rem;color:#2d3748;line-height:1.7}
+.brief-number-list li .n{flex-shrink:0;width:20px;height:20px;background:#0d2137;color:#c9a84c;border-radius:4px;display:inline-flex;align-items:center;justify-content:center;font-size:0.62rem;font-weight:800;font-family:'IBM Plex Mono',monospace;margin-top:2px}
+.brief-number-list li strong{color:#0d2137}
+.brief-stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0}
+.brief-stat{background:#f7fafc;border-radius:6px;padding:10px 12px;border:1px solid #e8edf4;text-align:center}
+.brief-stat-v{font-size:1.05rem;font-weight:700;font-family:'IBM Plex Mono',monospace;color:#0d2137}
+.brief-stat-l{font-size:0.56rem;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:#a0aec0;margin-top:2px}
+.brief-footer{background:#f7fafc;border-top:1px solid #e2e8f0;padding:14px 36px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.brief-footer-note{font-size:0.58rem;color:#a0aec0;font-family:'IBM Plex Mono',monospace}
+.brief-dl-links{display:flex;gap:8px;flex-wrap:wrap}
+
+/* ── EDIT MODE ── */
+.edit-bar{position:fixed;bottom:0;left:0;right:0;z-index:800;background:#0d2137;border-top:2px solid rgba(201,168,76,0.35);padding:10px 28px;display:flex;align-items:center;justify-content:space-between;gap:16px;box-shadow:0 -4px 24px rgba(0,0,0,0.25)}
+.edit-bar-left{display:flex;align-items:center;gap:10px;font-size:0.65rem;color:rgba(255,255,255,0.45);font-family:'IBM Plex Mono',monospace}
+.edit-bar-right{display:flex;gap:8px}
+.eb-btn{padding:7px 16px;border-radius:5px;font-size:0.68rem;font-weight:700;cursor:pointer;font-family:'IBM Plex Sans',sans-serif;border:none;transition:opacity .15s}
+.eb-btn:hover{opacity:.85}
+.eb-unlock{background:rgba(201,168,76,0.15);color:#c9a84c;border:1px solid rgba(201,168,76,0.4)}
+.eb-save{background:#27ae60;color:white}
+.eb-discard{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.6);border:1px solid rgba(255,255,255,0.15)}
+.eb-lock{background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.4);border:1px solid rgba(255,255,255,0.1)}
+
+/* Edit mode visual feedback */
+body.edit-mode [data-edit-id]{outline:1.5px dashed rgba(201,168,76,0.5);border-radius:3px;cursor:text;min-height:1em}
+body.edit-mode [data-edit-id]:focus{outline:2px solid #c9a84c;background:rgba(201,168,76,0.04)}
+body.edit-mode [data-edit-id]:empty::before{content:attr(data-placeholder);color:#c9a84c;opacity:0.5;font-style:italic}
+
+/* ── MODALS ── */
+.modal-backdrop{position:fixed;inset:0;background:rgba(10,20,40,0.65);z-index:9000;display:flex;align-items:center;justify-content:center;padding:24px}
+.modal-box{background:white;border-radius:8px;max-width:400px;width:100%;box-shadow:0 8px 40px rgba(0,0,0,0.25);overflow:hidden}
+.modal-head{padding:16px 22px;border-bottom:2px solid #0d2137;display:flex;align-items:center;justify-content:space-between}
+.modal-title{font-size:0.82rem;font-weight:800;color:#0d2137}
+.modal-close{background:none;border:1px solid #e2e8f0;color:#718096;width:28px;height:28px;border-radius:4px;cursor:pointer;font-size:0.9rem;font-family:sans-serif}
+.modal-body{padding:22px}
+.mf-lbl{font-size:0.61rem;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:#718096;margin-bottom:5px;display:block}
+.mf-input{width:100%;padding:9px 12px;border:1px solid #e2e8f0;border-radius:5px;font-size:0.82rem;font-family:'IBM Plex Sans',sans-serif;outline:none;color:#1a202c;margin-bottom:12px}
+.mf-input:focus{border-color:#0d2137}
+.mf-error{display:none;font-size:0.68rem;color:#c0392b;padding:7px 10px;background:#fdf2f2;border-radius:4px;border-left:3px solid #c0392b;margin-bottom:12px}
+.mf-btn{width:100%;background:#0d2137;color:white;padding:11px;border:none;border-radius:5px;font-size:0.78rem;font-weight:700;cursor:pointer;font-family:'IBM Plex Sans',sans-serif;letter-spacing:0.4px}
 
 /* ── BACK NAV ── */
-.back-nav{display:inline-flex;align-items:center;gap:6px;font-size:0.68rem;color:#718096;text-decoration:none;padding:5px 0;margin-bottom:4px;transition:color .18s}
+.back-nav{display:inline-flex;align-items:center;gap:6px;font-size:0.68rem;color:#718096;text-decoration:none;padding:10px 0 4px;transition:color .18s}
 .back-nav:hover{color:#1a3a5c}
 
+/* ── FOOTER ── */
+.footer{background:#1a3a5c;color:rgba(255,255,255,0.3);text-align:center;padding:11px;font-size:0.58rem;font-family:'IBM Plex Mono',monospace}
+
+@media(max-width:900px){
+  .summary-grid{grid-template-columns:1fr}
+  .ca-stats{grid-template-columns:repeat(2,1fr)}
+  .brief-stat-row{grid-template-columns:1fr 1fr}
+  .brief-header,.brief-body,.brief-footer{padding-left:20px;padding-right:20px}
+}
 @media(max-width:700px){
   .header{padding:14px 16px;flex-direction:column;align-items:flex-start}
-  .page-wrap{padding:16px 14px 40px}
+  .page-wrap{padding:0 14px 80px}
+  .itab{padding:10px 14px;font-size:0.68rem}
 }
 </style>
 </head>
@@ -63,7 +157,7 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f4f6f9;color:#
 <div class="header">
   <div class="header-left">
     <h1>Chairman's Board Update</h1>
-    <p>VPS Lakeshore Hospital &amp; Research Centre &nbsp;&middot;&nbsp; Lakeshore 2.0 Transformation Programme &nbsp;&middot;&nbsp; Confidential</p>
+    <p>VPS Lakeshore Hospital &amp; Research Centre &nbsp;·&nbsp; Lakeshore 2.0 Transformation Programme &nbsp;·&nbsp; Confidential</p>
     <div class="header-badges">
       <span class="hbadge hb-gold">Weekly Cadence</span>
       <span class="hbadge hb-conf">Restricted Access</span>
@@ -73,107 +167,385 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f4f6f9;color:#
   <div class="header-right">Chairman's Office<br>Weekly Update<br>Confidential</div>
 </div>
 
-<!-- ══════════ PAGE CONTENT ══════════ -->
-<div class="page-wrap">
-
-  <!-- ─── LOCK SCREEN ─────────────────────────────────────────────────── -->
-  <div id="chmLock" style="position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#001228 0%,#0d2137 50%,#001228 100%);z-index:999;display:flex;align-items:center;justify-content:center;padding:24px">
-    <div style="background:rgba(255,255,255,.05);border:1px solid rgba(201,168,76,0.3);border-radius:14px;padding:42px 44px 36px;max-width:420px;width:100%;box-shadow:0 0 0 1px rgba(255,255,255,.04) inset,0 24px 80px rgba(0,0,0,.7),0 0 60px rgba(201,168,76,.08);backdrop-filter:blur(20px)">
-      <div style="border-bottom:2px solid rgba(201,168,76,0.25);padding-bottom:18px;margin-bottom:24px">
-        <div style="font-size:0.58rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:rgba(201,168,76,0.7);margin-bottom:6px;font-family:'IBM Plex Mono',monospace">VPS Lakeshore Hospital &amp; Research Centre</div>
-        <div style="font-size:1.1rem;font-weight:800;color:#fff">Chairman's Board Update</div>
-        <div style="font-size:0.65rem;color:rgba(255,255,255,0.35);margin-top:4px">Lakeshore 2.0 Transformation Programme &nbsp;&middot;&nbsp; Restricted access</div>
-      </div>
-      <div style="margin-bottom:12px">
-        <label style="display:block;font-size:0.61rem;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:rgba(255,255,255,0.4);margin-bottom:6px">Username <span style="font-weight:400;color:rgba(255,255,255,0.22);text-transform:none">(leave blank for view-only)</span></label>
-        <input id="chmUser" type="text" placeholder="Admin username" autocomplete="off"
-          style="width:100%;padding:10px 13px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:7px;font-size:0.82rem;font-family:'IBM Plex Sans',sans-serif;outline:none;color:#fff"
-          onfocus="this.style.borderColor='rgba(201,168,76,0.5)'" onblur="this.style.borderColor='rgba(255,255,255,.15)'">
-      </div>
-      <div style="margin-bottom:18px">
-        <label style="display:block;font-size:0.61rem;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:rgba(255,255,255,0.4);margin-bottom:6px">Password</label>
-        <input id="chmPass" type="password" placeholder="Enter password"
-          style="width:100%;padding:10px 13px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:7px;font-size:0.82rem;font-family:'IBM Plex Sans',sans-serif;outline:none;color:#fff;letter-spacing:2px"
-          onfocus="this.style.borderColor='rgba(201,168,76,0.5)'" onblur="this.style.borderColor='rgba(255,255,255,.15)'"
-          onkeydown="if(event.key==='Enter')chmAttemptLogin()">
-      </div>
-      <div id="chmError" style="display:none;font-size:0.68rem;color:#ff6b86;margin-bottom:14px;padding:7px 10px;background:rgba(200,16,62,0.12);border-radius:5px;border-left:3px solid rgba(200,16,62,0.5)">Incorrect credentials — please try again.</div>
-      <button onclick="chmAttemptLogin()"
-        style="width:100%;background:linear-gradient(135deg,#0d2137,#1a3a5c);color:white;padding:12px;border:1px solid rgba(201,168,76,0.25);border-radius:7px;font-size:0.8rem;font-weight:700;cursor:pointer;font-family:'IBM Plex Sans',sans-serif;letter-spacing:0.5px;transition:opacity .2s"
-        onmouseover="this.style.opacity='.88'" onmouseout="this.style.opacity='1'">
-        Continue →
-      </button>
-      <div style="margin-top:18px;font-size:0.59rem;color:rgba(255,255,255,0.2);text-align:center;line-height:1.8">View access: password only &nbsp;&middot;&nbsp; Edit access: authorised admins<br>Contact the Chairman's office for access</div>
+<!-- ══════════ LOCK SCREEN ══════════ -->
+<div id="chmLock" style="position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#001228 0%,#0d2137 50%,#001228 100%);z-index:999;display:flex;align-items:center;justify-content:center;padding:24px">
+  <div style="background:rgba(255,255,255,.05);border:1px solid rgba(201,168,76,0.3);border-radius:14px;padding:42px 44px 36px;max-width:420px;width:100%;box-shadow:0 0 0 1px rgba(255,255,255,.04) inset,0 24px 80px rgba(0,0,0,.7),0 0 60px rgba(201,168,76,.08);backdrop-filter:blur(20px)">
+    <div style="border-bottom:2px solid rgba(201,168,76,0.25);padding-bottom:18px;margin-bottom:24px">
+      <div style="font-size:0.58rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:rgba(201,168,76,0.7);margin-bottom:6px;font-family:'IBM Plex Mono',monospace">VPS Lakeshore Hospital &amp; Research Centre</div>
+      <div style="font-size:1.1rem;font-weight:800;color:#fff">Chairman's Board Update</div>
+      <div style="font-size:0.65rem;color:rgba(255,255,255,0.35);margin-top:4px">Lakeshore 2.0 Transformation Programme &nbsp;·&nbsp; Restricted access</div>
     </div>
+    <div style="margin-bottom:12px">
+      <label style="display:block;font-size:0.61rem;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:rgba(255,255,255,0.4);margin-bottom:6px">Username <span style="font-weight:400;color:rgba(255,255,255,0.22);text-transform:none">(leave blank for view-only)</span></label>
+      <input id="chmUser" type="text" placeholder="Admin username" autocomplete="off"
+        style="width:100%;padding:10px 13px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:7px;font-size:0.82rem;font-family:'IBM Plex Sans',sans-serif;outline:none;color:#fff"
+        onfocus="this.style.borderColor='rgba(201,168,76,0.5)'" onblur="this.style.borderColor='rgba(255,255,255,.15)'">
+    </div>
+    <div style="margin-bottom:18px">
+      <label style="display:block;font-size:0.61rem;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:rgba(255,255,255,0.4);margin-bottom:6px">Password</label>
+      <input id="chmPass" type="password" placeholder="Enter password"
+        style="width:100%;padding:10px 13px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:7px;font-size:0.82rem;font-family:'IBM Plex Sans',sans-serif;outline:none;color:#fff;letter-spacing:2px"
+        onfocus="this.style.borderColor='rgba(201,168,76,0.5)'" onblur="this.style.borderColor='rgba(255,255,255,.15)'"
+        onkeydown="if(event.key==='Enter')chmAttemptLogin()">
+    </div>
+    <div id="chmError" style="display:none;font-size:0.68rem;color:#ff6b86;margin-bottom:14px;padding:7px 10px;background:rgba(200,16,62,0.12);border-radius:5px;border-left:3px solid rgba(200,16,62,0.5)">Incorrect credentials — please try again.</div>
+    <button onclick="chmAttemptLogin()" style="width:100%;background:linear-gradient(135deg,#0d2137,#1a3a5c);color:white;padding:12px;border:1px solid rgba(201,168,76,0.25);border-radius:7px;font-size:0.8rem;font-weight:700;cursor:pointer;font-family:'IBM Plex Sans',sans-serif;letter-spacing:0.5px">
+      Continue →
+    </button>
+    <div style="margin-top:18px;font-size:0.59rem;color:rgba(255,255,255,0.2);text-align:center;line-height:1.8">View access: password only &nbsp;·&nbsp; Edit access: authorised admins<br>Contact the Chairman's office for access</div>
+  </div>
+</div>
+
+<!-- ══════════ AUTHENTICATED CONTENT ══════════ -->
+<div id="chmContent" style="display:none">
+
+  <!-- Inner Tab Bar -->
+  <div class="inner-tabs">
+    <div class="itab active" onclick="switchInnerTab('status',this)" id="itab-status">📋 Programme Status</div>
+    <div class="itab" onclick="switchInnerTab('brief',this)" id="itab-brief">📝 Partner Brief</div>
   </div>
 
-  <!-- ─── AUTHENTICATED CONTENT ────────────────────────────────────────── -->
-  <div id="chmContent" style="display:none">
+  <div class="page-wrap">
 
-    <!-- Back nav -->
+    <!-- Back nav + toolbar -->
     <a href="index.html" class="back-nav">← Back to Dashboard</a>
-
-    <!-- Toolbar -->
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;margin-top:8px;padding:8px 0;border-bottom:1px solid #e2e8f0">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;margin-top:4px;padding:7px 0;border-bottom:1px solid #e2e8f0">
       <div style="font-size:0.65rem;color:#718096">
-        <span id="chmViewOnlyNote" style="display:none">View-only access &nbsp;&middot;&nbsp; <a href="#" onclick="chmLogout();return false" style="color:#0d2137;text-decoration:none;font-weight:600">Sign out</a></span>
-        <span id="chmAdminNote" style="display:none">Editing as <strong id="chmAdminUserDisplay" style="color:#0d2137"></strong> &nbsp;&middot;&nbsp; <a href="#" onclick="chmLogout();return false" style="color:#718096;text-decoration:none">Sign out</a></span>
+        <span id="chmViewOnlyNote" style="display:none">View-only access &nbsp;·&nbsp; <a href="#" onclick="chmLogout();return false" style="color:#0d2137;text-decoration:none;font-weight:600">Sign out</a></span>
+        <span id="chmAdminNote" style="display:none">Editing as <strong id="chmAdminUserDisplay" style="color:#0d2137"></strong> &nbsp;·&nbsp; <a href="#" onclick="chmLogout();return false" style="color:#718096;text-decoration:none">Sign out</a></span>
       </div>
       <button id="chmAddBtn" onclick="chmShowAddForm()" style="display:none;background:#0d2137;color:white;border:none;padding:7px 16px;border-radius:5px;font-size:0.68rem;font-weight:700;cursor:pointer;font-family:'IBM Plex Sans',sans-serif">+ New Weekly Update</button>
     </div>
 
-    <!-- Page heading -->
-    <div style="margin-bottom:20px;padding-bottom:14px;border-bottom:2px solid #0d2137">
-      <div style="font-size:0.58rem;font-weight:700;text-transform:uppercase;letter-spacing:1.4px;color:#a0aec0;margin-bottom:5px;font-family:'IBM Plex Mono',monospace">VPS Lakeshore Hospital &amp; Research Centre &nbsp;&middot;&nbsp; Confidential</div>
-      <div style="font-size:1.2rem;font-weight:800;color:#0d2137;letter-spacing:-0.2px">Chairman's Board Update</div>
-      <div style="font-size:0.68rem;color:#718096;margin-top:3px">Lakeshore 2.0 Transformation Programme &nbsp;&middot;&nbsp; Weekly Cadence</div>
-    </div>
+    <!-- ══ TAB 1: PROGRAMME STATUS ══ -->
+    <div class="itab-pane active" id="pane-status">
 
-    <!-- Updates container -->
-    <div id="chmUpdatesContainer"></div>
-
-    <!-- Empty state -->
-    <div id="chmEmpty" style="display:none;padding:48px;text-align:center;color:#a0aec0;background:white;border-radius:6px;border:1px solid #e2e8f0">
-      <div style="font-size:0.85rem;font-weight:600;color:#718096;margin-bottom:6px">No updates yet</div>
-      <div style="font-size:0.72rem">Admin users can add the first weekly update above</div>
-    </div>
-
-  </div>
-
-  <!-- ─── ADD UPDATE MODAL ──────────────────────────────────────────────── -->
-  <div id="chmModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(10,20,40,0.6);z-index:9999;overflow-y:auto;padding:24px 16px">
-    <div style="background:white;border-radius:8px;max-width:920px;margin:0 auto;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,0.2);border:1px solid #e2e8f0">
-      <div style="padding:16px 24px;border-bottom:2px solid #0d2137;display:flex;align-items:center;justify-content:space-between">
-        <div id="chmModalTitle" style="font-size:0.85rem;font-weight:800;color:#0d2137">New Weekly Board Update</div>
-        <button onclick="chmCloseModal()" style="background:none;border:1px solid #e2e8f0;color:#718096;width:30px;height:30px;border-radius:5px;cursor:pointer;font-size:1rem;font-family:'IBM Plex Sans',sans-serif">&#x2715;</button>
+      <!-- Compliance Alert Banner -->
+      <div class="compliance-alert">
+        <div class="ca-head">
+          <div>
+            <div class="ca-title" data-edit-id="comp-alert-title">⚠ Compliance Diagnostic — 16 March 2026</div>
+            <div style="font-size:0.65rem;color:#78350f;margin-top:3px" data-edit-id="comp-alert-sub">62 items reviewed &nbsp;·&nbsp; 27 confirmed non-compliances &nbsp;·&nbsp; 6 require action within days &nbsp;·&nbsp; 16 internal contradictions need reconciliation</div>
+          </div>
+          <div class="ca-links">
+            <a class="ca-link ca-link-xl" href="Weekly%20update/16th%20March/Complicance%20Tracker/Hospital_Compliance_Tracker_%2013%2003%2026%20final%20%282%29.xlsx" download>📥 Full Compliance Tracker (.xlsx)</a>
+            <a class="ca-link ca-link-doc" href="Weekly%20update/16th%20March/Complicance%20Tracker/Lakeshore_Compliance_Gap_Report_13Mar2026%20%281%29.docx" download>📄 Gap Report (.docx)</a>
+          </div>
+        </div>
+        <div class="ca-stats">
+          <div class="cas"><div class="cas-v" style="color:#c0392b" data-edit-id="comp-s1">27</div><div class="cas-l">Past Due</div></div>
+          <div class="cas"><div class="cas-v" style="color:#e67e22" data-edit-id="comp-s2">6</div><div class="cas-l">Due Within Days</div></div>
+          <div class="cas"><div class="cas-v" style="color:#f39c12" data-edit-id="comp-s3">16</div><div class="cas-l">Contradictions</div></div>
+          <div class="cas"><div class="cas-v" style="color:#2980b9" data-edit-id="comp-s4">62</div><div class="cas-l">Total Items</div></div>
+        </div>
       </div>
-      <div id="chmModalBody" style="padding:24px;max-height:80vh;overflow-y:auto"></div>
+
+      <!-- Capex + Cost Summary Cards -->
+      <div class="summary-grid">
+        <div class="sum-card">
+          <div class="sum-card-head">
+            <div class="sum-card-icon">🏗️</div>
+            <div class="sum-card-title" data-edit-id="capex-card-title">Capex Rationalisation — FY27 Budget</div>
+          </div>
+          <div class="sum-rows">
+            <div class="sum-row"><span data-edit-id="capex-r1l">Total FY27 Budget</span><span data-edit-id="capex-r1v">₹82.2 Cr</span></div>
+            <div class="sum-row"><span data-edit-id="capex-r2l">Biomedical Equipment</span><span data-edit-id="capex-r2v">₹49.2 Cr</span></div>
+            <div class="sum-row"><span data-edit-id="capex-r3l">Civil / Buildings</span><span data-edit-id="capex-r3v">₹18.3 Cr</span></div>
+            <div class="sum-row"><span data-edit-id="capex-r4l">IT &amp; Systems</span><span data-edit-id="capex-r4v">₹4.3 Cr</span></div>
+            <div class="sum-row highlight" style="border-top:1px solid #f0f4f8;padding-top:5px;margin-top:2px"><span data-edit-id="capex-r5l">Deferred (3 items)</span><span data-edit-id="capex-r5v">−₹7.0 Cr</span></div>
+          </div>
+          <div class="sum-note" data-edit-id="capex-note">Deferred: Digital Pathology ₹3 Cr · Digital Slide Scanner ₹2.5 Cr · LASER Equipment ₹1.5 Cr. Quantity reductions approved on 4 biomedical items. Key active projects: Casualty ₹3.8 Cr (Jul–Nov), MLP ₹4.4 Cr (Jan–Jun), Renal Transplant Centre ₹1.5 Cr (Jul–Oct).</div>
+        </div>
+        <div class="sum-card">
+          <div class="sum-card-head">
+            <div class="sum-card-icon">✂️</div>
+            <div class="sum-card-title" data-edit-id="cost-card-title">Cost Rationalisation — Status</div>
+          </div>
+          <div class="sum-rows">
+            <div class="sum-row highlight"><span data-edit-id="cost-r1l">Consumables — Immediate Opportunity</span><span data-edit-id="cost-r1v">₹40L</span></div>
+            <div class="sum-row highlight"><span data-edit-id="cost-r2l">Consumables — Structural (Top 20)</span><span data-edit-id="cost-r2v">₹5 Cr</span></div>
+            <div class="sum-row"><span data-edit-id="cost-r3l">Manpower Review</span><span data-edit-id="cost-r3v">In Progress</span></div>
+            <div class="sum-row"><span data-edit-id="cost-r4l">Rate Contract Negotiations</span><span data-edit-id="cost-r4v">Calendared</span></div>
+            <div class="sum-row"><span data-edit-id="cost-r5l">Vendor Renegotiations (Capex)</span><span data-edit-id="cost-r5v">Initiated</span></div>
+          </div>
+          <div class="sum-note" data-edit-id="cost-note">Cost rationalisation file is under review. Nurse-to-bed ratio benchmarking complete; Phase 1 recommendations expected 21 Mar. Rate contract calendar compiled — first vendor negotiations commencing week of 20 Mar. No contractable savings quantum yet finalised.</div>
+        </div>
+      </div>
+
+      <!-- Programme Status Heading -->
+      <div style="margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid #0d2137">
+        <div style="font-size:0.58rem;font-weight:700;text-transform:uppercase;letter-spacing:1.4px;color:#a0aec0;margin-bottom:4px;font-family:'IBM Plex Mono',monospace">VPS Lakeshore Hospital &amp; Research Centre &nbsp;·&nbsp; Confidential</div>
+        <div style="font-size:1.15rem;font-weight:800;color:#0d2137;letter-spacing:-0.2px" data-edit-id="ps-headline">Chairman's Board Update</div>
+        <div style="font-size:0.68rem;color:#718096;margin-top:3px" data-edit-id="ps-sub">Lakeshore 2.0 Transformation Programme &nbsp;·&nbsp; Weekly Cadence</div>
+      </div>
+
+      <div id="chmUpdatesContainer"></div>
+      <div id="chmEmpty" style="display:none;padding:48px;text-align:center;color:#a0aec0;background:white;border-radius:6px;border:1px solid #e2e8f0">
+        <div style="font-size:0.85rem;font-weight:600;color:#718096;margin-bottom:6px">No updates yet</div>
+        <div style="font-size:0.72rem">Admin users can add the first weekly update above</div>
+      </div>
+    </div>
+
+    <!-- ══ TAB 2: PARTNER BRIEF ══ -->
+    <div class="itab-pane" id="pane-brief">
+
+      <div class="brief-wrap">
+        <!-- Article Header -->
+        <div class="brief-header">
+          <div class="brief-meta" data-edit-id="br-meta">VPS Lakeshore · Lakeshore 2.0 Transformation · Week of 16 March 2026</div>
+          <div class="brief-headline" data-edit-id="br-headline">Structural momentum is building — but revenue activation and compliance cannot wait.</div>
+          <div class="brief-deck" data-edit-id="br-deck">Three weeks into the programme, capex discipline is showing and cost identification is progressing. The harder work — activating revenue levers and resolving a governance backlog — now defines the programme's credibility.</div>
+        </div>
+
+        <!-- Article Body -->
+        <div class="brief-body">
+
+          <!-- In Brief -->
+          <div class="brief-section">
+            <div class="brief-section-title" data-edit-id="br-s0-title">The Situation</div>
+            <div class="brief-p" data-edit-id="br-s0-body">The Lakeshore 2.0 agenda is three weeks in. The programme has correctly identified its highest-value near-term levers — consumables rationalisation (₹40L immediate, ₹5 Cr structural), selective capex deferral, and a revenue enhancement programme anchored by tariff revision and new specialty launches. The FY27 capex budget has been set at a disciplined ₹82.2 Cr with ₹7 Cr of non-critical spend deferred. <strong>What is now critical is execution velocity.</strong> Two areas — revenue activation and compliance — are running materially below the pace required to deliver FY27 impact.</div>
+          </div>
+
+          <!-- Capex -->
+          <div class="brief-section">
+            <div class="brief-section-title" data-edit-id="br-s1-title">Capex</div>
+            <div class="brief-section-head" data-edit-id="br-s1-head">Budget set, deferral signals are right.</div>
+            <div class="brief-stat-row">
+              <div class="brief-stat"><div class="brief-stat-v" data-edit-id="br-st1v">₹82.2 Cr</div><div class="brief-stat-l">FY27 Total Budget</div></div>
+              <div class="brief-stat"><div class="brief-stat-v" data-edit-id="br-st2v">₹7.0 Cr</div><div class="brief-stat-l">Deferred (3 Items)</div></div>
+              <div class="brief-stat"><div class="brief-stat-v" data-edit-id="br-st3v">₹49.2 Cr</div><div class="brief-stat-l">Biomedical Equipment</div></div>
+            </div>
+            <div class="brief-p" data-edit-id="br-s1-body1">The FY27 capex programme is anchored by biomedical equipment (₹49.2 Cr) and civil works (₹18.3 Cr), with three non-critical items — <strong>Digital Pathology (₹3 Cr), Digital Slide Scanner (₹2.5 Cr), and LASER Equipment (₹1.5 Cr)</strong> — deferred in the current cycle. This is the right call. Capital must flow to revenue-enabling and capacity-unlocking projects, not to capability aspirations.</div>
+            <div class="brief-p" data-edit-id="br-s1-body2">The active portfolio is well-structured. The <strong>Casualty redesign (₹3.8 Cr, July–November)</strong>, <strong>Multi-Level Parking (₹4.4 Cr, January–June)</strong>, <strong>Ultrasound &amp; Ortho Renovation (₹1.6 Cr, January–May)</strong>, and the <strong>Renal Transplant Centre (₹1.5 Cr, July–October)</strong> are on defined timelines. Quantity reductions have been approved across four biomedical procurement items, signalling that budget discipline extends below the headline number.</div>
+          </div>
+
+          <!-- Cost -->
+          <div class="brief-section">
+            <div class="brief-section-title" data-edit-id="br-s2-title">Cost Rationalisation</div>
+            <div class="brief-section-head" data-edit-id="br-s2-head">On the right path — but the number must be fixed.</div>
+            <div class="brief-p" data-edit-id="br-s2-body1">The programme has identified the right targets — consumables, manpower efficiency, and vendor rate contracts — but has not yet arrived at a <em>contractable savings quantum</em>. The ₹40L immediate consumables opportunity must translate into signed vendor commitments <strong>within the next fortnight.</strong> Manpower benchmarking has been initiated but a Phase 1 number is needed before the next board update. Rate contract negotiations are being calendared but not yet underway.</div>
+            <div class="brief-callout" data-edit-id="br-s2-callout"><strong>The risk:</strong> cost initiatives that remain in the "identification" phase through end of Q1 will not deliver FY27 P&amp;L impact. The programme needs a firm number — contracted or credibly pipeline — by 31 March.</div>
+          </div>
+
+          <!-- Compliance -->
+          <div class="brief-section">
+            <div class="brief-section-title" data-edit-id="br-s3-title">Compliance</div>
+            <div class="brief-section-head" data-edit-id="br-s3-head">A governance emergency, not a tracking problem.</div>
+            <div class="brief-p" data-edit-id="br-s3-body1">The compliance diagnostic covering 62 items has surfaced a pattern that cannot be managed through a spreadsheet alone. <strong>27 items are already past due.</strong> The most material: the FY25 corporate income tax return is four months overdue (penalty risk under Sec 271B: up to ₹1.5 Cr); the GSTR-9 annual return is 72 days past deadline with daily penalties accruing; board meeting minutes for three meetings (July, November 2025) remain unsigned — blocking DIR-12 and MGT-14 filings for the CFO and Group CEO appointments, which fall due in 22 days. The Advance Tax 4th instalment was due today, 15 March.</div>
+            <div class="brief-p" data-edit-id="br-s3-body2">Additionally, <strong>16 internal contradictions exist between tracking sheets</strong> — meaning no one can be certain of the true renewal status of key hospital licences (AERB, Fire NOC, Pharmacy, BMW). This is not a compliance gap. It is a governance gap. The solution requires a dedicated compliance champion — not the CEO, who already carries a full portfolio — with a formal 60-day closure mandate and weekly board-level review.</div>
+            <div class="brief-stat-row">
+              <div class="brief-stat"><div class="brief-stat-v" style="color:#c0392b" data-edit-id="br-cs1v">27</div><div class="brief-stat-l">Items Past Due</div></div>
+              <div class="brief-stat"><div class="brief-stat-v" style="color:#e67e22" data-edit-id="br-cs2v">6</div><div class="brief-stat-l">Due Within Days</div></div>
+              <div class="brief-stat"><div class="brief-stat-v" style="color:#1a3a5c" data-edit-id="br-cs3v">62</div><div class="brief-stat-l">Total Items</div></div>
+            </div>
+          </div>
+
+          <!-- Revenue -->
+          <div class="brief-section">
+            <div class="brief-section-title" data-edit-id="br-s4-title">Revenue Levers</div>
+            <div class="brief-section-head" data-edit-id="br-s4-head">The clock is running. Q1 is the window.</div>
+            <div class="brief-p" data-edit-id="br-s4-body">Rate revision is in draft. New specialties (IR-DSA, Cosmetology, Geriatric Care) are in the planning stage. Care packages are conceptual. This is three of the four revenue levers sitting below the activation line. If these initiatives do not reach sign-off and operational activation in Q1, they become <strong>FY28 levers</strong> — and the revenue half of the FY27 UC case (₹575 Cr / 25.8% EBITDA) becomes structurally unachievable. <strong>The Chairman must set a hard deadline of 31 March for tariff revision sign-off.</strong></div>
+          </div>
+
+          <!-- Bottom Line -->
+          <div class="brief-section">
+            <div class="brief-section-title" data-edit-id="br-s5-title">The Bottom Line</div>
+            <div class="brief-section-head" data-edit-id="br-s5-head">Three decisions the Chairman should make this week.</div>
+            <ul class="brief-number-list">
+              <li><span class="n">1</span><div data-edit-id="br-bl1"><strong>Commission a dedicated compliance task force</strong> with a 60-day closure mandate covering all 27 past-due items. Assign accountability — not shared ownership — to a single named officer. Review progress weekly at Chairman level.</div></li>
+              <li><span class="n">2</span><div data-edit-id="br-bl2"><strong>Set 31 March as a non-negotiable deadline for tariff revision sign-off.</strong> Revenue levers that slip to April become FY28 levers. The upside case (₹575 Cr, 25.8% EBITDA margin) depends on Q1 activation.</div></li>
+              <li><span class="n">3</span><div data-edit-id="br-bl3"><strong>Require a firm, contractable cost savings number</strong> from the rationalisation team before the next board update. The ₹40L consumables opportunity must be contracted; manpower Phase 1 must have a number. Without this, the cost lever of the programme remains aspirational.</div></li>
+            </ul>
+          </div>
+
+          <!-- Compliance Downloads -->
+          <div class="brief-section" style="margin-bottom:0">
+            <div class="brief-section-title" data-edit-id="br-s6-title">Compliance Tracker</div>
+            <div class="brief-p" data-edit-id="br-s6-body" style="margin-bottom:10px">Full compliance diagnostic conducted 13 March 2026. Source documents available for download below.</div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <a class="ca-link ca-link-xl" href="Weekly%20update/16th%20March/Complicance%20Tracker/Hospital_Compliance_Tracker_%2013%2003%2026%20final%20%282%29.xlsx" download>📥 Full Compliance Tracker (.xlsx)</a>
+              <a class="ca-link ca-link-doc" href="Weekly%20update/16th%20March/Complicance%20Tracker/Lakeshore_Compliance_Gap_Report_13Mar2026%20%281%29.docx" download>📄 Gap Analysis Report (.docx)</a>
+            </div>
+          </div>
+
+        </div><!-- /brief-body -->
+
+        <!-- Article Footer -->
+        <div class="brief-footer">
+          <div class="brief-footer-note" data-edit-id="br-foot">LHRC/BU/2026/002 &nbsp;·&nbsp; Chairman's Office, VPS Lakeshore &nbsp;·&nbsp; Strictly Confidential &nbsp;·&nbsp; 16 March 2026</div>
+          <div class="brief-dl-links">
+            <a class="ca-link ca-link-xl" href="Weekly%20update/16th%20March/Complicance%20Tracker/Hospital_Compliance_Tracker_%2013%2003%2026%20final%20%282%29.xlsx" download style="font-size:0.6rem">📥 Compliance Tracker</a>
+            <a class="ca-link ca-link-doc" href="Weekly%20update/16th%20March/Complicance%20Tracker/Lakeshore_Compliance_Gap_Report_13Mar2026%20%281%29.docx" download style="font-size:0.6rem">📄 Gap Report</a>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /pane-brief -->
+
+  </div><!-- /page-wrap -->
+
+  <!-- ══ EDIT BAR (at bottom, visible when authenticated) ══ -->
+  <div class="edit-bar" id="editBar">
+    <div class="edit-bar-left" id="editBarStatus">
+      <span id="editLockIcon">🔏</span>
+      <span id="editBarMsg">Page editing is locked</span>
+    </div>
+    <div class="edit-bar-right">
+      <div id="editLockedBtns">
+        <button class="eb-btn eb-unlock" onclick="showEditModal()">Unlock Editing</button>
+      </div>
+      <div id="editUnlockedBtns" style="display:none;gap:8px;display:none">
+        <button class="eb-btn eb-discard" onclick="discardEdits()">Discard</button>
+        <button class="eb-btn eb-lock" onclick="lockEditing()">🔒 Lock</button>
+        <button class="eb-btn eb-save" onclick="saveEditorial()">💾 Save All Changes</button>
+      </div>
     </div>
   </div>
 
-</div><!-- /page-wrap -->
+</div><!-- /chmContent -->
+
+<!-- ══ ADD UPDATE MODAL ══ -->
+<div id="chmModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(10,20,40,0.6);z-index:9999;overflow-y:auto;padding:24px 16px">
+  <div style="background:white;border-radius:8px;max-width:920px;margin:0 auto;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,0.2);border:1px solid #e2e8f0">
+    <div style="padding:16px 24px;border-bottom:2px solid #0d2137;display:flex;align-items:center;justify-content:space-between">
+      <div id="chmModalTitle" style="font-size:0.85rem;font-weight:800;color:#0d2137">New Weekly Board Update</div>
+      <button onclick="chmCloseModal()" style="background:none;border:1px solid #e2e8f0;color:#718096;width:30px;height:30px;border-radius:5px;cursor:pointer;font-size:1rem;font-family:'IBM Plex Sans',sans-serif">✕</button>
+    </div>
+    <div id="chmModalBody" style="padding:24px;max-height:80vh;overflow-y:auto"></div>
+  </div>
+</div>
+
+<!-- ══ EDIT UNLOCK MODAL ══ -->
+<div id="editModal" class="modal-backdrop" style="display:none">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div class="modal-title">🔏 Unlock Page Editing</div>
+      <button class="modal-close" onclick="hideEditModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:0.7rem;color:#718096;margin-bottom:14px;line-height:1.6">Enter the editorial password to make all page text editable. This is separate from the view and admin access credentials.</p>
+      <label class="mf-lbl">Editorial Password</label>
+      <input class="mf-input" id="editPassInput" type="password" placeholder="Enter editorial password"
+        onkeydown="if(event.key==='Enter')attemptEditUnlock()">
+      <div class="mf-error" id="editError">Incorrect password — please try again.</div>
+      <button class="mf-btn" onclick="attemptEditUnlock()">Unlock Editing →</button>
+    </div>
+  </div>
+</div>
 
 <!-- ══════════ FOOTER ══════════ -->
 <div class="footer">
-  VPS Lakeshore Hospital &amp; Research Centre
-  &nbsp;&middot;&nbsp;
-  Chairman's Board Update — Lakeshore 2.0 Transformation Programme
-  &nbsp;&middot;&nbsp;
-  Confidential — Restricted Access
-  &nbsp;&middot;&nbsp;
-  Last Updated: 14 March 2026
+  VPS Lakeshore Hospital &amp; Research Centre &nbsp;·&nbsp; Chairman's Board Update — Lakeshore 2.0 &nbsp;·&nbsp; Confidential — Restricted Access
 </div>
 
 
-<!-- ══════════ CHAIRMAN MODULE ══════════ -->
+<!-- ══════════ SCRIPTS ══════════ -->
 <script>
-// ══════════════════════════════════════════════════════════════════
-//  CHAIRMAN UPDATE MODULE — Standalone
-// ══════════════════════════════════════════════════════════════════
 
+// ══════════════════════════════════════════════════════════
+//  INNER TAB SYSTEM
+// ══════════════════════════════════════════════════════════
+function switchInnerTab(name, el) {
+  document.querySelectorAll('.itab-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.itab').forEach(t => t.classList.remove('active'));
+  document.getElementById('pane-' + name).classList.add('active');
+  if (el) el.classList.add('active');
+}
+
+// ══════════════════════════════════════════════════════════
+//  EDITORIAL EDIT MODE
+// ══════════════════════════════════════════════════════════
+const EDIT_PASS    = 'LakeshoreBoard26';
+const EDIT_STORE   = 'lhrc_editorial_v1';
+let editActive     = false;
+let editOriginals  = {};
+
+function showEditModal() {
+  document.getElementById('editModal').style.display = 'flex';
+  document.getElementById('editPassInput').value = '';
+  document.getElementById('editError').style.display = 'none';
+  setTimeout(() => document.getElementById('editPassInput').focus(), 80);
+}
+function hideEditModal() {
+  document.getElementById('editModal').style.display = 'none';
+}
+function attemptEditUnlock() {
+  if (document.getElementById('editPassInput').value === EDIT_PASS) {
+    hideEditModal();
+    activateEditing();
+  } else {
+    document.getElementById('editError').style.display = 'block';
+    document.getElementById('editPassInput').value = '';
+    document.getElementById('editPassInput').focus();
+  }
+}
+
+function activateEditing() {
+  editActive = true;
+  editOriginals = {};
+  document.body.classList.add('edit-mode');
+  document.querySelectorAll('[data-edit-id]').forEach(el => {
+    const key = el.getAttribute('data-edit-id');
+    editOriginals[key] = el.innerHTML;
+    el.contentEditable = 'true';
+  });
+  document.getElementById('editLockedBtns').style.display = 'none';
+  document.getElementById('editUnlockedBtns').style.display = 'flex';
+  document.getElementById('editBarMsg').textContent = 'Editing unlocked — click any text to edit';
+  document.getElementById('editLockIcon').textContent = '✏️';
+}
+
+function lockEditing() {
+  editActive = false;
+  document.body.classList.remove('edit-mode');
+  document.querySelectorAll('[data-edit-id]').forEach(el => {
+    el.contentEditable = 'false';
+  });
+  document.getElementById('editLockedBtns').style.display = 'block';
+  document.getElementById('editUnlockedBtns').style.display = 'none';
+  document.getElementById('editBarMsg').textContent = 'Page editing is locked';
+  document.getElementById('editLockIcon').textContent = '🔏';
+}
+
+function discardEdits() {
+  document.querySelectorAll('[data-edit-id]').forEach(el => {
+    const key = el.getAttribute('data-edit-id');
+    if (editOriginals[key] !== undefined) el.innerHTML = editOriginals[key];
+  });
+  lockEditing();
+}
+
+function saveEditorial() {
+  const saves = {};
+  document.querySelectorAll('[data-edit-id]').forEach(el => {
+    saves[el.getAttribute('data-edit-id')] = el.innerHTML;
+  });
+  try { localStorage.setItem(EDIT_STORE, JSON.stringify(saves)); } catch(e) {}
+  lockEditing();
+  // Flash confirmation
+  const msg = document.getElementById('editBarMsg');
+  msg.textContent = '✓ Changes saved';
+  setTimeout(() => { msg.textContent = 'Page editing is locked'; }, 2400);
+}
+
+function loadEditorial() {
+  try {
+    const saved = localStorage.getItem(EDIT_STORE);
+    if (!saved) return;
+    const saves = JSON.parse(saved);
+    Object.keys(saves).forEach(key => {
+      const el = document.querySelector('[data-edit-id="' + key + '"]');
+      if (el) el.innerHTML = saves[key];
+    });
+  } catch(e) {}
+}
+
+// ══════════════════════════════════════════════════════════
+//  CHAIRMAN MODULE
+// ══════════════════════════════════════════════════════════
 const CHM_VIEW_PASS  = 'Lakeshore 2026';
 const CHM_ADMINS     = { 'chairman':'Board@LHRC2026', 'sameeraj':'Lakeshore@Admin1' };
-const CHM_STORE_KEY  = 'lhrc_chairman_board_updates_v1';
+const CHM_STORE_KEY  = 'lhrc_chairman_board_updates_v2';
 
 const CHM_TEMPLATE = [
   { category:'Cost Rationalisation', icon:'✂️', color:'#c0392b', bg:'#fde8e8',
@@ -186,13 +558,13 @@ const CHM_TEMPLATE = [
   { category:'Capex Management', icon:'🏗️', color:'#1a3a5c', bg:'#edf2f7',
     items:[
       { key:'capex_defer',   name:'Capex Deferral',                    sub:'Non-critical projects deferred' },
-      { key:'capex_reduce',  name:'Capex Reduction',                   sub:'Scope optimisation on active projects' },
+      { key:'capex_reduce',  name:'Capex Reduction',                   sub:'Scope &amp; quantity optimisation' },
       { key:'capex_vendor',  name:'Vendor Negotiation Savings',        sub:'Renegotiate capex vendor contracts' }
     ]
   },
   { category:'Revenue Enhancement', icon:'📈', color:'#1e7e34', bg:'#e8f5e9',
     items:[
-      { key:'newspecs',      name:'New Specialties Launch',            sub:'Expand specialty &amp; doctor portfolio' },
+      { key:'newspecs',      name:'New Specialties Launch',            sub:'IR-DSA, Cosmetology, Geriatric Care' },
       { key:'raterev',       name:'Rate Revision',                     sub:'Procedure &amp; package tariff update' },
       { key:'packages',      name:'Care Packages',                     sub:'New bundled care offerings' }
     ]
@@ -207,136 +579,161 @@ const CHM_TEMPLATE = [
 ];
 
 const CHM_STATUSES = {
-  'immediate'  :{ label:'Immediate Action', cls:'csb-red',   dot:'⚡' },
-  'at-risk'    :{ label:'At Risk',          cls:'csb-red',   dot:'⚠' },
-  'on-track'   :{ label:'On Track',         cls:'csb-green', dot:'●' },
-  'approved'   :{ label:'Approved',         cls:'csb-green', dot:'✓' },
-  'complete'   :{ label:'Complete',         cls:'csb-green', dot:'✔' },
-  'in-progress':{ label:'In Progress',      cls:'csb-amber', dot:'◉' },
-  'monitoring' :{ label:'Monitoring',       cls:'csb-amber', dot:'◉' },
-  'planning'   :{ label:'Planning',         cls:'csb-blue',  dot:'◈' },
-  'draft'      :{ label:'Draft',            cls:'csb-grey',  dot:'○' },
-  'concept'    :{ label:'Concept',          cls:'csb-grey',  dot:'○' },
-  'deferred'   :{ label:'Deferred',         cls:'csb-grey',  dot:'⏸' }
+  'immediate'  :{ label:'Immediate Action', cls:'csb-red'  },
+  'at-risk'    :{ label:'At Risk',          cls:'csb-red'  },
+  'on-track'   :{ label:'On Track',         cls:'csb-green'},
+  'approved'   :{ label:'Approved',         cls:'csb-green'},
+  'complete'   :{ label:'Complete',         cls:'csb-green'},
+  'in-progress':{ label:'In Progress',      cls:'csb-amber'},
+  'monitoring' :{ label:'Monitoring',       cls:'csb-amber'},
+  'planning'   :{ label:'Planning',         cls:'csb-blue' },
+  'draft'      :{ label:'Draft',            cls:'csb-grey' },
+  'concept'    :{ label:'Concept',          cls:'csb-grey' },
+  'deferred'   :{ label:'Deferred',         cls:'csb-grey' }
 };
 
-const CHM_SEED = [{
-  id:1, weekOf:'14 March 2026', refNo:'LHRC/BU/2026/001',
-  addedBy:"Chairman's Office", addedOn:'14 Mar 2026',
-  execSummary:'Transformation agenda formally initiated across four pillars: Cost Rationalisation, Capex Management, Revenue Enhancement, and the Lakeshore 2.0 Brand Uplift programme. Immediate savings opportunity of ₹40L identified in consumables rationalisation; total near-term programme impact assessed at ₹5 Cr+. Rate contract reviews and vendor negotiations are being calendared. Revenue levers across new specialties, rate revision, and packages are in early design stage.',
-  data:{
-    manpower     :{ status:'in-progress', impact:'Quantum TBD — headcount review in progress',              notes:'Nurse-to-bed ratio benchmarking initiated. Phase 1 assessment underway.' },
-    consumables  :{ status:'immediate',   impact:'₹40L immediate; ₹5 Cr potential from top 20 items',      notes:'Top 20 high-spend consumables identified. Vendor discussions to commence this week.' },
-    ratecontracts:{ status:'planning',    impact:'TBD — contract calendar being compiled',                  notes:'Supplier contracts list compiled. Negotiation calendar to be finalised.' },
-    capex_defer  :{ status:'approved',    impact:'Cash flow preservation — quantum to be confirmed',        notes:'Board-approved deferral of select non-critical capex. Final list confirmed.' },
-    capex_reduce :{ status:'in-progress', impact:'Scope review ongoing across active projects',             notes:'Project-wise scope review initiated with engineering and clinical teams.' },
-    capex_vendor :{ status:'in-progress', impact:'TBD — key vendors identified',                           notes:'Key capex vendors shortlisted for renegotiation. Meetings being scheduled.' },
-    newspecs     :{ status:'planning',    impact:'Incremental revenue per specialty — to be modelled',      notes:'Specialty mix analysis complete. 3 priority specialties identified for FY27.' },
-    raterev      :{ status:'draft',       impact:'~3–5% blended yield improvement expected',                notes:'Market benchmarking in progress. Draft tariff revision under review.' },
-    packages     :{ status:'concept',     impact:'Improved occupancy &amp; IP conversion rates',            notes:'Wellness and surgical package concept note prepared. Awaiting clinical sign-off.' },
-    orgchart     :{ status:'in-progress', impact:'Operational efficiency &amp; accountability clarity',     notes:'New org chart drafted. Leadership alignment meetings ongoing.' },
-    website      :{ status:'planning',    impact:'Improved patient acquisition &amp; brand perception',     notes:'RFP issued to 3 digital agencies. Evaluation committee constituted.' },
-    streamline   :{ status:'in-progress', impact:'Reduced cycle times &amp; process efficiency',            notes:'Process mapping workshops conducted across HR, Finance &amp; Ops. Quick wins identified.' }
+const CHM_SEED = [
+  {
+    id:2, weekOf:'16 March 2026', refNo:'LHRC/BU/2026/002',
+    addedBy:"Chairman's Office", addedOn:'16 Mar 2026',
+    execSummary:'FY27 capex budget crystallised at ₹82.2 Cr with ₹7 Cr of non-critical spend deferred (Digital Pathology ₹3 Cr, Digital Slide Scanner ₹2.5 Cr, LASER Equipment ₹1.5 Cr). Consumables rationalisation has moved from identification to vendor engagement — the ₹40L immediate opportunity must be contracted within the fortnight; structural ₹5 Cr potential requires sustained focus through Q1. Compliance diagnostic complete: 62 items reviewed, 27 confirmed non-compliances, 6 requiring immediate action including Advance Tax instalment due today and DIR-12/MGT-14 falling due in 22 days. A dedicated compliance task force is required — this cannot be managed via tracker alone. Revenue levers (rate revision, new specialties, care packages) remain in early design; pace must accelerate significantly to avoid these slipping to FY28.',
+    data:{
+      manpower     :{ status:'in-progress', impact:'Quantum TBD — Phase 1 assessment complete',                 notes:'Nurse-to-bed ratio benchmarking complete. Recommendations and quantum expected by 21 Mar.' },
+      consumables  :{ status:'immediate',   impact:'₹40L immediate; ₹5 Cr structural from top 20 items',       notes:'Top 20 identified. Vendor meetings scheduled this week. Target: commitments by 28 Mar.' },
+      ratecontracts:{ status:'planning',    impact:'TBD — negotiations to commence 20 Mar',                     notes:'Rate contract calendar compiled. First vendor negotiations commencing week of 20 Mar.' },
+      capex_defer  :{ status:'approved',    impact:'₹7 Cr deferred: Dig. Pathology ₹3 Cr, Scanner ₹2.5 Cr, LASER ₹1.5 Cr', notes:'Board-approved deferral confirmed. Budget formally set at ₹82.2 Cr for FY27.' },
+      capex_reduce :{ status:'in-progress', impact:'Unit reductions approved on 4 biomedical items',            notes:'Scope: Uretero scope 4→1, Dental chair 4→2, Referral monitor 4→2, Vascular doppler 2→1.' },
+      capex_vendor :{ status:'in-progress', impact:'Biomedical vendor renegotiations initiated',                notes:'Key capex vendors identified. Renegotiation meetings scheduled.' },
+      newspecs     :{ status:'planning',    impact:'3 priority specialties identified for FY27',                notes:'IR-DSA, Cosmetology &amp; Geriatric Care shortlisted. Business cases in preparation.' },
+      raterev      :{ status:'draft',       impact:'~3–5% blended yield improvement modelled',                  notes:'Market benchmarking complete. Draft tariff revision under internal review. Target: sign-off by 31 Mar.' },
+      packages     :{ status:'concept',     impact:'Improved occupancy &amp; IP conversion rates targeted',     notes:'Surgical and wellness packages in concept. Awaiting clinical sign-off.' },
+      orgchart     :{ status:'in-progress', impact:'Accountability clarity and operational efficiency',         notes:'New org chart drafted. Leadership alignment sessions ongoing. Final version expected 20 Mar.' },
+      website      :{ status:'planning',    impact:'Enhanced patient acquisition &amp; brand positioning',      notes:'RFP issued to 3 digital agencies. Evaluation committee constituted. Shortlist by 25 Mar.' },
+      streamline   :{ status:'in-progress', impact:'Reduced cycle times across HR, Finance &amp; Ops',         notes:'Process mapping workshops complete. Quick wins identified; implementation commencing 17 Mar.' }
+    }
+  },
+  {
+    id:1, weekOf:'14 March 2026', refNo:'LHRC/BU/2026/001',
+    addedBy:"Chairman's Office", addedOn:'14 Mar 2026',
+    execSummary:'Transformation agenda formally initiated across four pillars: Cost Rationalisation, Capex Management, Revenue Enhancement, and the Lakeshore 2.0 Brand Uplift programme. Immediate savings opportunity of ₹40L identified in consumables rationalisation; total near-term programme impact assessed at ₹5 Cr+. Rate contract reviews and vendor negotiations are being calendared. Revenue levers across new specialties, rate revision, and packages are in early design stage.',
+    data:{
+      manpower     :{ status:'in-progress', impact:'Quantum TBD — headcount review in progress',              notes:'Nurse-to-bed ratio benchmarking initiated. Phase 1 assessment underway.' },
+      consumables  :{ status:'immediate',   impact:'₹40L immediate; ₹5 Cr potential from top 20 items',      notes:'Top 20 high-spend consumables identified. Vendor discussions to commence this week.' },
+      ratecontracts:{ status:'planning',    impact:'TBD — contract calendar being compiled',                  notes:'Supplier contracts list compiled. Negotiation calendar to be finalised.' },
+      capex_defer  :{ status:'approved',    impact:'Cash flow preservation — quantum to be confirmed',        notes:'Board-approved deferral of select non-critical capex. Final list confirmed.' },
+      capex_reduce :{ status:'in-progress', impact:'Scope review ongoing across active projects',             notes:'Project-wise scope review initiated with engineering and clinical teams.' },
+      capex_vendor :{ status:'in-progress', impact:'TBD — key vendors identified',                           notes:'Key capex vendors shortlisted for renegotiation. Meetings being scheduled.' },
+      newspecs     :{ status:'planning',    impact:'Incremental revenue per specialty — to be modelled',      notes:'Specialty mix analysis complete. 3 priority specialties identified for FY27.' },
+      raterev      :{ status:'draft',       impact:'~3–5% blended yield improvement expected',                notes:'Market benchmarking in progress. Draft tariff revision under review.' },
+      packages     :{ status:'concept',     impact:'Improved occupancy &amp; IP conversion rates',            notes:'Wellness and surgical package concept note prepared. Awaiting clinical sign-off.' },
+      orgchart     :{ status:'in-progress', impact:'Operational efficiency &amp; accountability clarity',     notes:'New org chart drafted. Leadership alignment meetings ongoing.' },
+      website      :{ status:'planning',    impact:'Improved patient acquisition &amp; brand perception',     notes:'RFP issued to 3 digital agencies. Evaluation committee constituted.' },
+      streamline   :{ status:'in-progress', impact:'Reduced cycle times &amp; process efficiency',            notes:'Process mapping workshops conducted across HR, Finance &amp; Ops. Quick wins identified.' }
+    }
   }
-}];
+];
 
 let chmAuthLevel = null;
 let chmAdminUsername = '';
 
-function chmAttemptLogin(){
-  const user=(document.getElementById('chmUser').value||'').trim().toLowerCase();
-  const pass=document.getElementById('chmPass').value||'';
-  const errEl=document.getElementById('chmError');
-  errEl.style.display='none';
-  if(!user && pass===CHM_VIEW_PASS){
-    chmAuthLevel='view'; chmAdminUsername=''; chmShowContent();
-  } else if(user && CHM_ADMINS[user] && CHM_ADMINS[user]===pass){
-    chmAuthLevel='admin'; chmAdminUsername=user; chmShowContent();
+function chmAttemptLogin() {
+  const user = (document.getElementById('chmUser').value || '').trim().toLowerCase();
+  const pass = document.getElementById('chmPass').value || '';
+  const errEl = document.getElementById('chmError');
+  errEl.style.display = 'none';
+  if (!user && pass === CHM_VIEW_PASS) {
+    chmAuthLevel = 'view'; chmAdminUsername = ''; chmShowContent();
+  } else if (user && CHM_ADMINS[user] && CHM_ADMINS[user] === pass) {
+    chmAuthLevel = 'admin'; chmAdminUsername = user; chmShowContent();
   } else {
-    errEl.style.display='block';
-    const p=document.getElementById('chmPass');
-    p.style.borderColor='rgba(200,16,62,0.6)';
-    setTimeout(()=>{p.style.borderColor='rgba(255,255,255,.15)';},2000);
+    errEl.style.display = 'block';
+    const p = document.getElementById('chmPass');
+    p.style.borderColor = 'rgba(200,16,62,0.6)';
+    setTimeout(() => { p.style.borderColor = 'rgba(255,255,255,.15)'; }, 2000);
   }
 }
 
-function chmShowContent(){
-  document.getElementById('chmLock').style.display='none';
-  document.getElementById('chmContent').style.display='block';
-  if(chmAuthLevel==='admin'){
-    document.getElementById('chmAdminNote').style.display='inline';
-    document.getElementById('chmViewOnlyNote').style.display='none';
-    document.getElementById('chmAddBtn').style.display='inline-block';
-    document.getElementById('chmAdminUserDisplay').textContent=
-      chmAdminUsername.charAt(0).toUpperCase()+chmAdminUsername.slice(1);
+function chmShowContent() {
+  document.getElementById('chmLock').style.display = 'none';
+  document.getElementById('chmContent').style.display = 'block';
+  if (chmAuthLevel === 'admin') {
+    document.getElementById('chmAdminNote').style.display = 'inline';
+    document.getElementById('chmViewOnlyNote').style.display = 'none';
+    document.getElementById('chmAddBtn').style.display = 'inline-block';
+    document.getElementById('chmAdminUserDisplay').textContent =
+      chmAdminUsername.charAt(0).toUpperCase() + chmAdminUsername.slice(1);
   } else {
-    document.getElementById('chmViewOnlyNote').style.display='inline';
-    document.getElementById('chmAdminNote').style.display='none';
-    document.getElementById('chmAddBtn').style.display='none';
+    document.getElementById('chmViewOnlyNote').style.display = 'inline';
+    document.getElementById('chmAdminNote').style.display = 'none';
+    document.getElementById('chmAddBtn').style.display = 'none';
   }
   chmRenderUpdates();
+  loadEditorial();
 }
 
-function chmLogout(){
-  chmAuthLevel=null; chmAdminUsername='';
-  ['chmAdminNote','chmViewOnlyNote'].forEach(id=>{const e=document.getElementById(id);if(e)e.style.display='none';});
-  const addBtn=document.getElementById('chmAddBtn'); if(addBtn)addBtn.style.display='none';
-  document.getElementById('chmContent').style.display='none';
-  document.getElementById('chmLock').style.display='flex';
-  ['chmUser','chmPass'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
-  document.getElementById('chmError').style.display='none';
+function chmLogout() {
+  chmAuthLevel = null; chmAdminUsername = '';
+  ['chmAdminNote','chmViewOnlyNote'].forEach(id => { const e = document.getElementById(id); if (e) e.style.display = 'none'; });
+  const ab = document.getElementById('chmAddBtn'); if (ab) ab.style.display = 'none';
+  document.getElementById('chmContent').style.display = 'none';
+  document.getElementById('chmLock').style.display = 'flex';
+  ['chmUser','chmPass'].forEach(id => { const e = document.getElementById(id); if (e) e.value = ''; });
+  document.getElementById('chmError').style.display = 'none';
+  if (editActive) lockEditing();
 }
 
-function chmGetUpdates(){
-  try{
-    const s=localStorage.getItem(CHM_STORE_KEY);
-    if(s){const p=JSON.parse(s);if(Array.isArray(p)&&p.length>0)return p;}
-  }catch(e){}
+function chmGetUpdates() {
+  try {
+    const s = localStorage.getItem(CHM_STORE_KEY);
+    if (s) { const p = JSON.parse(s); if (Array.isArray(p) && p.length > 0) return p; }
+  } catch(e) {}
   return JSON.parse(JSON.stringify(CHM_SEED));
 }
 
-function chmRenderUpdates(){
-  const updates=chmGetUpdates();
-  const container=document.getElementById('chmUpdatesContainer');
-  const emptyEl=document.getElementById('chmEmpty');
-  if(!updates||updates.length===0){container.innerHTML='';emptyEl.style.display='block';return;}
-  emptyEl.style.display='none';
-  container.innerHTML=updates.map((u,i)=>chmBuildCard(u,i===0)).join('');
+function chmRenderUpdates() {
+  const updates = chmGetUpdates();
+  const container = document.getElementById('chmUpdatesContainer');
+  const emptyEl = document.getElementById('chmEmpty');
+  if (!updates || updates.length === 0) { container.innerHTML = ''; emptyEl.style.display = 'block'; return; }
+  emptyEl.style.display = 'none';
+  container.innerHTML = updates.map((u, i) => chmBuildCard(u, i === 0)).join('');
 }
 
-function chmStatusDot(status){
-  const ragCol={'on-track':'#27ae60','approved':'#27ae60','complete':'#27ae60',
+function chmStatusDot(status) {
+  const ragCol = {
+    'on-track':'#27ae60','approved':'#27ae60','complete':'#27ae60',
     'at-risk':'#c0392b','immediate':'#c0392b',
     'in-progress':'#e67e22','monitoring':'#e67e22','planning':'#e67e22',
-    'draft':'#a0aec0','concept':'#a0aec0','deferred':'#a0aec0'}[status]||'#a0aec0';
-  const label=(CHM_STATUSES[status]||{label:status}).label;
+    'draft':'#a0aec0','concept':'#a0aec0','deferred':'#a0aec0'
+  }[status] || '#a0aec0';
+  const label = (CHM_STATUSES[status] || { label: status }).label;
   return `<span style="display:inline-flex;align-items:center;gap:5px;font-size:0.68rem;color:#4a5568;white-space:nowrap"><span style="width:7px;height:7px;border-radius:50%;background:${ragCol};flex-shrink:0;display:inline-block"></span>${label}</span>`;
 }
 
-function chmBuildCard(u,isLatest){
-  const bodyId='chmBody'+u.id;
-  const isAdmin=chmAuthLevel==='admin';
-  const ROMANS=['I','II','III','IV','V','VI','VII','VIII','IX','X'];
-  const statusOpts=s=>[
+function chmBuildCard(u, isLatest) {
+  const bodyId = 'chmBody' + u.id;
+  const isAdmin = chmAuthLevel === 'admin';
+  const ROMANS = ['I','II','III','IV','V','VI','VII','VIII','IX','X'];
+  const statusOpts = s => [
     ['in-progress','◉ In Progress'],['planning','◈ Planning'],['on-track','● On Track'],
     ['immediate','⚡ Immediate Action'],['at-risk','⚠ At Risk'],['approved','✓ Approved'],
     ['complete','✔ Complete'],['monitoring','◉ Monitoring'],['draft','○ Draft'],
     ['concept','○ Concept'],['deferred','⏸ Deferred']
-  ].map(([v,l])=>`<option value="${v}"${s===v?' selected':''}>${l}</option>`).join('');
+  ].map(([v,l]) => `<option value="${v}"${s===v?' selected':''}>${l}</option>`).join('');
 
-  const catSections=CHM_TEMPLATE.map((cat,ci)=>{
-    const roman=ROMANS[ci]||String(ci+1);
-    const rows=cat.items.map(item=>{
-      const d=u.data[item.key]||{status:'draft',impact:'—',notes:'—'};
-      const statusCell=isAdmin
-        ?`<select id="ic_${u.id}_${item.key}_status" style="width:100%;padding:4px 6px;border:1px solid #e2e8f0;border-radius:4px;font-size:0.64rem;font-family:'IBM Plex Sans',sans-serif;color:#1a202c;background:white">${statusOpts(d.status)}</select>`
-        :chmStatusDot(d.status);
-      const impactCell=isAdmin
-        ?`<input id="ic_${u.id}_${item.key}_impact" type="text" value="${(d.impact&&d.impact!=='—')?d.impact.replace(/"/g,'&quot;'):''}" placeholder="Impact / target…" style="width:100%;padding:4px 6px;border:1px solid #e2e8f0;border-radius:4px;font-size:0.66rem;font-family:'IBM Plex Sans',sans-serif">`
-        :`<span style="font-size:0.68rem;color:#4a5568">${d.impact||'—'}</span>`;
-      const notesCell=isAdmin
-        ?`<input id="ic_${u.id}_${item.key}_notes" type="text" value="${(d.notes&&d.notes!=='—')?d.notes.replace(/"/g,'&quot;'):''}" placeholder="Notes / actions…" style="width:100%;padding:4px 6px;border:1px solid #e2e8f0;border-radius:4px;font-size:0.64rem;font-family:'IBM Plex Sans',sans-serif">`
-        :`<span style="font-size:0.65rem;color:#718096;line-height:1.6">${d.notes||'—'}</span>`;
+  const catSections = CHM_TEMPLATE.map((cat, ci) => {
+    const roman = ROMANS[ci] || String(ci+1);
+    const rows = cat.items.map(item => {
+      const d = u.data[item.key] || { status:'draft', impact:'—', notes:'—' };
+      const statusCell = isAdmin
+        ? `<select id="ic_${u.id}_${item.key}_status" style="width:100%;padding:4px 6px;border:1px solid #e2e8f0;border-radius:4px;font-size:0.64rem;font-family:'IBM Plex Sans',sans-serif;color:#1a202c;background:white">${statusOpts(d.status)}</select>`
+        : chmStatusDot(d.status);
+      const impactCell = isAdmin
+        ? `<input id="ic_${u.id}_${item.key}_impact" type="text" value="${(d.impact&&d.impact!=='—')?d.impact.replace(/"/g,'&quot;'):''}" placeholder="Impact / target…" style="width:100%;padding:4px 6px;border:1px solid #e2e8f0;border-radius:4px;font-size:0.66rem;font-family:'IBM Plex Sans',sans-serif">`
+        : `<span style="font-size:0.68rem;color:#4a5568">${d.impact||'—'}</span>`;
+      const notesCell = isAdmin
+        ? `<input id="ic_${u.id}_${item.key}_notes" type="text" value="${(d.notes&&d.notes!=='—')?d.notes.replace(/"/g,'&quot;'):''}" placeholder="Notes / actions…" style="width:100%;padding:4px 6px;border:1px solid #e2e8f0;border-radius:4px;font-size:0.64rem;font-family:'IBM Plex Sans',sans-serif">`
+        : `<span style="font-size:0.65rem;color:#718096;line-height:1.6">${d.notes||'—'}</span>`;
       return `<tr>
         <td style="padding:7px 10px;border-bottom:1px solid #f0f4f8;vertical-align:middle;width:26%;font-size:0.7rem;font-weight:600;color:#1a202c">${item.name}<div style="font-size:0.57rem;color:#a0aec0;font-weight:400;margin-top:1px">${item.sub}</div></td>
         <td style="padding:7px 10px;border-bottom:1px solid #f0f4f8;vertical-align:middle;width:16%">${statusCell}</td>
@@ -360,100 +757,92 @@ function chmBuildCard(u,isLatest){
     </div>`;
   }).join('');
 
-  const summaryField=isAdmin
-    ?`<textarea id="ic_${u.id}_summary" rows="2" style="width:100%;padding:6px 8px;border:1.5px solid #e2e8f0;border-radius:5px;font-size:0.71rem;font-family:'IBM Plex Sans',sans-serif;line-height:1.65;resize:vertical;font-style:italic;color:#2d3748;background:white" onfocus="this.style.borderColor='#1a3a5c'" onblur="this.style.borderColor='#e2e8f0'">${u.execSummary||''}</textarea>`
-    :`<span style="font-size:0.71rem;color:#2d3748;line-height:1.75;font-style:italic">${u.execSummary||'—'}</span>`;
+  const summaryField = isAdmin
+    ? `<textarea id="ic_${u.id}_summary" rows="2" style="width:100%;padding:6px 8px;border:1.5px solid #e2e8f0;border-radius:5px;font-size:0.71rem;font-family:'IBM Plex Sans',sans-serif;line-height:1.65;resize:vertical;font-style:italic;color:#2d3748;background:white" onfocus="this.style.borderColor='#1a3a5c'" onblur="this.style.borderColor='#e2e8f0'">${u.execSummary||''}</textarea>`
+    : `<span style="font-size:0.71rem;color:#2d3748;line-height:1.75;font-style:italic">${u.execSummary||'—'}</span>`;
 
-  const weekField=isAdmin
-    ?`<input id="ic_${u.id}_weekof" type="text" value="${u.weekOf}" style="border:1.5px solid #e2e8f0;border-radius:4px;padding:3px 8px;font-size:0.72rem;font-weight:700;color:#0d2137;font-family:'IBM Plex Sans',sans-serif;width:auto" onfocus="this.style.borderColor='#1a3a5c'" onblur="this.style.borderColor='#e2e8f0'">`
-    :`Week of ${u.weekOf}`;
+  const weekField = isAdmin
+    ? `<input id="ic_${u.id}_weekof" type="text" value="${u.weekOf}" style="border:1.5px solid #e2e8f0;border-radius:4px;padding:3px 8px;font-size:0.72rem;font-weight:700;color:#0d2137;font-family:'IBM Plex Sans',sans-serif;width:auto" onfocus="this.style.borderColor='#1a3a5c'" onblur="this.style.borderColor='#e2e8f0'">`
+    : `Week of ${u.weekOf}`;
 
-  const toggleBtn=!isLatest
-    ?`<button onclick="chmToggle('${bodyId}')" id="btn${bodyId}" style="background:none;border:1px solid #d1d9e0;color:#718096;padding:3px 12px;border-radius:4px;font-size:0.62rem;cursor:pointer;font-family:'IBM Plex Sans',sans-serif">▼ Expand</button>`
-    :'';
+  const toggleBtn = !isLatest
+    ? `<button onclick="chmToggle('${bodyId}')" id="btn${bodyId}" style="background:none;border:1px solid #d1d9e0;color:#718096;padding:3px 12px;border-radius:4px;font-size:0.62rem;cursor:pointer;font-family:'IBM Plex Sans',sans-serif">▼ Expand</button>`
+    : '';
 
-  const adminBtns=isAdmin
-    ?`<button onclick="chmDeleteUpdate(${u.id})" style="background:none;border:1px solid #f5c6c6;color:#c0392b;padding:3px 10px;border-radius:4px;font-size:0.6rem;cursor:pointer;font-family:'IBM Plex Sans',sans-serif;font-weight:600">✕ Delete</button>`
-    :'';
+  const adminBtns = isAdmin
+    ? `<button onclick="chmDeleteUpdate(${u.id})" style="background:none;border:1px solid #f5c6c6;color:#c0392b;padding:3px 10px;border-radius:4px;font-size:0.6rem;cursor:pointer;font-family:'IBM Plex Sans',sans-serif;font-weight:600">✕ Delete</button>`
+    : '';
 
-  const saveBtn=isAdmin
-    ?`<button onclick="chmSaveInline(${u.id})" style="background:#0d2137;color:white;border:none;padding:6px 18px;border-radius:5px;font-size:0.66rem;font-weight:700;cursor:pointer;font-family:'IBM Plex Sans',sans-serif;letter-spacing:0.4px">💾 Save Changes</button>`
-    :'';
+  const saveBtn = isAdmin
+    ? `<button onclick="chmSaveInline(${u.id})" style="background:#0d2137;color:white;border:none;padding:6px 18px;border-radius:5px;font-size:0.66rem;font-weight:700;cursor:pointer;font-family:'IBM Plex Sans',sans-serif;letter-spacing:0.4px">💾 Save Changes</button>`
+    : '';
 
   return `<div style="background:white;border-radius:6px;margin-bottom:14px;overflow:hidden;border:1px solid ${isLatest?'#c8d8e8':'#e2e8f0'}">
-
-    <!-- Card header -->
     <div style="padding:12px 22px 11px;border-bottom:2px solid #0d2137;display:flex;align-items:center;justify-content:space-between;background:white">
       <div>
         <div style="font-size:0.75rem;font-weight:800;color:#0d2137;display:flex;align-items:center;gap:8px">
           ${isLatest?'<span style="font-size:0.56rem;background:#0d2137;color:white;padding:2px 7px;border-radius:2px;font-weight:700;letter-spacing:0.6px;font-family:\'IBM Plex Mono\',monospace">CURRENT</span>':''}
           Board Update — ${weekField}
         </div>
-        <div style="font-size:0.58rem;color:#a0aec0;margin-top:4px;font-family:'IBM Plex Mono',monospace">${u.refNo} &nbsp;&middot;&nbsp; ${u.addedOn} &nbsp;&middot;&nbsp; ${u.addedBy}</div>
+        <div style="font-size:0.58rem;color:#a0aec0;margin-top:4px;font-family:'IBM Plex Mono',monospace">${u.refNo} &nbsp;·&nbsp; ${u.addedOn} &nbsp;·&nbsp; ${u.addedBy}</div>
       </div>
       <div style="display:flex;align-items:center;gap:6px">${adminBtns}${toggleBtn}</div>
     </div>
-
-    <!-- Expandable body -->
     <div id="${bodyId}" style="display:${isLatest?'block':'none'}">
-
-      <!-- Chairman's note -->
       <div style="padding:11px 22px 12px;border-bottom:1px solid #f0f3f7;background:#fafbfc">
         <div style="font-size:0.59rem;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:#a0aec0;margin-bottom:5px">Chairman's Note</div>
         ${summaryField}
       </div>
-
-      <!-- Initiative tables -->
       <div style="padding:18px 22px 8px">${catSections}</div>
-
-      <!-- Footer / Save -->
       <div style="border-top:1px solid #f0f3f7;padding:9px 22px;display:flex;justify-content:space-between;align-items:center">
-        <span style="font-size:0.57rem;color:#c8d0da;font-family:'IBM Plex Mono',monospace">${u.refNo} &nbsp;&middot;&nbsp; VPS Lakeshore Hospital &amp; Research Centre &nbsp;&middot;&nbsp; Strictly Confidential</span>
+        <span style="font-size:0.57rem;color:#c8d0da;font-family:'IBM Plex Mono',monospace">${u.refNo} &nbsp;·&nbsp; VPS Lakeshore Hospital &amp; Research Centre &nbsp;·&nbsp; Strictly Confidential</span>
         ${saveBtn}
       </div>
     </div>
   </div>`;
 }
 
-function chmToggle(bodyId){
-  const el=document.getElementById(bodyId);
-  const btn=document.getElementById('btn'+bodyId);
-  if(el.style.display==='none'){el.style.display='block';if(btn)btn.innerHTML='▲ Collapse';}
-  else{el.style.display='none';if(btn)btn.innerHTML='▼ Expand';}
+function chmToggle(bodyId) {
+  const el = document.getElementById(bodyId);
+  const btn = document.getElementById('btn' + bodyId);
+  if (el.style.display === 'none') { el.style.display = 'block'; if (btn) btn.innerHTML = '▲ Collapse'; }
+  else { el.style.display = 'none'; if (btn) btn.innerHTML = '▼ Expand'; }
 }
 
-function chmShowAddForm(existing){
-  const isEdit=!!existing;
-  const today=new Date();
-  const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
-  const dateStr=existing?existing.weekOf:today.getDate()+' '+months[today.getMonth()]+' '+today.getFullYear();
-  const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
-  const statusOpts=s=>[
+function chmShowAddForm(existing) {
+  const isEdit = !!existing;
+  const today = new Date();
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const dateStr = existing ? existing.weekOf : today.getDate() + ' ' + months[today.getMonth()] + ' ' + today.getFullYear();
+  const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+  const statusOpts = s => [
     ['in-progress','◉ In Progress'],['planning','◈ Planning'],['on-track','● On Track'],
     ['immediate','⚡ Immediate Action'],['at-risk','⚠ At Risk'],['approved','✓ Approved'],
     ['complete','✔ Complete'],['monitoring','◉ Monitoring'],['draft','○ Draft'],
     ['concept','○ Concept'],['deferred','⏸ Deferred']
-  ].map(([v,l])=>`<option value="${v}"${s===v?' selected':''}>${l}</option>`).join('');
+  ].map(([v,l]) => `<option value="${v}"${s===v?' selected':''}>${l}</option>`).join('');
 
-  const FORM_ROMANS=['I','II','III','IV','V','VI','VII','VIII','IX','X'];
-  const catForms=CHM_TEMPLATE.map((cat,ci)=>{const roman=FORM_ROMANS[ci]||String(ci+1);
-    const rows=cat.items.map(item=>{
-      const ex=existing&&existing.data?existing.data[item.key]:{};
+  const ROMANS = ['I','II','III','IV','V','VI','VII','VIII','IX','X'];
+  const catForms = CHM_TEMPLATE.map((cat, ci) => {
+    const roman = ROMANS[ci] || String(ci+1);
+    const rows = cat.items.map(item => {
+      const ex = existing && existing.data ? existing.data[item.key] : {};
       return `<tr>
-      <td style="padding:8px 10px;vertical-align:top;border-bottom:1px solid #f0f4f8;width:26%">
-        <div style="font-size:0.7rem;font-weight:700;color:#1a202c">${item.name}</div>
-        <div style="font-size:0.58rem;color:#a0aec0;margin-top:2px">${item.sub}</div>
-      </td>
-      <td style="padding:8px 10px;vertical-align:top;border-bottom:1px solid #f0f4f8;width:17%">
-        <select id="fm_${item.key}_status" style="width:100%;padding:6px 7px;border:1px solid #e2e8f0;border-radius:5px;font-size:0.66rem;font-family:'IBM Plex Sans',sans-serif">${statusOpts(ex.status||'draft')}</select>
-      </td>
-      <td style="padding:8px 10px;vertical-align:top;border-bottom:1px solid #f0f4f8;width:28%">
-        <input id="fm_${item.key}_impact" type="text" value="${(ex.impact&&ex.impact!=='—')?ex.impact:''}" placeholder="Impact / savings target…" style="width:100%;padding:6px 8px;border:1px solid #e2e8f0;border-radius:5px;font-size:0.68rem;font-family:'IBM Plex Sans',sans-serif">
-      </td>
-      <td style="padding:8px 10px;vertical-align:top;border-bottom:1px solid #f0f4f8">
-        <input id="fm_${item.key}_notes" type="text" value="${(ex.notes&&ex.notes!=='—')?ex.notes:''}" placeholder="Key actions, owner, next steps…" style="width:100%;padding:6px 8px;border:1px solid #e2e8f0;border-radius:5px;font-size:0.68rem;font-family:'IBM Plex Sans',sans-serif">
-      </td>
-    </tr>`;}).join('');
+        <td style="padding:8px 10px;vertical-align:top;border-bottom:1px solid #f0f4f8;width:26%">
+          <div style="font-size:0.7rem;font-weight:700;color:#1a202c">${item.name}</div>
+          <div style="font-size:0.58rem;color:#a0aec0;margin-top:2px">${item.sub}</div>
+        </td>
+        <td style="padding:8px 10px;vertical-align:top;border-bottom:1px solid #f0f4f8;width:17%">
+          <select id="fm_${item.key}_status" style="width:100%;padding:6px 7px;border:1px solid #e2e8f0;border-radius:5px;font-size:0.66rem;font-family:'IBM Plex Sans',sans-serif">${statusOpts(ex.status||'draft')}</select>
+        </td>
+        <td style="padding:8px 10px;vertical-align:top;border-bottom:1px solid #f0f4f8;width:28%">
+          <input id="fm_${item.key}_impact" type="text" value="${(ex.impact&&ex.impact!=='—')?ex.impact:''}" placeholder="Impact / savings target…" style="width:100%;padding:6px 8px;border:1px solid #e2e8f0;border-radius:5px;font-size:0.68rem;font-family:'IBM Plex Sans',sans-serif">
+        </td>
+        <td style="padding:8px 10px;vertical-align:top;border-bottom:1px solid #f0f4f8">
+          <input id="fm_${item.key}_notes" type="text" value="${(ex.notes&&ex.notes!=='—')?ex.notes:''}" placeholder="Key actions, owner, next steps…" style="width:100%;padding:6px 8px;border:1px solid #e2e8f0;border-radius:5px;font-size:0.68rem;font-family:'IBM Plex Sans',sans-serif">
+        </td>
+      </tr>`;
+    }).join('');
     return `<div style="margin-bottom:16px;border-radius:8px;overflow:hidden;border:1px solid #e2e8f0">
       <div style="background:${cat.bg};border-left:4px solid ${cat.color};padding:8px 14px;display:flex;align-items:center;gap:8px">
         <span style="font-size:0.9rem">${cat.icon}</span>
@@ -472,13 +861,12 @@ function chmShowAddForm(existing){
     </div>`;
   }).join('');
 
-  const modalTitle=document.getElementById('chmModalTitle');
-  if(modalTitle) modalTitle.textContent=isEdit?'Edit Weekly Board Update':'New Weekly Board Update';
+  const modalTitle = document.getElementById('chmModalTitle');
+  if (modalTitle) modalTitle.textContent = isEdit ? 'Edit Weekly Board Update' : 'New Weekly Board Update';
+  const modalBody = document.getElementById('chmModalBody');
+  modalBody.dataset.editId = isEdit ? existing.id : '';
 
-  const modalBody=document.getElementById('chmModalBody');
-  modalBody.dataset.editId=isEdit?existing.id:'';
-
-  modalBody.innerHTML=`
+  modalBody.innerHTML = `
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px">
       <div>
         <label style="display:block;font-size:0.61rem;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:#718096;margin-bottom:5px">Week Of</label>
@@ -491,95 +879,89 @@ function chmShowAddForm(existing){
     </div>
     <div style="margin-bottom:20px">
       <label style="display:block;font-size:0.61rem;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:#718096;margin-bottom:5px">Chairman's Note / Executive Summary</label>
-      <textarea id="fm_execsummary" rows="3" placeholder="Brief summary of this week's highlights, overall programme status and chairman's observations…" style="width:100%;padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:0.78rem;font-family:'IBM Plex Sans',sans-serif;line-height:1.65;resize:vertical;outline:none" onfocus="this.style.borderColor='#1a3a5c'" onblur="this.style.borderColor='#e2e8f0'">${existing?existing.execSummary:''}</textarea>
+      <textarea id="fm_execsummary" rows="3" placeholder="Brief summary of this week's highlights…" style="width:100%;padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:0.78rem;font-family:'IBM Plex Sans',sans-serif;line-height:1.65;resize:vertical;outline:none" onfocus="this.style.borderColor='#1a3a5c'" onblur="this.style.borderColor='#e2e8f0'">${existing?existing.execSummary:''}</textarea>
     </div>
     <div style="background:#edf2f7;border-left:4px solid #1a3a5c;border-radius:0 6px 6px 0;padding:8px 14px;margin-bottom:16px;font-size:0.68rem;color:#4a5568">
-      <strong>Initiative Status Updates</strong> — Set the current status, quantified impact, and key actions for each initiative below.
+      <strong>Initiative Status Updates</strong> — Set current status, quantified impact, and key actions for each initiative.
     </div>
     ${catForms}
     <div style="display:flex;gap:10px;justify-content:flex-end;padding-top:16px;border-top:1px solid #e2e8f0;margin-top:6px">
       <button onclick="chmCloseModal()" style="background:#f7fafc;border:1px solid #e2e8f0;color:#718096;padding:10px 20px;border-radius:7px;font-size:0.75rem;cursor:pointer;font-family:'IBM Plex Sans',sans-serif">Cancel</button>
       <button onclick="chmSaveUpdate()" style="background:linear-gradient(135deg,#0d2137,#1a3a5c);color:white;border:none;padding:10px 26px;border-radius:7px;font-size:0.75rem;font-weight:700;cursor:pointer;font-family:'IBM Plex Sans',sans-serif;letter-spacing:0.5px">Save Board Update →</button>
     </div>`;
-  document.getElementById('chmModal').style.display='block';
-  document.body.style.overflow='hidden';
+  document.getElementById('chmModal').style.display = 'block';
+  document.body.style.overflow = 'hidden';
 }
 
-function chmSaveUpdate(){
-  const weekOf=(document.getElementById('fm_weekof').value||'').trim()||'—';
-  const prepBy=(document.getElementById('fm_prepby').value||'').trim()||chmAdminUsername;
-  const execSummary=(document.getElementById('fm_execsummary').value||'').trim();
-  const updates=chmGetUpdates();
-  const data={};
-  CHM_TEMPLATE.forEach(cat=>{
-    cat.items.forEach(item=>{
-      data[item.key]={
-        status:(document.getElementById('fm_'+item.key+'_status')||{}).value||'draft',
-        impact:((document.getElementById('fm_'+item.key+'_impact')||{}).value||'').trim()||'—',
-        notes :((document.getElementById('fm_'+item.key+'_notes')||{}).value||'').trim()||'—'
+function chmSaveUpdate() {
+  const weekOf = (document.getElementById('fm_weekof').value||'').trim()||'—';
+  const prepBy = (document.getElementById('fm_prepby').value||'').trim()||chmAdminUsername;
+  const execSummary = (document.getElementById('fm_execsummary').value||'').trim();
+  const updates = chmGetUpdates();
+  const data = {};
+  CHM_TEMPLATE.forEach(cat => {
+    cat.items.forEach(item => {
+      data[item.key] = {
+        status: (document.getElementById('fm_'+item.key+'_status')||{}).value||'draft',
+        impact: ((document.getElementById('fm_'+item.key+'_impact')||{}).value||'').trim()||'—',
+        notes:  ((document.getElementById('fm_'+item.key+'_notes')||{}).value||'').trim()||'—'
       };
     });
   });
-  const editId=document.getElementById('chmModalBody').dataset.editId;
-  if(editId){
-    const idx=updates.findIndex(u=>u.id===parseInt(editId));
-    if(idx>-1) updates[idx]={...updates[idx],weekOf,addedBy:prepBy,execSummary,data};
+  const editId = document.getElementById('chmModalBody').dataset.editId;
+  if (editId) {
+    const idx = updates.findIndex(u => u.id === parseInt(editId));
+    if (idx > -1) updates[idx] = { ...updates[idx], weekOf, addedBy:prepBy, execSummary, data };
   } else {
-    const newId=updates.length>0?Math.max(...updates.map(u=>u.id))+1:1;
-    const padded=String(newId).padStart(3,'0');
-    const today=new Date();
-    const mons=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-    const addedOn=today.getDate()+' '+mons[today.getMonth()]+' '+today.getFullYear();
-    updates.unshift({id:newId,weekOf,refNo:'LHRC/BU/2026/'+padded,addedBy:prepBy,addedOn,execSummary,data});
+    const newId = updates.length > 0 ? Math.max(...updates.map(u => u.id)) + 1 : 1;
+    const padded = String(newId).padStart(3,'0');
+    const today = new Date();
+    const mons = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const addedOn = today.getDate()+' '+mons[today.getMonth()]+' '+today.getFullYear();
+    updates.unshift({ id:newId, weekOf, refNo:'LHRC/BU/2026/'+padded, addedBy:prepBy, addedOn, execSummary, data });
   }
-  localStorage.setItem(CHM_STORE_KEY,JSON.stringify(updates));
+  localStorage.setItem(CHM_STORE_KEY, JSON.stringify(updates));
   chmCloseModal();
   chmRenderUpdates();
 }
 
-function chmEditUpdate(id){
-  const updates=chmGetUpdates();
-  const u=updates.find(x=>x.id===id);
-  if(u) chmShowAddForm(u);
-}
-
-function chmDeleteUpdate(id){
-  if(!confirm('Delete this update? This cannot be undone.')) return;
-  const updates=chmGetUpdates().filter(u=>u.id!==id);
-  localStorage.setItem(CHM_STORE_KEY,JSON.stringify(updates));
+function chmDeleteUpdate(id) {
+  if (!confirm('Delete this update? This cannot be undone.')) return;
+  const updates = chmGetUpdates().filter(u => u.id !== id);
+  localStorage.setItem(CHM_STORE_KEY, JSON.stringify(updates));
   chmRenderUpdates();
 }
 
-function chmSaveInline(updateId){
-  const updates=chmGetUpdates();
-  const idx=updates.findIndex(u=>u.id===updateId);
-  if(idx<0) return;
-  const u={...updates[idx]};
-  const data={};
-  CHM_TEMPLATE.forEach(cat=>{
-    cat.items.forEach(item=>{
-      const sEl=document.getElementById('ic_'+updateId+'_'+item.key+'_status');
-      const iEl=document.getElementById('ic_'+updateId+'_'+item.key+'_impact');
-      const nEl=document.getElementById('ic_'+updateId+'_'+item.key+'_notes');
-      data[item.key]={
-        status:sEl?sEl.value:(u.data[item.key]||{}).status||'draft',
-        impact:iEl?(iEl.value.trim()||'—'):(u.data[item.key]||{}).impact||'—',
-        notes :nEl?(nEl.value.trim()||'—'):(u.data[item.key]||{}).notes||'—'
+function chmSaveInline(updateId) {
+  const updates = chmGetUpdates();
+  const idx = updates.findIndex(u => u.id === updateId);
+  if (idx < 0) return;
+  const u = { ...updates[idx] };
+  const data = {};
+  CHM_TEMPLATE.forEach(cat => {
+    cat.items.forEach(item => {
+      const sEl = document.getElementById('ic_'+updateId+'_'+item.key+'_status');
+      const iEl = document.getElementById('ic_'+updateId+'_'+item.key+'_impact');
+      const nEl = document.getElementById('ic_'+updateId+'_'+item.key+'_notes');
+      data[item.key] = {
+        status: sEl ? sEl.value : (u.data[item.key]||{}).status||'draft',
+        impact: iEl ? (iEl.value.trim()||'—') : (u.data[item.key]||{}).impact||'—',
+        notes:  nEl ? (nEl.value.trim()||'—') : (u.data[item.key]||{}).notes||'—'
       };
     });
   });
-  const weekEl=document.getElementById('ic_'+updateId+'_weekof');
-  const sumEl=document.getElementById('ic_'+updateId+'_summary');
-  if(weekEl&&weekEl.value.trim()) u.weekOf=weekEl.value.trim();
-  if(sumEl) u.execSummary=sumEl.value.trim();
-  updates[idx]={...u,data};
-  localStorage.setItem(CHM_STORE_KEY,JSON.stringify(updates));
+  const weekEl = document.getElementById('ic_'+updateId+'_weekof');
+  const sumEl  = document.getElementById('ic_'+updateId+'_summary');
+  if (weekEl && weekEl.value.trim()) u.weekOf = weekEl.value.trim();
+  if (sumEl) u.execSummary = sumEl.value.trim();
+  updates[idx] = { ...u, data };
+  localStorage.setItem(CHM_STORE_KEY, JSON.stringify(updates));
   chmRenderUpdates();
 }
 
-function chmCloseModal(){
-  document.getElementById('chmModal').style.display='none';
-  document.body.style.overflow='';
+function chmCloseModal() {
+  document.getElementById('chmModal').style.display = 'none';
+  document.body.style.overflow = '';
 }
 
 </script>
