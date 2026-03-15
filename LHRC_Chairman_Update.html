@@ -125,9 +125,23 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
 .supp-tbl td:first-child { color: #1a202c; font-weight: 500; width: 28px; text-align: center; }
 .supp-tbl td.supp-name { color: #1a202c; font-weight: 500; text-align: left !important; width: auto !important; min-width: 100px; }
 /* payroll table section rows */
-.pr-section-hd td { font-size: 0.59rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; font-family: 'IBM Plex Mono', monospace; padding: 12px 0 6px 0; border-bottom: 1px solid #e8ecf0; border-top: none; background: white; }
+.pr-section-hd { }
+.pr-section-hd td { padding: 0; border: none; background: transparent; }
+.pr-section-hd td:first-child {
+  font-size: 0.58rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px;
+  font-family: 'IBM Plex Mono', monospace; padding: 16px 0 5px 10px;
+  border-left: 3px solid; border-bottom: 1px solid #e2e8f0;
+  background: #f8fafc; color: inherit; white-space: nowrap;
+}
+.pr-section-hd td:not(:first-child) { border-bottom: 1px solid #e2e8f0; background: #f8fafc; }
+.pr-section-hd.si td:first-child { border-left-color: #0d2137; color: #0d2137; }
+.pr-section-hd.ur td:first-child { border-left-color: #a0aec0; color: #718096; }
 .pr-subtotal td { background: #2d3748; color: white; font-weight: 700; font-size: 0.69rem; padding: 7px 10px 7px 0; border-bottom: none; }
 .pr-total td { background: #0d2137; color: white; font-weight: 700; font-size: 0.69rem; padding: 9px 10px 9px 0; border-bottom: none; }
+.pr-footer { margin-top: 16px; padding-top: 12px; border-top: 1px solid #e2e8f0; font-size: 0.62rem; color: #718096; line-height: 1.7; font-family: 'IBM Plex Sans', sans-serif; }
+.pr-footer p { margin: 0 0 4px 0; }
+.pr-footer .pf-key { font-weight: 600; color: #4a5568; }
+.pr-footer .pf-hl { color: #0d2137; font-weight: 600; }
 .supp-tbl td.supp-amt { font-family: 'IBM Plex Mono', monospace; color: #0d2137; white-space: nowrap; }
 .popup-link { font-size: 0.68rem; font-weight: 600; color: #0d2137; text-decoration: none; border-bottom: 1px solid rgba(13,33,55,0.25); padding-bottom: 1px; cursor: pointer; background: none; border-left: none; border-right: none; border-top: none; font-family: 'IBM Plex Sans', sans-serif; transition: opacity .15s; }
 .popup-link:hover { opacity: 0.6; }
@@ -343,24 +357,22 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
       <button class="supp-modal-close" onclick="document.getElementById('payrollModal').classList.remove('open')">✕</button>
     </div>
     <div class="supp-modal-body">
-      <div class="supp-modal-note">All amounts in ₹ Lakhs. Identified savings: ₹464.1 L (₹4.6 Cr). † Biochemistry, Histopathology, Microbiology and Haematology are planned to reduce collectively from 85 to 75 staff — individual targets to be set once the group review is complete.</div>
-
       <table class="supp-tbl">
         <thead>
           <tr>
             <th style="text-align:left;min-width:130px;">Department</th>
-            <th style="text-align:center;width:36px;">HC</th>
-            <th style="text-align:center;width:54px;">Target HC</th>
+            <th style="text-align:center;width:42px;">HC</th>
+            <th style="text-align:center;width:58px;">Target HC</th>
             <th style="text-align:center;width:54px;">Variance</th>
-            <th style="text-align:right;width:90px;">Annual Cost (₹ L)</th>
-            <th style="text-align:right;width:76px;">Target (₹ L)</th>
+            <th style="text-align:right;width:92px;">Annual Cost (₹ L)</th>
+            <th style="text-align:right;width:78px;">Target (₹ L)</th>
             <th style="text-align:right;width:68px;">Saving (₹ L)</th>
             <th style="text-align:center;width:90px;">Timeline</th>
           </tr>
         </thead>
         <tbody>
           <!-- ── SAVINGS IDENTIFIED ── -->
-          <tr class="pr-section-hd"><td colspan="8" style="color:#0d2137;">Savings Identified</td></tr>
+          <tr class="pr-section-hd si"><td>Savings Identified</td><td colspan="7"></td></tr>
           <tr><td class="supp-name">Nursing (all grades)</td><td style="text-align:center;">630</td><td style="text-align:center;">569</td><td style="text-align:center;color:#c0392b;font-weight:700;">−61</td><td style="text-align:right;" class="supp-amt">2,329.5</td><td style="text-align:right;" class="supp-amt">2,103.9</td><td style="text-align:right;color:#2d6a4f;font-weight:700;">225.6</td><td style="text-align:center;">Intermediate</td></tr>
           <tr><td class="supp-name">Pharmacy</td><td style="text-align:center;">93</td><td style="text-align:center;">50</td><td style="text-align:center;color:#c0392b;font-weight:700;">−43</td><td style="text-align:right;" class="supp-amt">306.2</td><td style="text-align:right;" class="supp-amt">164.6</td><td style="text-align:right;color:#2d6a4f;font-weight:700;">141.6</td><td style="text-align:center;">Immediate &amp; Intermediate</td></tr>
           <tr><td class="supp-name">Patient Care Services</td><td style="text-align:center;">97</td><td style="text-align:center;">80</td><td style="text-align:center;color:#c0392b;font-weight:700;">−17</td><td style="text-align:right;" class="supp-amt">339.6</td><td style="text-align:right;" class="supp-amt">280.1</td><td style="text-align:right;color:#2d6a4f;font-weight:700;">59.5</td><td style="text-align:center;">Intermediate</td></tr>
@@ -369,7 +381,9 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
           <tr><td class="supp-name">Biomedical Engineering</td><td style="text-align:center;">9</td><td style="text-align:center;">7</td><td style="text-align:center;color:#c0392b;font-weight:700;">−2</td><td style="text-align:right;" class="supp-amt">41.2</td><td style="text-align:right;" class="supp-amt">32.1</td><td style="text-align:right;color:#2d6a4f;font-weight:700;">9.2</td><td style="text-align:center;">TBC</td></tr>
           <tr><td class="supp-name">Radiology</td><td style="text-align:center;">46</td><td style="text-align:center;">44</td><td style="text-align:center;color:#c0392b;font-weight:700;">−2</td><td style="text-align:right;" class="supp-amt">174.8</td><td style="text-align:right;" class="supp-amt">167.2</td><td style="text-align:right;color:#2d6a4f;font-weight:700;">7.6</td><td style="text-align:center;">TBC</td></tr>
           <tr class="pr-subtotal">
-            <td style="text-align:left;padding-left:0;" colspan="3">SUBTOTAL</td>
+            <td style="text-align:left;padding-left:0;">SUBTOTAL</td>
+            <td style="text-align:center;font-family:'IBM Plex Mono',monospace;">910</td>
+            <td style="text-align:center;font-family:'IBM Plex Mono',monospace;">781</td>
             <td style="text-align:center;color:#f8a5a5;font-family:'IBM Plex Mono',monospace;">−129</td>
             <td style="text-align:right;font-family:'IBM Plex Mono',monospace;">3,371.5</td>
             <td style="text-align:right;font-family:'IBM Plex Mono',monospace;">2,907.5</td>
@@ -378,7 +392,7 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
           </tr>
 
           <!-- ── UNDER REVIEW ── -->
-          <tr class="pr-section-hd"><td colspan="8" style="color:#718096;">Under Review</td></tr>
+          <tr class="pr-section-hd ur"><td>Under Review</td><td colspan="7"></td></tr>
           <tr><td class="supp-name">Paramedical</td><td style="text-align:center;">122</td><td style="text-align:center;color:#a0aec0;">—</td><td style="text-align:center;color:#a0aec0;">—</td><td style="text-align:right;" class="supp-amt">428.7</td><td style="text-align:right;color:#a0aec0;">—</td><td style="text-align:right;color:#a0aec0;">—</td><td style="text-align:center;color:#718096;">Under Review</td></tr>
           <tr><td class="supp-name">Food &amp; Beverages</td><td style="text-align:center;">84</td><td style="text-align:center;color:#a0aec0;">—</td><td style="text-align:center;color:#a0aec0;">—</td><td style="text-align:right;" class="supp-amt">238.2</td><td style="text-align:right;color:#a0aec0;">—</td><td style="text-align:right;color:#a0aec0;">—</td><td style="text-align:center;color:#a0aec0;">No Savings</td></tr>
           <tr><td class="supp-name">Administration</td><td style="text-align:center;">27</td><td style="text-align:center;color:#a0aec0;">—</td><td style="text-align:center;color:#a0aec0;">—</td><td style="text-align:right;" class="supp-amt">178.7</td><td style="text-align:right;color:#a0aec0;">—</td><td style="text-align:right;color:#a0aec0;">—</td><td style="text-align:center;color:#a0aec0;">No Savings</td></tr>
@@ -409,10 +423,11 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
           <tr><td class="supp-name">Corporate Communications</td><td style="text-align:center;">5</td><td style="text-align:center;color:#a0aec0;">—</td><td style="text-align:center;color:#a0aec0;">—</td><td style="text-align:right;" class="supp-amt">29.1</td><td style="text-align:right;color:#a0aec0;">—</td><td style="text-align:right;color:#a0aec0;">—</td><td style="text-align:center;color:#718096;">Under Review</td></tr>
           <tr><td style="color:#a0aec0;font-size:0.65rem;font-style:italic;text-align:left !important;width:auto !important;" colspan="8">+ 35 smaller departments — see full Excel for detail</td></tr>
           <tr class="pr-subtotal">
-            <td style="text-align:left;padding-left:0;" colspan="2">SUBTOTAL (shown)</td>
-            <td style="text-align:center;color:rgba(255,255,255,0.6);font-family:'IBM Plex Mono',monospace;">622</td>
+            <td style="text-align:left;padding-left:0;">SUBTOTAL</td>
+            <td style="text-align:center;font-family:'IBM Plex Mono',monospace;">714</td>
             <td style="text-align:center;color:rgba(255,255,255,0.3);">—</td>
-            <td style="text-align:right;font-family:'IBM Plex Mono',monospace;">2,553.2</td>
+            <td style="text-align:center;color:rgba(255,255,255,0.3);">—</td>
+            <td style="text-align:right;font-family:'IBM Plex Mono',monospace;">2,936.7</td>
             <td style="text-align:right;color:rgba(255,255,255,0.3);">—</td>
             <td style="text-align:right;color:rgba(255,255,255,0.3);">—</td>
             <td></td>
@@ -420,16 +435,23 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
 
           <!-- ── OVERALL TOTAL ── -->
           <tr class="pr-total">
-            <td style="text-align:left;padding-left:0;" colspan="2">OVERALL TOTAL (all 65 depts)</td>
+            <td style="text-align:left;padding-left:0;">OVERALL TOTAL</td>
             <td style="text-align:center;font-family:'IBM Plex Mono',monospace;">1,624</td>
-            <td style="text-align:center;color:rgba(255,255,255,0.3);">—</td>
+            <td style="text-align:center;font-family:'IBM Plex Mono',monospace;color:rgba(255,255,255,0.5);">781*</td>
+            <td style="text-align:center;color:#f8a5a5;font-family:'IBM Plex Mono',monospace;">−129*</td>
             <td style="text-align:right;font-family:'IBM Plex Mono',monospace;">6,308.2</td>
-            <td style="text-align:right;color:rgba(255,255,255,0.3);">—</td>
+            <td style="text-align:right;font-family:'IBM Plex Mono',monospace;color:rgba(255,255,255,0.5);">2,907.5*</td>
             <td style="text-align:right;color:#a8d5b5;font-family:'IBM Plex Mono',monospace;">464.1</td>
-            <td style="text-align:center;font-size:0.62rem;color:rgba(255,255,255,0.45);">identified</td>
+            <td style="text-align:center;font-size:0.6rem;color:rgba(255,255,255,0.4);">* identified only</td>
           </tr>
         </tbody>
       </table>
+
+      <div class="pr-footer">
+        <p><span class="pf-key">HC</span> = Headcount &nbsp;·&nbsp; All amounts in ₹ Lakhs &nbsp;·&nbsp; Consultant / visiting doctor fees excluded</p>
+        <p><span class="pf-hl">Identified savings: ₹464.1 L (₹4.6 Cr)</span> across 7 departments. Remaining ₹3.1 Cr to ₹7.6 Cr target is under active review across the remaining 58 departments.</p>
+        <p>† Biochemistry, Histopathology, Microbiology and Haematology are planned to reduce collectively from 85 to 75 staff — individual targets to be set once the group review is complete.</p>
+      </div>
     </div>
   </div>
 </div>
