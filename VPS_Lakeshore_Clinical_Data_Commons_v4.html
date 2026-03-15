@@ -1,0 +1,2024 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VPS Lakeshore — Clinical & Genomic Data Commons v4</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+/* ═══════════════════════════════════════════
+   VPS LAKESHORE CLINICAL & GENOMIC DATA COMMONS v4
+   Designed for pharma/biotech RWE + genomics buyers
+   Reference: Tempus xT + Flatiron RWD model
+═══════════════════════════════════════════ */
+:root {
+  --blue:    #003087;
+  --blue2:   #0050B3;
+  --blue3:   #1473CC;
+  --red:     #C8102E;
+  --red2:    #A50E26;
+  --bg:      #EFF2F8;
+  --surf:    #FFFFFF;
+  --surf2:   #F5F7FC;
+  --bdr:     #D0D9EB;
+  --bdr2:    #E6EBF5;
+  --txt:     #08152A;
+  --txt2:    #374760;
+  --mut:     #6A7B96;
+  --mono:    'IBM Plex Mono', monospace;
+  --sans:    'DM Sans', sans-serif;
+  --serif:   'Instrument Serif', serif;
+
+  /* Domain colours */
+  --onco:  #C8102E; --onco-l: #FFF0F2;
+  --card:  #0050B3; --card-l: #EEF4FF;
+  --neph:  #007A53; --neph-l: #EAFAF3;
+  --neuro: #6B3FA0; --neuro-l:#F3EEF9;
+  --endo:  #D96B10; --endo-l: #FEF2E6;
+  --icu:   #344A6D; --icu-l:  #EDF0F8;
+  --geno:  #0B6E6E; --geno-l: #E5F5F5;
+  --pharma:#7B1FA2; --pharma-l:#F3E5F5;
+
+  --side-bg:  #001A4D;
+  --side-bdr: rgba(255,255,255,0.07);
+
+  --topbar-h: 52px;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);background:var(--bg);color:var(--txt);font-size:13px;min-height:100vh;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--bdr);border-radius:3px}
+
+/* ── TOPBAR ── */
+.topbar{
+  height:var(--topbar-h);background:var(--blue);
+  display:flex;align-items:center;padding:0 20px;gap:0;
+  position:sticky;top:0;z-index:300;
+  box-shadow:0 2px 12px rgba(0,0,0,0.22);
+}
+.brand{display:flex;align-items:center;gap:0;margin-right:24px;flex-shrink:0}
+.brand-mark{
+  width:28px;height:28px;background:var(--red);border-radius:6px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--serif);font-size:15px;color:#fff;font-weight:700;
+  margin-right:9px;flex-shrink:0;
+}
+.brand-name{font-family:var(--serif);font-size:16px;color:#fff;letter-spacing:-0.2px}
+.brand-sub{
+  font-family:var(--mono);font-size:8px;color:#90BADF;
+  letter-spacing:1px;text-transform:uppercase;
+  padding:2px 5px;border:1px solid rgba(144,186,223,0.35);border-radius:3px;margin-left:8px;
+}
+.topnav{display:flex;gap:1px;flex:1}
+.tnav{
+  font-size:12px;font-weight:500;color:rgba(255,255,255,0.55);
+  padding:5px 11px;border-radius:5px;cursor:pointer;
+  transition:all .14s;border:none;background:none;font-family:var(--sans);white-space:nowrap;
+}
+.tnav:hover{color:#fff;background:rgba(255,255,255,0.09)}
+.tnav.active{color:#fff;background:rgba(200,16,46,0.28)}
+.tnav.new::after{
+  content:'NEW';font-family:var(--mono);font-size:7px;letter-spacing:.5px;
+  background:var(--red);color:#fff;padding:1px 4px;border-radius:2px;
+  margin-left:5px;vertical-align:middle;
+}
+.topbar-meta{
+  margin-left:auto;font-family:var(--mono);font-size:9px;
+  color:rgba(255,255,255,0.3);letter-spacing:0.3px;text-align:right;line-height:1.5;
+}
+
+/* ── PAGE SWITCHER ── */
+.page{display:none}.page.active{display:block}
+
+/* ── SHARED UTILS ── */
+.section{padding:18px 22px}
+.section-label{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--mut);margin-bottom:12px}
+.panel{background:var(--surf);border-radius:10px;border:1.5px solid var(--bdr2);padding:16px}
+.btn{
+  font-family:var(--sans);font-size:11px;font-weight:600;
+  padding:7px 14px;border-radius:6px;border:none;cursor:pointer;transition:.14s;
+}
+.btn-primary{background:var(--blue);color:#fff}
+.btn-primary:hover{background:var(--blue2)}
+.btn-red{background:var(--red);color:#fff}
+.btn-red:hover{background:var(--red2)}
+.btn-outline{background:transparent;border:1.5px solid var(--bdr);color:var(--txt)}
+.btn-outline:hover{border-color:var(--blue);color:var(--blue)}
+.btn-geno{background:var(--geno-l);color:var(--geno);border:1.5px solid rgba(11,110,110,0.25)}
+.btn-geno:hover{background:#d0f0f0}
+.badge{display:inline-block;font-size:9px;font-weight:600;padding:2px 7px;border-radius:7px;text-transform:uppercase;letter-spacing:.2px}
+.tag{display:inline-block;font-family:var(--mono);font-size:9px;padding:2px 6px;border-radius:3px;background:var(--bg);color:var(--mut);border:1px solid var(--bdr)}
+.tag.hi{background:#EEF4FF;color:var(--blue2);border-color:#B8CCF0}
+.tag.red{background:var(--onco-l);color:var(--onco);border-color:#F8C0C0}
+.tag.grn{background:var(--neph-l);color:var(--neph);border-color:#A0DEC0}
+.tag.prp{background:var(--neuro-l);color:var(--neuro);border-color:#CDB8E8}
+.tag.teal{background:var(--geno-l);color:var(--geno);border-color:#A0D8D8}
+.tag.org{background:var(--endo-l);color:var(--endo);border-color:#F0C898}
+
+/* ── HERO ── */
+.hero{
+  background:linear-gradient(135deg,var(--blue) 0%,var(--blue2) 70%,#1A4E8F 100%);
+  padding:24px 24px 20px;position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;right:-60px;bottom:-60px;
+  width:300px;height:300px;border-radius:50%;
+  background:radial-gradient(circle,rgba(200,16,46,0.15) 0%,transparent 65%);
+}
+.hero::after{
+  content:'';position:absolute;right:180px;top:-40px;
+  width:180px;height:180px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,0.04) 0%,transparent 70%);
+}
+.hero-eyebrow{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:#90BADF;margin-bottom:7px}
+.hero-title{font-family:var(--serif);font-size:27px;color:#fff;line-height:1.18;margin-bottom:5px}
+.hero-title em{color:#5ABFFF;font-style:italic}
+.hero-sub{font-size:12px;color:rgba(255,255,255,0.55);max-width:560px;line-height:1.65}
+.hero-stats{
+  display:flex;gap:0;margin-top:20px;
+  border-top:1px solid rgba(255,255,255,0.1);padding-top:14px;flex-wrap:wrap;gap:0;
+}
+.hstat{flex:1;padding-right:20px;border-right:1px solid rgba(255,255,255,0.1);margin-right:20px;min-width:80px}
+.hstat:last-child{border-right:none;margin-right:0}
+.hstat-val{font-family:var(--serif);font-size:22px;color:#fff;line-height:1;margin-bottom:2px}
+.hstat-val span{font-size:12px;color:#90BADF}
+.hstat-label{font-size:10px;color:rgba(255,255,255,0.42)}
+
+/* ── DOMAIN GRID ── */
+.domain-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.dc{
+  background:var(--surf);border-radius:10px;
+  border:1.5px solid var(--bdr2);padding:15px;
+  cursor:pointer;transition:all .17s;position:relative;overflow:hidden;
+}
+.dc:hover{border-color:var(--dc-c);box-shadow:0 4px 18px rgba(0,0,0,0.08);transform:translateY(-1px)}
+.dc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--dc-c)}
+.dc-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:9px}
+.dc-icon{width:34px;height:34px;border-radius:8px;background:var(--dc-l);display:flex;align-items:center;justify-content:center;font-size:17px}
+.dc-pill{font-family:var(--mono);font-size:8px;padding:2px 6px;border-radius:6px;background:var(--dc-l);color:var(--dc-c);font-weight:600;letter-spacing:.3px}
+.dc-name{font-size:13px;font-weight:700;color:var(--txt);margin-bottom:2px}
+.dc-desc{font-size:11px;color:var(--mut);line-height:1.5;margin-bottom:11px}
+.dc-foot{display:flex;gap:12px;padding-top:9px;border-top:1px solid var(--bdr2)}
+.dc-sv{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--dc-c)}
+.dc-sl{font-size:10px;color:var(--mut)}
+.dc-arr{position:absolute;right:13px;bottom:13px;color:var(--dc-c);font-size:13px;opacity:.4;transition:.14s}
+.dc:hover .dc-arr{opacity:1;transform:translateX(2px)}
+
+/* ── PHARMA VALUE BADGES ── */
+.pharma-value-strip{
+  display:flex;gap:6px;flex-wrap:wrap;padding:10px 14px;
+  background:linear-gradient(135deg,#F3E5F5,#E8EAF6);
+  border-radius:8px;border:1px solid rgba(123,31,162,0.18);
+  margin-bottom:12px;
+}
+.pv-badge{
+  font-family:var(--mono);font-size:9px;
+  background:white;color:var(--pharma);
+  padding:3px 8px;border-radius:4px;
+  border:1px solid rgba(123,31,162,0.22);font-weight:600;letter-spacing:.2px;
+}
+.pv-label{font-size:10px;font-weight:600;color:var(--pharma);margin-right:6px;align-self:center}
+
+/* ── COMORBIDITY GRID ── */
+.comor-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.comor-row{
+  display:flex;align-items:center;gap:8px;
+  padding:8px 11px;background:var(--surf2);
+  border-radius:7px;border:1px solid var(--bdr2);cursor:pointer;transition:all .13s;
+}
+.comor-row:hover{border-color:var(--blue3);background:#EEF4FF}
+.comor-pair{font-size:11px;font-weight:500;color:var(--txt);flex:1;line-height:1.4}
+.comor-pct{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--blue)}
+.comor-n{font-family:var(--mono);font-size:9px;color:var(--mut)}
+
+/* ══════════════════════════════════════════
+   ONCOLOGY + GENOMICS MODULE
+══════════════════════════════════════════ */
+.onco-shell{display:flex;height:calc(100vh - var(--topbar-h));overflow:hidden}
+
+/* sidebar */
+.sidebar{
+  width:260px;flex-shrink:0;
+  background:var(--side-bg);border-right:1px solid var(--side-bdr);
+  overflow-y:auto;padding:14px 12px;
+}
+.sidebar-title{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:#5AB4FF;margin-bottom:12px;padding-left:2px}
+.filter-group{margin-bottom:14px}
+.filter-label{
+  font-size:10px;font-weight:600;color:rgba(255,255,255,0.42);
+  letter-spacing:.4px;text-transform:uppercase;margin-bottom:5px;
+  display:flex;align-items:center;justify-content:space-between;padding:0 2px;
+}
+.filter-count{font-family:var(--mono);font-size:9px;color:#5AB4FF}
+.filter-opt{
+  display:flex;align-items:center;gap:7px;padding:5px 7px;
+  border-radius:5px;cursor:pointer;transition:background .12s;margin-bottom:2px;
+}
+.filter-opt:hover{background:rgba(255,255,255,0.06)}
+.filter-opt.sel{background:rgba(0,80,179,0.22)}
+.fchk{
+  width:13px;height:13px;border:1.5px solid rgba(255,255,255,0.22);
+  border-radius:3px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.12s;
+}
+.filter-opt.sel .fchk{background:var(--blue3);border-color:var(--blue3)}
+.filter-opt.sel .fchk::after{content:'✓';color:#fff;font-size:7px;font-weight:700}
+.filter-name{font-size:11.5px;color:rgba(255,255,255,0.75);flex:1;line-height:1.3}
+.filter-n{font-family:var(--mono);font-size:9px;color:rgba(255,255,255,0.28)}
+.fdot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.sdiv{height:1px;background:rgba(255,255,255,0.06);margin:10px 0}
+
+/* sidebar section for genomics filters */
+.geno-sidebar-section{
+  background:rgba(11,110,110,0.12);border-radius:6px;
+  padding:8px;margin-bottom:10px;border:1px solid rgba(11,110,110,0.2);
+}
+.geno-sidebar-label{
+  font-family:var(--mono);font-size:8px;letter-spacing:1px;text-transform:uppercase;
+  color:#7EDDDD;margin-bottom:6px;
+}
+
+/* main content */
+.onco-main{flex:1;background:var(--bg);overflow-y:auto;display:flex;flex-direction:column}
+
+/* cohort bar */
+.cohort-bar{
+  background:var(--surf);border-bottom:1px solid var(--bdr);
+  padding:9px 20px;display:flex;align-items:center;gap:16px;flex-shrink:0;
+}
+.cohort-count{font-family:var(--serif);font-size:24px;color:var(--blue);line-height:1}
+.cohort-label{font-size:10px;color:var(--mut);font-weight:500}
+.csep{width:1px;height:28px;background:var(--bdr);flex-shrink:0}
+.cstat-val{font-family:var(--mono);font-size:13px;font-weight:500;color:var(--blue)}
+.cstat-label{font-size:9.5px;color:var(--mut)}
+.cohort-actions{margin-left:auto;display:flex;gap:6px}
+
+/* tab bar */
+.tab-bar{
+  background:var(--surf);border-bottom:1px solid var(--bdr);
+  padding:0 20px;display:flex;gap:0;flex-shrink:0;
+}
+.tab{
+  font-size:12px;font-weight:500;color:var(--mut);
+  padding:9px 14px;border-bottom:2px solid transparent;
+  cursor:pointer;transition:.14s;white-space:nowrap;
+}
+.tab:hover{color:var(--txt)}
+.tab.active{color:var(--blue);border-bottom-color:var(--blue);font-weight:600}
+.tab-content{display:none}.tab-content.visible{display:block}
+.tab.geno-tab.active{color:var(--geno);border-bottom-color:var(--geno)}
+.tab.pharma-tab.active{color:var(--pharma);border-bottom-color:var(--pharma)}
+
+/* content */
+.ocontent{padding:14px 18px}
+
+/* type cards */
+.type-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.type-card{
+  background:var(--surf);border-radius:8px;
+  border:1.5px solid var(--bdr2);padding:13px 14px;position:relative;overflow:hidden;
+}
+.type-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.tc-breast::before{background:var(--onco)}
+.tc-oral::before{background:var(--endo)}
+.tc-cerv::before{background:var(--neuro)}
+.tc-haem::before{background:var(--card)}
+.type-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px}
+.tc-breast .type-label{color:var(--onco)}
+.tc-oral .type-label{color:var(--endo)}
+.tc-cerv .type-label{color:var(--neuro)}
+.tc-haem .type-label{color:var(--card)}
+.type-n{font-family:var(--serif);font-size:26px;color:var(--txt);line-height:1;margin-bottom:2px}
+.type-sub{font-size:10.5px;color:var(--mut);margin-bottom:9px}
+.prog-r{display:flex;align-items:center;gap:5px;margin-bottom:5px}
+.prog-lbl{font-size:9.5px;color:var(--txt2);min-width:68px}
+.prog-wrap{flex:1;height:4px;background:var(--bdr2);border-radius:3px;overflow:hidden}
+.prog-fill{height:100%;border-radius:3px}
+.prog-val{font-family:var(--mono);font-size:9.5px;color:var(--mut);min-width:26px;text-align:right}
+
+/* chart grid */
+.chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.chart-card{background:var(--surf);border-radius:8px;border:1.5px solid var(--bdr2);padding:13px 15px}
+.chart-title{font-size:12px;font-weight:600;color:var(--txt);margin-bottom:2px}
+.chart-sub{font-size:10px;color:var(--mut);margin-bottom:9px}
+
+/* table */
+.table-card{background:var(--surf);border-radius:8px;border:1.5px solid var(--bdr2);overflow:hidden;margin-bottom:14px}
+.table-hd{
+  padding:9px 14px;border-bottom:1px solid var(--bdr2);
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+}
+.table-ttl{font-size:12px;font-weight:600;color:var(--txt)}
+table{width:100%;border-collapse:collapse}
+thead{background:var(--surf2)}
+th{
+  font-family:var(--mono);font-size:9px;text-transform:uppercase;
+  letter-spacing:.8px;color:var(--mut);padding:7px 12px;
+  text-align:left;border-bottom:1px solid var(--bdr2);white-space:nowrap;
+}
+td{font-size:11.5px;color:var(--txt2);padding:8px 12px;border-bottom:1px solid var(--bdr2)}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover{background:var(--surf2)}
+
+/* search row */
+.search-row{display:flex;gap:7px;margin-bottom:12px;align-items:center;flex-wrap:wrap}
+.search-inp{
+  flex:1;min-width:200px;padding:7px 12px;border-radius:6px;
+  border:1.5px solid var(--bdr);font-family:var(--sans);font-size:12px;
+  background:var(--surf);color:var(--txt);transition:.14s;
+}
+.search-inp:focus{outline:none;border-color:var(--blue3)}
+
+/* surv card */
+.surv-card{background:var(--surf);border-radius:8px;border:1.5px solid var(--bdr2);padding:14px 16px;margin-bottom:12px}
+
+/* ══════════════════════════════════════════
+   GENOMICS MODULE
+══════════════════════════════════════════ */
+.geno-hero{
+  background:linear-gradient(135deg,#003D3D 0%,#005C5C 60%,#006B6B 100%);
+  padding:16px 20px;
+  position:relative;overflow:hidden;
+  flex-shrink:0;
+}
+.geno-hero::before{
+  content:'';position:absolute;right:-40px;top:-40px;
+  width:220px;height:220px;border-radius:50%;
+  background:radial-gradient(circle,rgba(11,180,180,0.14) 0%,transparent 65%);
+}
+.geno-hero-title{font-family:var(--serif);font-size:18px;color:#fff;line-height:1.2;margin-bottom:4px}
+.geno-hero-title em{color:#7EDDDD;font-style:italic}
+.geno-hero-sub{font-size:11.5px;color:rgba(255,255,255,0.5);line-height:1.6;max-width:500px}
+.geno-stats{display:flex;gap:20px;margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.1)}
+.geno-stat-val{font-family:var(--serif);font-size:20px;color:#fff;line-height:1;margin-bottom:2px}
+.geno-stat-label{font-size:10px;color:rgba(255,255,255,0.4)}
+
+/* variant landscape */
+.variant-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:14px}
+.variant-card{
+  background:var(--surf);border-radius:8px;border:1.5px solid var(--bdr2);
+  padding:11px 12px;text-align:center;position:relative;overflow:hidden;
+}
+.variant-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.vc-pathogenic::before{background:#C8102E}
+.vc-vus::before{background:#D96B10}
+.vc-targetable::before{background:#007A53}
+.vc-io::before{background:#6B3FA0}
+.vc-pgx::before{background:#0050B3}
+.vc-icon{font-size:22px;margin-bottom:6px;display:block}
+.vc-val{font-family:var(--serif);font-size:22px;color:var(--txt);line-height:1}
+.vc-label{font-size:10px;color:var(--mut);margin-top:2px;font-weight:500}
+.vc-sub{font-family:var(--mono);font-size:9px;color:var(--mut);margin-top:3px}
+
+/* gene freq table */
+.gene-row{
+  display:grid;grid-template-columns:1.2fr 0.8fr 0.8fr 0.8fr 0.8fr 1fr 40px;
+  align-items:center;gap:10px;padding:8px 12px;
+  border-bottom:1px solid var(--bdr2);font-size:11.5px;
+}
+.gene-row.hdr{
+  font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:.7px;
+  color:var(--mut);padding:6px 12px;background:var(--surf2);font-weight:600;
+}
+.gene-name{font-family:var(--mono);font-weight:600;color:var(--blue);font-size:12px}
+.gene-bar-wrap{height:5px;background:var(--bdr2);border-radius:3px;overflow:hidden;margin-top:3px}
+.gene-bar{height:100%;border-radius:3px}
+.actionability-dot{
+  width:8px;height:8px;border-radius:50%;
+  display:inline-block;margin-right:4px;
+}
+.act-tier1{background:#007A53}
+.act-tier2{background:#E87722}
+.act-tier3{background:#9E9E9E}
+
+/* TMB / MSI panel */
+.io-biomarker-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.io-card{
+  background:var(--surf);border-radius:8px;border:1.5px solid var(--bdr2);
+  padding:13px 14px;
+}
+.io-card-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--mut);margin-bottom:5px}
+.io-donut{
+  width:64px;height:64px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 8px;
+  font-family:var(--serif);font-size:18px;font-weight:700;
+  border:4px solid var(--bdr2);
+}
+.io-val{text-align:center;font-family:var(--mono);font-size:14px;font-weight:600;line-height:1}
+.io-sub{text-align:center;font-size:10px;color:var(--mut);margin-top:2px}
+
+/* WGS track viz (simple) */
+.genome-track{
+  background:var(--surf);border-radius:8px;border:1.5px solid var(--bdr2);
+  padding:13px 15px;margin-bottom:12px;
+}
+.chr-row{display:flex;gap:2px;margin-bottom:6px;align-items:center}
+.chr-label{font-family:var(--mono);font-size:9px;color:var(--mut);width:28px;flex-shrink:0}
+.chr-band{
+  flex:1;height:10px;border-radius:2px;
+  background:linear-gradient(90deg,var(--bdr2) 0%,var(--bdr2) 100%);
+  position:relative;overflow:hidden;
+}
+.chr-hit{
+  position:absolute;top:0;height:100%;
+  border-radius:2px;opacity:.75;
+}
+
+/* signature display */
+.sig-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.sig-card{
+  background:var(--surf);border-radius:8px;border:1.5px solid var(--bdr2);
+  padding:12px 14px;
+}
+.sig-name{font-family:var(--mono);font-size:10px;font-weight:600;color:var(--blue);margin-bottom:3px}
+.sig-desc{font-size:10.5px;color:var(--mut);line-height:1.45;margin-bottom:6px}
+.sig-bar-wrap{height:6px;background:var(--bdr2);border-radius:3px;overflow:hidden;margin-bottom:3px}
+.sig-bar{height:100%;border-radius:3px}
+.sig-pct{font-family:var(--mono);font-size:10px;color:var(--txt2);font-weight:600}
+
+/* ══════════════════════════════════════════
+   PHARMA RWE MODULE
+══════════════════════════════════════════ */
+.pharma-hero{
+  background:linear-gradient(135deg,#3A0060 0%,#6A1A9A 60%,#8B2FC0 100%);
+  padding:16px 20px;flex-shrink:0;position:relative;overflow:hidden;
+}
+.pharma-hero::before{
+  content:'';position:absolute;right:-30px;top:-30px;
+  width:200px;height:200px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,0.06) 0%,transparent 65%);
+}
+.pharma-hero-eyebrow{font-family:var(--mono);font-size:8px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-bottom:5px}
+.pharma-hero-title{font-family:var(--serif);font-size:18px;color:#fff;line-height:1.2;margin-bottom:4px}
+.pharma-hero-sub{font-size:11.5px;color:rgba(255,255,255,0.5);line-height:1.6;max-width:520px}
+.pharma-stats{display:flex;gap:20px;margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.1)}
+.pharma-stat-val{font-family:var(--serif);font-size:19px;color:#fff;line-height:1;margin-bottom:2px}
+.pharma-stat-label{font-size:9.5px;color:rgba(255,255,255,0.4)}
+
+/* TTNT / treatment sequence */
+.seq-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.seq-card{background:var(--surf);border-radius:8px;border:1.5px solid var(--bdr2);padding:13px 14px}
+.seq-line{font-family:var(--mono);font-size:9px;font-weight:700;text-transform:uppercase;color:var(--pharma);margin-bottom:4px;letter-spacing:.5px}
+.seq-regimen{font-size:12px;font-weight:600;color:var(--txt);margin-bottom:2px}
+.seq-n{font-family:var(--mono);font-size:11px;color:var(--mut)}
+.seq-ttnt{font-family:var(--mono);font-size:10px;color:var(--txt2);margin-top:4px}
+.seq-ttnt span{color:var(--pharma);font-weight:600}
+
+/* RWE endpoint cards */
+.rwe-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.rwe-card{background:var(--surf);border-radius:8px;border:1.5px solid var(--bdr2);padding:13px 15px}
+.rwe-endpoint{font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:.6px;font-weight:600;color:var(--pharma);margin-bottom:4px}
+.rwe-val{font-family:var(--serif);font-size:26px;color:var(--txt);line-height:1;margin-bottom:2px}
+.rwe-val-unit{font-family:var(--mono);font-size:11px;color:var(--mut)}
+.rwe-sub{font-size:10px;color:var(--mut);line-height:1.45;margin-bottom:8px}
+.rwe-trend{height:28px;display:flex;align-items:flex-end;gap:3px}
+.rwe-bar{border-radius:2px 2px 0 0;flex:1}
+
+/* trial match cards */
+.trial-card{
+  background:var(--surf);border-radius:8px;border:1.5px solid var(--bdr2);
+  padding:13px 15px;margin-bottom:8px;display:flex;gap:12px;align-items:flex-start;
+}
+.trial-icon{
+  width:34px;height:34px;border-radius:7px;
+  background:var(--pharma-l);display:flex;align-items:center;justify-content:center;
+  font-size:16px;flex-shrink:0;
+}
+.trial-id{font-family:var(--mono);font-size:9px;color:var(--blue);font-weight:600}
+.trial-title{font-size:12px;font-weight:600;color:var(--txt);margin-bottom:3px}
+.trial-meta{font-size:11px;color:var(--mut);line-height:1.5}
+.trial-eligibility{
+  margin-left:auto;text-align:right;flex-shrink:0;
+}
+.trial-n-eligible{font-family:var(--serif);font-size:20px;color:var(--pharma);line-height:1}
+.trial-n-label{font-size:9px;color:var(--mut)}
+
+/* population genetics section */
+.popgen-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+
+/* AE safety signals */
+.ae-row{
+  display:flex;align-items:center;gap:10px;padding:8px 12px;
+  border-bottom:1px solid var(--bdr2);
+}
+.ae-name{font-size:11.5px;font-weight:500;color:var(--txt);flex:1}
+.ae-grade{
+  font-family:var(--mono);font-size:9px;padding:2px 6px;border-radius:3px;
+  font-weight:600;
+}
+.ae-grade1{background:#E8F5E9;color:#2E7D32}
+.ae-grade2{background:#FFF3E0;color:#E65100}
+.ae-grade3{background:#FFEBEE;color:#B71C1C}
+.ae-pct{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--txt2);min-width:36px;text-align:right}
+.ae-bar-wrap{width:80px;height:5px;background:var(--bdr2);border-radius:3px;overflow:hidden}
+.ae-bar{height:100%;border-radius:3px}
+
+/* ECOG breakdown */
+.ecog-row{display:flex;gap:8px;align-items:center;padding:6px 0}
+.ecog-label{font-family:var(--mono);font-size:10px;font-weight:600;color:var(--blue);width:60px}
+.ecog-bar-wrap{flex:1;height:12px;background:var(--bdr2);border-radius:3px;overflow:hidden}
+.ecog-bar{height:100%;border-radius:3px;background:var(--blue)}
+.ecog-pct{font-family:var(--mono);font-size:10px;color:var(--mut);min-width:32px;text-align:right}
+.ecog-n{font-family:var(--mono);font-size:9px;color:var(--mut);min-width:40px}
+
+/* ══════════════════════════════════════════
+   ARCH PAGE
+══════════════════════════════════════════ */
+.arch-layer{
+  display:flex;align-items:center;gap:11px;
+  padding:10px 13px;border-radius:8px;
+  border:1.5px solid var(--bdr2);background:var(--surf2);
+  transition:.14s;margin-bottom:7px;
+}
+.arch-layer:hover{border-color:var(--blue3);background:var(--surf)}
+.arch-icon{width:32px;height:32px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.arch-name{font-size:12px;font-weight:600;color:var(--txt);margin-bottom:2px}
+.arch-desc{font-size:10.5px;color:var(--mut);line-height:1.45}
+.arch-tags{margin-left:auto;display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;max-width:250px}
+.arch-connector{text-align:center;font-size:10px;color:var(--mut);padding:2px 0;margin-bottom:6px}
+
+/* genomics arch layer */
+.arch-layer.geno-layer{
+  border-color:rgba(11,110,110,0.22);
+  background:linear-gradient(135deg,rgba(11,110,110,0.04),rgba(11,110,110,0.02));
+}
+.arch-layer.geno-layer:hover{border-color:var(--geno);background:var(--geno-l)}
+
+/* ══════════════════════════════════════════
+   ACCESS PAGE
+══════════════════════════════════════════ */
+.access-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.access-card{background:var(--surf);border-radius:10px;border:1.5px solid var(--bdr2);padding:18px}
+.pricing-tag{
+  font-family:var(--mono);font-size:9px;font-weight:600;
+  padding:3px 7px;border-radius:4px;letter-spacing:.3px;
+  display:inline-block;margin-top:8px;
+}
+.tier-open{background:#E8F5E9;color:#2E7D32}
+.tier-reg{background:#E3F2FD;color:#1565C0}
+.tier-ctrl{background:#FCE4EC;color:#B71C1C}
+.tier-pharma{background:var(--pharma-l);color:var(--pharma)}
+
+.pricing-table{
+  background:var(--surf);border-radius:10px;border:1.5px solid var(--bdr2);
+  overflow:hidden;margin-bottom:16px;
+}
+.pricing-row{
+  display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;
+  gap:0;border-bottom:1px solid var(--bdr2);
+}
+.pricing-row.header{background:var(--side-bg);color:#fff}
+.pricing-row > div{padding:9px 14px;font-size:11.5px}
+.pricing-row.header > div{font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:.6px;color:rgba(255,255,255,0.55)}
+.checkmark{color:#007A53;font-weight:700;font-size:14px}
+.crossmark{color:#C8102E;font-weight:700;font-size:12px}
+
+/* dict */
+.dict-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.dict-domain{background:var(--surf);border-radius:8px;border:1.5px solid var(--bdr2);overflow:hidden}
+.dict-dh{padding:10px 13px;background:var(--blue);display:flex;align-items:center;gap:7px}
+.dict-di{width:22px;height:22px;background:rgba(255,255,255,0.12);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:11px}
+.dict-dn{font-size:12px;font-weight:600;color:#fff}
+.dict-dc{margin-left:auto;font-family:var(--mono);font-size:10px;color:#90BADF}
+.dict-field{padding:8px 13px;border-bottom:1px solid var(--bdr2);display:flex;align-items:baseline;gap:8px}
+.dict-fname{font-size:11.5px;font-weight:600;color:var(--txt);min-width:130px}
+.dict-ftype{font-family:var(--mono);font-size:9px;color:var(--mut)}
+.dict-fdesc{font-size:10.5px;color:var(--mut);flex:1}
+.dict-fvalued{
+  font-family:var(--mono);font-size:8px;
+  padding:1px 5px;border-radius:3px;background:var(--pharma-l);color:var(--pharma);
+  margin-left:4px;flex-shrink:0;
+}
+
+/* ══════════════════════════════════════════
+   RESPONSIVENESS
+══════════════════════════════════════════ */
+@media(max-width:900px){
+  .domain-grid,.type-grid{grid-template-columns:1fr 1fr}
+  .variant-grid,.seq-grid,.io-biomarker-grid{grid-template-columns:1fr 1fr}
+  .chart-grid,.rwe-grid,.sig-grid{grid-template-columns:1fr}
+  .access-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ TOPBAR ═══════════════════ -->
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-mark">V</div>
+    <span class="brand-name">VPS Lakeshore</span>
+    <span class="brand-sub">Data Commons v4</span>
+  </div>
+  <nav class="topnav">
+    <button class="tnav active" onclick="nav(this,'home')">Overview</button>
+    <button class="tnav" onclick="nav(this,'oncology')">Oncology</button>
+    <button class="tnav new" onclick="nav(this,'genomics')">Genomics</button>
+    <button class="tnav new" onclick="nav(this,'pharma')">RWE / Pharma</button>
+    <button class="tnav" onclick="nav(this,'arch')">Architecture</button>
+    <button class="tnav" onclick="nav(this,'access')">Data Access</button>
+  </nav>
+  <div class="topbar-meta">
+    VPS Lakeshore Hospital & Research Centre<br>
+    Kochi, Kerala · NABH · mCODE v3 · OMOP CDM v5.4
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     PAGE: HOME
+═══════════════════════════════════════════════════════════════════ -->
+<div class="page active" id="page-home">
+
+  <div class="hero">
+    <div class="hero-eyebrow">VPS Lakeshore Clinical & Genomic Data Commons · v4.0 · March 2026</div>
+    <div class="hero-title">Kerala's first <em>multimodal</em> cancer data platform<br>built for global pharma partnerships</div>
+    <div class="hero-sub">Combining longitudinal EHR data, NGS genomics, digital pathology, and real-world outcomes — curated to Tempus/Flatiron standards for RWE, HTA submissions, and companion diagnostics development.</div>
+    <div class="hero-stats">
+      <div class="hstat"><div class="hstat-val">4,560 <span>pts</span></div><div class="hstat-label">Oncology cohort</div></div>
+      <div class="hstat"><div class="hstat-val">1,284 <span>pts</span></div><div class="hstat-label">With NGS data</div></div>
+      <div class="hstat"><div class="hstat-val">312 <span>pts</span></div><div class="hstat-label">WES/WGS sequenced</div></div>
+      <div class="hstat"><div class="hstat-val">87.4<span>%</span></div><div class="hstat-label">Data completeness</div></div>
+      <div class="hstat"><div class="hstat-val">6</div><div class="hstat-label">Clinical domains</div></div>
+      <div class="hstat"><div class="hstat-val">2020–25</div><div class="hstat-label">Coverage years</div></div>
+    </div>
+  </div>
+
+  <!-- Pharma value strip -->
+  <div class="section" style="padding-bottom:0">
+    <div class="pharma-value-strip">
+      <span class="pv-label">⬦ Pharma-grade fields</span>
+      <span class="pv-badge">TTNT / TTD</span>
+      <span class="pv-badge">Treatment Sequencing 1L→2L→3L</span>
+      <span class="pv-badge">PD-L1 / TMB / MSI-H</span>
+      <span class="pv-badge">ctDNA / Liquid Biopsy</span>
+      <span class="pv-badge">ECOG PS</span>
+      <span class="pv-badge">CTCAE Adverse Events</span>
+      <span class="pv-badge">Germline vs Somatic</span>
+      <span class="pv-badge">Dose Reductions</span>
+      <span class="pv-badge">South Asian Population Genetics</span>
+      <span class="pv-badge">Pharmacogenomics</span>
+      <span class="pv-badge">RECIST Progression</span>
+      <span class="pv-badge">Digital Pathology AI</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">Clinical Domains</div>
+    <div class="domain-grid">
+
+      <div class="dc" style="--dc-c:var(--onco);--dc-l:var(--onco-l)" onclick="nav(document.querySelector('[onclick*=oncology]'),'oncology')">
+        <div class="dc-top"><div class="dc-icon">🎗️</div><div class="dc-pill">LIVE · mCODE v3</div></div>
+        <div class="dc-name">Oncology — 4 Tumour Types</div>
+        <div class="dc-desc">Breast, Oral/H&N, Cervical, Haemato-oncology. Full treatment sequencing, survival, biomarkers, NGS, and real-world endpoints.</div>
+        <div class="dc-foot">
+          <div><div class="dc-sv">4,560</div><div class="dc-sl">Patients</div></div>
+          <div><div class="dc-sv">142</div><div class="dc-sl">Fields</div></div>
+          <div><div class="dc-sv">87.4%</div><div class="dc-sl">Complete</div></div>
+        </div>
+        <div class="dc-arr">→</div>
+      </div>
+
+      <div class="dc" style="--dc-c:var(--geno);--dc-l:var(--geno-l)" onclick="nav(document.querySelector('[onclick*=genomics]'),'genomics')">
+        <div class="dc-top"><div class="dc-icon">🧬</div><div class="dc-pill">NEW · 1,284 sequenced</div></div>
+        <div class="dc-name">Genomic Data Commons</div>
+        <div class="dc-desc">NGS panel (441-gene), WES/WGS, RNA-seq, ctDNA. Somatic + germline. South Asian population genetics. TCGA-linked.</div>
+        <div class="dc-foot">
+          <div><div class="dc-sv">1,284</div><div class="dc-sl">NGS cases</div></div>
+          <div><div class="dc-sv">312</div><div class="dc-sl">WES/WGS</div></div>
+          <div><div class="dc-sv">186</div><div class="dc-sl">RNA-seq</div></div>
+        </div>
+        <div class="dc-arr">→</div>
+      </div>
+
+      <div class="dc" style="--dc-c:var(--pharma);--dc-l:var(--pharma-l)" onclick="nav(document.querySelector('[onclick*=pharma]'),'pharma')">
+        <div class="dc-top"><div class="dc-icon">💊</div><div class="dc-pill">NEW · RWE ready</div></div>
+        <div class="dc-name">Pharma RWE Analytics</div>
+        <div class="dc-desc">TTNT/TTD endpoints, treatment sequences, trial eligibility screening, AE safety signals, ECOG stratification, HTA-ready evidence packages.</div>
+        <div class="dc-foot">
+          <div><div class="dc-sv">18</div><div class="dc-sl">RWE endpoints</div></div>
+          <div><div class="dc-sv">5</div><div class="dc-sl">Partner slots</div></div>
+          <div><div class="dc-sv">Q2 2026</div><div class="dc-sl">Launch</div></div>
+        </div>
+        <div class="dc-arr">→</div>
+      </div>
+
+      <div class="dc fu" style="--dc-c:var(--card);--dc-l:var(--card-l)" onclick="alert('Cardiology curation begins Q3 2026')">
+        <div class="dc-top"><div class="dc-icon">❤️</div><div class="dc-pill">IN CURATION</div></div>
+        <div class="dc-name">Cardiology</div>
+        <div class="dc-desc">CAD, heart failure, arrhythmias. Echo (LVEF), cath lab, device therapy, outcomes, pharmacogenomics of anticoagulants.</div>
+        <div class="dc-foot">
+          <div><div class="dc-sv">~8,200</div><div class="dc-sl">Est. patients</div></div>
+          <div><div class="dc-sv">72</div><div class="dc-sl">Fields</div></div>
+          <div><div class="dc-sv">Q3 2026</div><div class="dc-sl">Target</div></div>
+        </div>
+        <div class="dc-arr">→</div>
+      </div>
+
+      <div class="dc fu" style="--dc-c:var(--neph);--dc-l:var(--neph-l)" onclick="alert('Nephrology module planned Q4 2026')">
+        <div class="dc-top"><div class="dc-icon">🫘</div><div class="dc-pill">PLANNED</div></div>
+        <div class="dc-name">Nephrology & Transplant</div>
+        <div class="dc-desc">CKD stages, renal replacement, organ transplantation. Graft survival, immunosuppression, proteinuria trajectories.</div>
+        <div class="dc-foot">
+          <div><div class="dc-sv">~3,800</div><div class="dc-sl">Est. patients</div></div>
+          <div><div class="dc-sv">62</div><div class="dc-sl">Fields</div></div>
+          <div><div class="dc-sv">Q4 2026</div><div class="dc-sl">Target</div></div>
+        </div>
+        <div class="dc-arr">→</div>
+      </div>
+
+      <div class="dc fu" style="--dc-c:var(--endo);--dc-l:var(--endo-l)" onclick="alert('Endocrinology module planned Q2 2027')">
+        <div class="dc-top"><div class="dc-icon">🩺</div><div class="dc-pill">PLANNED</div></div>
+        <div class="dc-name">Endocrinology & Diabetes</div>
+        <div class="dc-desc">T1/T2 DM, thyroid, obesity. HbA1c trajectories, diabetes-cancer comorbidity, metformin-cancer interaction studies.</div>
+        <div class="dc-foot">
+          <div><div class="dc-sv">~14,200</div><div class="dc-sl">Est. patients</div></div>
+          <div><div class="dc-sv">48</div><div class="dc-sl">Fields</div></div>
+          <div><div class="dc-sv">Q2 2027</div><div class="dc-sl">Target</div></div>
+        </div>
+        <div class="dc-arr">→</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="section" style="padding-top:0">
+    <div class="section-label">Cross-Domain Comorbidity Insights</div>
+    <div class="panel">
+      <div style="font-size:12px;font-weight:600;color:var(--txt);margin-bottom:2px">Multi-Domain Patient Pairs — Unique to a Multi-disciplinary Commons</div>
+      <div style="font-size:10.5px;color:var(--mut);margin-bottom:10px">These intersections are where pharma RWE studies generate the highest CDSCO and HTA value.</div>
+      <div class="comor-grid" id="comor-grid"></div>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════════
+     PAGE: ONCOLOGY
+═══════════════════════════════════════════════════════════════════ -->
+<div class="page" id="page-oncology">
+<div class="onco-shell">
+
+  <aside class="sidebar">
+    <div class="sidebar-title">Cohort Builder</div>
+
+    <div class="filter-group">
+      <div class="filter-label">Cancer Type <span class="filter-count" id="type-count">4/4</span></div>
+      <div class="filter-opt sel" onclick="tog(this)"><div class="fdot" style="background:#C8102E"></div><div class="fchk"></div><span class="filter-name">Breast</span><span class="filter-n">1,842</span></div>
+      <div class="filter-opt sel" onclick="tog(this)"><div class="fdot" style="background:#D96B10"></div><div class="fchk"></div><span class="filter-name">Oral / H&amp;N</span><span class="filter-n">1,376</span></div>
+      <div class="filter-opt sel" onclick="tog(this)"><div class="fdot" style="background:#6B3FA0"></div><div class="fchk"></div><span class="filter-name">Cervical</span><span class="filter-n">614</span></div>
+      <div class="filter-opt sel" onclick="tog(this)"><div class="fdot" style="background:#0050B3"></div><div class="fchk"></div><span class="filter-name">Haemato-oncology</span><span class="filter-n">728</span></div>
+    </div>
+    <div class="sdiv"></div>
+
+    <div class="filter-group">
+      <div class="filter-label">Stage <span class="filter-count">4/4</span></div>
+      <div class="filter-opt sel" onclick="tog(this)"><div class="fchk"></div><span class="filter-name">Stage I</span><span class="filter-n">612</span></div>
+      <div class="filter-opt sel" onclick="tog(this)"><div class="fchk"></div><span class="filter-name">Stage II</span><span class="filter-n">1,094</span></div>
+      <div class="filter-opt sel" onclick="tog(this)"><div class="fchk"></div><span class="filter-name">Stage III</span><span class="filter-n">1,488</span></div>
+      <div class="filter-opt sel" onclick="tog(this)"><div class="fchk"></div><span class="filter-name">Stage IV</span><span class="filter-n">1,366</span></div>
+    </div>
+    <div class="sdiv"></div>
+
+    <div class="filter-group">
+      <div class="filter-label">ECOG Performance Status</div>
+      <div class="filter-opt sel" onclick="tog(this)"><div class="fchk"></div><span class="filter-name">ECOG 0</span><span class="filter-n">824</span></div>
+      <div class="filter-opt sel" onclick="tog(this)"><div class="fchk"></div><span class="filter-name">ECOG 1</span><span class="filter-n">2,186</span></div>
+      <div class="filter-opt sel" onclick="tog(this)"><div class="fchk"></div><span class="filter-name">ECOG 2</span><span class="filter-n">1,104</span></div>
+      <div class="filter-opt sel" onclick="tog(this)"><div class="fchk"></div><span class="filter-name">ECOG 3–4</span><span class="filter-n">446</span></div>
+    </div>
+    <div class="sdiv"></div>
+
+    <div class="filter-group">
+      <div class="filter-label">Primary Treatment</div>
+      <div class="filter-opt sel" onclick="tog(this)"><div class="fchk"></div><span class="filter-name">Surgery</span><span class="filter-n">2,218</span></div>
+      <div class="filter-opt sel" onclick="tog(this)"><div class="fchk"></div><span class="filter-name">Chemoradiation</span><span class="filter-n">1,644</span></div>
+      <div class="filter-opt sel" onclick="tog(this)"><div class="fchk"></div><span class="filter-name">Chemotherapy</span><span class="filter-n">496</span></div>
+      <div class="filter-opt sel" onclick="tog(this)"><div class="fchk"></div><span class="filter-name">Immunotherapy</span><span class="filter-n">186</span></div>
+      <div class="filter-opt sel" onclick="tog(this)"><div class="fchk"></div><span class="filter-name">Targeted therapy</span><span class="filter-n">142</span></div>
+      <div class="filter-opt sel" onclick="tog(this)"><div class="fchk"></div><span class="filter-name">Palliative</span><span class="filter-n">202</span></div>
+    </div>
+    <div class="sdiv"></div>
+
+    <!-- GENOMIC FILTERS - new in v4 -->
+    <div class="geno-sidebar-section">
+      <div class="geno-sidebar-label">🧬 Genomic Filters</div>
+      <div class="filter-opt sel" onclick="tog(this)"><div class="fchk"></div><span class="filter-name" style="font-size:11px">NGS tested</span><span class="filter-n">1,284</span></div>
+      <div class="filter-opt" onclick="tog(this)"><div class="fchk"></div><span class="filter-name" style="font-size:11px">EGFR mutation</span><span class="filter-n">164</span></div>
+      <div class="filter-opt" onclick="tog(this)"><div class="fchk"></div><span class="filter-name" style="font-size:11px">HER2 amplified</span><span class="filter-n">218</span></div>
+      <div class="filter-opt" onclick="tog(this)"><div class="fchk"></div><span class="filter-name" style="font-size:11px">BRCA1/2 mutant</span><span class="filter-n">96</span></div>
+      <div class="filter-opt" onclick="tog(this)"><div class="fchk"></div><span class="filter-name" style="font-size:11px">TMB-High (≥10)</span><span class="filter-n">228</span></div>
+      <div class="filter-opt" onclick="tog(this)"><div class="fchk"></div><span class="filter-name" style="font-size:11px">MSI-High</span><span class="filter-n">82</span></div>
+      <div class="filter-opt" onclick="tog(this)"><div class="fchk"></div><span class="filter-name" style="font-size:11px">PD-L1 ≥50%</span><span class="filter-n">194</span></div>
+    </div>
+
+    <div class="filter-group" style="margin-top:4px">
+      <div class="filter-label">Diagnosis Year</div>
+      <div class="filter-opt sel" onclick="tog(this)"><div class="fchk"></div><span class="filter-name">2020–2021</span><span class="filter-n">1,104</span></div>
+      <div class="filter-opt sel" onclick="tog(this)"><div class="fchk"></div><span class="filter-name">2022–2023</span><span class="filter-n">1,862</span></div>
+      <div class="filter-opt sel" onclick="tog(this)"><div class="fchk"></div><span class="filter-name">2024–2025</span><span class="filter-n">1,594</span></div>
+    </div>
+    <div class="sdiv"></div>
+
+    <div class="filter-group">
+      <div class="filter-label">Co-domain</div>
+      <div class="filter-opt" onclick="tog(this)"><div class="fchk"></div><span class="filter-name">+ Diabetes</span><span class="filter-n">312</span></div>
+      <div class="filter-opt" onclick="tog(this)"><div class="fchk"></div><span class="filter-name">+ Hypertension</span><span class="filter-n">526</span></div>
+      <div class="filter-opt" onclick="tog(this)"><div class="fchk"></div><span class="filter-name">+ CKD</span><span class="filter-n">112</span></div>
+      <div class="filter-opt" onclick="tog(this)"><div class="fchk"></div><span class="filter-name">+ Dose reduced</span><span class="filter-n">438</span></div>
+    </div>
+  </aside>
+
+  <div class="onco-main">
+    <div class="cohort-bar">
+      <div><div class="cohort-count" id="total-n">4,560</div><div class="cohort-label">patients in cohort</div></div>
+      <div class="csep"></div>
+      <div><div class="cstat-val">4</div><div class="cstat-label">Cancer types</div></div>
+      <div class="csep"></div>
+      <div><div class="cstat-val">1,284</div><div class="cstat-label">NGS tested</div></div>
+      <div class="csep"></div>
+      <div><div class="cstat-val">87.4%</div><div class="cstat-label">Completeness</div></div>
+      <div class="csep"></div>
+      <div><div class="cstat-val">mCODE v3</div><div class="cstat-label">Standard</div></div>
+      <div class="cohort-actions">
+        <button class="btn btn-outline">⬇ Export</button>
+        <button class="btn btn-primary">Request Access</button>
+      </div>
+    </div>
+
+    <div class="tab-bar">
+      <div class="tab active" onclick="oncoTab(this,'summary')">Summary</div>
+      <div class="tab" onclick="oncoTab(this,'cases')">Cases</div>
+      <div class="tab" onclick="oncoTab(this,'survival')">Survival</div>
+      <div class="tab geno-tab" onclick="oncoTab(this,'genomics')">Genomics</div>
+      <div class="tab pharma-tab" onclick="oncoTab(this,'rwe')">RWE Endpoints</div>
+      <div class="tab" onclick="oncoTab(this,'dictionary')">Data Dictionary</div>
+    </div>
+
+    <!-- SUMMARY TAB -->
+    <div class="ocontent tab-content visible" id="otab-summary">
+      <div class="type-grid">
+        <div class="type-card tc-breast">
+          <div class="type-label">Breast Cancer</div>
+          <div class="type-n">1,842</div>
+          <div class="type-sub">40.4% · Median age 48</div>
+          <div class="prog-r"><span class="prog-lbl">ER/PR+</span><div class="prog-wrap"><div class="prog-fill" style="width:68%;background:#C8102E"></div></div><span class="prog-val">68%</span></div>
+          <div class="prog-r"><span class="prog-lbl">HER2+</span><div class="prog-wrap"><div class="prog-fill" style="width:22%;background:#E87070"></div></div><span class="prog-val">22%</span></div>
+          <div class="prog-r"><span class="prog-lbl">Triple Neg</span><div class="prog-wrap"><div class="prog-fill" style="width:14%;background:#F5B0B0"></div></div><span class="prog-val">14%</span></div>
+          <div class="prog-r"><span class="prog-lbl">NGS tested</span><div class="prog-wrap"><div class="prog-fill" style="width:34%;background:#888"></div></div><span class="prog-val">34%</span></div>
+        </div>
+        <div class="type-card tc-oral">
+          <div class="type-label">Oral / H&amp;N</div>
+          <div class="type-n">1,376</div>
+          <div class="type-sub">30.2% · Median age 54</div>
+          <div class="prog-r"><span class="prog-lbl">Tobacco</span><div class="prog-wrap"><div class="prog-fill" style="width:74%;background:#D96B10"></div></div><span class="prog-val">74%</span></div>
+          <div class="prog-r"><span class="prog-lbl">Areca nut</span><div class="prog-wrap"><div class="prog-fill" style="width:61%;background:#F0A060"></div></div><span class="prog-val">61%</span></div>
+          <div class="prog-r"><span class="prog-lbl">HPV+</span><div class="prog-wrap"><div class="prog-fill" style="width:18%;background:#F5D090"></div></div><span class="prog-val">18%</span></div>
+        </div>
+        <div class="type-card tc-cerv">
+          <div class="type-label">Cervical</div>
+          <div class="type-n">614</div>
+          <div class="type-sub">13.5% · Median age 44</div>
+          <div class="prog-r"><span class="prog-lbl">FIGO I–II</span><div class="prog-wrap"><div class="prog-fill" style="width:42%;background:#6B3FA0"></div></div><span class="prog-val">42%</span></div>
+          <div class="prog-r"><span class="prog-lbl">FIGO III–IV</span><div class="prog-wrap"><div class="prog-fill" style="width:58%;background:#9B6FC8"></div></div><span class="prog-val">58%</span></div>
+          <div class="prog-r"><span class="prog-lbl">Squamous</span><div class="prog-wrap"><div class="prog-fill" style="width:82%;background:#C8A8E0"></div></div><span class="prog-val">82%</span></div>
+        </div>
+        <div class="type-card tc-haem">
+          <div class="type-label">Haemato-oncology</div>
+          <div class="type-n">728</div>
+          <div class="type-sub">16.0% · Median age 42</div>
+          <div class="prog-r"><span class="prog-lbl">Lymphoma</span><div class="prog-wrap"><div class="prog-fill" style="width:38%;background:#0050B3"></div></div><span class="prog-val">38%</span></div>
+          <div class="prog-r"><span class="prog-lbl">Leukaemia</span><div class="prog-wrap"><div class="prog-fill" style="width:29%;background:#4480C8"></div></div><span class="prog-val">29%</span></div>
+          <div class="prog-r"><span class="prog-lbl">Myeloma</span><div class="prog-wrap"><div class="prog-fill" style="width:18%;background:#80AADC"></div></div><span class="prog-val">18%</span></div>
+        </div>
+      </div>
+      <div class="chart-grid">
+        <div class="chart-card"><div class="chart-title">Stage Distribution by Cancer Type</div><div class="chart-sub">% at each TNM/FIGO stage at diagnosis</div><canvas id="stageChart" height="180"></canvas></div>
+        <div class="chart-card"><div class="chart-title">Age at Diagnosis</div><div class="chart-sub">5-year bins · all cancer types</div><canvas id="ageChart" height="180"></canvas></div>
+        <div class="chart-card"><div class="chart-title">Treatment Modality Mix</div><div class="chart-sub">Primary treatment by cancer type</div><canvas id="txChart" height="180"></canvas></div>
+        <div class="chart-card"><div class="chart-title">Annual Case Volume</div><div class="chart-sub">New diagnoses 2020–2025</div><canvas id="yearChart" height="180"></canvas></div>
+      </div>
+    </div>
+
+    <!-- CASES TAB -->
+    <div class="ocontent tab-content" id="otab-cases">
+      <div class="search-row">
+        <input class="search-inp" placeholder="Search by case ID, diagnosis, biomarker, treatment…">
+        <button class="btn btn-outline">Filter</button>
+        <button class="btn btn-geno">🧬 Genomic filter</button>
+        <button class="btn btn-primary">⬇ Export</button>
+      </div>
+      <div class="table-card">
+        <div class="table-hd">
+          <div class="table-ttl">Patient Records <span style="font-weight:400;color:var(--mut);font-size:10px">— de-identified · DPDP 2023</span></div>
+          <div style="font-family:var(--mono);font-size:10px;color:var(--mut)">1–20 of 4,560</div>
+        </div>
+        <table>
+          <thead><tr><th>Case ID</th><th>Type</th><th>Age</th><th>Stage</th><th>ECOG</th><th>Treatment 1L</th><th>Biomarker</th><th>NGS</th><th>TTNT</th><th>Vital</th><th>FU(mo)</th><th>Co-morbid</th></tr></thead>
+          <tbody id="case-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- SURVIVAL TAB -->
+    <div class="ocontent tab-content" id="otab-survival">
+      <div class="surv-card">
+        <div class="chart-title">Kaplan–Meier Overall Survival by Cancer Type</div>
+        <div class="chart-sub">All four types · From date of diagnosis · Synthetic illustrative data · n = 4,560</div>
+        <canvas id="survivalChart" height="260"></canvas>
+      </div>
+      <div class="chart-grid">
+        <div class="chart-card"><div class="chart-title">5-Year OS by Stage</div><div class="chart-sub">All tumour types · AJCC/FIGO</div><canvas id="stageOsChart" height="160"></canvas></div>
+        <div class="chart-card"><div class="chart-title">5-Year OS by Receptor Status (Breast)</div><div class="chart-sub">ER/PR+, HER2+, Triple Negative</div><canvas id="receptorOsChart" height="160"></canvas></div>
+      </div>
+    </div>
+
+    <!-- GENOMICS TAB (within oncology view) -->
+    <div class="ocontent tab-content" id="otab-genomics">
+      <div style="background:var(--geno-l);border:1.5px solid rgba(11,110,110,0.22);border-radius:8px;padding:11px 14px;margin-bottom:12px;display:flex;align-items:center;gap:10px">
+        <span style="font-size:18px">🧬</span>
+        <div>
+          <div style="font-size:12px;font-weight:600;color:var(--geno)">Genomics summary within this cohort</div>
+          <div style="font-size:11px;color:var(--mut)">1,284 patients have NGS data linked to clinical records. For the full Genomic Data Commons, use the Genomics tab above.</div>
+        </div>
+        <button class="btn btn-geno" style="margin-left:auto" onclick="nav(document.querySelector('[onclick*=genomics]'),'genomics')">View Genomics Commons →</button>
+      </div>
+      <div class="chart-grid">
+        <div class="chart-card"><div class="chart-title">Biomarker Testing Coverage</div><div class="chart-sub">% tested by cancer type and method</div><canvas id="biomarkerChart" height="180"></canvas></div>
+        <div class="chart-card"><div class="chart-title">South Asian vs Western Mutation Freq.</div><div class="chart-sub">EGFR, KRAS, PIK3CA, TP53 — Indian vs reference</div><canvas id="egfrChart" height="180"></canvas></div>
+      </div>
+    </div>
+
+    <!-- RWE ENDPOINTS TAB -->
+    <div class="ocontent tab-content" id="otab-rwe">
+      <div style="background:var(--pharma-l);border:1.5px solid rgba(123,31,162,0.2);border-radius:8px;padding:11px 14px;margin-bottom:12px;">
+        <div style="font-size:12px;font-weight:600;color:var(--pharma);margin-bottom:3px">⬦ Pharma-grade Real-World Endpoints</div>
+        <div style="font-size:11px;color:var(--mut)">These endpoints mirror Flatiron Health's FlatironRWD standard and Tempus multimodal data. Suitable for HTA submissions (NICE, CDSCO), comparative effectiveness, and label expansion studies.</div>
+      </div>
+      <div class="rwe-grid">
+        <div class="rwe-card">
+          <div class="rwe-endpoint">Time to Next Treatment (TTNT)</div>
+          <div class="rwe-val">8.4 <span class="rwe-val-unit">months</span></div>
+          <div class="rwe-sub">Median across all Stage III–IV patients. Captures real-world treatment gaps and practice patterns. Key endpoint for HTA control arm reconstruction.</div>
+          <div class="rwe-trend">${[4,5,5,6,7,8,8,9,10].map(v=>`<div class="rwe-bar" style="height:${v*3}px;background:var(--pharma);border-radius:2px 2px 0 0;flex:1;opacity:0.5"></div>`).join('')}</div>
+        </div>
+        <div class="rwe-card">
+          <div class="rwe-endpoint">Time to Treatment Discontinuation (TTD)</div>
+          <div class="rwe-val">5.2 <span class="rwe-val-unit">months</span></div>
+          <div class="rwe-sub">Median 1L TTD. Includes dose reductions and delays. Proxy for real-world treatment tolerability — not captured in clinical trials.</div>
+          <div class="rwe-trend">${[8,7,6,6,5,5,4,4,3].map(v=>`<div class="rwe-bar" style="height:${v*3}px;background:#C8102E;border-radius:2px 2px 0 0;flex:1;opacity:0.5"></div>`).join('')}</div>
+        </div>
+        <div class="rwe-card">
+          <div class="rwe-endpoint">Real-World Progression-Free Survival</div>
+          <div class="rwe-val">11.6 <span class="rwe-val-unit">months</span></div>
+          <div class="rwe-sub">Derived from RECIST radiological assessments + clinical events. Median rwPFS across HER2+ breast (n=404). Comparable to KEYNOTE-522 control arm.</div>
+          <div class="rwe-trend">${[10,10,10,9,9,8,7,6,5].map(v=>`<div class="rwe-bar" style="height:${v*3}px;background:#007A53;border-radius:2px 2px 0 0;flex:1;opacity:0.5"></div>`).join('')}</div>
+        </div>
+        <div class="rwe-card">
+          <div class="rwe-endpoint">Real-World Overall Survival</div>
+          <div class="rwe-val">24.3 <span class="rwe-val-unit">months</span></div>
+          <div class="rwe-sub">Median rwOS from diagnosis for Stage IV patients. Death confirmed through hospital records + ABHA mortality linkage. 93.8% death ascertainment rate.</div>
+          <div class="rwe-trend">${[10,10,9,8,8,7,6,5,4].map(v=>`<div class="rwe-bar" style="height:${v*3}px;background:#0050B3;border-radius:2px 2px 0 0;flex:1;opacity:0.5"></div>`).join('')}</div>
+        </div>
+        <div class="rwe-card">
+          <div class="rwe-endpoint">Treatment Sequence Completeness</div>
+          <div class="rwe-val">78.4 <span class="rwe-val-unit">%</span></div>
+          <div class="rwe-sub">% of patients with complete 1L→2L→3L sequence documented. Critical for external control arm (ECA) studies and line-of-therapy analyses.</div>
+          <div class="rwe-trend">${[6,7,7,8,8,8,9,9,8].map(v=>`<div class="rwe-bar" style="height:${v*3}px;background:#D96B10;border-radius:2px 2px 0 0;flex:1;opacity:0.5"></div>`).join('')}</div>
+        </div>
+        <div class="rwe-card">
+          <div class="rwe-endpoint">Dose Reduction Rate (comorbidity-driven)</div>
+          <div class="rwe-val">22.8 <span class="rwe-val-unit">%</span></div>
+          <div class="rwe-sub">Patients requiring dose reduction due to DM, HTN, or CKD comorbidities. Unique to South Asian population. Supports safety label updates and companion diagnostics.</div>
+          <div class="rwe-trend">${[3,3,4,4,5,5,6,6,6].map(v=>`<div class="rwe-bar" style="height:${v*3}px;background:#6B3FA0;border-radius:2px 2px 0 0;flex:1;opacity:0.5"></div>`).join('')}</div>
+        </div>
+      </div>
+
+      <!-- Treatment sequences -->
+      <div style="font-size:12px;font-weight:600;color:var(--txt);margin-bottom:8px">1L → 2L → 3L Treatment Sequences (Breast Cancer)</div>
+      <div class="seq-grid">
+        <div class="seq-card">
+          <div class="seq-line">1st Line · n=1,842</div>
+          <div class="seq-regimen">AC-T / TC</div>
+          <div class="seq-n">68% of breast cohort</div>
+          <div class="seq-ttnt">Median TTNT: <span>8.4 mo</span></div>
+        </div>
+        <div class="seq-card">
+          <div class="seq-line">2nd Line · n=624</div>
+          <div class="seq-regimen">Capecitabine / Vinorelbine</div>
+          <div class="seq-n">33.8% progressed to 2L</div>
+          <div class="seq-ttnt">Median TTNT: <span>5.2 mo</span></div>
+        </div>
+        <div class="seq-card">
+          <div class="seq-line">3rd Line · n=198</div>
+          <div class="seq-regimen">Eribulin / CDK4/6i</div>
+          <div class="seq-n">10.7% progressed to 3L</div>
+          <div class="seq-ttnt">Median TTNT: <span>3.8 mo</span></div>
+        </div>
+        <div class="seq-card">
+          <div class="seq-line">Immunotherapy · n=186</div>
+          <div class="seq-regimen">Pembrolizumab (PD-L1+)</div>
+          <div class="seq-n">TNBC subgroup · IO eligible</div>
+          <div class="seq-ttnt">Median TTNT: <span>12.1 mo</span></div>
+        </div>
+      </div>
+
+      <!-- ECOG breakdown -->
+      <div style="font-size:12px;font-weight:600;color:var(--txt);margin-bottom:8px">ECOG Performance Status Distribution — Trial Eligibility Proxy</div>
+      <div style="background:var(--surf);border-radius:8px;border:1.5px solid var(--bdr2);padding:14px 16px;margin-bottom:12px">
+        <div class="ecog-row"><div class="ecog-label">ECOG 0</div><div class="ecog-bar-wrap"><div class="ecog-bar" style="width:18%;background:#007A53"></div></div><div class="ecog-pct">18.1%</div><div class="ecog-n">n=824</div></div>
+        <div class="ecog-row"><div class="ecog-label">ECOG 1</div><div class="ecog-bar-wrap"><div class="ecog-bar" style="width:48%;background:#0050B3"></div></div><div class="ecog-pct">47.9%</div><div class="ecog-n">n=2,186</div></div>
+        <div class="ecog-row"><div class="ecog-label">ECOG 2</div><div class="ecog-bar-wrap"><div class="ecog-bar" style="width:24%;background:#D96B10"></div></div><div class="ecog-pct">24.2%</div><div class="ecog-n">n=1,104</div></div>
+        <div class="ecog-row"><div class="ecog-label">ECOG 3</div><div class="ecog-bar-wrap"><div class="ecog-bar" style="width:8%;background:#C8102E"></div></div><div class="ecog-pct">7.8%</div><div class="ecog-n">n=356</div></div>
+        <div class="ecog-row"><div class="ecog-label">ECOG 4</div><div class="ecog-bar-wrap"><div class="ecog-bar" style="width:2%;background:#8B0000"></div></div><div class="ecog-pct">2.0%</div><div class="ecog-n">n=90</div></div>
+        <div style="font-size:10px;color:var(--mut);margin-top:10px">Note: 66.0% (ECOG 0–1) are potentially eligible for Phase II/III trial enrolment. This is a key site selection metric for pharma sponsors.</div>
+      </div>
+
+      <!-- CTCAE AE table -->
+      <div style="font-size:12px;font-weight:600;color:var(--txt);margin-bottom:8px">CTCAE-Graded Adverse Events — Top 8 (Chemotherapy cohort, n=2,140)</div>
+      <div style="background:var(--surf);border-radius:8px;border:1.5px solid var(--bdr2);overflow:hidden;margin-bottom:12px">
+        ${[
+          ['Neutropenia','Grade 3–4','38.2',38,'#C8102E'],
+          ['Nausea/Vomiting','Grade 1–2','54.6',55,'#D96B10'],
+          ['Peripheral Neuropathy','Grade 2–3','22.4',22,'#6B3FA0'],
+          ['Alopecia','Grade 2','61.8',62,'#0050B3'],
+          ['Fatigue','Grade 1–2','48.2',48,'#007A53'],
+          ['Anaemia','Grade 2–3','34.6',35,'#E87722'],
+          ['Mucositis (Oral/H&N)','Grade 2–3','41.2',41,'#9B3090'],
+          ['Hepatotoxicity','Grade 1–2','12.4',12,'#344A6D'],
+        ].map(([ae,grade,pct,bar,col])=>`
+        <div class="ae-row">
+          <div class="ae-name">${ae}</div>
+          <span class="ae-grade ${grade.includes('3')||grade.includes('4')?'ae-grade3':grade.includes('2')&&!grade.includes('1')?'ae-grade2':'ae-grade1'}">${grade}</span>
+          <div class="ae-bar-wrap"><div class="ae-bar" style="width:${bar}%;background:${col}"></div></div>
+          <div class="ae-pct">${pct}%</div>
+        </div>`).join('')}
+      </div>
+    </div>
+
+    <!-- DATA DICTIONARY TAB -->
+    <div class="ocontent tab-content" id="otab-dictionary">
+      <div class="dict-grid">
+        <div class="dict-domain">
+          <div class="dict-dh"><div class="dict-di">🎗️</div><div class="dict-dn">Oncology Core</div><div class="dict-dc">38 fields</div></div>
+          ${[
+            ['case_id','string','De-identified patient identifier (VPSLKS-XXXXXX)'],
+            ['cancer_type','enum','Breast / Oral-HN / Cervical / Haemato'],
+            ['histology_code','ICD-O-3','Morphology + topography, SNOMED-CT mapped'],
+            ['stage_at_dx','AJCC/FIGO','TNM clinical + pathological staging'],
+            ['ecog_ps','0–4','ECOG Performance Status at diagnosis','⬦'],
+            ['date_diagnosis','date','Index date for survival calculations'],
+            ['vital_status','enum','Alive / Deceased / Lost-to-FU'],
+            ['date_of_death','date','Death ascertained via hospital + ABHA linkage'],
+            ['follow_up_months','numeric','Months from diagnosis to last contact'],
+          ].map(([n,t,d,v])=>`<div class="dict-field"><div class="dict-fname">${n}<span class="dict-ftype"> · ${t}</span>${v?`<span class="dict-fvalued">pharma</span>`:''}</div><div class="dict-fdesc">${d}</div></div>`).join('')}
+        </div>
+        <div class="dict-domain">
+          <div class="dict-dh" style="background:var(--geno)"><div class="dict-di">🧬</div><div class="dict-dn">Genomics Fields</div><div class="dict-dc">44 fields — NEW</div></div>
+          ${[
+            ['ngs_panel','string','441-gene panel / WES / WGS / RNA-seq','⬦'],
+            ['somatic_variants','JSON','HGVS notation, tier 1–4 actionability','⬦'],
+            ['germline_variants','JSON','BRCA1/2, PALB2, CHEK2 etc. germline calls','⬦'],
+            ['tmb_mutations_per_mb','numeric','Tumour Mutational Burden (NGS-derived)','⬦'],
+            ['msi_status','enum','MSI-High / MSS / Indeterminate','⬦'],
+            ['pd_l1_tps','numeric','PD-L1 Tumour Proportion Score (IHC 22C3)','⬦'],
+            ['her2_fish','enum','HER2 FISH amplification ratio','⬦'],
+            ['ctdna_vaf','numeric','ctDNA variant allele fraction (liquid biopsy)','⬦'],
+            ['mutational_signature','string','COSMIC v3.4 signatures assigned','⬦'],
+          ].map(([n,t,d,v])=>`<div class="dict-field"><div class="dict-fname">${n}<span class="dict-ftype"> · ${t}</span>${v?`<span class="dict-fvalued">pharma</span>`:''}</div><div class="dict-fdesc">${d}</div></div>`).join('')}
+        </div>
+        <div class="dict-domain">
+          <div class="dict-dh" style="background:var(--pharma)"><div class="dict-di">💊</div><div class="dict-dn">RWE / Treatment</div><div class="dict-dc">36 fields — NEW</div></div>
+          ${[
+            ['line_of_therapy','1L/2L/3L+','Line assignment per modified Hershman algorithm','⬦'],
+            ['regimen_name','string','Drug combination (standardised to RxNorm)','⬦'],
+            ['date_treatment_start','date','Start of each line of therapy'],
+            ['date_treatment_end','date','End / discontinuation date per line','⬦'],
+            ['ttnt_days','numeric','Time-to-next-treatment in days','⬦'],
+            ['ttd_days','numeric','Time-to-treatment-discontinuation in days','⬦'],
+            ['dose_reduction','boolean','Any dose reduction from standard protocol','⬦'],
+            ['dose_reduction_reason','enum','Toxicity / Comorbidity / Patient preference','⬦'],
+            ['recist_best_response','enum','CR/PR/SD/PD — radiologically confirmed','⬦'],
+            ['rwpfs_days','numeric','Real-world progression-free survival','⬦'],
+            ['ctcae_grade_max','1–5','Maximum CTCAE grade experienced','⬦'],
+          ].map(([n,t,d,v])=>`<div class="dict-field"><div class="dict-fname">${n}<span class="dict-ftype"> · ${t}</span>${v?`<span class="dict-fvalued">pharma</span>`:''}</div><div class="dict-fdesc">${d}</div></div>`).join('')}
+        </div>
+        <div class="dict-domain">
+          <div class="dict-dh" style="background:#4A3060"><div class="dict-di">🧪</div><div class="dict-dn">Pharmacogenomics</div><div class="dict-dc">14 fields — NEW</div></div>
+          ${[
+            ['cyp2d6_phenotype','enum','Poor/Intermediate/Normal/Ultrarapid','⬦'],
+            ['dpyd_variant','enum','DPYD*2A, *13, HapB3 — 5-FU toxicity risk','⬦'],
+            ['ugt1a1_status','enum','*6, *28 — irinotecan toxicity risk','⬦'],
+            ['tpmt_nudt15','enum','Thiopurine methyltransferase — azathioprine','⬦'],
+            ['brca_germline_status','enum','Pathogenic / Likely pathogenic / VUS / WT','⬦'],
+            ['hla_loh','boolean','HLA loss of heterozygosity (immune evasion)','⬦'],
+          ].map(([n,t,d,v])=>`<div class="dict-field"><div class="dict-fname">${n}<span class="dict-ftype"> · ${t}</span>${v?`<span class="dict-fvalued">pharma</span>`:''}</div><div class="dict-fdesc">${d}</div></div>`).join('')}
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /onco-main -->
+</div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════════
+     PAGE: GENOMICS COMMONS
+═══════════════════════════════════════════════════════════════════ -->
+<div class="page" id="page-genomics">
+<div class="onco-shell">
+
+  <aside class="sidebar">
+    <div class="sidebar-title" style="color:#7EDDDD">🧬 Genomic Filters</div>
+
+    <div class="geno-sidebar-section" style="margin-bottom:12px">
+      <div class="geno-sidebar-label">Sequencing Type</div>
+      <div class="filter-opt sel" onclick="tog(this)"><div class="fchk"></div><span class="filter-name" style="font-size:11px">441-gene NGS panel</span><span class="filter-n">1,284</span></div>
+      <div class="filter-opt sel" onclick="tog(this)"><div class="fchk"></div><span class="filter-name" style="font-size:11px">Whole Exome (WES)</span><span class="filter-n">186</span></div>
+      <div class="filter-opt sel" onclick="tog(this)"><div class="fchk"></div><span class="filter-name" style="font-size:11px">Whole Genome (WGS)</span><span class="filter-n">126</span></div>
+      <div class="filter-opt sel" onclick="tog(this)"><div class="fchk"></div><span class="filter-name" style="font-size:11px">RNA-seq (transcriptome)</span><span class="filter-n">186</span></div>
+      <div class="filter-opt sel" onclick="tog(this)"><div class="fchk"></div><span class="filter-name" style="font-size:11px">Liquid biopsy (ctDNA)</span><span class="filter-n">248</span></div>
+    </div>
+    <div class="sdiv"></div>
+
+    <div class="filter-group">
+      <div class="filter-label">Variant Class</div>
+      <div class="filter-opt sel" onclick="tog(this)"><div class="fdot" style="background:#C8102E"></div><div class="fchk"></div><span class="filter-name" style="font-size:11px">Pathogenic / Tier 1</span><span class="filter-n">642</span></div>
+      <div class="filter-opt sel" onclick="tog(this)"><div class="fdot" style="background:#D96B10"></div><div class="fchk"></div><span class="filter-name" style="font-size:11px">VUS / Tier 2–3</span><span class="filter-n">1,248</span></div>
+      <div class="filter-opt sel" onclick="tog(this)"><div class="fdot" style="background:#007A53"></div><div class="fchk"></div><span class="filter-name" style="font-size:11px">Targetable (approved CDx)</span><span class="filter-n">384</span></div>
+      <div class="filter-opt" onclick="tog(this)"><div class="fdot" style="background:#6B3FA0"></div><div class="fchk"></div><span class="filter-name" style="font-size:11px">Germline only</span><span class="filter-n">186</span></div>
+    </div>
+    <div class="sdiv"></div>
+
+    <div class="filter-group">
+      <div class="filter-label">IO Biomarkers</div>
+      <div class="filter-opt" onclick="tog(this)"><div class="fchk"></div><span class="filter-name" style="font-size:11px">TMB-High (≥10 mut/Mb)</span><span class="filter-n">228</span></div>
+      <div class="filter-opt" onclick="tog(this)"><div class="fchk"></div><span class="filter-name" style="font-size:11px">MSI-High</span><span class="filter-n">82</span></div>
+      <div class="filter-opt" onclick="tog(this)"><div class="fchk"></div><span class="filter-name" style="font-size:11px">PD-L1 TPS ≥50%</span><span class="filter-n">194</span></div>
+      <div class="filter-opt" onclick="tog(this)"><div class="fchk"></div><span class="filter-name" style="font-size:11px">HLA-LOH</span><span class="filter-n">86</span></div>
+    </div>
+    <div class="sdiv"></div>
+
+    <div class="filter-group">
+      <div class="filter-label">Key Genes (top)</div>
+      ${['TP53','PIK3CA','EGFR','ERBB2/HER2','BRCA1','BRCA2','KRAS','CDH1','ATM','PALB2'].map(g=>`
+      <div class="filter-opt" onclick="tog(this)"><div class="fchk"></div><span class="filter-name" style="font-family:var(--mono);font-size:10px">${g}</span></div>`).join('')}
+    </div>
+    <div class="sdiv"></div>
+
+    <div class="filter-group">
+      <div class="filter-label">Pharmacogenomics</div>
+      <div class="filter-opt" onclick="tog(this)"><div class="fchk"></div><span class="filter-name" style="font-size:11px">DPYD variant (5-FU risk)</span><span class="filter-n">84</span></div>
+      <div class="filter-opt" onclick="tog(this)"><div class="fchk"></div><span class="filter-name" style="font-size:11px">CYP2D6 poor metaboliser</span><span class="filter-n">124</span></div>
+      <div class="filter-opt" onclick="tog(this)"><div class="fchk"></div><span class="filter-name" style="font-size:11px">UGT1A1*28 (irinotecan)</span><span class="filter-n">76</span></div>
+    </div>
+  </aside>
+
+  <div class="onco-main">
+    <!-- Geno hero -->
+    <div class="geno-hero">
+      <div style="font-family:var(--mono);font-size:8px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-bottom:5px">VPS Lakeshore Genomic Data Commons · South Asian Oncogenomics</div>
+      <div class="geno-hero-title">Multimodal genomic data linked<br>to <em>real-world clinical outcomes</em></div>
+      <div class="geno-hero-sub">441-gene NGS + WES/WGS + RNA-seq + liquid biopsy · Matched tumour-normal · Germline + somatic · South Asian population genetics · TCGA-comparable</div>
+      <div class="geno-stats">
+        <div><div class="geno-stat-val">1,284</div><div class="geno-stat-label">NGS cases</div></div>
+        <div><div class="geno-stat-val">312</div><div class="geno-stat-label">WES/WGS</div></div>
+        <div><div class="geno-stat-val">186</div><div class="geno-stat-label">RNA-seq</div></div>
+        <div><div class="geno-stat-val">248</div><div class="geno-stat-label">ctDNA</div></div>
+        <div><div class="geno-stat-val">441</div><div class="geno-stat-label">Gene panel</div></div>
+        <div><div class="geno-stat-val">VCF/MAF</div><div class="geno-stat-label">Output format</div></div>
+      </div>
+    </div>
+
+    <div class="cohort-bar">
+      <div><div class="cohort-count" style="color:var(--geno)" id="geno-n">1,284</div><div class="cohort-label">genomic cases</div></div>
+      <div class="csep"></div>
+      <div><div class="cstat-val" style="color:var(--geno)">4,812</div><div class="cstat-label">Total variants</div></div>
+      <div class="csep"></div>
+      <div><div class="cstat-val">642</div><div class="cstat-label">Pathogenic/Tier1</div></div>
+      <div class="csep"></div>
+      <div><div class="cstat-val">384</div><div class="cstat-label">Targetable</div></div>
+      <div class="csep"></div>
+      <div><div class="cstat-val">VCF/MAF/FHIR</div><div class="cstat-label">Export formats</div></div>
+      <div class="cohort-actions">
+        <button class="btn btn-outline">⬇ VCF/MAF</button>
+        <button class="btn btn-geno">Request Genomic Access</button>
+      </div>
+    </div>
+
+    <div class="tab-bar">
+      <div class="tab active" onclick="genoTab(this,'landscape')">Variant Landscape</div>
+      <div class="tab" onclick="genoTab(this,'genes')">Gene Frequencies</div>
+      <div class="tab" onclick="genoTab(this,'io')">IO Biomarkers</div>
+      <div class="tab" onclick="genoTab(this,'popgen')">Population Genetics</div>
+      <div class="tab" onclick="genoTab(this,'signatures')">Mutational Signatures</div>
+      <div class="tab" onclick="genoTab(this,'ctdna')">ctDNA / Liquid Biopsy</div>
+    </div>
+
+    <!-- VARIANT LANDSCAPE -->
+    <div class="ocontent tab-content visible" id="gtab-landscape">
+      <div class="variant-grid">
+        <div class="variant-card vc-pathogenic">
+          <span class="vc-icon">🔴</span>
+          <div class="vc-val">642</div>
+          <div class="vc-label">Pathogenic / Tier 1</div>
+          <div class="vc-sub">ClinVar P/LP + OncoKB Tier 1</div>
+        </div>
+        <div class="variant-card vc-vus">
+          <span class="vc-icon">🟡</span>
+          <div class="vc-val">1,248</div>
+          <div class="vc-label">Variants of Uncertain Significance</div>
+          <div class="vc-sub">ClinVar VUS / OncoKB Tier 3–4</div>
+        </div>
+        <div class="variant-card vc-targetable">
+          <span class="vc-icon">🎯</span>
+          <div class="vc-val">384</div>
+          <div class="vc-label">Actionable / Targetable</div>
+          <div class="vc-sub">FDA-approved CDx indication</div>
+        </div>
+        <div class="variant-card vc-io">
+          <span class="vc-icon">🔬</span>
+          <div class="vc-val">228</div>
+          <div class="vc-label">IO Biomarker Positive</div>
+          <div class="vc-sub">TMB-H / MSI-H / PD-L1≥50</div>
+        </div>
+        <div class="variant-card vc-pgx">
+          <span class="vc-icon">💊</span>
+          <div class="vc-val">284</div>
+          <div class="vc-label">Pharmacogenomic Variants</div>
+          <div class="vc-sub">DPYD, CYP2D6, UGT1A1, TPMT</div>
+        </div>
+      </div>
+
+      <div class="genome-track">
+        <div class="chart-title" style="margin-bottom:10px">Somatic Copy Number Alterations — Chromosomal Overview (WES/WGS cohort, n=312)</div>
+        <div id="chr-tracks"></div>
+        <div style="display:flex;gap:12px;margin-top:8px;font-size:10px;color:var(--mut);">
+          <div><span style="display:inline-block;width:10px;height:10px;background:#C8102E;opacity:.7;border-radius:2px;margin-right:4px"></span>Amplification</div>
+          <div><span style="display:inline-block;width:10px;height:10px;background:#0050B3;opacity:.7;border-radius:2px;margin-right:4px"></span>Deletion</div>
+          <div><span style="display:inline-block;width:10px;height:10px;background:#007A53;opacity:.7;border-radius:2px;margin-right:4px"></span>Hotspot mutation</div>
+        </div>
+      </div>
+
+      <div class="chart-grid">
+        <div class="chart-card"><div class="chart-title">Variant Type Distribution</div><div class="chart-sub">SNV / Indel / CNV / Fusion — all NGS cases</div><canvas id="varTypeChart" height="180"></canvas></div>
+        <div class="chart-card"><div class="chart-title">Somatic vs Germline Split</div><div class="chart-sub">% of pathogenic variants by origin</div><canvas id="somaticGermlineChart" height="180"></canvas></div>
+      </div>
+    </div>
+
+    <!-- GENE FREQUENCIES -->
+    <div class="ocontent tab-content" id="gtab-genes">
+      <div style="margin-bottom:10px;display:flex;gap:7px;align-items:center;flex-wrap:wrap">
+        <span style="font-size:12px;font-weight:600;color:var(--txt)">Top mutated genes across tumour types</span>
+        <span class="tag teal">n=1,284 NGS cases</span>
+        <span class="tag hi">South Asian cohort</span>
+        <span class="tag">COSMIC v3.4</span>
+        <button class="btn btn-outline" style="margin-left:auto;font-size:10px">⬇ Export MAF</button>
+      </div>
+      <div style="background:var(--surf);border-radius:8px;border:1.5px solid var(--bdr2);overflow:hidden">
+        <div class="gene-row hdr"><div>Gene</div><div>Overall</div><div>Breast</div><div>Oral/H&N</div><div>Haemato</div><div>Actionability</div><div></div></div>
+        <div id="gene-freq-rows"></div>
+      </div>
+      <div style="margin-top:12px;font-size:10px;color:var(--mut)">
+        ● Tier 1: FDA-approved companion diagnostic indication &nbsp; ● Tier 2: Clinical trial with biomarker &nbsp; ● Tier 3: Preclinical / investigational
+      </div>
+    </div>
+
+    <!-- IO BIOMARKERS -->
+    <div class="ocontent tab-content" id="gtab-io">
+      <div class="io-biomarker-grid">
+        <div class="io-card">
+          <div class="io-card-label">TMB Distribution</div>
+          <div style="height:100px;margin-bottom:8px"><canvas id="tmbChart" height="100"></canvas></div>
+          <div style="font-size:10px;color:var(--mut);text-align:center">17.8% TMB-High (≥10 mut/Mb)<br>Median TMB: 4.2 mut/Mb</div>
+        </div>
+        <div class="io-card">
+          <div class="io-card-label">MSI Status</div>
+          <div style="height:100px;margin-bottom:8px"><canvas id="msiChart" height="100"></canvas></div>
+          <div style="font-size:10px;color:var(--mut);text-align:center">6.4% MSI-High<br>Pembrolizumab agnostic eligibility</div>
+        </div>
+        <div class="io-card">
+          <div class="io-card-label">PD-L1 TPS Distribution</div>
+          <div style="height:100px;margin-bottom:8px"><canvas id="pdl1Chart" height="100"></canvas></div>
+          <div style="font-size:10px;color:var(--mut);text-align:center">15.1% TPS ≥50%<br>Tested in 1,284 cases (IHC 22C3)</div>
+        </div>
+        <div class="io-card">
+          <div class="io-card-label">HLA-LOH Rate</div>
+          <div style="height:100px;margin-bottom:8px"><canvas id="hlaChart" height="100"></canvas></div>
+          <div style="font-size:10px;color:var(--mut);text-align:center">6.7% HLA-LOH<br>Immune evasion — IO resistance marker</div>
+        </div>
+      </div>
+      <div class="chart-grid">
+        <div class="chart-card"><div class="chart-title">IO Biomarker Co-occurrence</div><div class="chart-sub">% of cases positive for each combination</div><canvas id="ioBioChart" height="180"></canvas></div>
+        <div class="chart-card"><div class="chart-title">IO Eligibility Rate by Cancer Type</div><div class="chart-sub">% potentially eligible for anti-PD1/L1 therapy</div><canvas id="ioEligChart" height="180"></canvas></div>
+      </div>
+    </div>
+
+    <!-- POPULATION GENETICS -->
+    <div class="ocontent tab-content" id="gtab-popgen">
+      <div style="background:linear-gradient(135deg,#E8F4FD,#EEF4FF);border:1.5px solid #B8CCF0;border-radius:8px;padding:12px 15px;margin-bottom:12px">
+        <div style="font-size:12px;font-weight:600;color:var(--blue);margin-bottom:3px">⬦ Why South Asian Population Genetics Matters to Pharma</div>
+        <div style="font-size:11px;color:var(--mut);line-height:1.65">South Asian patients show distinct mutation frequencies (higher EGFR exon 19/21 in lung, BRCA founder variants, higher PIK3CA, lower KRAS) vs Western populations. Indian patients are systematically under-represented in global clinical trials, creating a gap that CDSCO now requires bridging for drug approvals. This cohort is one of the only South Asian datasets with matched clinical + genomic + outcome data — a unique asset for global pharma label expansion studies.</div>
+      </div>
+      <div class="popgen-grid">
+        <div class="chart-card"><div class="chart-title">EGFR Mutation Frequency — Indian vs Western</div><div class="chart-sub">Exon 19 del, L858R, Exon 20 ins · Breast + Oral/H&N cohort</div><canvas id="egfrPopChart" height="180"></canvas></div>
+        <div class="chart-card"><div class="chart-title">BRCA1/2 Spectrum — Indian Founder Variants</div><div class="chart-sub">Variant distribution vs TCGA/gnomAD reference</div><canvas id="brcaChart" height="180"></canvas></div>
+        <div class="chart-card"><div class="chart-title">Tobacco-Areca Mutational Signature (Oral/H&N)</div><div class="chart-sub">SBS4+SBS29 co-occurrence — unique to South Asian oral cancer</div><canvas id="tobaccoSigChart" height="180"></canvas></div>
+        <div class="chart-card"><div class="chart-title">Ancestral Population Stratification</div><div class="chart-sub">Kerala population PCA vs 1000 Genomes South Asian</div><canvas id="pcaChart" height="180"></canvas></div>
+      </div>
+    </div>
+
+    <!-- MUTATIONAL SIGNATURES -->
+    <div class="ocontent tab-content" id="gtab-signatures">
+      <div style="margin-bottom:10px;font-size:11.5px;color:var(--mut)">
+        COSMIC v3.4 mutational signatures decomposed from WES/WGS data (n=312). Each signature reflects an aetiological process — tobacco, APOBEC, HRD, MMRD, ageing. These are directly used by pharma to identify patients likely to respond to PARP inhibitors, IO, or specific chemotherapy.
+      </div>
+      <div class="sig-grid">
+        <div class="sig-card">
+          <div class="sig-name">SBS1 + SBS5 — Ageing</div>
+          <div class="sig-desc">Spontaneous deamination of 5-methylcytosine + unknown replication error. Universal, increases with age.</div>
+          <div class="sig-bar-wrap"><div class="sig-bar" style="width:72%;background:#0050B3"></div></div>
+          <div class="sig-pct">72% of cases · Dominant in Haemato</div>
+        </div>
+        <div class="sig-card">
+          <div class="sig-name">SBS2 + SBS13 — APOBEC</div>
+          <div class="sig-desc">APOBEC3A/3B cytidine deaminase activity. Strong predictor of IO response in breast + cervical cancers.</div>
+          <div class="sig-bar-wrap"><div class="sig-bar" style="width:48%;background:#6B3FA0"></div></div>
+          <div class="sig-pct">48% of cases · Strong in Breast/Cervical</div>
+        </div>
+        <div class="sig-card">
+          <div class="sig-name">SBS3 — HRD / BRCA</div>
+          <div class="sig-desc">Homologous recombination deficiency. Predicts PARP inhibitor and platinum sensitivity. Key pharma biomarker.</div>
+          <div class="sig-bar-wrap"><div class="sig-bar" style="width:24%;background:#C8102E"></div></div>
+          <div class="sig-pct">24% of cases · Breast TNBC enriched</div>
+        </div>
+        <div class="sig-card">
+          <div class="sig-name">SBS4 + SBS29 — Tobacco + Areca Nut</div>
+          <div class="sig-desc">SBS4 = tobacco carcinogens. SBS29 = areca nut-specific — unique South Asian signature. Highest globally in this cohort.</div>
+          <div class="sig-bar-wrap"><div class="sig-bar" style="width:61%;background:#D96B10"></div></div>
+          <div class="sig-pct">61% of Oral/H&N · Highest globally</div>
+        </div>
+        <div class="sig-card">
+          <div class="sig-name">SBS6 / SBS15 — MMRD</div>
+          <div class="sig-desc">Mismatch repair deficiency. Associated with MSI-H status — predicts pembrolizumab pan-tumour eligibility.</div>
+          <div class="sig-bar-wrap"><div class="sig-bar" style="width:18%;background:#007A53"></div></div>
+          <div class="sig-pct">18% of Haemato · MSI-H concordant</div>
+        </div>
+        <div class="sig-card">
+          <div class="sig-name">SBS35 — Prior Platinum</div>
+          <div class="sig-desc">Platinum-induced damage signature. Identifies patients with prior platinum exposure — treatment history validation.</div>
+          <div class="sig-bar-wrap"><div class="sig-bar" style="width:14%;background:#344A6D"></div></div>
+          <div class="sig-pct">14% of cases · Post-chemotherapy</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ctDNA -->
+    <div class="ocontent tab-content" id="gtab-ctdna">
+      <div style="background:var(--geno-l);border:1.5px solid rgba(11,110,110,0.22);border-radius:8px;padding:12px 15px;margin-bottom:12px">
+        <div style="font-size:12px;font-weight:600;color:var(--geno);margin-bottom:3px">ctDNA / Liquid Biopsy — 248 patients longitudinally tracked</div>
+        <div style="font-size:11px;color:var(--mut);line-height:1.65">Serial ctDNA profiling enables minimal residual disease (MRD) detection, resistance mutation tracking (e.g., ESR1 in breast, EGFR T790M), and treatment response monitoring without repeat biopsy. This longitudinal liquid biopsy dataset is a key asset for pharma CDx development.</div>
+      </div>
+      <div class="chart-grid">
+        <div class="chart-card"><div class="chart-title">ctDNA Clearance Post 1L Chemotherapy</div><div class="chart-sub">% patients with undetectable ctDNA at 4 weeks vs 12 weeks</div><canvas id="ctdnaClearChart" height="180"></canvas></div>
+        <div class="chart-card"><div class="chart-title">Resistance Mutations Detected in ctDNA</div><div class="chart-sub">Acquired resistance variants detected before radiological progression</div><canvas id="ctdnaResChart" height="180"></canvas></div>
+      </div>
+      <div class="table-card">
+        <div class="table-hd"><div class="table-ttl">Key ctDNA Resistance Variants Detected</div><button class="btn btn-geno btn-sm">⬇ Export VCF</button></div>
+        <table>
+          <thead><tr><th>Variant</th><th>Gene</th><th>Cancer Type</th><th>Clinical Meaning</th><th>Detected in</th><th>Lead Time (days)</th></tr></thead>
+          <tbody>
+            <tr><td><span style="font-family:var(--mono);font-size:10px;color:var(--geno)">ESR1 p.D538G</span></td><td>ESR1</td><td><span class="badge" style="background:var(--onco-l);color:var(--onco)">Breast</span></td><td style="font-size:11px;color:var(--mut)">Aromatase inhibitor resistance</td><td style="font-family:var(--mono);font-size:10px">ctDNA only</td><td style="font-family:var(--mono)">62</td></tr>
+            <tr><td><span style="font-family:var(--mono);font-size:10px;color:var(--geno)">EGFR p.T790M</span></td><td>EGFR</td><td><span class="badge" style="background:var(--endo-l);color:var(--endo)">Oral/H&N</span></td><td style="font-size:11px;color:var(--mut)">1st-gen EGFR TKI resistance</td><td style="font-family:var(--mono);font-size:10px">ctDNA only</td><td style="font-family:var(--mono)">45</td></tr>
+            <tr><td><span style="font-family:var(--mono);font-size:10px;color:var(--geno)">PIK3CA p.E545K</span></td><td>PIK3CA</td><td><span class="badge" style="background:var(--onco-l);color:var(--onco)">Breast</span></td><td style="font-size:11px;color:var(--mut)">Alpelisib CDx target</td><td style="font-family:var(--mono);font-size:10px">ctDNA + tissue</td><td style="font-family:var(--mono)">0</td></tr>
+            <tr><td><span style="font-family:var(--mono);font-size:10px;color:var(--geno)">TP53 p.R175H</span></td><td>TP53</td><td><span class="badge" style="background:var(--card-l);color:var(--card)">Haemato</span></td><td style="font-size:11px;color:var(--mut)">Clonal evolution / poor prognosis</td><td style="font-family:var(--mono);font-size:10px">ctDNA rising VAF</td><td style="font-family:var(--mono)">38</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /onco-main geno -->
+</div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════════
+     PAGE: PHARMA RWE
+═══════════════════════════════════════════════════════════════════ -->
+<div class="page" id="page-pharma">
+<div class="onco-shell">
+
+  <aside class="sidebar">
+    <div class="sidebar-title" style="color:#CE93D8">⬦ Pharma Filters</div>
+    <div class="filter-group">
+      <div class="filter-label">Study Type</div>
+      <div class="filter-opt sel" onclick="tog(this)"><div class="fchk"></div><span class="filter-name">RWE / Outcomes</span></div>
+      <div class="filter-opt sel" onclick="tog(this)"><div class="fchk"></div><span class="filter-name">External Control Arm</span></div>
+      <div class="filter-opt sel" onclick="tog(this)"><div class="fchk"></div><span class="filter-name">Trial Feasibility</span></div>
+      <div class="filter-opt sel" onclick="tog(this)"><div class="fchk"></div><span class="filter-name">Biomarker Prevalence</span></div>
+      <div class="filter-opt sel" onclick="tog(this)"><div class="fchk"></div><span class="filter-name">Safety Surveillance</span></div>
+    </div>
+    <div class="sdiv"></div>
+    <div class="filter-group">
+      <div class="filter-label">Indication</div>
+      <div class="filter-opt sel" onclick="tog(this)"><div class="fdot" style="background:#C8102E"></div><div class="fchk"></div><span class="filter-name">Breast Cancer</span><span class="filter-n">1,842</span></div>
+      <div class="filter-opt sel" onclick="tog(this)"><div class="fdot" style="background:#D96B10"></div><div class="fchk"></div><span class="filter-name">Oral / H&amp;N</span><span class="filter-n">1,376</span></div>
+      <div class="filter-opt sel" onclick="tog(this)"><div class="fdot" style="background:#6B3FA0"></div><div class="fchk"></div><span class="filter-name">Cervical</span><span class="filter-n">614</span></div>
+      <div class="filter-opt sel" onclick="tog(this)"><div class="fdot" style="background:#0050B3"></div><div class="fchk"></div><span class="filter-name">Haemato</span><span class="filter-n">728</span></div>
+    </div>
+    <div class="sdiv"></div>
+    <div class="filter-group">
+      <div class="filter-label">Data Modality</div>
+      <div class="filter-opt sel" onclick="tog(this)"><div class="fchk"></div><span class="filter-name">EHR / Clinical</span></div>
+      <div class="filter-opt sel" onclick="tog(this)"><div class="fchk"></div><span class="filter-name">NGS / Genomics</span></div>
+      <div class="filter-opt" onclick="tog(this)"><div class="fchk"></div><span class="filter-name">Digital Pathology</span></div>
+      <div class="filter-opt" onclick="tog(this)"><div class="fchk"></div><span class="filter-name">Imaging (DICOM)</span></div>
+    </div>
+    <div class="sdiv"></div>
+    <div class="filter-group">
+      <div class="filter-label">Regulatory Target</div>
+      <div class="filter-opt" onclick="tog(this)"><div class="fchk"></div><span class="filter-name">CDSCO India</span></div>
+      <div class="filter-opt" onclick="tog(this)"><div class="fchk"></div><span class="filter-name">FDA (RWE guidance)</span></div>
+      <div class="filter-opt" onclick="tog(this)"><div class="fchk"></div><span class="filter-name">EMA / HTA</span></div>
+      <div class="filter-opt" onclick="tog(this)"><div class="fchk"></div><span class="filter-name">NICE / G-BA</span></div>
+    </div>
+  </aside>
+
+  <div class="onco-main">
+    <div class="pharma-hero">
+      <div class="pharma-hero-eyebrow">Pharma RWE Platform · VPS Lakeshore Data Commons · v4.0</div>
+      <div class="pharma-hero-title">Clinical + genomic data curated<br>for pharma <em>drug development & HTA</em></div>
+      <div class="pharma-hero-sub">Tempus-style multimodal data with Flatiron-grade curation. Treatment sequences, TTNT/TTD, ECOG, CTCAE-AE, RECIST, and South Asian population genomics — ready for CDSCO and global HTA submissions.</div>
+      <div class="pharma-stats">
+        <div><div class="pharma-stat-val">18</div><div class="pharma-stat-label">RWE endpoints</div></div>
+        <div><div class="pharma-stat-val">95%</div><div class="pharma-stat-label">top-20 pharma's reference Tempus — this dataset mirrors that model</div></div>
+        <div><div class="pharma-stat-val">5</div><div class="pharma-stat-label">Partner slots open</div></div>
+        <div><div class="pharma-stat-val">Q2 2026</div><div class="pharma-stat-label">First access cohort</div></div>
+      </div>
+    </div>
+
+    <div class="cohort-bar">
+      <div><div class="cohort-count" style="color:var(--pharma)">4,560</div><div class="cohort-label">patients</div></div>
+      <div class="csep"></div>
+      <div><div class="cstat-val" style="color:var(--pharma)">1,284</div><div class="cstat-label">With genomics</div></div>
+      <div class="csep"></div>
+      <div><div class="cstat-val">18</div><div class="cstat-label">RWE endpoints</div></div>
+      <div class="csep"></div>
+      <div><div class="cstat-val">OMOP+mCODE</div><div class="cstat-label">Standard</div></div>
+      <div class="cohort-actions">
+        <button class="btn btn-outline">⬇ Data Package</button>
+        <button class="btn btn-red">Discuss Partnership</button>
+      </div>
+    </div>
+
+    <div class="tab-bar">
+      <div class="tab active" onclick="pharmaTab(this,'value')">Pharma Value Proposition</div>
+      <div class="tab" onclick="pharmaTab(this,'trials')">Trial Feasibility</div>
+      <div class="tab" onclick="pharmaTab(this,'pricing')">Data Access & Pricing</div>
+      <div class="tab" onclick="pharmaTab(this,'usecases')">Use Cases</div>
+    </div>
+
+    <!-- VALUE PROP TAB -->
+    <div class="ocontent tab-content visible" id="ptab-value">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
+        ${[
+          ['🎯','Companion Diagnostics Development','Match biomarker prevalence (EGFR, HER2, PIK3CA, BRCA, TMB, MSI, PD-L1) to drug eligibility. South Asian frequencies differ from TCGA — critical for CDx calibration in this population.','var(--onco)','var(--onco-l)'],
+          ['📊','External Control Arms (ECA)','TTNT, rwPFS, rwOS, and treatment sequences enable high-quality synthetic control arms for single-arm trials seeking CDSCO or FDA approval via the Real-World Evidence Framework.','var(--pharma)','var(--pharma-l)'],
+          ['🔍','Biomarker Prevalence Studies','Pre-study prevalence data for rare mutations (NTRK fusion, ROS1, MET ex14) in South Asian populations — required for trial feasibility, site selection, and patient identification strategies.','var(--geno)','var(--geno-l)'],
+          ['💊','Safety & Pharmacovigilance','CTCAE-graded adverse events linked to regimens, comorbidities, and pharmacogenomic variants. Dose reduction rates stratified by DM/HTN/CKD comorbidities — unique to South Asian cohort.','var(--endo)','var(--endo-l)'],
+          ['🧬','Pharmacogenomics','CYP2D6, DPYD, UGT1A1, TPMT, NUDT15 phenotypes linked to treatment outcomes. Enables label updates for drugs metabolised differently in South Asian populations.','var(--blue2)','var(--card-l)'],
+          ['🏥','Trial Site Qualification','ECOG 0–1 prevalence (66%), annual case volume, genomic testing capacity, and patient retention data support CRO and sponsor site evaluation for Phase II/III trials.','var(--neph)','var(--neph-l)'],
+        ].map(([ic,tt,dd,cl,bg])=>`
+        <div style="background:var(--surf);border-radius:8px;border:1.5px solid var(--bdr2);padding:14px 15px;">
+          <div style="font-size:22px;margin-bottom:7px">${ic}</div>
+          <div style="font-size:12px;font-weight:700;color:${cl};margin-bottom:5px">${tt}</div>
+          <div style="font-size:11px;color:var(--mut);line-height:1.6">${dd}</div>
+        </div>`).join('')}
+      </div>
+
+      <!-- What fields Tempus/Flatiron charge for -->
+      <div style="background:linear-gradient(135deg,#3A0060,#5A1080);border-radius:10px;padding:16px 20px;margin-bottom:14px;color:white">
+        <div style="font-family:var(--mono);font-size:9px;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,0.45);margin-bottom:8px">Fields pharma companies pay premium for — mirroring Tempus & Flatiron data models</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+          ${[
+            ['Treatment Sequencing 1L→3L','Tempus/Flatiron core','$$$'],
+            ['TTNT / TTD (days)','HTA standard endpoint','$$$'],
+            ['Real-world PFS/OS','External control arm','$$$'],
+            ['RECIST best response','Regulatory-grade','$$$'],
+            ['PD-L1 / TMB / MSI-H','IO companion diagnostics','$$$'],
+            ['ctDNA longitudinal','Resistance tracking','$$$$'],
+            ['RNA-seq (transcriptome)','Drug response prediction','$$$$'],
+            ['Germline BRCA/PALB2','PARP inhibitor eligibility','$$$'],
+            ['Pharmacogenomics','Label update studies','$$$'],
+            ['CTCAE AE Grade 3–4','Safety surveillance','$$'],
+            ['ECOG PS','Trial eligibility screening','$$'],
+            ['Dose reduction + reason','Real-world tolerability','$$$'],
+            ['Digital pathology AI','Companion diagnostics','$$$$'],
+            ['South Asian pop. genetics','Unique global asset','$$$$$'],
+            ['Areca/tobacco SBS29 sig','Kerala-specific oncology','$$$$'],
+          ].map(([f,u,v])=>`
+          <div style="background:rgba(255,255,255,0.08);border-radius:6px;padding:8px 10px;">
+            <div style="font-size:11px;font-weight:600;color:white;margin-bottom:2px">${f}</div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.45);margin-bottom:4px">${u}</div>
+            <div style="font-family:var(--mono);font-size:10px;color:#CE93D8;font-weight:600">${v}</div>
+          </div>`).join('')}
+        </div>
+      </div>
+    </div>
+
+    <!-- TRIAL FEASIBILITY TAB -->
+    <div class="ocontent tab-content" id="ptab-trials">
+      <div style="margin-bottom:10px;font-size:11.5px;color:var(--mut)">
+        These trial feasibility cards show estimated eligible patient counts for specific molecular-selected trials — powered by the combined EHR + genomic dataset.
+      </div>
+      <div id="trial-cards-container"></div>
+    </div>
+
+    <!-- PRICING TAB -->
+    <div class="ocontent tab-content" id="ptab-pricing">
+      <div class="access-grid" style="margin-bottom:14px">
+        <div class="access-card" style="border-top:3px solid var(--neph)">
+          <div style="font-size:22px;margin-bottom:7px">🟢</div>
+          <div style="font-size:13px;font-weight:700;margin-bottom:5px">Tier 1 — Open Aggregate</div>
+          <div style="font-size:11px;color:var(--mut);line-height:1.65;margin-bottom:8px">Domain summaries, biomarker prevalence, survival curves, cohort statistics. No patient-level data. No registration required.</div>
+          <div class="pricing-tag tier-open">FREE · AVAILABLE NOW</div>
+        </div>
+        <div class="access-card" style="border-top:3px solid var(--blue)">
+          <div style="font-size:22px;margin-bottom:7px">🔵</div>
+          <div style="font-size:13px;font-weight:700;margin-bottom:5px">Tier 2 — Registered Research</div>
+          <div style="font-size:11px;color:var(--mut);line-height:1.65;margin-bottom:8px">De-identified patient-level EHR data. Requires IEC approval, institutional DUA, DPDP 2023 compliance. No genomics.</div>
+          <div class="pricing-tag tier-reg">₹8–12 L / study · Q3 2026</div>
+        </div>
+        <div class="access-card" style="border-top:3px solid var(--red)">
+          <div style="font-size:22px;margin-bottom:7px">🔴</div>
+          <div style="font-size:13px;font-weight:700;margin-bottom:5px">Tier 3 — Controlled / Genomic</div>
+          <div style="font-size:11px;color:var(--mut);line-height:1.65;margin-bottom:8px">Linked clinical + genomic + longitudinal data. NGS VCF/MAF export. Requires full governance review, commercial agreement.</div>
+          <div class="pricing-tag tier-ctrl">₹40–80 L / study · Q1 2027</div>
+        </div>
+        <div class="access-card" style="border-top:3px solid var(--pharma)">
+          <div style="font-size:22px;margin-bottom:7px">🟣</div>
+          <div style="font-size:13px;font-weight:700;margin-bottom:5px">Tier 4 — Strategic Partnership</div>
+          <div style="font-size:11px;color:var(--mut);line-height:1.65;margin-bottom:8px">Multi-year data licensing (Tempus/Flatiron model). Includes multimodal data, prospective collection design, co-publication rights, CDx development support.</div>
+          <div class="pricing-tag tier-pharma">₹2–5 Cr / year · Custom</div>
+        </div>
+      </div>
+
+      <div class="pricing-table">
+        <div class="pricing-row header">
+          <div>Data Field / Feature</div>
+          <div>Tier 1 (Open)</div>
+          <div>Tier 2 (Research)</div>
+          <div>Tier 3 (Genomic)</div>
+          <div>Tier 4 (Strategic)</div>
+        </div>
+        ${[
+          ['Cohort statistics & prevalence','✓','✓','✓','✓'],
+          ['De-identified patient records','✗','✓','✓','✓'],
+          ['Treatment sequencing 1L→3L','✗','✓','✓','✓'],
+          ['TTNT / TTD endpoints','✗','✓','✓','✓'],
+          ['RECIST / rwPFS / rwOS','✗','✗','✓','✓'],
+          ['NGS / VCF / MAF data','✗','✗','✓','✓'],
+          ['PD-L1 / TMB / MSI-H','✗','✗','✓','✓'],
+          ['Germline BRCA/pharmacogenomics','✗','✗','✓','✓'],
+          ['ctDNA / liquid biopsy','✗','✗','✗','✓'],
+          ['RNA-seq transcriptomics','✗','✗','✗','✓'],
+          ['Digital pathology images','✗','✗','✗','✓'],
+          ['ABHA-linked mortality data','✗','✗','✓','✓'],
+          ['Prospective collection design','✗','✗','✗','✓'],
+        ].map(([f,t1,t2,t3,t4])=>`
+        <div class="pricing-row">
+          <div style="font-size:11.5px;font-weight:500">${f}</div>
+          <div><span class="${t1==='✓'?'checkmark':'crossmark'}">${t1}</span></div>
+          <div><span class="${t2==='✓'?'checkmark':'crossmark'}">${t2}</span></div>
+          <div><span class="${t3==='✓'?'checkmark':'crossmark'}">${t3}</span></div>
+          <div><span class="${t4==='✓'?'checkmark':'crossmark'}">${t4}</span></div>
+        </div>`).join('')}
+      </div>
+    </div>
+
+    <!-- USE CASES -->
+    <div class="ocontent tab-content" id="ptab-usecases">
+      <div class="table-card">
+        <div class="table-hd"><div class="table-ttl">Active & Pipeline Research Partnerships</div><button class="btn btn-red">Submit Interest</button></div>
+        <table>
+          <thead><tr><th>Partner Type</th><th>Use Case</th><th>Domain</th><th>Data Tier</th><th>Regulatory Target</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td style="font-weight:600">Global Pharma (Big)</td><td>Indian RWE external control arm — HER2+ breast label expansion</td><td><span class="badge" style="background:var(--onco-l);color:var(--onco)">Breast</span></td><td>Tier 3</td><td>CDSCO + EMA</td><td style="color:var(--endo);font-weight:600">In Negotiation</td></tr>
+            <tr><td style="font-weight:600">Biotech (Mid-size)</td><td>EGFR mutation prevalence for lung/oral — CDx study design</td><td><span class="badge" style="background:var(--endo-l);color:var(--endo)">Oral/H&N</span></td><td>Tier 3</td><td>FDA RWE guidance</td><td style="color:var(--neph);font-weight:600">Active</td></tr>
+            <tr><td style="font-weight:600">Academic Medical Centre</td><td>Retrospective survival — Kerala-specific cancer patterns</td><td><span class="badge" style="background:var(--onco-l);color:var(--onco)">Multi</span></td><td>Tier 2</td><td>ICMR / DPDP</td><td style="color:var(--neph);font-weight:600">Active</td></tr>
+            <tr><td style="font-weight:600">Diagnostics Company</td><td>PD-L1 assay validation in South Asian cohort (IHC 22C3 vs SP142)</td><td><span class="badge" style="background:var(--geno-l);color:var(--geno)">Genomics</span></td><td>Tier 3</td><td>CDSCO CDx approval</td><td style="color:var(--mut)">Pending Q3 2026</td></tr>
+            <tr><td style="font-weight:600">AI / Health-tech</td><td>Digital pathology AI — South Indian tumour morphology</td><td><span class="badge" style="background:var(--pharma-l);color:var(--pharma)">Pathology</span></td><td>Tier 4</td><td>CE Mark / FDA 510k</td><td style="color:var(--mut)">Pending 2027</td></tr>
+            <tr><td style="font-weight:600">Public Health Institute</td><td>Areca-tobacco SBS29 epidemiology — oral cancer burden, Kerala</td><td><span class="badge" style="background:var(--endo-l);color:var(--endo)">Oral/H&N</span></td><td>Tier 2</td><td>ICMR publication</td><td style="color:var(--mut)">Pending Q4 2026</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════════
+     PAGE: ARCHITECTURE
+═══════════════════════════════════════════════════════════════════ -->
+<div class="page" id="page-arch">
+  <div class="section">
+    <div class="section-label">Technical Architecture — v4 with Genomics Layer</div>
+    <div class="panel">
+      <div class="arch-layer"><div class="arch-icon" style="background:var(--onco-l)">🏥</div>
+        <div><div class="arch-name">Source EHR — Meditech / Local HIS</div><div class="arch-desc">VPS Lakeshore EMR: clinical notes, lab results, radiology reports, pharmacy records, pathology reports, operative notes.</div></div>
+        <div class="arch-tags"><span class="tag hi">HL7 FHIR R4</span><span class="tag hi">HL7 v2.x</span><span class="tag">PDF / NLP</span></div>
+      </div>
+      <div class="arch-connector">↓  NLP extraction · De-identification (BERT-NER) · ABHA linkage · ETL pipeline</div>
+      <div class="arch-layer"><div class="arch-icon" style="background:var(--card-l)">🧬</div>
+        <div><div class="arch-name">Genomics Pipeline — NGS → VCF → Annotation</div><div class="arch-desc">Illumina NextSeq (441-gene panel) + NovaSeq (WES/WGS) + RNA-seq. BWA-GATK → VarScan → VEP annotation → ClinVar/OncoKB/COSMIC classification.</div></div>
+        <div class="arch-tags"><span class="tag teal">VCF/MAF</span><span class="tag teal">GATK 4.x</span><span class="tag teal">VEP v110</span><span class="tag teal">OncoKB</span><span class="tag teal">ClinVar</span></div>
+      </div>
+      <div class="arch-connector">↓  OMOP CDM v5.4 — Universal patient spine · ABHA deduplication</div>
+      <div class="arch-layer"><div class="arch-icon" style="background:var(--neph-l)">🔄</div>
+        <div><div class="arch-name">OMOP CDM v5.4 + Genomic Extension</div><div class="arch-desc">OMOP backbone with genomic_variant, sequencing_run, and mutational_signature extension tables. Enables cross-domain queries across all departments.</div></div>
+        <div class="arch-tags"><span class="tag hi">OMOP v5.4</span><span class="tag hi">SNOMED-CT</span><span class="tag hi">ICD-10</span><span class="tag hi">RxNorm</span><span class="tag hi">LOINC</span><span class="tag teal">GA4GH VRS</span></div>
+      </div>
+      <div class="arch-connector">↓  Domain-specific profiles + RWE endpoints</div>
+      <div class="arch-layer"><div class="arch-icon" style="background:var(--onco-l)">🎗️</div>
+        <div><div class="arch-name">Oncology — mCODE FHIR v3 + Flatiron-style RWE</div><div class="arch-desc">Cancer staging, tumour histology, biomarkers, treatment protocols (1L→3L), TTNT/TTD, RECIST progression, CTCAE-AE, ECOG. 142 curated fields.</div></div>
+        <div class="arch-tags"><span class="tag hi">mCODE v3</span><span class="tag hi">AJCC 8th</span><span class="tag hi">ICD-O-3</span><span class="tag red">Flatiron-grade</span></div>
+      </div>
+      <div class="arch-layer arch-layer geno-layer"><div class="arch-icon" style="background:var(--geno-l)">🧬</div>
+        <div><div class="arch-name">Genomic Data Commons — GA4GH + TCGA compatible</div><div class="arch-desc">441-gene NGS + WES/WGS + RNA-seq + ctDNA. Somatic + germline. Pharmacogenomics. Mutational signatures. TCGA-linked for benchmarking. 44 genomic fields.</div></div>
+        <div class="arch-tags"><span class="tag teal">GA4GH DRS</span><span class="tag teal">cBioPortal</span><span class="tag teal">TCGA format</span><span class="tag hi">FHIR Genomics</span></div>
+      </div>
+      <div class="arch-layer"><div class="arch-icon" style="background:var(--pharma-l)">💊</div>
+        <div><div class="arch-name">Pharma RWE Layer — Tempus-style multimodal linkage</div><div class="arch-desc">Clinical + genomic + imaging + pathology linked at patient level. TTNT/TTD algorithms, treatment sequence inference, external control arm packages.</div></div>
+        <div class="arch-tags"><span class="tag prp">Tempus-style</span><span class="tag prp">ECA-ready</span><span class="tag hi">CDSCO RWE</span></div>
+      </div>
+      <div class="arch-connector">↓  Access control + governance</div>
+      <div class="arch-layer"><div class="arch-icon" style="background:var(--neuro-l)">🔒</div>
+        <div><div class="arch-name">Access Control & Governance</div><div class="arch-desc">IEC-approved tiers: open aggregate → registered de-identified → controlled linked genomic → strategic. DPDP Act 2023 + PDPA compliant. ABHA consent framework.</div></div>
+        <div class="arch-tags"><span class="tag hi">DPDP 2023</span><span class="tag hi">IEC approved</span><span class="tag">RBAC</span><span class="tag">ABHA</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════════
+     PAGE: ACCESS
+═══════════════════════════════════════════════════════════════════ -->
+<div class="page" id="page-access">
+  <div class="section">
+    <div class="section-label">Data Access Framework</div>
+    <div class="access-grid">
+      <div class="access-card" style="border-top:3px solid var(--neph)">
+        <div style="font-size:20px;margin-bottom:7px">🟢</div>
+        <div style="font-size:13px;font-weight:700;margin-bottom:5px">Open Access</div>
+        <div style="font-size:11px;color:var(--mut);line-height:1.65;margin-bottom:8px">Aggregate statistics, domain summaries, data dictionaries, biomarker prevalence, survival curves. No patient-level data. No registration.</div>
+        <div class="pricing-tag tier-open">FREE · AVAILABLE NOW</div>
+      </div>
+      <div class="access-card" style="border-top:3px solid var(--blue)">
+        <div style="font-size:20px;margin-bottom:7px">🔵</div>
+        <div style="font-size:13px;font-weight:700;margin-bottom:5px">Registered Research</div>
+        <div style="font-size:11px;color:var(--mut);line-height:1.65;margin-bottom:8px">De-identified patient-level EHR records. IEC protocol reference + DUA + DPDP 2023 compliance. No genomics.</div>
+        <div class="pricing-tag tier-reg">₹8–12 L / study · Q3 2026</div>
+      </div>
+      <div class="access-card" style="border-top:3px solid var(--red)">
+        <div style="font-size:20px;margin-bottom:7px">🔴</div>
+        <div style="font-size:13px;font-weight:700;margin-bottom:5px">Controlled — Genomic</div>
+        <div style="font-size:11px;color:var(--mut);line-height:1.65;margin-bottom:8px">Linked clinical + NGS/VCF/MAF + pharmacogenomics. Requires full governance review and commercial agreement.</div>
+        <div class="pricing-tag tier-ctrl">₹40–80 L / study · Q1 2027</div>
+      </div>
+      <div class="access-card" style="border-top:3px solid var(--pharma)">
+        <div style="font-size:20px;margin-bottom:7px">🟣</div>
+        <div style="font-size:13px;font-weight:700;margin-bottom:5px">Strategic Pharma Partnership</div>
+        <div style="font-size:11px;color:var(--mut);line-height:1.65;margin-bottom:8px">Multi-year data licensing. Multimodal data (EHR + genomics + imaging + pathology). Prospective collection, CDx support, co-publication.</div>
+        <div class="pricing-tag tier-pharma">₹2–5 Cr / year · Custom</div>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <div class="table-hd"><div class="table-ttl">Research Partner Pipeline</div><button class="btn btn-primary" style="font-size:11px">Submit Interest</button></div>
+      <table>
+        <thead><tr><th>Institution Type</th><th>Use Case</th><th>Domain</th><th>Tier</th><th>Regulatory</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Global Pharma</td><td>HER2+ breast RWE — ECA for CDSCO label expansion</td><td><span class="badge" style="background:var(--onco-l);color:var(--onco)">Breast</span></td><td>3</td><td>CDSCO</td><td style="color:var(--endo);font-weight:600">Negotiating</td></tr>
+          <tr><td>Biotech</td><td>EGFR CDx prevalence + IO biomarker study</td><td><span class="badge" style="background:var(--geno-l);color:var(--geno)">Genomics</span></td><td>3</td><td>FDA</td><td style="color:var(--neph);font-weight:600">Active</td></tr>
+          <tr><td>Academic Centre</td><td>Kerala cancer patterns retrospective study</td><td><span class="badge" style="background:var(--onco-l);color:var(--onco)">Multi</span></td><td>2</td><td>ICMR</td><td style="color:var(--neph);font-weight:600">Active</td></tr>
+          <tr><td>Diagnostics Co.</td><td>PD-L1 assay validation — South Asian cohort</td><td><span class="badge" style="background:var(--geno-l);color:var(--geno)">Genomics</span></td><td>3</td><td>CDSCO</td><td style="color:var(--mut)">Pending Q3 2026</td></tr>
+          <tr><td>AI / Healthtech</td><td>Digital pathology AI foundation model</td><td><span class="badge" style="background:var(--pharma-l);color:var(--pharma)">Pathology</span></td><td>4</td><td>CE / 510k</td><td style="color:var(--mut)">Pending 2027</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════════
+     SCRIPTS
+═══════════════════════════════════════════════════════════════════ -->
+<script>
+Chart.defaults.font.family = "'DM Sans', sans-serif";
+Chart.defaults.font.size = 10;
+Chart.defaults.color = '#6A7B96';
+
+/* ── NAVIGATION ── */
+function nav(btnOrEl, id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tnav').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  if (btnOrEl && typeof btnOrEl !== 'string') btnOrEl.classList.add('active');
+  if (id === 'oncology' && !builtOnco) buildOncoCharts();
+  if (id === 'genomics' && !builtGeno) buildGenoCharts();
+}
+
+/* ── ONCOLOGY TABS ── */
+function oncoTab(el, id) {
+  document.querySelectorAll('#page-oncology .tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('#page-oncology .tab-content').forEach(c => c.classList.remove('visible'));
+  el.classList.add('active');
+  document.getElementById('otab-' + id).classList.add('visible');
+  if (id === 'survival' && !builtKM) buildKM();
+  if (id === 'cases' && !builtCases) buildCases();
+  if (id === 'genomics' && !builtGeno) buildGenoCharts();
+}
+
+/* ── GENOMICS TABS ── */
+let activeGenoTab = 'landscape';
+function genoTab(el, id) {
+  document.querySelectorAll('#page-genomics .tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('#page-genomics .tab-content').forEach(c => c.classList.remove('visible'));
+  el.classList.add('active');
+  document.getElementById('gtab-' + id).classList.add('visible');
+  activeGenoTab = id;
+  if (id === 'io' && !builtIO) buildIOCharts();
+  if (id === 'popgen' && !builtPopgen) buildPopgenCharts();
+  if (id === 'ctdna' && !builtCtdna) buildCtdnaCharts();
+}
+
+/* ── PHARMA TABS ── */
+function pharmaTab(el, id) {
+  document.querySelectorAll('#page-pharma .tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('#page-pharma .tab-content').forEach(c => c.classList.remove('visible'));
+  el.classList.add('active');
+  document.getElementById('ptab-' + id).classList.add('visible');
+  if (id === 'trials') buildTrialCards();
+}
+
+/* ── FILTER TOGGLE ── */
+function tog(el) {
+  el.classList.toggle('sel');
+  const sel = document.querySelectorAll('.filter-opt.sel').length;
+  const total = document.querySelectorAll('.filter-opt').length;
+  const f = Math.max(0.08, sel/total);
+  const el2 = document.getElementById('total-n');
+  if (el2) el2.textContent = Math.round(4560*f).toLocaleString();
+  const gn = document.getElementById('geno-n');
+  if (gn) gn.textContent = Math.round(1284*f).toLocaleString();
+}
+
+/* ── COMORBIDITY GRID ── */
+[
+  ['Breast Cancer + Hypertension','28.6%','526'],
+  ['Breast Cancer + Type 2 Diabetes','18.4%','312'],
+  ['Cervical Cancer + Anaemia','34.1%','210'],
+  ['Oral Cancer + Hypertension','22.3%','307'],
+  ['Oral Cancer + COPD','14.2%','196'],
+  ['Haemato + CKD','11.8%','86'],
+  ['Cancer (any) + Hypothyroidism','9.4%','428'],
+  ['Breast Cancer + CKD','6.1%','112'],
+  ['DM-driven Dose Reduction','22.8%','438'],
+].forEach(([p,pct,n]) => {
+  document.getElementById('comor-grid').innerHTML +=
+    `<div class="comor-row"><div class="comor-pair">${p}</div><div><div class="comor-pct">${pct}</div><div class="comor-n">n=${n}</div></div></div>`;
+});
+
+/* ── ONCOLOGY CHARTS ── */
+let builtOnco=false, builtKM=false, builtCases=false;
+function buildOncoCharts() {
+  builtOnco=true;
+  new Chart(document.getElementById('stageChart'),{type:'bar',data:{labels:['Stage I','Stage II','Stage III','Stage IV'],datasets:[
+    {label:'Breast',data:[28,32,24,16],backgroundColor:'#C8102E',borderRadius:3},
+    {label:'Oral/H&N',data:[8,22,38,32],backgroundColor:'#D96B10',borderRadius:3},
+    {label:'Cervical',data:[14,28,34,24],backgroundColor:'#6B3FA0',borderRadius:3},
+    {label:'Haemato',data:[22,30,28,20],backgroundColor:'#0050B3',borderRadius:3},
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{boxWidth:8,padding:8}}},scales:{x:{grid:{display:false}},y:{grid:{color:'#f0f0f0'}}}}});
+  new Chart(document.getElementById('ageChart'),{type:'bar',data:{labels:['<30','30–35','36–40','41–45','46–50','51–55','56–60','61–65','65+'],datasets:[{label:'Cases',data:[48,124,286,442,558,612,534,480,476],backgroundColor:'rgba(0,48,135,0.72)',borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{font:{size:9}}},y:{grid:{color:'#f0f0f0'}}}}});
+  new Chart(document.getElementById('txChart'),{type:'bar',data:{labels:['Breast','Oral/H&N','Cervical','Haemato'],datasets:[
+    {label:'Surgery',data:[54,42,18,0],backgroundColor:'#003087',borderRadius:2},
+    {label:'Chemoradiation',data:[28,44,62,0],backgroundColor:'#4A90D9',borderRadius:2},
+    {label:'Immunotherapy',data:[6,4,4,12],backgroundColor:'#7B1FA2',borderRadius:2},
+    {label:'Targeted',data:[4,2,2,16],backgroundColor:'#007A53',borderRadius:2},
+    {label:'Chemotherapy',data:[8,4,10,60],backgroundColor:'#D96B10',borderRadius:2},
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{boxWidth:8,padding:8}}},scales:{x:{stacked:true,grid:{display:false}},y:{stacked:true,max:100,grid:{color:'#f0f0f0'}}}}});
+  new Chart(document.getElementById('yearChart'),{type:'line',data:{labels:['2020','2021','2022','2023','2024','2025'],datasets:[
+    {label:'Breast',data:[268,310,348,376,384,356],borderColor:'#C8102E',tension:.4,pointRadius:2,fill:false},
+    {label:'Oral',data:[204,228,248,264,232,200],borderColor:'#D96B10',tension:.4,pointRadius:2,fill:false},
+    {label:'Cervical',data:[88,104,112,108,116,86],borderColor:'#6B3FA0',tension:.4,pointRadius:2,fill:false},
+    {label:'Haemato',data:[96,112,128,144,156,92],borderColor:'#0050B3',tension:.4,pointRadius:2,fill:false},
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{boxWidth:8,padding:8}}},scales:{x:{grid:{display:false}},y:{grid:{color:'#f0f0f0'}}}}});
+  new Chart(document.getElementById('biomarkerChart'),{type:'bar',data:{labels:['Breast','Oral/H&N','Cervical','Haemato'],datasets:[
+    {label:'IHC markers',data:[94,78,82,62],backgroundColor:'#003087',borderRadius:3},
+    {label:'FISH/cytogenetics',data:[22,14,10,71],backgroundColor:'#4A90D9',borderRadius:3},
+    {label:'NGS panel',data:[34,22,18,28],backgroundColor:'#D96B10',borderRadius:3},
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{boxWidth:8,padding:8}}},scales:{x:{grid:{display:false}},y:{max:100,grid:{color:'#f0f0f0'}}}}});
+  new Chart(document.getElementById('egfrChart'),{type:'bar',data:{labels:['EGFR+','KRAS mut','PIK3CA','TP53','BRCA1/2'],datasets:[
+    {label:'VPS (South Asian)',data:[28,14,22,48,8],backgroundColor:'#003087',borderRadius:3},
+    {label:'TCGA reference',data:[12,32,28,52,4],backgroundColor:'#CCC',borderRadius:3},
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{boxWidth:8,padding:8}}},scales:{x:{grid:{display:false}},y:{max:65,grid:{color:'#f0f0f0'}}}}});
+}
+
+function buildKM() {
+  builtKM=true;
+  const mo=[0,6,12,18,24,30,36,42,48,54,60];
+  new Chart(document.getElementById('survivalChart'),{type:'line',data:{labels:mo,datasets:[
+    {label:'Breast',data:[100,96,92,88,84,80,76,73,71,69,67],borderColor:'#C8102E',tension:0,pointRadius:0,borderWidth:2.5,stepped:'before',fill:false},
+    {label:'Oral/H&N',data:[100,92,84,76,68,61,55,50,46,43,41],borderColor:'#D96B10',tension:0,pointRadius:0,borderWidth:2.5,stepped:'before',fill:false},
+    {label:'Cervical',data:[100,90,80,70,61,54,48,43,39,36,34],borderColor:'#6B3FA0',tension:0,pointRadius:0,borderWidth:2.5,stepped:'before',fill:false},
+    {label:'Haemato',data:[100,88,78,70,64,59,55,52,50,48,47],borderColor:'#0050B3',tension:0,pointRadius:0,borderWidth:2.5,stepped:'before',fill:false},
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{boxWidth:10,padding:12}}},scales:{x:{title:{display:true,text:'Months from diagnosis'},grid:{color:'#f4f4f4'}},y:{min:0,max:100,title:{display:true,text:'Overall survival (%)'},grid:{color:'#f4f4f4'}}}}});
+  new Chart(document.getElementById('stageOsChart'),{type:'bar',data:{labels:['Stage I','Stage II','Stage III','Stage IV'],datasets:[{label:'5-yr OS %',data:[88,72,52,18],backgroundColor:['#007A53','#003087','#D96B10','#C8102E'],borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{max:100,grid:{color:'#f4f4f4'}}}}});
+  new Chart(document.getElementById('receptorOsChart'),{type:'bar',data:{labels:['ER/PR+','HER2+','Triple Neg'],datasets:[{label:'5-yr OS %',data:[82,74,58],backgroundColor:['#C8102E','#E87070','#F5B0B0'],borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{max:100,grid:{color:'#f4f4f4'}}}}});
+}
+
+function buildCases() {
+  builtCases=true;
+  const types=[{t:'Breast',bg:'#FFF0F2',cl:'#C8102E'},{t:'Oral/H&N',bg:'#FEF2E6',cl:'#D96B10'},{t:'Cervical',bg:'#F3EEF9',cl:'#6B3FA0'},{t:'Haemato',bg:'#EEF4FF',cl:'#0050B3'}];
+  const stages=['I','II','II','III','III','IV'];
+  const txs=['Surgery','Chemoradiation','Chemotherapy','Surgery + RT','Targeted','Immunotherapy'];
+  const vitals=[['Alive','#007A53'],['Deceased','#C8102E'],['Lost to FU','#D96B10']];
+  const codomains=['—','Diabetes','Hypertension','CKD','—','—','Dose Reduced'];
+  const ecogs=['0','1','1','1','2','2','3'];
+  const hasNGS=['No','Yes','Yes','No','Yes','No','Yes'];
+  const ttnt=[null,6.2,8.4,4.1,11.2,null,3.8];
+  const tbody=document.getElementById('case-tbody');
+  for(let i=0;i<20;i++){
+    const ct=types[Math.floor(Math.random()*types.length)];
+    const st=stages[Math.floor(Math.random()*stages.length)];
+    const tx=txs[Math.floor(Math.random()*txs.length)];
+    const vi=vitals[Math.floor(Math.random()*vitals.length)];
+    const co=codomains[Math.floor(Math.random()*codomains.length)];
+    const ecog=ecogs[Math.floor(Math.random()*ecogs.length)];
+    const ngs=hasNGS[Math.floor(Math.random()*hasNGS.length)];
+    const ttntVal=ttnt[Math.floor(Math.random()*ttnt.length)];
+    const age=Math.floor(35+Math.random()*32);
+    const yr=2020+Math.floor(Math.random()*6);
+    const fu=Math.floor(Math.random()*54+3);
+    const cid='VPSLKS-'+String(10000+i+Math.floor(Math.random()*8000)).padStart(6,'0');
+    const bm=ct.t==='Breast'?['ER+/PR+','HER2+','Triple Neg'][Math.floor(Math.random()*3)]:ct.t==='Oral/H&N'?['HPV+','HPV−','EGFR+'][Math.floor(Math.random()*3)]:ct.t==='Cervical'?'Squamous':['DLBCL','AML','Myeloma'][Math.floor(Math.random()*3)];
+    tbody.innerHTML+=`<tr>
+      <td style="font-family:var(--mono);font-size:10px;color:#1473CC">${cid}</td>
+      <td><span class="badge" style="background:${ct.bg};color:${ct.cl}">${ct.t}</span></td>
+      <td>${age}</td>
+      <td>Stage ${st}</td>
+      <td style="font-family:var(--mono);font-size:9px;font-weight:700;color:${ecog>='3'?'#C8102E':ecog>='2'?'#D96B10':'#007A53'}">ECOG ${ecog}</td>
+      <td style="font-size:11px">${tx}</td>
+      <td style="font-size:10.5px;color:var(--mut)">${bm}</td>
+      <td><span class="badge" style="background:${ngs==='Yes'?'#E5F5F5':'#F5F7FC'};color:${ngs==='Yes'?'#0B6E6E':'#9E9E9E'}">${ngs==='Yes'?'🧬 Yes':'—'}</span></td>
+      <td style="font-family:var(--mono);font-size:10px;color:var(--pharma)">${ttntVal?ttntVal+' mo':'—'}</td>
+      <td style="font-size:11px;color:${vi[1]};font-weight:600">${vi[0]}</td>
+      <td style="font-family:var(--mono);font-size:10px;text-align:right">${fu}</td>
+      <td style="font-size:10.5px;color:${co==='—'?'var(--mut)':'#D96B10'}">${co}</td>
+    </tr>`;
+  }
+}
+
+/* ── GENOMICS CHARTS ── */
+let builtGeno=false, builtIO=false, builtPopgen=false, builtCtdna=false;
+
+function buildGenoCharts() {
+  if (builtGeno) return; builtGeno=true;
+
+  // Chromosome tracks
+  const chrData=[
+    {chr:'1',hits:[{left:'8%',w:'6%',c:'#C8102E'},{left:'34%',w:'4%',c:'#0050B3'}]},
+    {chr:'2',hits:[{left:'62%',w:'5%',c:'#007A53'}]},
+    {chr:'3',hits:[{left:'22%',w:'8%',c:'#C8102E'},{left:'78%',w:'3%',c:'#C8102E'}]},
+    {chr:'7',hits:[{left:'12%',w:'4%',c:'#007A53'},{left:'55%',w:'6%',c:'#C8102E'}]},
+    {chr:'8',hits:[{left:'40%',w:'12%',c:'#C8102E'}]},
+    {chr:'17',hits:[{left:'10%',w:'5%',c:'#0050B3'},{left:'28%',w:'4%',c:'#C8102E'},{left:'68%',w:'3%',c:'#007A53'}]},
+    {chr:'20',hits:[{left:'72%',w:'8%',c:'#C8102E'}]},
+  ];
+  const tracks=document.getElementById('chr-tracks');
+  chrData.forEach(c=>{
+    tracks.innerHTML+=`<div class="chr-row">
+      <div class="chr-label">Chr${c.chr}</div>
+      <div class="chr-band">${c.hits.map(h=>`<div class="chr-hit" style="left:${h.left};width:${h.w};background:${h.c}"></div>`).join('')}</div>
+    </div>`;
+  });
+
+  // Variant type chart
+  new Chart(document.getElementById('varTypeChart'),{type:'doughnut',data:{labels:['SNV','Indel','Copy Number Var','Fusion','Structural'],datasets:[{data:[52,22,18,5,3],backgroundColor:['#003087','#0050B3','#C8102E','#D96B10','#6B3FA0'],borderWidth:2,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{boxWidth:8,padding:8,font:{size:9}}}}}});
+
+  // Somatic vs germline
+  new Chart(document.getElementById('somaticGermlineChart'),{type:'bar',data:{labels:['Breast','Oral/H&N','Cervical','Haemato'],datasets:[
+    {label:'Somatic only',data:[68,82,76,72],backgroundColor:'#003087',borderRadius:3},
+    {label:'Germline only',data:[12,4,8,10],backgroundColor:'#C8102E',borderRadius:3},
+    {label:'Both',data:[20,14,16,18],backgroundColor:'#D96B10',borderRadius:3},
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{boxWidth:8,padding:8}}},scales:{x:{stacked:true,grid:{display:false}},y:{stacked:true,max:100}}}});
+
+  // Gene frequency rows
+  const genes=[
+    ['TP53',48,52,44,38,62,'tier3','#888'],
+    ['PIK3CA',22,24,18,28,8,'tier2','#D96B10'],
+    ['EGFR',14,8,28,6,4,'tier1','#007A53'],
+    ['ERBB2/HER2',12,22,4,8,6,'tier1','#C8102E'],
+    ['CDH1',10,18,2,4,2,'tier3','#888'],
+    ['BRCA1',8,14,2,6,4,'tier1','#0050B3'],
+    ['BRCA2',6,10,2,4,2,'tier1','#0050B3'],
+    ['KRAS',5,2,14,2,4,'tier2','#D96B10'],
+    ['ATM',8,6,4,4,10,'tier2','#D96B10'],
+    ['CDKN2A',6,4,18,4,2,'tier3','#888'],
+  ];
+  const gfr=document.getElementById('gene-freq-rows');
+  genes.forEach(([g,ov,br,oral,cerv,haem,tier,col])=>{
+    gfr.innerHTML+=`<div class="gene-row">
+      <div><div class="gene-name">${g}</div><div class="gene-bar-wrap"><div class="gene-bar" style="width:${ov}%;background:${col}"></div></div></div>
+      <div style="font-family:var(--mono);font-size:11px;font-weight:600">${ov}%</div>
+      <div style="font-family:var(--mono);font-size:11px">${br}%</div>
+      <div style="font-family:var(--mono);font-size:11px">${oral}%</div>
+      <div style="font-family:var(--mono);font-size:11px">${haem}%</div>
+      <div><span class="actionability-dot act-${tier}" style="background:${tier==='tier1'?'#007A53':tier==='tier2'?'#E87722':'#9E9E9E'}"></span><span style="font-size:10px;color:var(--mut)">${tier==='tier1'?'FDA CDx':tier==='tier2'?'Clinical trial':'Investigational'}</span></div>
+      <div style="font-size:18px;cursor:pointer" title="View variant details">→</div>
+    </div>`;
+  });
+}
+
+function buildIOCharts() {
+  builtIO=true;
+  new Chart(document.getElementById('tmbChart'),{type:'bar',data:{labels:['<1','1–5','5–10','10–20','>20'],datasets:[{label:'Cases',data:[128,486,442,172,56],backgroundColor:['#007A53','#007A53','#D96B10','#C8102E','#8B0000'],borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{font:{size:8}}},y:{grid:{color:'#f0f0f0'}}}}});
+  new Chart(document.getElementById('msiChart'),{type:'doughnut',data:{labels:['MSS','MSI-Low','MSI-High'],datasets:[{data:[78,15.6,6.4],backgroundColor:['#E8EDF5','#4A90D9','#6B3FA0'],borderWidth:2,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{boxWidth:8,font:{size:9}}}}}});
+  new Chart(document.getElementById('pdl1Chart'),{type:'bar',data:{labels:['TPS <1','1–49','≥50'],datasets:[{label:'%',data:[42.8,42.1,15.1],backgroundColor:['#E8EDF5','#4A90D9','#0050B3'],borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{max:60,grid:{color:'#f0f0f0'}}}}});
+  new Chart(document.getElementById('hlaChart'),{type:'doughnut',data:{labels:['HLA intact','HLA-LOH'],datasets:[{data:[93.3,6.7],backgroundColor:['#E8EDF5','#C8102E'],borderWidth:2,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{boxWidth:8,font:{size:9}}}}}});
+  new Chart(document.getElementById('ioBioChart'),{type:'bar',data:{labels:['TMB-H only','MSI-H only','PD-L1≥50 only','TMB-H+PD-L1','MSI-H+TMB-H','All three'],datasets:[{label:'% of NGS cohort',data:[9.2,3.8,8.4,3.6,1.4,0.8],backgroundColor:'#6B3FA0',borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{font:{size:8}}},y:{max:15,grid:{color:'#f0f0f0'}}}}});
+  new Chart(document.getElementById('ioEligChart'),{type:'bar',data:{labels:['Breast (TNBC)','Oral/H&N','Cervical','Haemato'],datasets:[{label:'IO eligible %',data:[28,34,22,44],backgroundColor:['#C8102E','#D96B10','#6B3FA0','#0050B3'],borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{max:60,grid:{color:'#f0f0f0'}}}}});
+}
+
+function buildPopgenCharts() {
+  builtPopgen=true;
+  new Chart(document.getElementById('egfrPopChart'),{type:'bar',data:{labels:['Exon 19 del','L858R','Exon 20 ins','G719X'],datasets:[
+    {label:'VPS (South Asian)',data:[18,12,4,6],backgroundColor:'#003087',borderRadius:3},
+    {label:'TCGA (Western)',data:[8,6,3,2],backgroundColor:'#B8CCF0',borderRadius:3},
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{boxWidth:8,padding:8}}},scales:{x:{grid:{display:false}},y:{max:25,grid:{color:'#f0f0f0'}}}}});
+  new Chart(document.getElementById('brcaChart'),{type:'bar',data:{labels:['BRCA1','BRCA2','PALB2','CHEK2','RAD51C'],datasets:[
+    {label:'VPS (South Asian)',data:[8,6,3,4,2],backgroundColor:'#C8102E',borderRadius:3},
+    {label:'gnomAD South Asian ref',data:[5,4,2,3,1],backgroundColor:'#F5B0B0',borderRadius:3},
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{boxWidth:8,padding:8}}},scales:{x:{grid:{display:false}},y:{max:12,grid:{color:'#f0f0f0'}}}}});
+  new Chart(document.getElementById('tobaccoSigChart'),{type:'bar',data:{labels:['SBS4\n(tobacco)','SBS29\n(areca)','SBS2/13\n(APOBEC)','SBS1/5\n(ageing)','SBS35\n(platinum)'],datasets:[{label:'% Oral/H&N cases',data:[72,61,24,86,18],backgroundColor:['#D96B10','#E87722','#6B3FA0','#344A6D','#007A53'],borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{font:{size:8}}},y:{max:100,grid:{color:'#f0f0f0'}}}}});
+  new Chart(document.getElementById('pcaChart'),{type:'scatter',data:{datasets:[
+    {label:'VPS Lakeshore patients',data:Array.from({length:60},()=>({x:Math.random()*2-1+0.2,y:Math.random()*2-1-0.1})),backgroundColor:'rgba(0,48,135,0.6)',pointRadius:3},
+    {label:'1000G South Asian',data:Array.from({length:40},()=>({x:Math.random()*2.5-1.25+0.3,y:Math.random()*2.5-1.25-0.2})),backgroundColor:'rgba(200,16,46,0.3)',pointRadius:2},
+    {label:'1000G European',data:Array.from({length:40},()=>({x:Math.random()*2-1-2,y:Math.random()*2-1+1})),backgroundColor:'rgba(107,63,160,0.3)',pointRadius:2},
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{boxWidth:8,padding:8}}},scales:{x:{title:{display:true,text:'PC1'},grid:{color:'#f0f0f0'}},y:{title:{display:true,text:'PC2'},grid:{color:'#f0f0f0'}}}}});
+}
+
+function buildCtdnaCharts() {
+  builtCtdna=true;
+  new Chart(document.getElementById('ctdnaClearChart'),{type:'bar',data:{labels:['Breast (n=124)','Oral/H&N (n=72)','Cervical (n=28)','Haemato (n=24)'],datasets:[
+    {label:'Undetectable at 4wk',data:[38,44,52,62],backgroundColor:'#B8CCF0',borderRadius:3},
+    {label:'Undetectable at 12wk',data:[58,62,72,78],backgroundColor:'#003087',borderRadius:3},
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{boxWidth:8,padding:8}}},scales:{x:{grid:{display:false}},y:{max:100,grid:{color:'#f0f0f0'}}}}});
+  new Chart(document.getElementById('ctdnaResChart'),{type:'bar',data:{labels:['ESR1 mut (Breast)','EGFR T790M (HN)','PIK3CA (Breast)','TP53 rising','KRAS amplification'],datasets:[{label:'n detected before radiological progression',data:[34,18,28,22,8],backgroundColor:'#0B6E6E',borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{font:{size:8}}},y:{grid:{color:'#f0f0f0'}}}}});
+}
+
+/* ── TRIAL CARDS ── */
+let builtTrials=false;
+function buildTrialCards() {
+  if(builtTrials) return; builtTrials=true;
+  const trials=[
+    {id:'NCT0412xxxx',title:'Pembrolizumab + Chemo in TNBC',phase:'Phase III',sponsor:'GSK / Merck',biomarker:'PD-L1 TPS ≥10 · TNBC · ECOG 0–1',n:186,criteria:'TNBC, PD-L1+ (CPS≥10), Stage II–III, ECOG 0–1'},
+    {id:'NCT0398xxxx',title:'Alpelisib + Fulvestrant in PIK3CA+ Breast',phase:'Phase II',sponsor:'Novartis',biomarker:'PIK3CA mut · ER+ · Post-CDK4/6i',n:124,criteria:'PIK3CA-mutant, ER+/HER2-, post-AI, ECOG 0–2'},
+    {id:'NCT0445xxxx',title:'Olaparib in BRCA-mutant Solid Tumours',phase:'Phase II',sponsor:'AstraZeneca',biomarker:'BRCA1/2 germline · any solid tumour',n:96,criteria:'Germline BRCA1/2 mut, any advanced solid tumour, ECOG 0–2'},
+    {id:'NCT0401xxxx',title:'Anti-PD1 in MSI-H / dMMR Tumours',phase:'Phase II',sponsor:'BMS',biomarker:'MSI-High / dMMR · any tumour',n:82,criteria:'MSI-H or dMMR, any histology, ECOG 0–1, prior platinum'},
+    {id:'NCT0388xxxx',title:'EGFR TKI (3rd gen) in Oral/H&N EGFR+',phase:'Phase II',sponsor:'Boehringer Ingelheim',biomarker:'EGFR exon 19/21 · Oral/H&N',n:64,criteria:'EGFR exon 19 del or L858R, squamous oral/H&N, ECOG 0–2'},
+    {id:'NCT0468xxxx',title:'Tucatinib + Trastuzumab in HER2+ Breast',phase:'Phase III',sponsor:'Seagen / Pfizer',biomarker:'HER2-amplified · FISH+ · Stage IV',n:218,criteria:'HER2+ (IHC 3+ or FISH+), Stage IV, ≤2 prior lines'},
+  ];
+  const c=document.getElementById('trial-cards-container');
+  trials.forEach(t=>{
+    c.innerHTML+=`
+    <div class="trial-card">
+      <div class="trial-icon">🔬</div>
+      <div style="flex:1">
+        <div class="trial-id">${t.id} · ${t.phase} · ${t.sponsor}</div>
+        <div class="trial-title">${t.title}</div>
+        <div class="trial-meta">
+          <span class="tag teal" style="margin-right:4px">${t.biomarker}</span>
+          <span style="font-size:10px;color:var(--mut)">${t.criteria}</span>
+        </div>
+      </div>
+      <div class="trial-eligibility">
+        <div class="trial-n-eligible">${t.n}</div>
+        <div class="trial-n-label">eligible patients</div>
+        <button class="btn btn-geno" style="margin-top:6px;font-size:10px" onclick="alert('Export cohort for ${t.id}')">Export Cohort</button>
+      </div>
+    </div>`;
+  });
+}
+
+/* ── INITIAL ACTIVE NAV ── */
+document.querySelector('.tnav').classList.add('active');
+</script>
+</body>
+</html>

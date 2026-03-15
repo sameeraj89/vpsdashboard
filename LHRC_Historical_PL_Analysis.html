@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LHRC Historical P&L Analysis — FY18–FY25</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#f0f4f8;color:#1a202c;font-size:14px}
+.header{background:linear-gradient(135deg,#1a3a5c 0%,#0f2744 100%);color:white;padding:16px 32px;display:flex;align-items:center;justify-content:space-between}
+.header h1{font-size:1.2rem;font-weight:700}
+.header p{font-size:0.72rem;opacity:0.7;margin-top:2px}
+.hb{display:flex;gap:8px;flex-wrap:wrap}
+.badge{background:rgba(255,255,255,0.15);padding:4px 12px;border-radius:20px;font-size:0.7rem;font-weight:600}
+.badge.or{background:#e67e22}.badge.rd{background:#e74c3c}.badge.gn{background:#27ae60}
+.tab-bar{background:white;border-bottom:2px solid #e2e8f0;padding:0 24px;display:flex;gap:0;overflow-x:auto}
+.tab{padding:12px 16px;font-size:0.75rem;font-weight:600;color:#718096;cursor:pointer;border-bottom:3px solid transparent;transition:all 0.2s;white-space:nowrap;margin-bottom:-2px}
+.tab:hover{color:#1a3a5c;background:#f7fafc}
+.tab.active{color:#1a3a5c;border-bottom-color:#1a3a5c;background:white}
+.page{display:none;padding:18px 28px;max-width:1500px;margin:0 auto}
+.page.active{display:block}
+.kpi-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:10px;margin-bottom:18px}
+.kpi{background:white;border-radius:8px;padding:12px 14px;box-shadow:0 1px 4px rgba(0,0,0,0.06);border-left:3px solid}
+.kpi-label{font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:#a0aec0}
+.kpi-value{font-size:1.2rem;font-weight:800;margin-top:2px}
+.kpi-sub{font-size:0.63rem;color:#a0aec0;margin-top:2px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.g21{display:grid;grid-template-columns:2fr 1fr;gap:14px}
+.g12{display:grid;grid-template-columns:1fr 2fr;gap:14px}
+@media(max-width:900px){.g2,.g3,.g21,.g12{grid-template-columns:1fr}}
+.card{background:white;border-radius:10px;padding:18px;box-shadow:0 1px 4px rgba(0,0,0,0.06);margin-bottom:14px}
+.card-title{font-size:0.8rem;font-weight:700;color:#2d3748;margin-bottom:2px}
+.card-sub{font-size:0.65rem;color:#a0aec0;margin-bottom:12px}
+.tbl{width:100%;border-collapse:collapse;font-size:0.71rem}
+.tbl th{background:#f7fafc;text-align:left;padding:7px 9px;font-size:0.63rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#718096;border-bottom:2px solid #e2e8f0;white-space:nowrap}
+.tbl th:hover{background:#edf2f7}
+.tbl td{padding:6px 9px;border-bottom:1px solid #f0f4f8;color:#2d3748}
+.tbl tr:hover td{background:#f7fafc}
+.tbl tr.highlight td{background:#fffbf0;font-weight:600}
+.tbl .num{text-align:right}
+.pill{display:inline-block;padding:2px 7px;border-radius:10px;font-size:0.6rem;font-weight:700}
+.gp{background:#e8f5e9;color:#27ae60}.rp{background:#fce4ec;color:#e74c3c}
+.op{background:#fff3e0;color:#e67e22}.bp{background:#e3f2fd;color:#1976d2}
+.pp{background:#f3e5f5;color:#8e44ad}.grp{background:#f5f5f5;color:#757575}
+.ibox{background:#fffbf0;border:1px solid #fde68a;border-left:4px solid #f59e0b;border-radius:8px;padding:11px 14px;margin-bottom:14px}
+.ibox.red{background:#fff5f5;border-color:#fca5a5;border-left-color:#ef4444}
+.ibox.green{background:#f0fdf4;border-color:#86efac;border-left-color:#22c55e}
+.ibox.blue{background:#eff6ff;border-color:#93c5fd;border-left-color:#3b82f6}
+.ibox-title{font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;color:#92400e}
+.ibox.red .ibox-title{color:#991b1b}.ibox.green .ibox-title{color:#166534}.ibox.blue .ibox-title{color:#1e40af}
+.ibox-text{font-size:0.73rem;color:#4a5568;line-height:1.5}
+.slabel{font-size:0.66rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#a0aec0;margin:18px 0 10px;display:flex;align-items:center;gap:8px}
+.slabel::after{content:'';flex:1;height:1px;background:#e2e8f0}
+.spark{display:inline-block;padding:1px 6px;border-radius:10px;font-size:0.6rem;font-weight:700}
+.spark.up{background:#e8f5e9;color:#27ae60}.spark.dn{background:#fce4ec;color:#e74c3c}.spark.flat{background:#fff3e0;color:#e67e22}
+.mini-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:14px}
+.mini-card{background:white;border:1px solid #e2e8f0;border-radius:8px;padding:12px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
+.mini-card .mc-label{font-size:0.58rem;text-transform:uppercase;letter-spacing:0.8px;color:#a0aec0;font-weight:700}
+.mini-card .mc-val{font-size:1.1rem;font-weight:800;margin:4px 0}
+.mini-card .mc-sub{font-size:0.58rem;color:#a0aec0}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>LHRC — Historical P&L Deep-Dive</h1>
+    <p>VPS Lakeshore Hospital &amp; Research Centre, Kochi &nbsp;&middot;&nbsp; Consolidated Audited Financials FY18–FY25 &nbsp;&middot;&nbsp; Amounts in ₹ Lakhs</p>
+  </div>
+  <div class="hb">
+    <span class="badge gn">FY25 Rev ₹408 Cr</span>
+    <span class="badge or">EBITDA 19.4% &mdash; Compressed</span>
+    <span class="badge rd">PAT ↓32% from FY23 peak</span>
+    <span class="badge">8-Yr CAGR 8.6%</span>
+  </div>
+</div>
+
+<div class="tab-bar">
+  <div class="tab active" onclick="showTab('snapshot',this)">&#x1F4CA; P&L Snapshot</div>
+  <div class="tab" onclick="showTab('revenue',this)">&#x1F4C8; Revenue Deep-Dive</div>
+  <div class="tab" onclick="showTab('coststructure',this)">&#x1F52C; Cost Structure</div>
+  <div class="tab" onclick="showTab('margins',this)">&#x1F4D0; Margin Architecture</div>
+  <div class="tab" onclick="showTab('costbehavior',this)">&#x2699;&#xFE0F; Cost Behavior</div>
+  <div class="tab" onclick="showTab('dupont',this)">&#x1F3DB;&#xFE0F; DuPont &amp; Returns</div>
+  <div class="tab" onclick="showTab('cashflow',this)">&#x1F4B0; Cash &amp; Leverage</div>
+  <div class="tab" onclick="showTab('balancesheet',this)">&#x1F4CB; Balance Sheet</div>
+</div>
+
+<!-- ===== DATA ===== -->
+<script>
+const FY=['FY18','FY19','FY20','FY21','FY22','FY23','FY24','FY25'];
+const D={
+  revenue:[22837,28188,30486,24231,35859,41918,39622,40752],
+  otherIncome:[250,184,166,210,307,536,667,823],
+  totalIncome:[23087,28372,30652,24441,36166,42454,40289,41575],
+  medCons:[7016,8025,8329,6964,10065,11005,11333,11675],
+  payroll:[5912,7002,7369,6113,6282,6384,7506,7937],
+  doctorCost:[4147,4846,5034,4335,6088,7601,7365,7011],
+  repairs:[522,571,695,575,822,1006,1097,1328],
+  power:[1180,1055,1086,904,982,1071,1198,1246],
+  housekeeping:[514,626,703,564,721,835,930,1029],
+  restaurant:[511,643,721,441,680,827,832,839],
+  marketing:[120,228,335,99,240,387,472,703],
+  misc:[629,667,354,321,543,497,438,441],
+  provDoubtful:[8,399,600,38,400,1099,11,244],
+  labTest:[109,167,185,254,224,200,228,238],
+  security:[103,117,145,138,171,177,218,228],
+  professional:[6,59,49,67,114,175,164,181],
+  rent:[117,57,65,70,102,127,134,179],
+  printing:[103,104,106,86,134,228,163,168],
+  csr:[17,0,16,39,41,66,108,137],
+  ratesTaxes:[57,22,28,37,51,23,104,63],
+  insurance:[5,9,13,24,24,25,26,23],
+  badDebts:[2,2,0,0,0,0,0,0],
+  totalExpenses:[21076,24598,25833,21069,27684,31732,32326,33667],
+  ebitda:[2010,3774,4819,3372,8481,10722,7962,7908],
+  depreciation:[1358,1819,1993,2032,2146,2269,2370,2605],
+  ebit:[653,1955,2826,1340,6335,8452,5592,5303],
+  finance:[236,348,375,360,257,211,93,33],
+  pbt:[417,1607,2451,980,6078,8241,5500,5270],
+  tax:[126,369,806,208,1790,2490,1113,1362],
+  pat:[291,1238,1645,772,4288,5752,4387,3908],
+  totalAssets:[39313,39836,40994,42678,46394,50026,50768,53330],
+  equity:[27882,28187,28672,29466,33121,37345,40022,42228],
+  ppe:[28376,32910,33319,33668,34051,32764,34596,34229],
+  cwip:[7097,2236,1360,268,15,567,189,466],
+  tradeRec:[929,1531,1870,1814,2013,1999,2687,3405],
+  cash:[255,147,846,3086,1162,3663,993,4434],
+  bankBal:[616,673,714,731,3899,6178,6672,6187],
+  inventory:[674,707,862,920,1106,1272,1071,1092],
+  tradePay:[3394,4082,3181,3293,3320,3539,3279,3861],
+  ncBorrow:[623,3508,3716,2914,1301,724,0,0],
+  cBorrow:[0,718,0,807,579,579,3,0],
+  cfOps:[7060,3201,4257,3962,3119,5497,4412,6831],
+  cfInv:[-7002,-2156,-1540,-722,-2404,-665,-3930,-1585],
+  cfFin:[62,-1192,-2017,-1000,-2639,-2331,-3152,-1794],
+  capex:[7169,2272,1620,822,2646,904,4556,2269],
+  divPaid:[506,800,1001,1,498,1501,1696,1702],
+};
+
+const pct=(n,d)=>d!==0?((n/d)*100):0;
+const yoy=(arr,i)=>i>0&&arr[i-1]!==0?((arr[i]-arr[i-1])/arr[i-1]*100):null;
+const cagr=(start,end,n)=>n>0&&start>0?((Math.pow(end/start,1/n)-1)*100):0;
+const fmtCr=v=>'₹'+(v/100).toFixed(1)+' Cr';
+const fP=v=>v>=0?'+'+v.toFixed(1)+'%':v.toFixed(1)+'%';
+const sparkClass=v=>v>2?'up':v<-2?'dn':'flat';
+
+// Chart.js light theme defaults
+Chart.defaults.color='#718096';
+Chart.defaults.borderColor='#e2e8f0';
+Chart.defaults.font.family="'Segoe UI',system-ui,sans-serif";
+Chart.defaults.font.size=10;
+Chart.defaults.plugins.legend.labels.boxWidth=10;
+Chart.defaults.plugins.legend.labels.padding=12;
+
+const C={navy:'#1a3a5c',orange:'#e67e22',purple:'#8e44ad',green:'#27ae60',red:'#e74c3c',darkRed:'#c0392b',blue:'#1976d2',teal:'#16a085',amber:'#f59e0b',pink:'#d63384'};
+
+let chartsInited=new Set();
+function showTab(name,el){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  el.classList.add('active');
+  if(!chartsInited.has(name)){chartsInited.add(name);initChartsFor(name);}
+}
+function initChartsFor(name){
+  const fn={snapshot:initSnapshot,revenue:initRevenue,coststructure:initCostStructure,margins:initMargins,costbehavior:initCostBehavior,dupont:initDuPont,cashflow:initCashFlow,balancesheet:initBalanceSheet};
+  if(fn[name])fn[name]();
+}
+function mkChart(id,type,data,opts={}){
+  const ctx=document.getElementById(id);
+  if(!ctx)return null;
+  return new Chart(ctx,{type,data,options:{responsive:true,maintainAspectRatio:false,...opts}});
+}
+window.addEventListener('DOMContentLoaded',()=>{chartsInited.add('snapshot');initSnapshot();});
+</script>
+
+<!-- ===== PAGE: P&L SNAPSHOT ===== -->
+<div id="page-snapshot" class="page active">
+  <div class="kpi-strip">
+    <div class="kpi" style="border-color:#1a3a5c"><div class="kpi-label">Revenue Growth</div><div class="kpi-value" style="color:#1a3a5c">₹228→₹408 Cr</div><div class="kpi-sub">FY18→FY25 · CAGR 8.6%</div></div>
+    <div class="kpi" style="border-color:#27ae60"><div class="kpi-label">EBITDA Growth</div><div class="kpi-value" style="color:#27ae60">₹20→₹79 Cr</div><div class="kpi-sub">FY18 8.8% → FY25 19.4% margin</div></div>
+    <div class="kpi" style="border-color:#e67e22"><div class="kpi-label">PAT Growth</div><div class="kpi-value" style="color:#e67e22">₹2.9→₹39.1 Cr</div><div class="kpi-sub">FY18→FY25 · CAGR 44.5%</div></div>
+    <div class="kpi" style="border-color:#8e44ad"><div class="kpi-label">Peak EBITDA</div><div class="kpi-value" style="color:#8e44ad">₹107 Cr</div><div class="kpi-sub">FY23 · 25.6% margin</div></div>
+    <div class="kpi" style="border-color:#e74c3c"><div class="kpi-label">Total Expenses Growth</div><div class="kpi-value" style="color:#e74c3c">₹211→₹337 Cr</div><div class="kpi-sub">FY18→FY25 · CAGR 6.9%</div></div>
+    <div class="kpi" style="border-color:#16a085"><div class="kpi-label">Debt Position</div><div class="kpi-value" style="color:#16a085">₹42→₹0 Cr</div><div class="kpi-sub">FY19 peak debt → Debt-free FY24</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Consolidated P&L — Full 8-Year Trend (₹ Lakhs)</div>
+    <div class="card-sub">All figures audited · YoY% and margin% in tooltips · CAGR in last column</div>
+    <div style="overflow-x:auto">
+      <table class="tbl" id="plTable"></table>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Revenue &amp; EBITDA Trajectory</div>
+      <div class="card-sub">Bar = Revenue · Line = EBITDA margin %</div>
+      <div style="position:relative;height:280px"><canvas id="snapshotRevEbitda"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Profit Waterfall: Revenue → PAT (FY25)</div>
+      <div class="card-sub">How each cost layer eats into top-line</div>
+      <div style="position:relative;height:280px"><canvas id="snapshotWaterfall"></canvas></div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">YoY Growth Rates — Revenue vs EBITDA vs PAT</div>
+      <div class="card-sub">Divergence between revenue growth and profit growth shows cost growth relative to revenue</div>
+      <div style="position:relative;height:240px"><canvas id="snapshotGrowthLines"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Indexed Performance (FY18 = 100)</div>
+      <div class="card-sub">Revenue, EBITDA, PAT normalized to base year</div>
+      <div style="position:relative;height:240px"><canvas id="snapshotIndexed"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<script>
+function initSnapshot(){
+  const rows=[
+    {label:'Revenue from Operations',data:D.revenue,bold:true,color:'#1a3a5c'},
+    {label:'Other Income',data:D.otherIncome},
+    {label:'Total Income',data:D.totalIncome,bold:true,borderTop:true},
+    {label:'',spacer:true},
+    {label:'Medicines & Consumables',data:D.medCons},
+    {label:'Payroll Expenses',data:D.payroll},
+    {label:'Doctor Cost',data:D.doctorCost},
+    {label:'Repairs & Maintenance',data:D.repairs},
+    {label:'Power, Fuel & Water',data:D.power},
+    {label:'Housekeeping',data:D.housekeeping},
+    {label:'Restaurant',data:D.restaurant},
+    {label:'Marketing',data:D.marketing},
+    {label:'Other Expenses',data:FY.map((_,i)=>D.misc[i]+D.labTest[i]+D.security[i]+D.professional[i]+D.rent[i]+D.printing[i]+D.csr[i]+D.ratesTaxes[i]+D.insurance[i]+D.badDebts[i]+D.provDoubtful[i])},
+    {label:'Total Expenses',data:D.totalExpenses,bold:true,borderTop:true},
+    {label:'',spacer:true},
+    {label:'EBITDA',data:D.ebitda,bold:true,color:'#27ae60',pctOf:'revenue'},
+    {label:'Depreciation',data:D.depreciation},
+    {label:'EBIT',data:D.ebit,bold:true},
+    {label:'Finance Costs',data:D.finance},
+    {label:'PBT',data:D.pbt,bold:true},
+    {label:'Tax',data:D.tax},
+    {label:'PAT',data:D.pat,bold:true,color:'#e67e22',borderTop:true,pctOf:'revenue'},
+  ];
+  let html='<thead><tr><th style="min-width:200px">Particulars</th>';
+  FY.forEach(f=>html+=`<th class="num">${f}</th>`);
+  html+='<th class="num">CAGR</th></tr></thead><tbody>';
+  rows.forEach(r=>{
+    if(r.spacer){html+='<tr><td colspan="10" style="height:6px;border:none"></td></tr>';return;}
+    const s=r.bold?'font-weight:700;':'';
+    const c=r.color?`color:${r.color};`:'';
+    const bt=r.borderTop?'border-top:2px solid #e2e8f0;':'';
+    html+=`<tr><td style="${s}${c}${bt}">${r.label}</td>`;
+    r.data.forEach((v,i)=>{
+      const yoyV=yoy(r.data,i);
+      const yoyStr=yoyV!==null?` (${fP(yoyV)})`:'';
+      const pctStr=r.pctOf?` · ${pct(v,D.revenue[i]).toFixed(1)}%`:'';
+      html+=`<td class="num" style="${s}${c}${bt}" title="${r.label} ${FY[i]}${yoyStr}${pctStr}">${v.toLocaleString('en-IN')}</td>`;
+    });
+    const ca=cagr(r.data[0],r.data[7],7);
+    html+=`<td class="num" style="${s}${bt}"><span class="spark ${sparkClass(ca)}">${ca.toFixed(1)}%</span></td>`;
+    html+='</tr>';
+  });
+  html+='</tbody>';
+  document.getElementById('plTable').innerHTML=html;
+
+  const ebitdaPct=D.ebitda.map((v,i)=>pct(v,D.revenue[i]));
+  mkChart('snapshotRevEbitda','bar',{
+    labels:FY,
+    datasets:[
+      {label:'Revenue (₹L)',data:D.revenue,backgroundColor:'rgba(26,58,92,0.7)',borderColor:'#1a3a5c',borderWidth:1,borderRadius:4,yAxisID:'y',order:2},
+      {label:'EBITDA %',data:ebitdaPct,type:'line',borderColor:'#27ae60',backgroundColor:'rgba(39,174,96,0.08)',pointBackgroundColor:'#27ae60',pointRadius:5,tension:0.3,yAxisID:'y1',order:1,fill:true}
+    ]
+  },{
+    plugins:{legend:{position:'bottom'}},
+    scales:{
+      y:{position:'left',ticks:{callback:v=>'₹'+(v/100).toFixed(0)+'Cr'},grid:{color:'#f0f4f8'}},
+      y1:{position:'right',min:0,max:30,ticks:{callback:v=>v+'%'},grid:{display:false}}
+    }
+  });
+
+  // Waterfall FY25
+  const wfLabels=['Revenue','Med&Cons','Payroll','Doctor','R&M','Power','HK','Restaurant','Mktg','Others','EBITDA','Deprec.','Finance','Tax','PAT'];
+  const wfData=[40752,-11675,-7937,-7011,-1328,-1246,-1029,-839,-703,-2899,0,-2605,-33,-1362,0];
+  let cum=40752;const wfBase=[];const wfVal=[];
+  wfBase.push(0);wfVal.push(40752);
+  for(let i=1;i<10;i++){cum+=wfData[i];wfBase.push(cum);wfVal.push(-wfData[i]);}
+  wfBase.push(0);wfVal.push(D.ebitda[7]);
+  cum=D.ebitda[7];
+  for(let i=11;i<14;i++){cum+=wfData[i];wfBase.push(cum);wfVal.push(-wfData[i]);}
+  wfBase.push(0);wfVal.push(D.pat[7]);
+
+  mkChart('snapshotWaterfall','bar',{
+    labels:wfLabels,
+    datasets:[
+      {label:'Base',data:wfBase,backgroundColor:'transparent',borderWidth:0,stack:'s'},
+      {label:'Amount',data:wfVal,backgroundColor:wfLabels.map((_,i)=>i===0?'#1a3a5c':i===10?'#27ae60':i===14?'#e67e22':'rgba(231,76,60,0.6)'),borderWidth:0,stack:'s',borderRadius:3}
+    ]
+  },{
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>ctx.datasetIndex===1?'₹'+ctx.raw.toLocaleString('en-IN')+' L':''}}},
+    scales:{x:{ticks:{font:{size:8}},grid:{display:false}},y:{ticks:{callback:v=>'₹'+(v/100).toFixed(0)+'Cr'},grid:{color:'#f0f4f8'}}}
+  });
+
+  const revGr=FY.map((_,i)=>yoy(D.revenue,i));
+  const ebitdaGr=FY.map((_,i)=>yoy(D.ebitda,i));
+  const patGr=FY.map((_,i)=>yoy(D.pat,i));
+  mkChart('snapshotGrowthLines','line',{
+    labels:FY,
+    datasets:[
+      {label:'Revenue YoY%',data:revGr,borderColor:'#1a3a5c',pointBackgroundColor:'#1a3a5c',tension:0.3,pointRadius:4},
+      {label:'EBITDA YoY%',data:ebitdaGr,borderColor:'#27ae60',pointBackgroundColor:'#27ae60',tension:0.3,pointRadius:4},
+      {label:'PAT YoY%',data:patGr,borderColor:'#e67e22',pointBackgroundColor:'#e67e22',tension:0.3,pointRadius:4}
+    ]
+  },{
+    plugins:{legend:{position:'bottom'}},
+    scales:{y:{ticks:{callback:v=>v+'%'},grid:{color:'#f0f4f8'}},x:{grid:{display:false}}}
+  });
+
+  const idx=(arr)=>arr.map(v=>(v/arr[0]*100));
+  mkChart('snapshotIndexed','line',{
+    labels:FY,
+    datasets:[
+      {label:'Revenue',data:idx(D.revenue),borderColor:'#1a3a5c',pointBackgroundColor:'#1a3a5c',tension:0.3,pointRadius:4},
+      {label:'EBITDA',data:idx(D.ebitda),borderColor:'#27ae60',pointBackgroundColor:'#27ae60',tension:0.3,pointRadius:4},
+      {label:'PAT',data:idx(D.pat),borderColor:'#e67e22',pointBackgroundColor:'#e67e22',tension:0.3,pointRadius:4},
+      {label:'Total Assets',data:idx(D.totalAssets),borderColor:'#8e44ad',pointBackgroundColor:'#8e44ad',tension:0.3,borderDash:[5,5],pointRadius:3}
+    ]
+  },{
+    plugins:{legend:{position:'bottom'}},
+    scales:{y:{ticks:{callback:v=>v},grid:{color:'#f0f4f8'}},x:{grid:{display:false}}}
+  });
+}
+</script>
+
+<!-- ===== PAGE: REVENUE DEEP-DIVE ===== -->
+<div id="page-revenue" class="page">
+  <div class="kpi-strip">
+    <div class="kpi" style="border-color:#1a3a5c"><div class="kpi-label">Revenue FY18→FY25</div><div class="kpi-value" style="color:#1a3a5c">₹228→₹408 Cr</div><div class="kpi-sub">CAGR 8.6% over 7 years</div></div>
+    <div class="kpi" style="border-color:#27ae60"><div class="kpi-label">Pre-COVID CAGR</div><div class="kpi-value" style="color:#27ae60">15.5%</div><div class="kpi-sub">FY18–FY20 · ₹228→₹305 Cr</div></div>
+    <div class="kpi" style="border-color:#e67e22"><div class="kpi-label">FY21 Contraction</div><div class="kpi-value" style="color:#e67e22">−20.5%</div><div class="kpi-sub">₹305 Cr → ₹242 Cr</div></div>
+    <div class="kpi" style="border-color:#e74c3c"><div class="kpi-label">Post-COVID Recovery</div><div class="kpi-value" style="color:#e74c3c">₹242→₹419 Cr</div><div class="kpi-sub">FY21–FY23 · +73% in 2 years</div></div>
+    <div class="kpi" style="border-color:#8e44ad"><div class="kpi-label">FY24 Contraction</div><div class="kpi-value" style="color:#8e44ad">−5.5%</div><div class="kpi-sub">₹419 Cr → ₹396 Cr</div></div>
+    <div class="kpi" style="border-color:#16a085"><div class="kpi-label">Other Income Growth</div><div class="kpi-value" style="color:#16a085">₹2.5→₹8.2 Cr</div><div class="kpi-sub">FY18→FY25 · CAGR 18.6%</div></div>
+  </div>
+
+  <div class="ibox blue">
+    <div class="ibox-title">Revenue Story in 3 Acts</div>
+    <div class="ibox-text"><strong>Act 1 (FY18–FY20):</strong> Organic growth at a 15.5% CAGR, with revenue expanding from ₹228 Cr to ₹305 Cr. <strong>Act 2 (FY21):</strong> Revenue contracted 20.5% to ₹242 Cr, reflecting the broad disruption to elective and inpatient volumes during the pandemic. <strong>Act 3 (FY22–FY25):</strong> A sharp recovery brought revenue to ₹419 Cr by FY23 (+73% over two years). FY24 recorded a contraction of 5.5% to ₹396 Cr, followed by a partial recovery to ₹408 Cr in FY25 (+2.9%).</div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Revenue Trend with Growth Phases</div>
+      <div class="card-sub">Bar = Revenue · Color = growth phase</div>
+      <div style="position:relative;height:280px"><canvas id="revTrend"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Revenue vs Other Income Composition</div>
+      <div class="card-sub">Other income growing — treasury yield improving</div>
+      <div style="position:relative;height:280px"><canvas id="revComposition"></canvas></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Revenue Growth Bridge — Year-on-Year Incremental Revenue (₹ Lakhs)</div>
+    <div class="card-sub">Positive = growth year · Negative = contraction</div>
+    <div style="position:relative;height:220px"><canvas id="revBridge"></canvas></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Other Income Analysis</div>
+    <div class="card-sub">Rising from 1.1% of revenue in FY18 to 2.0% — mostly interest income on growing cash pile</div>
+    <div style="position:relative;height:200px"><canvas id="otherIncTrend"></canvas></div>
+  </div>
+</div>
+
+<script>
+function initRevenue(){
+  mkChart('revTrend','bar',{
+    labels:FY,
+    datasets:[{label:'Revenue ₹L',data:D.revenue,backgroundColor:D.revenue.map((_,i)=>i===3?'rgba(231,76,60,0.65)':i===4||i===5?'rgba(39,174,96,0.65)':'rgba(26,58,92,0.7)'),borderRadius:4}]
+  },{
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>fmtCr(c.raw)}}},
+    scales:{y:{ticks:{callback:v=>fmtCr(v)},grid:{color:'#f0f4f8'}},x:{grid:{display:false}}}
+  });
+  mkChart('revComposition','bar',{
+    labels:FY,
+    datasets:[
+      {label:'Revenue from Ops',data:D.revenue,backgroundColor:'rgba(26,58,92,0.7)',borderRadius:4,stack:'s'},
+      {label:'Other Income',data:D.otherIncome,backgroundColor:'rgba(39,174,96,0.65)',borderRadius:4,stack:'s'}
+    ]
+  },{
+    plugins:{legend:{position:'bottom'}},
+    scales:{x:{stacked:true,grid:{display:false}},y:{stacked:true,ticks:{callback:v=>fmtCr(v)},grid:{color:'#f0f4f8'}}}
+  });
+  const incremental=FY.map((_,i)=>i===0?0:D.revenue[i]-D.revenue[i-1]);
+  mkChart('revBridge','bar',{
+    labels:FY,
+    datasets:[{label:'Incremental Revenue ₹L',data:incremental,backgroundColor:incremental.map(v=>v>=0?'rgba(39,174,96,0.65)':'rgba(231,76,60,0.65)'),borderRadius:4}]
+  },{
+    plugins:{legend:{display:false}},
+    scales:{y:{ticks:{callback:v=>(v>=0?'+':'')+v.toLocaleString()+'L'},grid:{color:'#f0f4f8'}},x:{grid:{display:false}}}
+  });
+  const oiPct=D.otherIncome.map((v,i)=>pct(v,D.revenue[i]));
+  mkChart('otherIncTrend','bar',{
+    labels:FY,
+    datasets:[
+      {label:'Other Income ₹L',data:D.otherIncome,backgroundColor:'rgba(22,160,133,0.6)',borderRadius:4,yAxisID:'y'},
+      {label:'% of Revenue',data:oiPct,type:'line',borderColor:'#e67e22',pointBackgroundColor:'#e67e22',tension:0.3,yAxisID:'y1'}
+    ]
+  },{
+    plugins:{legend:{position:'bottom'}},
+    scales:{y:{ticks:{callback:v=>'₹'+v+'L'},grid:{color:'#f0f4f8'}},y1:{position:'right',ticks:{callback:v=>v.toFixed(1)+'%'},grid:{display:false}}}
+  });
+}
+</script>
+
+<!-- ===== PAGE: COST STRUCTURE ===== -->
+<div id="page-coststructure" class="page">
+  <div class="kpi-strip">
+    <div class="kpi" style="border-color:#e74c3c"><div class="kpi-label">Total Cost Growth</div><div class="kpi-value" style="color:#e74c3c">₹211→₹337 Cr</div><div class="kpi-sub">FY18→FY25 · CAGR 6.9%</div></div>
+    <div class="kpi" style="border-color:#1a3a5c"><div class="kpi-label">Material Cost %</div><div class="kpi-value" style="color:#1a3a5c">30.7%→28.6%</div><div class="kpi-sub">FY18→FY25 · −2.1pp</div></div>
+    <div class="kpi" style="border-color:#e67e22"><div class="kpi-label">People Cost %</div><div class="kpi-value" style="color:#e67e22">43.8%→36.7%</div><div class="kpi-sub">Payroll+Doctors FY18→FY25</div></div>
+    <div class="kpi" style="border-color:#8e44ad"><div class="kpi-label">Marketing Cost Growth</div><div class="kpi-value" style="color:#8e44ad">₹1.2→₹7.0 Cr</div><div class="kpi-sub">FY18→FY25 · CAGR 28.5%</div></div>
+  </div>
+
+  <div class="ibox">
+    <div class="ibox-title">&#x1F50D; Cost Structure Overview</div>
+    <div class="ibox-text">The three largest cost heads — Materials (28.6%), Payroll (19.5%), and Doctor Costs (17.2%) — collectively accounted for 65.3% of FY25 revenue. Over the FY18–FY25 period, materials as a share of revenue declined from 30.7% to 28.6%, while payroll rose from 25.9% to 19.5% on a combined people-cost basis. Doctor costs as a percentage of revenue moved from 18.1% in FY23 to 17.2% in FY25. Marketing expenditure grew from ₹1.2 Cr in FY18 to ₹7.0 Cr in FY25, rising from 0.5% to 1.7% of revenue over the period.</div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Cost Structure as % of Revenue — Stacked Area</div>
+      <div class="card-sub">Key buckets as percentage of revenue over time</div>
+      <div style="position:relative;height:320px"><canvas id="costStackArea"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">FY25 Cost Breakdown (₹ Lakhs)</div>
+      <div class="card-sub">Where the money goes</div>
+      <div style="position:relative;height:320px"><canvas id="costPie"></canvas></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Cost Head Trends — % of Revenue (The Margin Levers)</div>
+    <div class="card-sub">Each row shows how that cost head has moved as a share of revenue</div>
+    <div style="overflow-x:auto"><table class="tbl" id="costTable"></table></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Cost CAGR vs Revenue CAGR — Who's Running Faster?</div>
+    <div class="card-sub">Red bars = cost growing faster than revenue = margin drag · Green = lean cost head</div>
+    <div style="position:relative;height:260px"><canvas id="costVsRevCAGR"></canvas></div>
+  </div>
+</div>
+
+<script>
+function initCostStructure(){
+  const costHeads=[
+    {name:'Med & Cons',data:D.medCons,color:'#1a3a5c'},
+    {name:'Payroll',data:D.payroll,color:'#e67e22'},
+    {name:'Doctor Cost',data:D.doctorCost,color:'#e74c3c'},
+    {name:'R&M',data:D.repairs,color:'#8e44ad'},
+    {name:'Power',data:D.power,color:'#16a085'},
+    {name:'Housekeeping',data:D.housekeeping,color:'#d63384'},
+    {name:'Restaurant',data:D.restaurant,color:'#f59e0b'},
+    {name:'Marketing',data:D.marketing,color:'#27ae60'},
+  ];
+  mkChart('costStackArea','line',{
+    labels:FY,
+    datasets:costHeads.map(h=>({label:h.name,data:h.data.map((v,i)=>pct(v,D.revenue[i])),borderColor:h.color,backgroundColor:h.color+'18',fill:true,tension:0.3,pointRadius:3}))
+  },{
+    plugins:{legend:{position:'bottom',labels:{font:{size:9}}}},
+    scales:{y:{stacked:true,ticks:{callback:v=>v+'%'},grid:{color:'#f0f4f8'}},x:{grid:{display:false}}}
+  });
+  const pieData=[{name:'Med & Cons',v:11675},{name:'Payroll',v:7937},{name:'Doctor Cost',v:7011},{name:'R&M',v:1328},{name:'Power',v:1246},{name:'Housekeeping',v:1029},{name:'Restaurant',v:839},{name:'Marketing',v:703},{name:'Others',v:2899}];
+  mkChart('costPie','doughnut',{
+    labels:pieData.map(d=>d.name),
+    datasets:[{data:pieData.map(d=>d.v),backgroundColor:['#1a3a5c','#e67e22','#e74c3c','#8e44ad','#16a085','#d63384','#f59e0b','#27ae60','#bdc3c7'],borderWidth:2,borderColor:'#fff'}]
+  },{plugins:{legend:{position:'right',labels:{font:{size:10}}}}});
+
+  const allCosts=[
+    {name:'Medicines & Consumables',data:D.medCons},{name:'Payroll Expenses',data:D.payroll},{name:'Doctor Cost',data:D.doctorCost},
+    {name:'Repairs & Maintenance',data:D.repairs},{name:'Power, Fuel & Water',data:D.power},{name:'Housekeeping',data:D.housekeeping},
+    {name:'Restaurant',data:D.restaurant},{name:'Marketing',data:D.marketing},{name:'Provision for Doubtful Debts',data:D.provDoubtful},{name:'Miscellaneous',data:D.misc}
+  ];
+  let th='<thead><tr><th>Cost Head</th>';FY.forEach(f=>th+=`<th class="num">${f}</th>`);th+='<th class="num">CAGR</th><th class="num">Verdict</th></tr></thead><tbody>';
+  allCosts.forEach(c=>{
+    th+=`<tr><td style="font-weight:600">${c.name}</td>`;
+    c.data.forEach((v,i)=>th+=`<td class="num">${pct(v,D.revenue[i]).toFixed(1)}%</td>`);
+    const ca=cagr(c.data[0],c.data[7],7),revCAGR=cagr(D.revenue[0],D.revenue[7],7);
+    th+=`<td class="num"><span class="spark ${sparkClass(ca)}">${ca.toFixed(1)}%</span></td>`;
+    th+=`<td class="num">${ca>revCAGR+1?'<span class="pill rp">⚠ Drag</span>':ca<revCAGR-1?'<span class="pill gp">✓ Lean</span>':'<span class="pill op">~ Neutral</span>'}</td></tr>`;
+  });
+  th+='</tbody>';document.getElementById('costTable').innerHTML=th;
+
+  const revCG=cagr(D.revenue[0],D.revenue[7],7);
+  const cagrData=allCosts.filter(c=>c.name!=='Provision for Doubtful Debts').map(c=>({name:c.name.replace('Expenses','').replace('& Maintenance','').trim().substring(0,12),cagr:cagr(c.data[0],c.data[7],7)}));
+  mkChart('costVsRevCAGR','bar',{
+    labels:cagrData.map(d=>d.name),
+    datasets:[{label:'Cost CAGR',data:cagrData.map(d=>d.cagr),backgroundColor:cagrData.map(d=>d.cagr>revCG?'rgba(231,76,60,0.6)':'rgba(39,174,96,0.6)'),borderRadius:4}]
+  },{plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>v+'%'},grid:{color:'#f0f4f8'}},x:{ticks:{font:{size:8}},grid:{display:false}}}});
+}
+</script>
+
+<!-- ===== PAGE: MARGIN ARCHITECTURE ===== -->
+<div id="page-margins" class="page">
+  <div class="kpi-strip">
+    <div class="kpi" style="border-color:#27ae60"><div class="kpi-label">EBITDA Margin</div><div class="kpi-value" style="color:#27ae60">8.8%→19.4%</div><div class="kpi-sub">FY18→FY25 · Peak 25.6% FY23</div></div>
+    <div class="kpi" style="border-color:#1a3a5c"><div class="kpi-label">EBIT Margin</div><div class="kpi-value" style="color:#1a3a5c">2.9%→13.0%</div><div class="kpi-sub">FY18→FY25 · Peak 20.2% FY23</div></div>
+    <div class="kpi" style="border-color:#e67e22"><div class="kpi-label">PBT Margin</div><div class="kpi-value" style="color:#e67e22">1.8%→12.9%</div><div class="kpi-sub">FY18→FY25</div></div>
+    <div class="kpi" style="border-color:#8e44ad"><div class="kpi-label">PAT Margin</div><div class="kpi-value" style="color:#8e44ad">1.3%→9.6%</div><div class="kpi-sub">FY18→FY25 · Peak 13.7% FY23</div></div>
+    <div class="kpi" style="border-color:#e74c3c"><div class="kpi-label">Finance Cost</div><div class="kpi-value" style="color:#e74c3c">₹2.4→₹0.3 Cr</div><div class="kpi-sub">FY18→FY25 following debt repayment</div></div>
+  </div>
+
+  <div class="ibox">
+    <div class="ibox-title">&#x1F4D0; Margin Architecture: FY18–FY25</div>
+    <div class="ibox-text">EBITDA margin expanded from 8.8% in FY18 to a peak of 25.6% in FY23, driven by volume recovery and operating leverage post-FY21. FY24 and FY25 recorded a reversal, with EBITDA margin declining 6.2pp from the FY23 peak to 19.4% in FY25. The EBIT-to-PBT conversion rate stood at 99.4% in FY25, with finance costs effectively eliminated following full debt repayment by FY24.</div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Margin Cascade — EBITDA → EBIT → PBT → PAT (%)</div>
+      <div class="card-sub">All margins as % of revenue across years</div>
+      <div style="position:relative;height:300px"><canvas id="marginLines"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Margin Spread: EBITDA vs PAT</div>
+      <div class="card-sub">Gap = depreciation + finance + tax burden</div>
+      <div style="position:relative;height:300px"><canvas id="marginSpread"></canvas></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Margin Walk: FY23 (Peak) → FY25 — What Changed? (pp of Revenue)</div>
+    <div class="card-sub">Decomposing the 6.2pp EBITDA margin decline — positive = margin improvement, negative = margin drag</div>
+    <div style="position:relative;height:240px"><canvas id="marginWalk"></canvas></div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Depreciation &amp; Finance Cost as % of Revenue</div>
+      <div class="card-sub">Below-EBITDA items — finance cost nearly eliminated</div>
+      <div style="position:relative;height:220px"><canvas id="dnaFin"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Effective Tax Rate Trend</div>
+      <div class="card-sub">Tax rate volatility due to deferred tax adjustments</div>
+      <div style="position:relative;height:220px"><canvas id="taxRate"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<script>
+function initMargins(){
+  const em=D.ebitda.map((v,i)=>pct(v,D.revenue[i]));
+  const ebm=D.ebit.map((v,i)=>pct(v,D.revenue[i]));
+  const pm=D.pbt.map((v,i)=>pct(v,D.revenue[i]));
+  const nm=D.pat.map((v,i)=>pct(v,D.revenue[i]));
+  mkChart('marginLines','line',{labels:FY,datasets:[
+    {label:'EBITDA %',data:em,borderColor:'#27ae60',backgroundColor:'rgba(39,174,96,0.06)',fill:true,tension:0.3,pointRadius:5,pointBackgroundColor:'#27ae60'},
+    {label:'EBIT %',data:ebm,borderColor:'#1a3a5c',tension:0.3,pointRadius:4,pointBackgroundColor:'#1a3a5c'},
+    {label:'PBT %',data:pm,borderColor:'#e67e22',tension:0.3,pointRadius:4,borderDash:[4,4],pointBackgroundColor:'#e67e22'},
+    {label:'PAT %',data:nm,borderColor:'#8e44ad',tension:0.3,pointRadius:4,pointBackgroundColor:'#8e44ad'}
+  ]},{plugins:{legend:{position:'bottom'}},scales:{y:{ticks:{callback:v=>v.toFixed(0)+'%'},grid:{color:'#f0f4f8'}},x:{grid:{display:false}}}});
+
+  mkChart('marginSpread','bar',{labels:FY,datasets:[
+    {label:'EBITDA %',data:em,backgroundColor:'rgba(39,174,96,0.55)',borderRadius:4},
+    {label:'PAT %',data:nm,backgroundColor:'rgba(142,68,173,0.55)',borderRadius:4}
+  ]},{plugins:{legend:{position:'bottom'}},scales:{y:{ticks:{callback:v=>v+'%'},grid:{color:'#f0f4f8'}},x:{grid:{display:false}}}});
+
+  const labels=['Med&Cons','Payroll','Doctor','R&M','Power','HK','Restaurant','Marketing'];
+  const costPcts23=[pct(D.medCons[5],D.revenue[5]),pct(D.payroll[5],D.revenue[5]),pct(D.doctorCost[5],D.revenue[5]),pct(D.repairs[5],D.revenue[5]),pct(D.power[5],D.revenue[5]),pct(D.housekeeping[5],D.revenue[5]),pct(D.restaurant[5],D.revenue[5]),pct(D.marketing[5],D.revenue[5])];
+  const costPcts25=[pct(D.medCons[7],D.revenue[7]),pct(D.payroll[7],D.revenue[7]),pct(D.doctorCost[7],D.revenue[7]),pct(D.repairs[7],D.revenue[7]),pct(D.power[7],D.revenue[7]),pct(D.housekeeping[7],D.revenue[7]),pct(D.restaurant[7],D.revenue[7]),pct(D.marketing[7],D.revenue[7])];
+  const deltas=labels.map((_,i)=>-(costPcts25[i]-costPcts23[i]));
+  mkChart('marginWalk','bar',{labels:labels,datasets:[{label:'Margin Impact (pp)',data:deltas,backgroundColor:deltas.map(v=>v>=0?'rgba(39,174,96,0.6)':'rgba(231,76,60,0.6)'),borderRadius:4}]},{
+    plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>(v>=0?'+':'')+v.toFixed(1)+'pp'},grid:{color:'#f0f4f8'}},x:{ticks:{font:{size:9}},grid:{display:false}}}
+  });
+
+  mkChart('dnaFin','line',{labels:FY,datasets:[
+    {label:'Depreciation %',data:D.depreciation.map((v,i)=>pct(v,D.revenue[i])),borderColor:'#e67e22',pointBackgroundColor:'#e67e22',tension:0.3,pointRadius:4,fill:true,backgroundColor:'rgba(230,126,34,0.06)'},
+    {label:'Finance Cost %',data:D.finance.map((v,i)=>pct(v,D.revenue[i])),borderColor:'#e74c3c',pointBackgroundColor:'#e74c3c',tension:0.3,pointRadius:4,fill:true,backgroundColor:'rgba(231,76,60,0.06)'}
+  ]},{plugins:{legend:{position:'bottom'}},scales:{y:{ticks:{callback:v=>v.toFixed(1)+'%'},grid:{color:'#f0f4f8'}},x:{grid:{display:false}}}});
+
+  mkChart('taxRate','bar',{labels:FY,datasets:[{label:'Effective Tax Rate %',data:D.tax.map((v,i)=>D.pbt[i]>0?pct(v,D.pbt[i]):0),backgroundColor:'rgba(231,76,60,0.5)',borderRadius:4}]},{
+    plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>v+'%'},grid:{color:'#f0f4f8'}},x:{grid:{display:false}}}
+  });
+}
+</script>
+
+<!-- ===== PAGE: COST BEHAVIOR ===== -->
+<div id="page-costbehavior" class="page">
+  <div class="ibox blue">
+    <div class="ibox-title">&#x2699;&#xFE0F; Fixed vs Variable Cost Behavior Analysis</div>
+    <div class="ibox-text">This analysis classifies costs by their behaviour relative to revenue changes. A variable cost moves proportionally with revenue; a fixed cost remains broadly stable regardless of volume. The FY21 contraction (revenue −20.5%) followed by FY22 recovery (revenue +48%) provides a natural test of cost flexibility across the cycle.</div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Cost Elasticity to Revenue (FY18–FY25)</div>
+      <div class="card-sub">Revenue CAGR = 8.6%. Red = cost growing faster than revenue</div>
+      <div style="position:relative;height:320px"><canvas id="elasticity"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Operating Leverage Effect</div>
+      <div class="card-sub">Revenue vs EBITDA YoY% — measures profit sensitivity to volume changes</div>
+      <div style="position:relative;height:320px"><canvas id="opLeverage"></canvas></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Cost Behavior Classification</div>
+    <div class="card-sub">Based on correlation with revenue and CAGR relative to revenue CAGR</div>
+    <div style="overflow-x:auto"><table class="tbl" id="costBehaviorTable"></table></div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">People Cost (Payroll + Doctor) as % of Revenue</div>
+      <div class="card-sub">The single biggest cost lever — 36.7% of revenue in FY25</div>
+      <div style="position:relative;height:240px"><canvas id="peopleCost"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Material Cost Ratio — Medicines &amp; Consumables</div>
+      <div class="card-sub">Remarkably stable at 27–29% — well managed procurement</div>
+      <div style="position:relative;height:240px"><canvas id="materialRatio"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<script>
+function initCostBehavior(){
+  const revCG=cagr(D.revenue[0],D.revenue[7],7);
+  const costs=[
+    {name:'Med & Consumables',data:D.medCons,type:'Variable'},{name:'Payroll',data:D.payroll,type:'Semi-Fixed'},
+    {name:'Doctor Cost',data:D.doctorCost,type:'Variable'},{name:'R&M',data:D.repairs,type:'Semi-Fixed'},
+    {name:'Power & Fuel',data:D.power,type:'Fixed'},{name:'Housekeeping',data:D.housekeeping,type:'Semi-Fixed'},
+    {name:'Restaurant',data:D.restaurant,type:'Variable'},{name:'Marketing',data:D.marketing,type:'Discretionary'}
+  ];
+  mkChart('elasticity','bar',{labels:costs.map(c=>c.name.substring(0,14)),datasets:[
+    {label:'Cost CAGR',data:costs.map(c=>cagr(c.data[0],c.data[7],7)),backgroundColor:costs.map(c=>{const ca=cagr(c.data[0],c.data[7],7);return ca>revCG?'rgba(231,76,60,0.6)':'rgba(39,174,96,0.6)'}),borderRadius:4}
+  ]},{plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`CAGR: ${c.raw.toFixed(1)}% (Rev CAGR: ${revCG.toFixed(1)}%)`}}},scales:{y:{ticks:{callback:v=>v+'%'},grid:{color:'#f0f4f8'}},x:{ticks:{font:{size:8}},grid:{display:false}}}});
+
+  mkChart('opLeverage','bar',{labels:FY.slice(1),datasets:[
+    {label:'Revenue YoY%',data:FY.slice(1).map((_,i)=>yoy(D.revenue,i+1)),backgroundColor:'rgba(26,58,92,0.55)',borderRadius:4},
+    {label:'EBITDA YoY%',data:FY.slice(1).map((_,i)=>yoy(D.ebitda,i+1)),backgroundColor:'rgba(39,174,96,0.55)',borderRadius:4}
+  ]},{plugins:{legend:{position:'bottom'}},scales:{y:{ticks:{callback:v=>v+'%'},grid:{color:'#f0f4f8'}},x:{grid:{display:false}}}});
+
+  let ht='<thead><tr><th>Cost Head</th><th class="num">FY18 (₹L)</th><th class="num">FY25 (₹L)</th><th class="num">CAGR</th><th class="num">FY18 % Rev</th><th class="num">FY25 % Rev</th><th class="num">Δ pp</th><th>Classification</th><th>Commentary</th></tr></thead><tbody>';
+  costs.forEach(c=>{
+    const ca=cagr(c.data[0],c.data[7],7),p18=pct(c.data[0],D.revenue[0]),p25=pct(c.data[7],D.revenue[7]),delta=p25-p18;
+    const cls=delta>1?'rp':delta<-1?'gp':'op';
+    ht+=`<tr><td style="font-weight:600">${c.name}</td><td class="num">${c.data[0].toLocaleString()}</td><td class="num">${c.data[7].toLocaleString()}</td><td class="num"><span class="spark ${sparkClass(ca)}">${ca.toFixed(1)}%</span></td><td class="num">${p18.toFixed(1)}%</td><td class="num">${p25.toFixed(1)}%</td><td class="num"><span class="pill ${cls}">${delta>=0?'+':''}${delta.toFixed(1)}pp</span></td><td><span class="pill bp">${c.type}</span></td><td style="font-size:0.62rem;color:#a0aec0;max-width:160px">${ca>revCG+2?'Growing faster than revenue — grew faster than revenue':'Tracking with or below revenue growth'}</td></tr>`;
+  });
+  ht+='</tbody>';document.getElementById('costBehaviorTable').innerHTML=ht;
+
+  mkChart('peopleCost','bar',{labels:FY,datasets:[
+    {label:'Payroll %',data:FY.map((_,i)=>pct(D.payroll[i],D.revenue[i])),backgroundColor:'rgba(230,126,34,0.55)',stack:'s',borderRadius:4},
+    {label:'Doctor Cost %',data:FY.map((_,i)=>pct(D.doctorCost[i],D.revenue[i])),backgroundColor:'rgba(231,76,60,0.55)',stack:'s',borderRadius:4}
+  ]},{plugins:{legend:{position:'bottom'}},scales:{x:{stacked:true,grid:{display:false}},y:{stacked:true,ticks:{callback:v=>v+'%'},grid:{color:'#f0f4f8'}}}});
+
+  mkChart('materialRatio','line',{labels:FY,datasets:[{label:'Med & Cons %',data:D.medCons.map((v,i)=>pct(v,D.revenue[i])),borderColor:'#1a3a5c',backgroundColor:'rgba(26,58,92,0.06)',fill:true,tension:0.3,pointRadius:5,pointBackgroundColor:'#1a3a5c'}]},{
+    plugins:{legend:{display:false}},scales:{y:{min:25,max:32,ticks:{callback:v=>v+'%'},grid:{color:'#f0f4f8'}},x:{grid:{display:false}}}
+  });
+}
+</script>
+
+<!-- ===== PAGE: DUPONT & RETURNS ===== -->
+<div id="page-dupont" class="page">
+  <div class="ibox green">
+    <div class="ibox-title">&#x1F3DB;&#xFE0F; DuPont Analysis — Decomposing Return on Equity</div>
+    <div class="ibox-text">ROE = Net Margin × Asset Turnover × Equity Multiplier. This decomposition identifies whether returns were driven by profitability, asset efficiency, or financial leverage. LHRC was almost entirely equity-funded across the period (multiplier ~1.27x in FY25), making ROE principally a function of net margin and asset utilization.</div>
+  </div>
+
+  <div class="kpi-strip">
+    <div class="kpi" style="border-color:#27ae60"><div class="kpi-label">ROE</div><div class="kpi-value" style="color:#27ae60">1.0%→9.5%</div><div class="kpi-sub">FY18→FY25 · Peak 16.3% FY23</div></div>
+    <div class="kpi" style="border-color:#1a3a5c"><div class="kpi-label">ROA</div><div class="kpi-value" style="color:#1a3a5c">0.7%→7.5%</div><div class="kpi-sub">FY18→FY25 · PAT/Avg Assets</div></div>
+    <div class="kpi" style="border-color:#e67e22"><div class="kpi-label">ROCE</div><div class="kpi-value" style="color:#e67e22">2.3%→12.6%</div><div class="kpi-sub">FY18→FY25 · EBIT/Capital Employed</div></div>
+    <div class="kpi" style="border-color:#8e44ad"><div class="kpi-label">Asset Turnover</div><div class="kpi-value" style="color:#8e44ad">0.58→0.78x</div><div class="kpi-sub">FY18→FY25 · Revenue/Avg Assets</div></div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">ROE, ROA &amp; ROCE Trend</div>
+      <div class="card-sub">Return metrics across the cycle</div>
+      <div style="position:relative;height:280px"><canvas id="returnTrend"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">DuPont Decomposition</div>
+      <div class="card-sub">Net Margin % × Asset Turnover × Equity Multiplier</div>
+      <div style="position:relative;height:280px"><canvas id="dupontDecomp"></canvas></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">DuPont Table — Full Decomposition</div>
+    <div style="overflow-x:auto"><table class="tbl" id="dupontTable"></table></div>
+  </div>
+</div>
+
+<script>
+function initDuPont(){
+  const avgA=FY.map((_,i)=>i===0?D.totalAssets[0]:(D.totalAssets[i]+D.totalAssets[i-1])/2);
+  const avgE=FY.map((_,i)=>i===0?D.equity[0]:(D.equity[i]+D.equity[i-1])/2);
+  const roe=D.pat.map((v,i)=>pct(v,avgE[i])),roa=D.pat.map((v,i)=>pct(v,avgA[i]));
+  const capEmp=FY.map((_,i)=>D.equity[i]+(D.ncBorrow[i]||0));
+  const roce=D.ebit.map((v,i)=>pct(v,capEmp[i]));
+  const netM=D.pat.map((v,i)=>pct(v,D.revenue[i])),aTo=D.revenue.map((v,i)=>v/avgA[i]),eqMult=avgA.map((v,i)=>v/avgE[i]);
+
+  mkChart('returnTrend','line',{labels:FY,datasets:[
+    {label:'ROE %',data:roe,borderColor:'#27ae60',pointBackgroundColor:'#27ae60',tension:0.3,pointRadius:5},
+    {label:'ROA %',data:roa,borderColor:'#1a3a5c',pointBackgroundColor:'#1a3a5c',tension:0.3,pointRadius:4},
+    {label:'ROCE %',data:roce,borderColor:'#e67e22',pointBackgroundColor:'#e67e22',tension:0.3,pointRadius:4,borderDash:[5,5]}
+  ]},{plugins:{legend:{position:'bottom'}},scales:{y:{ticks:{callback:v=>v+'%'},grid:{color:'#f0f4f8'}},x:{grid:{display:false}}}});
+
+  mkChart('dupontDecomp','bar',{labels:FY,datasets:[
+    {label:'Net Margin %',data:netM,backgroundColor:'rgba(39,174,96,0.55)',borderRadius:4},
+    {label:'Asset Turnover (x10)',data:aTo.map(v=>v*10),backgroundColor:'rgba(26,58,92,0.55)',borderRadius:4},
+    {label:'Equity Multiplier (x10)',data:eqMult.map(v=>v*10),backgroundColor:'rgba(142,68,173,0.55)',borderRadius:4}
+  ]},{plugins:{legend:{position:'bottom'}},scales:{y:{grid:{color:'#f0f4f8'}},x:{grid:{display:false}}}});
+
+  let ht='<thead><tr><th>Metric</th>';FY.forEach(f=>ht+=`<th class="num">${f}</th>`);ht+='</tr></thead><tbody>';
+  [{name:'PAT (₹L)',data:D.pat},{name:'Revenue (₹L)',data:D.revenue},{name:'Avg Total Assets (₹L)',data:avgA},{name:'Avg Equity (₹L)',data:avgE},
+   {name:'Net Margin %',data:netM,fmt:'%'},{name:'Asset Turnover',data:aTo,fmt:'x'},{name:'Equity Multiplier',data:eqMult,fmt:'x'},
+   {name:'ROE %',data:roe,fmt:'%',bold:true},{name:'ROA %',data:roa,fmt:'%'},{name:'ROCE %',data:roce,fmt:'%'}
+  ].forEach(r=>{
+    const s=r.bold?'font-weight:700;color:#27ae60':'';
+    ht+=`<tr><td style="${s}">${r.name}</td>`;
+    r.data.forEach(v=>{const val=r.fmt==='%'?v.toFixed(1)+'%':r.fmt==='x'?v.toFixed(2)+'x':Math.round(v).toLocaleString();ht+=`<td class="num" style="${s}">${val}</td>`;});
+    ht+='</tr>';
+  });
+  ht+='</tbody>';document.getElementById('dupontTable').innerHTML=ht;
+}
+</script>
+
+<!-- ===== PAGE: CASH & LEVERAGE ===== -->
+<div id="page-cashflow" class="page">
+  <div class="kpi-strip">
+    <div class="kpi" style="border-color:#27ae60"><div class="kpi-label">Cumulative CFO</div><div class="kpi-value" style="color:#27ae60">₹343 Cr</div><div class="kpi-sub">FY18–FY25 · 8 years</div></div>
+    <div class="kpi" style="border-color:#1a3a5c"><div class="kpi-label">CFO Range</div><div class="kpi-value" style="color:#1a3a5c">₹31–₹68 Cr</div><div class="kpi-sub">Annual operating cash flow</div></div>
+    <div class="kpi" style="border-color:#16a085"><div class="kpi-label">Debt Reduction</div><div class="kpi-value" style="color:#16a085">₹42→₹0 Cr</div><div class="kpi-sub">FY19 peak → Debt-free FY24</div></div>
+    <div class="kpi" style="border-color:#e67e22"><div class="kpi-label">Cash Accumulation</div><div class="kpi-value" style="color:#e67e22">₹8.7→₹106 Cr</div><div class="kpi-sub">FY18→FY25 · Cash + Bank FD</div></div>
+    <div class="kpi" style="border-color:#8e44ad"><div class="kpi-label">Cumulative Dividends</div><div class="kpi-value" style="color:#8e44ad">₹75 Cr</div><div class="kpi-sub">FY18–FY25 total paid</div></div>
+  </div>
+
+  <div class="ibox green">
+    <div class="ibox-title">&#x2705; Balance Sheet &amp; Cash Position — FY18–FY25</div>
+    <div class="ibox-text">LHRC reached a debt-free position by FY24, having reduced total borrowings from ₹42 Cr (FY19 peak) to zero. Cash and bank balances grew to ₹106 Cr by FY25, comprising ₹44 Cr in liquid cash and ₹62 Cr in fixed deposits. Operating cash flow ranged between ₹31 Cr and ₹68 Cr annually over the period, with free cash flow positive in each year following FY19.</div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Cash Flow from Operations, Investing &amp; Financing</div>
+      <div class="card-sub">CFO positive across all years</div>
+      <div style="position:relative;height:280px"><canvas id="cfTrend"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Free Cash Flow &amp; Dividend Coverage</div>
+      <div class="card-sub">FCF = CFO – Capex · How much is left after reinvestment</div>
+      <div style="position:relative;height:280px"><canvas id="fcfTrend"></canvas></div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Debt Reduction Journey</div>
+      <div class="card-sub">From ₹42 Cr total debt (FY19) to zero</div>
+      <div style="position:relative;height:240px"><canvas id="debtTrend"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Cash &amp; Bank Balance Accumulation</div>
+      <div class="card-sub">Liquid assets on balance sheet</div>
+      <div style="position:relative;height:240px"><canvas id="cashTrend"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<script>
+function initCashFlow(){
+  mkChart('cfTrend','bar',{labels:FY,datasets:[
+    {label:'CFO',data:D.cfOps,backgroundColor:'rgba(39,174,96,0.6)',borderRadius:4},
+    {label:'CFI',data:D.cfInv,backgroundColor:'rgba(231,76,60,0.6)',borderRadius:4},
+    {label:'CFF',data:D.cfFin,backgroundColor:'rgba(142,68,173,0.6)',borderRadius:4}
+  ]},{plugins:{legend:{position:'bottom'}},scales:{y:{ticks:{callback:v=>fmtCr(v)},grid:{color:'#f0f4f8'}},x:{grid:{display:false}}}});
+
+  mkChart('fcfTrend','bar',{labels:FY,datasets:[
+    {label:'FCF',data:D.cfOps.map((v,i)=>v-D.capex[i]),backgroundColor:'rgba(26,58,92,0.6)',borderRadius:4},
+    {label:'Dividend',data:D.divPaid.map(v=>-v),backgroundColor:'rgba(230,126,34,0.6)',borderRadius:4}
+  ]},{plugins:{legend:{position:'bottom'}},scales:{y:{ticks:{callback:v=>fmtCr(v)},grid:{color:'#f0f4f8'}},x:{grid:{display:false}}}});
+
+  mkChart('debtTrend','bar',{labels:FY,datasets:[{label:'Total Debt ₹L',data:FY.map((_,i)=>(D.ncBorrow[i]||0)+(D.cBorrow[i]||0)),backgroundColor:'rgba(231,76,60,0.5)',borderRadius:4}]},{
+    plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>'₹'+v+'L'},grid:{color:'#f0f4f8'}},x:{grid:{display:false}}}
+  });
+
+  mkChart('cashTrend','bar',{labels:FY,datasets:[
+    {label:'Cash',data:D.cash,backgroundColor:'rgba(39,174,96,0.6)',stack:'s',borderRadius:4},
+    {label:'Bank FD',data:D.bankBal,backgroundColor:'rgba(26,58,92,0.6)',stack:'s',borderRadius:4}
+  ]},{plugins:{legend:{position:'bottom'}},scales:{x:{stacked:true,grid:{display:false}},y:{stacked:true,ticks:{callback:v=>'₹'+v+'L'},grid:{color:'#f0f4f8'}}}});
+}
+</script>
+
+<!-- ===== PAGE: BALANCE SHEET ===== -->
+<div id="page-balancesheet" class="page">
+  <div class="kpi-strip">
+    <div class="kpi" style="border-color:#1a3a5c"><div class="kpi-label">Total Assets</div><div class="kpi-value" style="color:#1a3a5c">₹393→₹533 Cr</div><div class="kpi-sub">FY18→FY25 · CAGR 4.5%</div></div>
+    <div class="kpi" style="border-color:#27ae60"><div class="kpi-label">Equity</div><div class="kpi-value" style="color:#27ae60">₹279→₹422 Cr</div><div class="kpi-sub">FY18→FY25 · 79.2% of assets FY25</div></div>
+    <div class="kpi" style="border-color:#e67e22"><div class="kpi-label">Net Fixed Assets</div><div class="kpi-value" style="color:#e67e22">₹354→₹347 Cr</div><div class="kpi-sub">FY18→FY25 · PPE + CWIP</div></div>
+    <div class="kpi" style="border-color:#e74c3c"><div class="kpi-label">Working Capital Days</div><div class="kpi-value" style="color:#e74c3c" id="wcDays">—</div><div class="kpi-sub">Trade Rec – Trade Pay cycle</div></div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Asset Composition Over Time</div>
+      <div class="card-sub">PPE dominates — typical for hospital businesses</div>
+      <div style="position:relative;height:280px"><canvas id="assetComp"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Working Capital Metrics</div>
+      <div class="card-sub">Receivable days &amp; inventory days trend</div>
+      <div style="position:relative;height:280px"><canvas id="wcMetrics"></canvas></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Balance Sheet Summary (₹ Lakhs)</div>
+    <div style="overflow-x:auto"><table class="tbl" id="bsTable"></table></div>
+  </div>
+</div>
+
+<script>
+function initBalanceSheet(){
+  mkChart('assetComp','bar',{labels:FY,datasets:[
+    {label:'PPE + CWIP',data:FY.map((_,i)=>D.ppe[i]+D.cwip[i]),backgroundColor:'rgba(26,58,92,0.6)',stack:'s',borderRadius:4},
+    {label:'Cash + Bank',data:FY.map((_,i)=>D.cash[i]+D.bankBal[i]),backgroundColor:'rgba(39,174,96,0.6)',stack:'s',borderRadius:4},
+    {label:'Receivables',data:D.tradeRec,backgroundColor:'rgba(230,126,34,0.6)',stack:'s',borderRadius:4},
+    {label:'Other',data:FY.map((_,i)=>D.totalAssets[i]-D.ppe[i]-D.cwip[i]-D.cash[i]-D.bankBal[i]-D.tradeRec[i]),backgroundColor:'rgba(189,195,199,0.4)',stack:'s',borderRadius:4}
+  ]},{plugins:{legend:{position:'bottom'}},scales:{x:{stacked:true,grid:{display:false}},y:{stacked:true,ticks:{callback:v=>fmtCr(v)},grid:{color:'#f0f4f8'}}}});
+
+  const recDays=D.tradeRec.map((v,i)=>(v/D.revenue[i])*365);
+  const invDays=D.inventory.map((v,i)=>(v/D.medCons[i])*365);
+  const payDays=D.tradePay.map((v,i)=>(v/D.medCons[i])*365);
+  document.getElementById('wcDays').textContent=Math.round(recDays[7]-payDays[7]+invDays[7])+'d';
+
+  mkChart('wcMetrics','line',{labels:FY,datasets:[
+    {label:'Receivable Days',data:recDays,borderColor:'#e74c3c',pointBackgroundColor:'#e74c3c',tension:0.3,pointRadius:4},
+    {label:'Inventory Days',data:invDays,borderColor:'#e67e22',pointBackgroundColor:'#e67e22',tension:0.3,pointRadius:4}
+  ]},{plugins:{legend:{position:'bottom'}},scales:{y:{ticks:{callback:v=>Math.round(v)+'d'},grid:{color:'#f0f4f8'}},x:{grid:{display:false}}}});
+
+  const bsRows=[
+    {name:'PPE',data:D.ppe,bold:true},{name:'CWIP',data:D.cwip},{name:'Trade Receivables',data:D.tradeRec},{name:'Inventories',data:D.inventory},
+    {name:'Cash & Equivalents',data:D.cash},{name:'Bank Balances (FD)',data:D.bankBal},
+    {name:'Total Assets',data:D.totalAssets,bold:true,color:'#1a3a5c'},{name:'',spacer:true},
+    {name:'Equity',data:D.equity,bold:true,color:'#27ae60'},{name:'NC Borrowings',data:D.ncBorrow},{name:'Current Borrowings',data:D.cBorrow},{name:'Trade Payables',data:D.tradePay}
+  ];
+  let ht='<thead><tr><th>Item</th>';FY.forEach(f=>ht+=`<th class="num">${f}</th>`);ht+='</tr></thead><tbody>';
+  bsRows.forEach(r=>{
+    if(r.spacer){ht+='<tr><td colspan="9" style="height:6px;border:none"></td></tr>';return;}
+    const s=r.bold?'font-weight:700;':'',c=r.color?`color:${r.color};`:'';
+    ht+=`<tr><td style="${s}${c}">${r.name}</td>`;r.data.forEach(v=>ht+=`<td class="num" style="${s}${c}">${v.toLocaleString('en-IN')}</td>`);ht+='</tr>';
+  });
+  ht+='</tbody>';document.getElementById('bsTable').innerHTML=ht;
+}
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LHRC Revenue & Doctor Analytics — FY26 BRM</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#f0f4f8;color:#1a202c;font-size:14px}
+.header{background:linear-gradient(135deg,#1a3a5c 0%,#0f2744 100%);color:white;padding:16px 32px;display:flex;align-items:center;justify-content:space-between}
+.header h1{font-size:1.2rem;font-weight:700}
+.header p{font-size:0.72rem;opacity:0.7;margin-top:2px}
+.hb{display:flex;gap:8px;flex-wrap:wrap}
+.badge{background:rgba(255,255,255,0.15);padding:4px 12px;border-radius:20px;font-size:0.7rem;font-weight:600}
+.badge.or{background:#e67e22}.badge.rd{background:#e74c3c}.badge.gr{background:#27ae60}
+.tab-bar{background:white;border-bottom:2px solid #e2e8f0;padding:0 24px;display:flex;gap:0;overflow-x:auto}
+.tab{padding:12px 16px;font-size:0.75rem;font-weight:600;color:#718096;cursor:pointer;border-bottom:3px solid transparent;transition:all 0.2s;white-space:nowrap;margin-bottom:-2px}
+.tab:hover{color:#1a3a5c;background:#f7fafc}
+.tab.active{color:#1a3a5c;border-bottom-color:#1a3a5c;background:white}
+.page{display:none;padding:18px 28px;max-width:1500px;margin:0 auto}
+.page.active{display:block}
+.kpi-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:18px}
+.kpi{background:white;border-radius:8px;padding:12px 14px;box-shadow:0 1px 4px rgba(0,0,0,0.06);border-left:3px solid}
+.kpi-label{font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:#a0aec0}
+.kpi-value{font-size:1.2rem;font-weight:800;margin-top:2px}
+.kpi-sub{font-size:0.63rem;color:#a0aec0;margin-top:2px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.g21{display:grid;grid-template-columns:2fr 1fr;gap:14px}
+.g12{display:grid;grid-template-columns:1fr 2fr;gap:14px}
+.card{background:white;border-radius:10px;padding:18px;box-shadow:0 1px 4px rgba(0,0,0,0.06);margin-bottom:14px}
+.card-title{font-size:0.8rem;font-weight:700;color:#2d3748;margin-bottom:2px}
+.card-sub{font-size:0.65rem;color:#a0aec0;margin-bottom:12px}
+.tbl{width:100%;border-collapse:collapse;font-size:0.71rem}
+.tbl th{background:#f7fafc;text-align:left;padding:7px 9px;font-size:0.63rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#718096;border-bottom:2px solid #e2e8f0;white-space:nowrap;cursor:pointer}
+.tbl th:hover{background:#edf2f7}
+.tbl td{padding:6px 9px;border-bottom:1px solid #f0f4f8;color:#2d3748}
+.tbl tr:hover td{background:#f7fafc}
+.tbl tr.top3 td{background:#fffbf0;font-weight:600}
+.pill{display:inline-block;padding:2px 7px;border-radius:10px;font-size:0.6rem;font-weight:700}
+.gp{background:#e8f5e9;color:#27ae60}.rp{background:#fce4ec;color:#e74c3c}
+.op{background:#fff3e0;color:#e67e22}.bp{background:#e3f2fd;color:#1976d2}
+.pp{background:#f3e5f5;color:#8e44ad}.grp{background:#f5f5f5;color:#757575}
+.ibox{background:#fffbf0;border:1px solid #fde68a;border-left:4px solid #f59e0b;border-radius:8px;padding:11px 14px;margin-bottom:14px}
+.ibox.red{background:#fff5f5;border-color:#fca5a5;border-left-color:#ef4444}
+.ibox.green{background:#f0fdf4;border-color:#86efac;border-left-color:#22c55e}
+.ibox.blue{background:#eff6ff;border-color:#93c5fd;border-left-color:#3b82f6}
+.ibox-title{font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;color:#92400e}
+.ibox.red .ibox-title{color:#991b1b}.ibox.green .ibox-title{color:#166534}.ibox.blue .ibox-title{color:#1e40af}
+.ibox-text{font-size:0.73rem;color:#4a5568;line-height:1.5}
+.filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
+.fbtn{padding:4px 12px;border-radius:16px;border:1px solid #e2e8f0;background:white;font-size:0.7rem;font-weight:600;cursor:pointer;color:#718096;transition:all 0.15s}
+.fbtn:hover{border-color:#1a3a5c;color:#1a3a5c}
+.fbtn.active{background:#1a3a5c;color:white;border-color:#1a3a5c}
+.search-input{padding:6px 12px;border:1px solid #e2e8f0;border-radius:6px;font-size:0.75rem;width:200px;outline:none}
+.search-input:focus{border-color:#1a3a5c}
+.sort-sel{padding:5px 10px;border:1px solid #e2e8f0;border-radius:6px;font-size:0.73rem;color:#4a5568;outline:none;background:white;cursor:pointer}
+.slabel{font-size:0.66rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#a0aec0;margin:18px 0 10px;display:flex;align-items:center;gap:8px}
+.slabel::after{content:'';flex:1;height:1px;background:#e2e8f0}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>LHRC Revenue &amp; Doctor Analytics</h1>
+    <p>VPS Lakeshore Hospital &amp; Research Centre, Kochi &middot; YTD 10 Months (Apr 25 – Jan 26) · Kochi + Calicut &nbsp;&middot;&nbsp; FY26 BRM Data &nbsp;&middot;&nbsp; FY26 YTD BRM Analysis (Apr 25 – Jan 26)</p>
+  </div>
+  <div class="hb">
+    <span class="badge or">&#x20B9;381 Cr Revenue</span>
+    <span class="badge">40+ Doctors</span>
+    <span class="badge">18,476 IP Discharges</span>
+    <span class="badge rd">&#x26A0;&#xFE0F; Top 2 Docs = 22.3% Revenue</span>
+  </div>
+</div>
+
+<div class="tab-bar">
+  <div class="tab active" onclick="showTab('overview',this)">&#x1F4CA; Overview</div>
+  <div class="tab" onclick="showTab('departments',this)">&#x1F3E5; By Department</div>
+  <div class="tab" onclick="showTab('doctors',this)">&#x1F468;&#x200D;&#x2695;&#xFE0F; By Doctor</div>
+  <div class="tab" onclick="showTab('concentration',this)">&#x26A0;&#xFE0F; Concentration Risk</div>
+  <div class="tab" onclick="showTab('quadrant',this)">&#x1F4CA; Revenue Matrix</div>
+  <div class="tab" onclick="showTab('monthly',this)">&#x1F4C5; Monthly Trends</div>
+  <div class="tab" onclick="showTab('payor',this)">&#x1F4B3; Payor &amp; Mix</div>
+  <div class="tab" onclick="showTab('benchmarks',this)">&#x1F4D0; Peer Benchmarks</div>
+  <div class="tab" onclick="showTab('doctorMIS',this)">&#x1F469;&#x200D;&#x2695;&#xFE0F; Doctor MIS</div>
+</div>
+
+<!-- ===== PAGE: OVERVIEW ===== -->
+<div id="page-overview" class="page active">
+  <div class="kpi-strip">
+    <div class="kpi" style="border-color:#1a3a5c"><div class="kpi-label">Total Revenue (YTD)</div><div class="kpi-value" style="color:#1a3a5c">&#x20B9;381 Cr</div><div class="kpi-sub">ADR &#x20B9;1.47 Cr/day &middot; 10 months</div></div>
+    <div class="kpi" style="border-color:#e67e22"><div class="kpi-label">IP Revenue</div><div class="kpi-value" style="color:#e67e22">&#x20B9;264 Cr</div><div class="kpi-sub">69.2% of total &middot; 18,476 discharges</div></div>
+    <div class="kpi" style="border-color:#8e44ad"><div class="kpi-label">ARPP-IP</div><div class="kpi-value" style="color:#8e44ad">&#x20B9;1.43 L</div><div class="kpi-sub">ALOS 4.06d &middot; ARPOB &#x20B9;35,188</div></div>
+    <div class="kpi" style="border-color:#27ae60"><div class="kpi-label">IP Discharges</div><div class="kpi-value" style="color:#27ae60">18,476</div><div class="kpi-sub">74,991 bed days &middot; Kochi</div></div>
+    <div class="kpi" style="border-color:#e74c3c"><div class="kpi-label">OP Revenue</div><div class="kpi-value" style="color:#e74c3c">&#x20B9;103 Cr</div><div class="kpi-sub">3,28,984 visits &middot; &#x20B9;3,278/visit</div></div>
+    <div class="kpi" style="border-color:#c0392b"><div class="kpi-label">Top 5 Doctors</div><div class="kpi-value" style="color:#c0392b">36.3%</div><div class="kpi-sub">of YTD revenue (&#x20B9;381 Cr)</div></div>
+  </div>
+
+  <div class="ibox red">
+    <div class="ibox-title">&#x1F4CA; Revenue Concentration — FY26 YTD</div>
+    <div class="ibox-text"><strong>2 doctors (Gangadharan VP + Abi Abraham M)</strong> generated &#x20B9;84.8 Cr = <strong>22.3% of YTD revenue (&#x20B9;381.12 Cr)</strong>. The top 5 doctors collectively accounted for 36.3% of YTD revenue. Gangadharan VP contributed ₹52.9 Cr (13.9%) and Abi Abraham M contributed ₹31.9 Cr (8.4%) over the 10-month period.</div>
+  </div>
+
+  <div class="g21">
+    <div class="card">
+      <div class="card-title">Revenue by Department — Top 15 (&#x20B9; Crore, FY26 YTD)</div>
+      <div class="card-sub">Medical Oncology + Nephrology = 26.0% of total revenue</div>
+      <div style="position:relative;height:300px"><canvas id="deptBar"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Revenue Mix</div>
+      <div class="card-sub">IP &#x20B9;264 Cr &middot; OP &#x20B9;103 Cr &middot; F&B &#x20B9;14 Cr</div>
+      <div style="position:relative;height:160px"><canvas id="mixDonut"></canvas></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:12px">
+        <div style="background:#f7fafc;border-radius:6px;padding:8px;text-align:center"><div style="font-size:0.6rem;color:#a0aec0;font-weight:700;text-transform:uppercase">IP Revenue</div><div style="font-size:1rem;font-weight:800;color:#1a3a5c">&#x20B9;264 Cr</div></div>
+        <div style="background:#f7fafc;border-radius:6px;padding:8px;text-align:center"><div style="font-size:0.6rem;color:#a0aec0;font-weight:700;text-transform:uppercase">OP Revenue</div><div style="font-size:1rem;font-weight:800;color:#e67e22">&#x20B9;103 Cr</div></div>
+        <div style="background:#f7fafc;border-radius:6px;padding:8px;text-align:center"><div style="font-size:0.6rem;color:#a0aec0;font-weight:700;text-transform:uppercase">F&B Revenue</div><div style="font-size:1rem;font-weight:800;color:#8e44ad">&#x20B9;14.4 Cr</div></div>
+        <div style="background:#f7fafc;border-radius:6px;padding:8px;text-align:center"><div style="font-size:0.6rem;color:#a0aec0;font-weight:700;text-transform:uppercase">Bed Occupancy</div><div style="font-size:1rem;font-weight:800;color:#27ae60">52%</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Top 12 Doctors by Revenue (&#x20B9; Crore, FY26 YTD)</div>
+      <div class="card-sub">Top 12 = 63.5% of all doctor revenue</div>
+      <div style="position:relative;height:260px"><canvas id="doctorBar"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Revenue Concentration Curve (Lorenz)</div>
+      <div class="card-sub">X = cumulative doctor count &middot; Y = % of total revenue</div>
+      <div style="position:relative;height:260px"><canvas id="concLine"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PAGE: DEPARTMENTS ===== -->
+<div id="page-departments" class="page">
+  <div class="card">
+    <div class="card-title">Department Performance Table — All Departments</div>
+    <div class="card-sub">Click column headers to sort. FY26 YTD (10 months: Apr-Jan)</div>
+    <div style="overflow-x:auto">
+    <table class="tbl">
+      <thead><tr>
+        <th onclick="sortDept('rank')">#</th>
+        <th onclick="sortDept('name')">Department</th>
+        <th onclick="sortDept('total')">Total &#x20B9;Cr</th>
+        <th onclick="sortDept('pct')">% Share</th>
+        <th onclick="sortDept('ip')">IP &#x20B9;Cr</th>
+        <th onclick="sortDept('op')">OP &#x20B9;Cr</th>
+        <th onclick="sortDept('disc')">IP Disc.</th>
+        <th onclick="sortDept('opv')">OP Visits</th>
+        <th onclick="sortDept('arppIP')">ARPP-IP</th>
+        <th onclick="sortDept('arppOP')">ARPP-OP</th>
+        <th onclick="sortDept('arpob')">ARPOB</th>
+        <th>Tier</th>
+      </tr></thead>
+      <tbody id="deptTbody"></tbody>
+    </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Revenue Composition by Department — IP vs OP</div>
+    <div class="card-sub">FY26 YTD figures</div>
+    <div style="position:relative;height:500px"><canvas id="deptStack"></canvas></div>
+  </div>
+
+  <div class="slabel">Top 6 Department Doctor Breakdowns</div>
+  <div class="g3">
+    <div class="card"><div class="card-title">Medical Oncology</div><div style="position:relative;height:200px"><canvas id="pieOnco"></canvas></div></div>
+    <div class="card"><div class="card-title">Nephrology</div><div style="position:relative;height:200px"><canvas id="pieNephro"></canvas></div></div>
+    <div class="card"><div class="card-title">Neuro Surgery</div><div style="position:relative;height:200px"><canvas id="pieNeuro"></canvas></div></div>
+    <div class="card"><div class="card-title">GI Surgery</div><div style="position:relative;height:200px"><canvas id="pieGI"></canvas></div></div>
+    <div class="card"><div class="card-title">Gastroenterology</div><div style="position:relative;height:200px"><canvas id="pieGastro"></canvas></div></div>
+    <div class="card"><div class="card-title">Cardiology</div><div style="position:relative;height:200px"><canvas id="pieCardio"></canvas></div></div>
+  </div>
+</div>
+
+<!-- ===== PAGE: DOCTORS ===== -->
+<div id="page-doctors" class="page">
+  <div class="filter-bar">
+    <span style="font-size:0.72rem;font-weight:700;color:#4a5568">Filter:</span>
+    <button class="fbtn active" onclick="filterDocs('ALL',this)">All</button>
+    <button class="fbtn" onclick="filterDocs('MEDICAL ONCOLOGY',this)">Oncology</button>
+    <button class="fbtn" onclick="filterDocs('NEPHROLOGY',this)">Nephrology</button>
+    <button class="fbtn" onclick="filterDocs('GI SURGERY',this)">GI Surgery</button>
+    <button class="fbtn" onclick="filterDocs('NEURO SURGERY',this)">Neuro Surgery</button>
+    <button class="fbtn" onclick="filterDocs('CARDIOLOGY',this)">Cardiology</button>
+    <button class="fbtn" onclick="filterDocs('GASTROENTEROLOGY',this)">Gastroenterology</button>
+    <button class="fbtn" onclick="filterDocs('SURGICAL ONCOLOGY',this)">Surg Oncology</button>
+    <button class="fbtn" onclick="filterDocs('JOINT REPLACEMENT',this)">Joint Replacement</button>
+    <input class="search-input" type="text" id="docSearch" placeholder="&#x1F50D; Search doctor..." oninput="filterDocs()">
+    <select class="sort-sel" id="docSort" onchange="filterDocs()">
+      <option value="total">Sort: Total Rev</option>
+      <option value="ip">Sort: IP Rev</option>
+      <option value="op">Sort: OP Rev</option>
+      <option value="disc">Sort: Discharges</option>
+      <option value="arppIP">Sort: ARPP-IP</option>
+      <option value="arpob">Sort: ARPOB</option>
+      <option value="arppOP">Sort: ARPP-OP</option>
+    </select>
+  </div>
+  <div class="card">
+    <table class="tbl">
+      <thead><tr>
+        <th>#</th><th>Doctor</th><th>Department</th><th>Total &#x20B9;Cr</th>
+        <th>% Hosp</th><th>IP &#x20B9;Cr</th><th>OP &#x20B9;Cr</th>
+        <th>Discharges</th><th>Bed Days</th><th>OP Visits</th>
+        <th>ARPP-IP</th><th>ARPOB</th><th>ARPP-OP</th>
+      </tr></thead>
+      <tbody id="docTbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== PAGE: CONCENTRATION ===== -->
+<div id="page-concentration" class="page">
+  <div class="ibox red">
+    <div class="ibox-title">&#x1F6A8; Concentration Risk — FY26 YTD Figures</div>
+    <div class="ibox-text">
+      <strong>Top 2 doctors (Gangadharan VP + Abi Abraham M):</strong> ₹84.8 Cr = <strong>22.9%</strong> of hospital revenue &nbsp;|&nbsp;
+      <strong>Top 5 doctors:</strong> ₹137.8 Cr = <strong>37.4%</strong> of revenue &nbsp;|&nbsp;
+      <strong>80% revenue threshold:</strong> reached at <strong>Top 22 doctors</strong> out of 50+ &nbsp;|&nbsp;
+      Medical Oncology (single consultant) = 14.0% of total revenue
+    </div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Revenue Share — Top 10 Doctors</div>
+      <div class="card-sub">Top 10 doctors = 55.8% of total revenue</div>
+      <div style="position:relative;height:280px"><canvas id="concBar"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Cumulative Revenue Concentration</div>
+      <div class="card-sub">How quickly revenue concentrates among top doctors</div>
+      <div style="position:relative;height:280px"><canvas id="concCumul"></canvas></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Concentration Risk Details</div>
+    <table class="tbl">
+      <thead><tr><th>Metric</th><th>FY26 YTD</th><th>FY25</th><th>Benchmark</th><th>Risk Level</th></tr></thead>
+      <tbody>
+        <tr><td>Top 1 Doctor % Revenue</td><td style="color:#e74c3c;font-weight:700">14.0%</td><td>12.9%</td><td>&lt;10%</td><td><span class="pill rp">High</span></td></tr>
+        <tr><td>Top 2 Doctors % Revenue</td><td style="color:#e74c3c;font-weight:700">22.4%</td><td>20.7%</td><td>&lt;15%</td><td><span class="pill rp">High</span></td></tr>
+        <tr><td>Top 5 Doctors % Revenue</td><td style="color:#e67e22;font-weight:700">36.4%</td><td>33.7%</td><td>&lt;30%</td><td><span class="pill op">Medium</span></td></tr>
+        <tr><td>Top 10 Doctors % Revenue</td><td>55.8%</td><td>51.2%</td><td>&lt;50%</td><td><span class="pill op">Medium</span></td></tr>
+        <tr><td>Single Dept Concentration (Med Onco)</td><td style="color:#e74c3c;font-weight:700">14.4%</td><td>13.2%</td><td>&lt;12%</td><td><span class="pill rp">High</span></td></tr>
+        <tr><td>Gini Coefficient (Doctor Revenue)</td><td>0.72</td><td>0.68</td><td>&lt;0.60</td><td><span class="pill op">Medium</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== PAGE: QUADRANT ===== -->
+<div id="page-quadrant" class="page">
+  <div class="card">
+    <div class="card-title" id="qTitle">Volume vs ARPP-IP — Department Revenue Matrix</div>
+    <div class="card-sub" id="qSub">Bubble size = total revenue. Dashed lines = medians. Click axes buttons to change dimensions.</div>
+    <div style="position:relative;height:460px"><canvas id="quadChart"></canvas></div>
+  </div>
+  <div class="g2">
+    <div class="card" style="background:linear-gradient(135deg,#dcfce7,#bbf7d0);border:1px solid #86efac">
+      <div class="card-title" style="color:#166534">&#x1F4C8; High Volume · High Revenue per Case</div>
+      <div id="matStar" style="font-size:0.72rem;color:#166534;line-height:1.7"></div>
+    </div>
+    <div class="card" style="background:linear-gradient(135deg,#ede9fe,#ddd6fe);border:1px solid #c4b5fd">
+      <div class="card-title" style="color:#6d28d9">&#x1F4A0; Low Volume · High Revenue per Case</div>
+      <div id="matPremium" style="font-size:0.72rem;color:#6d28d9;line-height:1.7"></div>
+    </div>
+    <div class="card" style="background:linear-gradient(135deg,#fff7ed,#fed7aa);border:1px solid #fdba74">
+      <div class="card-title" style="color:#9a3412">&#x1F4CA; High Volume · Low Revenue per Case</div>
+      <div id="matCash" style="font-size:0.72rem;color:#9a3412;line-height:1.7"></div>
+    </div>
+    <div class="card" style="background:linear-gradient(135deg,#f1f5f9,#e2e8f0);border:1px solid #cbd5e1">
+      <div class="card-title" style="color:#475569">&#x1F4CB; Low Volume · Low Revenue per Case</div>
+      <div id="matQuestion" style="font-size:0.72rem;color:#475569;line-height:1.7"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PAGE: MONTHLY ===== -->
+<div id="page-monthly" class="page">
+  <div class="card">
+    <div class="card-title">Monthly Revenue — IP vs OP (&#x20B9; Crore, FY26 YTD)</div>
+    <div class="card-sub">IP typically 69-71% of monthly revenue. Peak in January (₹42.8 Cr).</div>
+    <div style="position:relative;height:260px"><canvas id="monthStack"></canvas></div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Top 5 Departments — Monthly Revenue Trend</div>
+      <div class="card-sub">Medical Oncology, Nephrology, Neuro Surgery, GI Surgery, Cardiology</div>
+      <div style="position:relative;height:260px"><canvas id="deptTrend"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">IP Discharge &amp; ADR — Monthly</div>
+      <div class="card-sub">Discharge count (left axis) vs ADR in Cr (right axis)</div>
+      <div style="position:relative;height:260px"><canvas id="discOcc"></canvas></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ===== PAGE: PAYOR ===== -->
+<div id="page-payor" class="page">
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Payor Mix — FY26 YTD</div>
+      <div class="card-sub">Cash at 66% (₹247 Cr), Insurance 26% (₹96 Cr), Government 6% (₹21 Cr), Corporate 2.5% (₹9 Cr). Insurance share improved vs FY25.</div>
+      <div style="position:relative;height:280px"><canvas id="payorDonut"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Top Insurance Partners (&#x20B9; Lakhs)</div>
+      <div class="card-sub">Top 5 TPAs = 60.3% of insurance revenue</div>
+      <div style="position:relative;height:280px"><canvas id="insuranceBar"></canvas></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Insurance Partner Details — FY26 YTD</div>
+    <table class="tbl">
+      <thead><tr><th>#</th><th>TPA / Insurance</th><th>Revenue (₹ L)</th><th>% of Insurance</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr class="top3"><td>1</td><td>Star Health & Allied Insurance</td><td style="font-weight:700">₹1,795.7</td><td>18.7%</td><td><span class="pill gp">Top Partner</span></td></tr>
+        <tr class="top3"><td>2</td><td>Medi Assist</td><td style="font-weight:700">₹1,775.0</td><td>18.5%</td><td><span class="pill gp">Top Partner</span></td></tr>
+        <tr class="top3"><td>3</td><td>Health Insurance TPA of India</td><td style="font-weight:700">₹856.5</td><td>8.9%</td><td><span class="pill op">Growing</span></td></tr>
+        <tr><td>4</td><td>Vidal Health</td><td>₹837.2</td><td>8.7%</td><td><span class="pill op">Growing</span></td></tr>
+        <tr><td>5</td><td>Aasandha (Maldives Govt)</td><td>₹490.4</td><td>5.1%</td><td><span class="pill bp">International</span></td></tr>
+        <tr><td>6</td><td>ICICI Lombard</td><td>₹424.4</td><td>4.4%</td><td><span class="pill grp">Stable</span></td></tr>
+        <tr><td>7</td><td>Niva Bupa</td><td>₹361.8</td><td>3.8%</td><td><span class="pill grp">Stable</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== PAGE: BENCHMARKS ===== -->
+<div id="page-benchmarks" class="page">
+  <div class="ibox blue">
+    <div class="ibox-title">&#x1F4D0; Peer Benchmarking — LHRC vs Apollo vs IHH India</div>
+    <div class="ibox-text">LHRC recorded 52% occupancy over the YTD period vs Apollo 68% and IHH 72%. ARPOB for the period was ₹35,188 vs Apollo ₹60,588, a gap of ₹25,400.</div>
+  </div>
+
+  <div class="kpi-strip" style="grid-template-columns:repeat(5,1fr)">
+    <div class="kpi" style="border-color:#1a3a5c"><div class="kpi-label">LHRC Occupancy</div><div class="kpi-value" style="color:#1a3a5c">52%</div><div class="kpi-sub">vs Apollo 68% &middot; IHH 72%</div></div>
+    <div class="kpi" style="border-color:#27ae60"><div class="kpi-label">LHRC ALOS</div><div class="kpi-value" style="color:#27ae60">4.06 days</div><div class="kpi-sub">vs Apollo 3.32d &middot; IHH 4.2d</div></div>
+    <div class="kpi" style="border-color:#8e44ad"><div class="kpi-label">LHRC EBITDA (est)</div><div class="kpi-value" style="color:#8e44ad">18%</div><div class="kpi-sub">vs Apollo 24.6% &middot; IHH 18%</div></div>
+    <div class="kpi" style="border-color:#e74c3c"><div class="kpi-label">LHRC ARPOB</div><div class="kpi-value" style="color:#e74c3c">&#x20B9;35,188</div><div class="kpi-sub">vs Apollo &#x20B9;60,588</div></div>
+    <div class="kpi" style="border-color:#1976d2"><div class="kpi-label">Insurance Mix</div><div class="kpi-value" style="color:#1976d2">26%</div><div class="kpi-sub">vs Apollo 45% &middot; IHH 35%</div></div>
+  </div>
+
+  <div class="g2">
+    <div class="card"><div class="card-title">ARPOB — &#x20B9;/Occupied Bed/Day</div><div style="position:relative;height:240px"><canvas id="bArpob"></canvas></div></div>
+    <div class="card"><div class="card-title">Bed Occupancy Rate (%)</div><div style="position:relative;height:240px"><canvas id="bOcc"></canvas></div></div>
+  </div>
+  <div class="g2">
+    <div class="card"><div class="card-title">ALOS — Average Length of Stay (Days)</div><div style="position:relative;height:240px"><canvas id="bAlos"></canvas></div></div>
+    <div class="card"><div class="card-title">Payor Mix — LHRC vs Apollo vs IHH</div><div style="position:relative;height:240px"><canvas id="bPayor"></canvas></div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Detailed Benchmark Comparison Table</div>
+    <table class="tbl">
+      <thead><tr><th>Metric</th><th>LHRC FY26 YTD</th><th>IHH India FY25</th><th>Apollo FY25</th><th>LHRC Gap vs Apollo</th></tr></thead>
+      <tbody>
+        <tr><td>Operational Beds</td><td>471</td><td>5,008 (28 hospitals)</td><td>8,025 (45 hospitals)</td><td style="color:#718096">Different scale</td></tr>
+        <tr><td>Occupancy Rate</td><td>52%</td><td>72%</td><td>68%</td><td><span class="pill rp">&#x25BC; 16 ppt</span></td></tr>
+        <tr><td>ALOS (days)</td><td>4.06</td><td>4.2</td><td>3.32</td><td><span class="pill op">&#x25B2; 0.74d longer</span></td></tr>
+        <tr><td>ARPOB (&#x20B9;/day)</td><td>&#x20B9;35,188</td><td>~&#x20B9;47,100</td><td>&#x20B9;60,588</td><td><span class="pill rp">&#x25BC; &#x20B9;25,400</span></td></tr>
+        <tr><td>ARPP-IP</td><td>&#x20B9;1.43 L</td><td>~&#x20B9;1.96 L</td><td>&#x20B9;1.73 L</td><td><span class="pill rp">&#x25BC; &#x20B9;30,000</span></td></tr>
+        <tr><td>Insurance % (Payor)</td><td>26%</td><td>~35%</td><td>45%</td><td><span class="pill rp">&#x25BC; 19 ppt</span></td></tr>
+        <tr><td>Revenue Growth YoY</td><td>~8% (annualized)</td><td>13%</td><td>9-10%</td><td><span class="pill gp">On track</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== PAGE: DOCTOR MIS ===== -->
+<div id="page-doctorMIS" class="page">
+  <div class="card">
+    <div class="card-title">&#x1F4CB; Department / Doctor MIS &mdash; Monthly Breakdown</div>
+    <div class="card-sub">Select a doctor to view month-wise IP Revenue, OP Revenue &amp; KPIs &middot; Amount in Lakhs &middot; Source: BRM FY26 &middot; Kochi</div>
+    <div class="filter-bar" style="margin-top:10px">
+      <div>
+        <div style="font-size:0.62rem;font-weight:700;color:#a0aec0;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.8px">Department</div>
+        <select class="sort-sel" id="misDeptSel" onchange="misDeptFilter()" style="width:230px"></select>
+      </div>
+      <div>
+        <div style="font-size:0.62rem;font-weight:700;color:#a0aec0;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.8px">Doctor</div>
+        <select class="sort-sel" id="misDocSel" onchange="misLoadDoc()" style="width:280px"></select>
+      </div>
+      <div>
+        <div style="font-size:0.62rem;font-weight:700;color:#a0aec0;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.8px">Search</div>
+        <input class="search-input" id="misSearch" placeholder="&#x1F50D; Type doctor name..." oninput="misSearchDoc()">
+      </div>
+    </div>
+  </div>
+  <div id="misStatRow" style="display:none;margin-bottom:14px">
+    <div class="kpi-strip" id="misKPIStrip" style="grid-template-columns:repeat(8,1fr)"></div>
+  </div>
+  <div class="g3" id="misTrendSection" style="display:none">
+    <div class="card">
+      <div class="card-title">IP Revenue &mdash; Monthly (&#x20B9; Lakhs)</div>
+      <div class="card-sub" id="misIPSub">&nbsp;</div>
+      <div style="position:relative;height:180px"><canvas id="misIPChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">OP Revenue &mdash; Monthly (&#x20B9; Lakhs)</div>
+      <div class="card-sub" id="misOPSub">&nbsp;</div>
+      <div style="position:relative;height:180px"><canvas id="misOPChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Total Revenue &mdash; Monthly (&#x20B9; Lakhs)</div>
+      <div class="card-sub" id="misTotSub">&nbsp;</div>
+      <div style="position:relative;height:180px"><canvas id="misTotChart"></canvas></div>
+    </div>
+  </div>
+  <div class="slabel">All Doctors &mdash; FY26 YTD Summary (click any row to load detail)</div>
+  <div class="card">
+    <div style="display:flex;gap:8px;margin-bottom:12px;align-items:center;flex-wrap:wrap">
+      <input class="search-input" id="sumSearch" placeholder="&#x1F50D; Search doctor or department..." oninput="renderDocSum()">
+      <select class="sort-sel" id="sumDeptSel" onchange="renderDocSum()"><option value="">All Departments</option></select>
+      <span id="sumCount" style="font-size:0.65rem;color:#a0aec0;margin-left:4px"></span>
+    </div>
+    <div style="overflow-x:auto">
+    <table class="tbl">
+      <thead><tr>
+        <th onclick="sortDocSum('name')">#&nbsp;Doctor</th>
+        <th onclick="sortDocSum('dept')">Department</th>
+        <th onclick="sortDocSum('total')" style="text-align:right;color:#1a3a5c">Total (Cr) &#x25BC;</th>
+        <th onclick="sortDocSum('ip')" style="text-align:right">IP (Cr)</th>
+        <th onclick="sortDocSum('op')" style="text-align:right">OP (Cr)</th>
+        <th onclick="sortDocSum('disc')" style="text-align:right">IP Disc.</th>
+        <th onclick="sortDocSum('beds')" style="text-align:right">Bed Days</th>
+        <th onclick="sortDocSum('opv')" style="text-align:right">OP Visits</th>
+        <th onclick="sortDocSum('arppOP')" style="text-align:right">ARPP(OP)</th>
+        <th onclick="sortDocSum('arppIP')" style="text-align:right">ARPP(IP)</th>
+        <th onclick="sortDocSum('arpob')" style="text-align:right">ARPOB</th>
+      </tr></thead>
+      <tbody id="tbDocSum"></tbody>
+    </table></div>
+  </div>
+</div>
+
+<script>
+// =============================================
+// BRM FY26 DATA — YTD 10 Months (Apr-Jan)
+// =============================================
+const BRM_DOCTORS = [
+  {"name":"GANGADHARAN V P","dept":"MEDICAL ONCOLOGY","ip":34.37,"op":18.52,"total":52.89,"opv":29574,"disc":4810,"beds":10506,"arppOP":6263,"arppIP":71460,"arpob":32717},
+  {"name":"ABI ABRAHAM M","dept":"NEPHROLOGY","ip":23.89,"op":8.04,"total":31.93,"opv":11986,"disc":648,"beds":6282,"arppOP":6708,"arppIP":368709,"arpob":38033},
+  {"name":"SUDISH KARUNAKARAN","dept":"NEURO SURGERY","ip":21.72,"op":1.65,"total":23.37,"opv":4753,"disc":733,"beds":5052,"arppOP":3476,"arppIP":296314,"arpob":42993},
+  {"name":"RAMESH H","dept":"GI SURGERY","ip":15.59,"op":1.30,"total":16.90,"opv":6003,"disc":763,"beds":4474,"arppOP":2172,"arppIP":204385,"arpob":34856},
+  {"name":"DATSON GEORGE P","dept":"UROLOGY","ip":10.93,"op":2.21,"total":13.14,"opv":7690,"disc":641,"beds":2086,"arppOP":2868,"arppIP":170534,"arpob":52403},
+  {"name":"PADMAKUMAR R","dept":"MINIMALLY INVASIVE SURGERY","ip":11.71,"op":0.75,"total":12.46,"opv":3485,"disc":636,"beds":1739,"arppOP":2163,"arppIP":184101,"arpob":67331},
+  {"name":"CHITRATHARA K","dept":"SURGICAL ONCOLOGY","ip":8.21,"op":2.45,"total":10.66,"opv":8741,"disc":587,"beds":2325,"arppOP":2803,"arppIP":139854,"arpob":35309},
+  {"name":"FADL H VEERANKUTTY","dept":"COMPREHENSIVE LIVER CARE","ip":8.60,"op":0.89,"total":9.49,"opv":1637,"disc":216,"beds":2068,"arppOP":5420,"arppIP":398238,"arpob":41595},
+  {"name":"JACOB VARGHESE","dept":"JOINT REPLACEMENT","ip":7.06,"op":1.09,"total":8.15,"opv":2877,"disc":215,"beds":800,"arppOP":3800,"arppIP":328188,"arpob":88200},
+  {"name":"JITHIN S KUMAR","dept":"NEPHROLOGY","ip":5.72,"op":2.29,"total":8.01,"opv":5300,"disc":257,"beds":1695,"arppOP":4315,"arppIP":222741,"arpob":33773},
+  {"name":"ROY J MUKKADA","dept":"GASTROENTEROLOGY","ip":4.29,"op":3.67,"total":7.96,"opv":8000,"disc":390,"beds":1388,"arppOP":4585,"arppIP":110051,"arpob":30922},
+  {"name":"RAJESH SIMON","dept":"FOOT & ANKLE","ip":7.08,"op":0.89,"total":7.97,"opv":3703,"disc":302,"beds":1478,"arppOP":2391,"arppIP":234442,"arpob":47904},
+  {"name":"ANANDKUMAR V","dept":"CARDIOLOGY","ip":5.70,"op":1.95,"total":7.64,"opv":4698,"disc":353,"beds":1130,"arppOP":4141,"arppIP":161353,"arpob":50405},
+  {"name":"GEORGE JACOB","dept":"JOINT REPLACEMENT","ip":6.47,"op":0.64,"total":7.11,"opv":2247,"disc":200,"beds":727,"arppOP":2844,"arppIP":323351,"arpob":88955},
+  {"name":"SHAWN T JOSEPH","dept":"HEAD AND NECK ONCOLOGY","ip":5.94,"op":0.82,"total":6.76,"opv":2284,"disc":210,"beds":1106,"arppOP":3605,"arppIP":282656,"arpob":53669},
+  {"name":"CIBI ISSAC","dept":"CARDIOLOGY","ip":5.21,"op":1.48,"total":6.69,"opv":5205,"disc":401,"beds":1085,"arppOP":2844,"arppIP":129828,"arpob":47983},
+  {"name":"JOHN ALEXANDER","dept":"GENERAL MEDICINE","ip":4.12,"op":2.02,"total":6.15,"opv":6624,"disc":487,"beds":2402,"arppOP":3055,"arppIP":84702,"arpob":17173},
+  {"name":"APPU BENNY THOMAS","dept":"JOINT REPLACEMENT","ip":5.23,"op":0.63,"total":5.86,"opv":2731,"disc":168,"beds":823,"arppOP":2307,"arppIP":311015,"arpob":63488},
+  {"name":"JOSEPH EDISON","dept":"RADIATION ONCOLOGY","ip":0.12,"op":5.68,"total":5.80,"opv":4250,"disc":13,"beds":64,"arppOP":13366,"arppIP":91586,"arpob":18603},
+  {"name":"SUJITH D.S.","dept":"CARDIO THORACIC SURGERY","ip":5.21,"op":0.30,"total":5.51,"opv":971,"disc":168,"beds":1013,"arppOP":3103,"arppIP":310307,"arpob":51463},
+  {"name":"JOSE THOMAS P","dept":"ORTHOPEDICS","ip":4.70,"op":0.23,"total":4.93,"opv":1439,"disc":157,"beds":1299,"arppOP":1610,"arppIP":299135,"arpob":36154},
+  {"name":"KRISHNA KUMAR R","dept":"SPINE SURGERY","ip":3.75,"op":0.86,"total":4.61,"opv":2557,"disc":115,"beds":401,"arppOP":3371,"arppIP":326065,"arpob":93510},
+  {"name":"BINDU VARGHESE","dept":"NEUROLOGY","ip":3.30,"op":1.18,"total":4.48,"opv":4364,"disc":295,"beds":1291,"arppOP":2705,"arppIP":111992,"arpob":25591},
+  {"name":"SHUBHA ACHYUTHA","dept":"FAMILY MEDICINE","ip":0.00,"op":4.21,"total":4.20,"opv":4100,"disc":0,"beds":0,"arppOP":10264,"arppIP":0,"arpob":0},
+  {"name":"SMITHA JOY","dept":"OB & GYNEC","ip":2.93,"op":1.17,"total":4.10,"opv":5821,"disc":295,"beds":852,"arppOP":2010,"arppIP":99322,"arpob":34390},
+  {"name":"MAHESH S","dept":"GI SURGERY","ip":3.64,"op":0.35,"total":3.98,"opv":2834,"disc":192,"beds":1009,"arppOP":1228,"arppIP":189396,"arpob":36040},
+  {"name":"KARTIK GANESH","dept":"NEPHROLOGY","ip":2.51,"op":0.94,"total":3.46,"opv":1072,"disc":47,"beds":281,"arppOP":4444,"arppIP":189572,"arpob":31708},
+  {"name":"AJU AJAY","dept":"CARDIOLOGY","ip":2.99,"op":0.44,"total":3.43,"opv":2184,"disc":190,"beds":535,"arppOP":2026,"arppIP":157154,"arpob":55812},
+  {"name":"VIDYA M.V","dept":"NEUROLOGY","ip":2.54,"op":0.77,"total":3.31,"opv":3591,"disc":312,"beds":1530,"arppOP":2174,"arppIP":113414,"arpob":23128},
+  {"name":"ARUN A","dept":"PEDIATRICS","ip":2.02,"op":1.22,"total":3.24,"opv":12998,"disc":617,"beds":2249,"arppOP":941,"arppIP":32757,"arpob":8984},
+  {"name":"MURALI KRISHNA MENON","dept":"NEUROLOGY","ip":2.13,"op":0.94,"total":3.07,"opv":5448,"disc":395,"beds":1492,"arppOP":1944,"arppIP":77421,"arpob":20497},
+  {"name":"ANTONY PAUL C","dept":"GASTROENTEROLOGY","ip":1.51,"op":1.40,"total":2.91,"opv":3767,"disc":168,"beds":495,"arppOP":3706,"arppIP":90083,"arpob":30573},
+  {"name":"MUJEEB RAHMAN K.K","dept":"PULMONARY CRITICAL CARE","ip":2.21,"op":0.60,"total":2.81,"opv":2331,"disc":152,"beds":784,"arppOP":2373,"arppIP":116682,"arpob":22622},
+  {"name":"HARI LAKSHMANAN P","dept":"PULMONOLOGY","ip":2.28,"op":0.46,"total":2.75,"opv":3564,"disc":232,"beds":995,"arppOP":1440,"arppIP":88012,"arpob":20522},
+  {"name":"PRADEEP GEORGE M","dept":"GASTROENTEROLOGY","ip":1.93,"op":0.73,"total":2.67,"opv":1217,"disc":106,"beds":371,"arppOP":4958,"arppIP":94161,"arpob":26903},
+  {"name":"IDICULA MATHEWS","dept":"ENT","ip":2.04,"op":0.60,"total":2.64,"opv":4057,"disc":161,"beds":419,"arppOP":1480,"arppIP":126708,"arpob":48709},
+  {"name":"ER PHYSICIAN","dept":"EMERGENCY DEPARTMENT","ip":0.01,"op":2.47,"total":2.48,"opv":16520,"disc":2,"beds":4,"arppOP":1495,"arppIP":47250,"arpob":23625},
+  {"name":"HARIKRISHNA K","dept":"CARDIOLOGY","ip":2.11,"op":0.32,"total":2.43,"opv":1339,"disc":143,"beds":490,"arppOP":2381,"arppIP":147497,"arpob":43045},
+  {"name":"DENNIS P JOSE","dept":"FOOT & ANKLE","ip":1.98,"op":0.42,"total":2.41,"opv":2637,"disc":106,"beds":738,"arppOP":1603,"arppIP":187223,"arpob":26891},
+  {"name":"ARUN OOMMEN","dept":"NEURO SURGERY","ip":2.23,"op":0.76,"total":2.98,"opv":1764,"disc":103,"beds":489,"arppOP":4291,"arppIP":216118,"arpob":45522}
+];
+
+const BRM_DEPTS = [
+  {"name":"MEDICAL ONCOLOGY","ip":34.37,"op":18.81,"total":53.18,"pct":14.4,"opv":35034,"disc":4810,"beds":10506,"arppOP":5370,"arppIP":71454,"arpob":32714},
+  {"name":"NEPHROLOGY","ip":32.13,"op":13.14,"total":45.27,"pct":12.2,"opv":18358,"disc":952,"beds":8258,"arppOP":7158,"arppIP":337500,"arpob":38912},
+  {"name":"NEURO SURGERY","ip":26.10,"op":2.74,"total":28.84,"pct":7.8,"opv":6517,"disc":836,"beds":5541,"arppOP":4203,"arppIP":312201,"arpob":47107},
+  {"name":"GI SURGERY","ip":20.38,"op":2.05,"total":22.43,"pct":6.1,"opv":9092,"disc":955,"beds":5483,"arppOP":2254,"arppIP":213403,"arpob":37169},
+  {"name":"JOINT REPLACEMENT","ip":18.75,"op":2.36,"total":21.11,"pct":5.7,"opv":7855,"disc":583,"beds":2350,"arppOP":3003,"arppIP":321612,"arpob":79787},
+  {"name":"CARDIOLOGY","ip":16.12,"op":4.28,"total":20.41,"pct":5.5,"opv":13426,"disc":1087,"beds":3240,"arppOP":3189,"arppIP":148295,"arpob":49753},
+  {"name":"GASTROENTEROLOGY","ip":10.63,"op":7.72,"total":18.35,"pct":5.0,"opv":14201,"disc":664,"beds":2254,"arppOP":5437,"arppIP":160090,"arpob":47160},
+  {"name":"UROLOGY","ip":13.25,"op":3.19,"total":16.44,"pct":4.4,"opv":9827,"disc":797,"beds":2541,"arppOP":3247,"arppIP":166248,"arpob":52145},
+  {"name":"MINIMALLY INVASIVE SURGERY","ip":11.71,"op":0.75,"total":12.46,"pct":3.4,"opv":3485,"disc":636,"beds":1739,"arppOP":2163,"arppIP":184101,"arpob":67331},
+  {"name":"NEUROLOGY","ip":7.97,"op":2.89,"total":10.86,"pct":2.9,"opv":13403,"disc":1002,"beds":4313,"arppOP":2156,"arppIP":79541,"arpob":18479},
+  {"name":"SURGICAL ONCOLOGY","ip":8.21,"op":2.49,"total":10.70,"pct":2.9,"opv":8946,"disc":587,"beds":2325,"arppOP":2783,"arppIP":139863,"arpob":35309},
+  {"name":"FOOT & ANKLE","ip":9.06,"op":1.31,"total":10.37,"pct":2.8,"opv":6340,"disc":408,"beds":2216,"arppOP":2066,"arppIP":222059,"arpob":40885},
+  {"name":"COMPREHENSIVE LIVER CARE","ip":8.78,"op":0.94,"total":9.72,"pct":2.6,"opv":1719,"disc":265,"beds":2428,"arppOP":5467,"arppIP":331321,"arpob":36161},
+  {"name":"GENERAL MEDICINE","ip":4.59,"op":2.88,"total":7.47,"pct":2.0,"opv":8833,"disc":634,"beds":3068,"arppOP":3262,"arppIP":72397,"arpob":14959},
+  {"name":"ORTHOPEDICS","ip":6.45,"op":0.56,"total":7.01,"pct":1.9,"opv":2515,"disc":246,"beds":1774,"arppOP":2227,"arppIP":262195,"arpob":36357},
+  {"name":"OB & GYNEC","ip":4.85,"op":1.87,"total":6.72,"pct":1.8,"opv":8693,"disc":479,"beds":1318,"arppOP":2152,"arppIP":101253,"arpob":36800},
+  {"name":"PEDIATRICS","ip":4.25,"op":2.08,"total":6.33,"pct":1.7,"opv":21663,"disc":1028,"beds":3739,"arppOP":960,"arppIP":41342,"arpob":11367},
+  {"name":"RADIATION ONCOLOGY","ip":0.12,"op":5.68,"total":5.80,"pct":1.6,"opv":4691,"disc":13,"beds":64,"arppOP":12109,"arppIP":92308,"arpob":18750},
+  {"name":"CARDIO THORACIC SURGERY","ip":5.21,"op":0.31,"total":5.52,"pct":1.5,"opv":1087,"disc":182,"beds":1155,"arppOP":2852,"arppIP":286264,"arpob":45108},
+  {"name":"SPINE SURGERY","ip":3.75,"op":0.86,"total":4.61,"pct":1.2,"opv":2557,"disc":115,"beds":401,"arppOP":3371,"arppIP":326065,"arpob":93510}
+];
+
+// Monthly data FY26 (10 months)
+const months = ['Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan'];
+const monthlyIP = [22.93, 25.94, 22.94, 27.10, 28.08, 27.90, 27.61, 24.47, 26.55, 30.36];
+const monthlyOP = [9.63, 10.13, 9.20, 11.05, 11.07, 10.51, 10.49, 9.48, 10.04, 11.21];
+const monthlyFB = [1.33, 1.41, 1.32, 1.55, 1.52, 1.48, 1.46, 1.37, 1.43, 1.56];
+const monthlyTotal = [33.89, 37.49, 33.46, 39.70, 40.68, 39.89, 39.56, 35.32, 38.02, 43.13];
+const monthlyADR = [1.30, 1.44, 1.29, 1.53, 1.56, 1.53, 1.52, 1.36, 1.46, 1.66];
+
+// Payor data
+const payorData = {
+  cash: {amt: 247.07, pct: 66.2},
+  insurance: {amt: 96.02, pct: 25.7},
+  government: {amt: 20.68, pct: 5.5},
+  corporate: {amt: 9.33, pct: 2.5}
+};
+
+const insurancePartners = [
+  {name: 'Star Health', amt: 1795.7, pct: 18.7},
+  {name: 'Medi Assist', amt: 1775.0, pct: 18.5},
+  {name: 'Health Insurance TPA', amt: 856.5, pct: 8.9},
+  {name: 'Vidal Health', amt: 837.2, pct: 8.7},
+  {name: 'Aasandha', amt: 490.4, pct: 5.1},
+  {name: 'ICICI Lombard', amt: 424.4, pct: 4.4},
+  {name: 'Niva Bupa', amt: 361.8, pct: 3.8}
+];
+
+// =============================================
+// CHART DEFAULTS & HELPERS
+// =============================================
+Chart.defaults.responsive = true;
+Chart.defaults.maintainAspectRatio = false;
+
+const TOTAL_REV = BRM_DOCTORS.reduce((s,d)=>s+d.total,0);
+const C = ['#1a3a5c','#e67e22','#27ae60','#8e44ad','#e74c3c','#1976d2','#c0392b','#16a085','#f39c12','#2c3e50'];
+const fmt = (v,d=2) => v == null ? '-' : v.toFixed(d);
+const fmtK = v => v >= 100000 ? '₹'+(v/100000).toFixed(2)+' L' : '₹'+Math.round(v/1000)+'K';
+const tierOf = d => d.total >= 20 ? '<span class="pill gp">Pillar</span>' : d.total >= 10 ? '<span class="pill op">Growth</span>' : d.total >= 5 ? '<span class="pill bp">Active</span>' : '<span class="pill grp">Minor</span>';
+const bcgOf = d => {
+  const medDisc = 400, medArpp = 180000;
+  if(d.disc >= medDisc && d.arppIP >= medArpp) return 'High ARPP';
+  if(d.disc >= medDisc && d.arppIP < medArpp) return 'High Volume';
+  if(d.disc < medDisc && d.arppIP >= medArpp) return 'Premium';
+  return 'Question';
+};
+const bcgPill = b => '';
+
+// =============================================
+// TAB SWITCHING
+// =============================================
+let chartsInited = new Set();
+function showTab(name, el) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  el.classList.add('active');
+  if (!chartsInited.has(name)) { chartsInited.add(name); initChartsFor(name); }
+  if (name==='doctorMIS') initDocMIS();
+}
+
+function initChartsFor(name) {
+  if (name === 'overview')      { buildOverview(); }
+  if (name === 'departments')   { buildDeptTable(); buildDeptStack(); buildDeptPies(); }
+  if (name === 'doctors')       { filterDocs('ALL', document.querySelector('.fbtn.active')); }
+  if (name === 'concentration') { buildConcentration(); }
+  if (name === 'quadrant')      { buildQuadrant(); }
+  if (name === 'monthly')       { buildMonthly(); }
+  if (name === 'payor')         { buildPayor(); }
+  if (name === 'benchmarks')    { buildBenchmarks(); }
+}
+
+// =============================================
+// OVERVIEW CHARTS
+// =============================================
+function buildOverview() {
+  // Department bar
+  const topDepts = [...BRM_DEPTS].sort((a,b)=>b.total-a.total).slice(0,15);
+  new Chart(document.getElementById('deptBar'), {
+    type: 'bar',
+    data: {
+      labels: topDepts.map(d=>d.name.substring(0,15)),
+      datasets: [{
+        data: topDepts.map(d=>d.total),
+        backgroundColor: topDepts.map((_,i)=>C[i%C.length]),
+        borderRadius: 4
+      }]
+    },
+    options: {
+      indexAxis: 'y',
+      plugins: { legend:{display:false}, tooltip:{callbacks:{label:ctx=>`₹${ctx.raw.toFixed(2)} Cr`}} },
+      scales: { x:{ticks:{callback:v=>'₹'+v+'Cr',font:{size:9}}}, y:{ticks:{font:{size:9}}} }
+    }
+  });
+
+  // Revenue mix donut
+  new Chart(document.getElementById('mixDonut'), {
+    type: 'doughnut',
+    data: {
+      labels: ['IP Revenue','OP Revenue','F&B Revenue'],
+      datasets: [{data:[264,100,14.4],backgroundColor:['#1a3a5c','#e67e22','#8e44ad'],borderWidth:0}]
+    },
+    options: { cutout:'60%', plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:12}}} }
+  });
+
+  // Doctor bar
+  const topDocs = [...BRM_DOCTORS].sort((a,b)=>b.total-a.total).slice(0,12);
+  new Chart(document.getElementById('doctorBar'), {
+    type: 'bar',
+    data: {
+      labels: topDocs.map(d=>d.name.substring(0,18)),
+      datasets: [{data:topDocs.map(d=>d.total),backgroundColor:C,borderRadius:4}]
+    },
+    options: {
+      indexAxis:'y',
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`₹${ctx.raw.toFixed(2)} Cr`}}},
+      scales:{x:{ticks:{callback:v=>'₹'+v+'Cr',font:{size:9}}},y:{ticks:{font:{size:8}}}}
+    }
+  });
+
+  // Concentration curve
+  const sorted = [...BRM_DOCTORS].sort((a,b)=>b.total-a.total);
+  let cumul = 0;
+  const cumulData = sorted.map((d,i)=>{cumul+=d.total;return {x:i+1,y:(cumul/TOTAL_REV)*100};});
+  new Chart(document.getElementById('concLine'), {
+    type: 'line',
+    data: {
+      datasets: [
+        {label:'Actual',data:cumulData,borderColor:'#e74c3c',backgroundColor:'rgba(231,76,60,0.1)',fill:true,tension:0.3,pointRadius:0},
+        {label:'Equal',data:sorted.map((_,i)=>({x:i+1,y:((i+1)/sorted.length)*100})),borderColor:'#a0aec0',borderDash:[5,5],pointRadius:0}
+      ]
+    },
+    options: {
+      plugins:{legend:{position:'bottom',labels:{font:{size:9},boxWidth:10}}},
+      scales:{x:{type:'linear',title:{display:true,text:'# Doctors',font:{size:9}},ticks:{font:{size:8}}},y:{title:{display:true,text:'% Revenue',font:{size:9}},ticks:{callback:v=>v+'%',font:{size:8}}}}
+    }
+  });
+}
+
+// =============================================
+// DEPARTMENT TABLE & CHARTS
+// =============================================
+let dSortKey = 'total', dSortAsc = false;
+function sortDept(key) {
+  if (dSortKey === key) dSortAsc = !dSortAsc;
+  else { dSortKey = key; dSortAsc = false; }
+  buildDeptTable();
+}
+
+function buildDeptTable() {
+  const sorted = [...BRM_DEPTS].sort((a, b) => {
+    if (dSortKey === 'name') return dSortAsc ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name);
+    const av = a[dSortKey] ?? 0, bv = b[dSortKey] ?? 0;
+    return dSortAsc ? av - bv : bv - av;
+  });
+  const tbody = document.getElementById('deptTbody');
+  tbody.innerHTML = sorted.map((d, i) => {
+    const tier = d.total >= 20 ? '<span class="pill gp">Pillar</span>' : d.total >= 10 ? '<span class="pill op">Growth</span>' : d.total >= 5 ? '<span class="pill bp">Active</span>' : '<span class="pill grp">Support</span>';
+    return `<tr class="${i<3?'top3':''}">
+      <td style="color:#a0aec0;font-weight:700">${i+1}</td>
+      <td style="font-weight:700">${d.name}</td>
+      <td style="font-weight:800">₹${fmt(d.total)}</td>
+      <td><div style="display:flex;align-items:center;gap:4px"><div style="width:${Math.round(d.pct*4)}px;height:4px;background:#1a3a5c;border-radius:2px;min-width:2px"></div>${fmt(d.pct,1)}%</div></td>
+      <td>₹${fmt(d.ip)}</td>
+      <td>₹${fmt(d.op)}</td>
+      <td>${d.disc.toLocaleString()}</td>
+      <td>${d.opv.toLocaleString()}</td>
+      <td>₹${d.arppIP.toLocaleString()}</td>
+      <td>₹${d.arppOP.toLocaleString()}</td>
+      <td>₹${d.arpob.toLocaleString()}</td>
+      <td>${tier}</td>
+    </tr>`;
+  }).join('');
+}
+
+function buildDeptStack() {
+  const depts = [...BRM_DEPTS].sort((a,b)=>b.total-a.total).slice(0,15);
+  new Chart(document.getElementById('deptStack'), {
+    type: 'bar',
+    data: {
+      labels: depts.map(d=>d.name.substring(0,18)),
+      datasets: [
+        {label:'IP Revenue',data:depts.map(d=>d.ip),backgroundColor:'#1a3a5c',borderRadius:2},
+        {label:'OP Revenue',data:depts.map(d=>d.op),backgroundColor:'#e67e22',borderRadius:2}
+      ]
+    },
+    options: {
+      indexAxis:'y',
+      plugins:{legend:{position:'top',labels:{font:{size:10},boxWidth:12}}},
+      scales:{x:{stacked:true,ticks:{callback:v=>'₹'+v+'Cr',font:{size:9}}},y:{stacked:true,ticks:{font:{size:9}}}}
+    }
+  });
+}
+
+function buildDeptPies() {
+  const pieConfig = (labels, data) => ({
+    type:'pie',
+    data:{labels,datasets:[{data,backgroundColor:C.slice(0,labels.length),borderWidth:1}]},
+    options:{plugins:{legend:{position:'right',labels:{font:{size:8},boxWidth:8}}}}
+  });
+  
+  // Medical Oncology - single consultant dominant
+  new Chart(document.getElementById('pieOnco'), pieConfig(['Gangadharan VP','Others'],[52.89,0.29]));
+  // Nephrology
+  new Chart(document.getElementById('pieNephro'), pieConfig(['Abi Abraham M','Jithin S Kumar','Kartik Ganesh','Others'],[31.93,8.01,3.46,1.87]));
+  // Neuro Surgery
+  new Chart(document.getElementById('pieNeuro'), pieConfig(['Sudish K','Arun Oommen','Others'],[23.37,2.98,2.49]));
+  // GI Surgery
+  new Chart(document.getElementById('pieGI'), pieConfig(['Ramesh H','Mahesh S','Others'],[16.90,3.98,1.55]));
+  // Gastroenterology
+  new Chart(document.getElementById('pieGastro'), pieConfig(['Roy J Mukkada','Maya P','Antony Paul','Pradeep George','Others'],[7.96,3.50,2.91,2.67,1.31]));
+  // Cardiology
+  new Chart(document.getElementById('pieCardio'), pieConfig(['Anandkumar V','Cibi Issac','Aju Ajay','Harikrishna K','Others'],[7.64,6.69,3.43,2.43,0.22]));
+}
+
+// =============================================
+// DOCTOR FILTERING
+// =============================================
+let currentDeptFilter = 'ALL';
+function filterDocs(dept, btn) {
+  if(dept) currentDeptFilter = dept;
+  document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  
+  const search = (document.getElementById('docSearch')?.value || '').toLowerCase();
+  const sortKey = document.getElementById('docSort')?.value || 'total';
+  
+  let filtered = BRM_DOCTORS.filter(d => {
+    if(currentDeptFilter !== 'ALL' && !d.dept.toUpperCase().includes(currentDeptFilter.toUpperCase())) return false;
+    if(search && !d.name.toLowerCase().includes(search) && !d.dept.toLowerCase().includes(search)) return false;
+    return true;
+  });
+  
+  filtered.sort((a,b) => b[sortKey] - a[sortKey]);
+  
+  const tbody = document.getElementById('docTbody');
+  tbody.innerHTML = filtered.map((d,i) => {
+    const pct = (d.total / TOTAL_REV * 100).toFixed(1);
+    const bcg = bcgOf(d);
+    return `<tr class="${i<3?'top3':''}">
+      <td style="color:#a0aec0;font-weight:700">${i+1}</td>
+      <td style="font-weight:700">${d.name}</td>
+      <td style="color:#718096;font-size:0.66rem">${d.dept}</td>
+      <td style="font-weight:800">₹${fmt(d.total)}</td>
+      <td>${pct}%</td>
+      <td>₹${fmt(d.ip)}</td>
+      <td>₹${fmt(d.op)}</td>
+      <td>${d.disc.toLocaleString()}</td>
+      <td>${d.beds.toLocaleString()}</td>
+      <td>${d.opv.toLocaleString()}</td>
+      <td>₹${d.arppIP.toLocaleString()}</td>
+      <td>₹${d.arpob.toLocaleString()}</td>
+      <td>₹${d.arppOP.toLocaleString()}</td>
+    </tr>`;
+  }).join('');
+}
+
+// =============================================
+// CONCENTRATION CHARTS
+// =============================================
+function buildConcentration() {
+  const sorted = [...BRM_DOCTORS].sort((a,b)=>b.total-a.total);
+  const top10 = sorted.slice(0,10);
+  
+  // Bar chart
+  new Chart(document.getElementById('concBar'), {
+    type: 'bar',
+    data: {
+      labels: top10.map(d=>d.name.substring(0,15)),
+      datasets: [{
+        data: top10.map(d=>(d.total/TOTAL_REV*100)),
+        backgroundColor: top10.map((_,i)=>i<2?'#e74c3c':i<5?'#e67e22':'#1976d2'),
+        borderRadius: 4
+      }]
+    },
+    options: {
+      plugins:{legend:{display:false}},
+      scales:{y:{ticks:{callback:v=>v+'%',font:{size:9}}},x:{ticks:{font:{size:8}}}}
+    }
+  });
+  
+  // Cumulative
+  let cumul = 0;
+  new Chart(document.getElementById('concCumul'), {
+    type: 'line',
+    data: {
+      labels: sorted.slice(0,30).map((_,i)=>i+1),
+      datasets: [{
+        data: sorted.slice(0,30).map(d=>{cumul+=d.total;return (cumul/TOTAL_REV*100);}),
+        borderColor: '#e74c3c',
+        backgroundColor: 'rgba(231,76,60,0.1)',
+        fill: true,
+        tension: 0.3
+      }]
+    },
+    options: {
+      plugins:{legend:{display:false}},
+      scales:{x:{title:{display:true,text:'# Doctors'},ticks:{font:{size:9}}},y:{ticks:{callback:v=>v+'%',font:{size:9}}}}
+    }
+  });
+}
+
+// =============================================
+// QUADRANT CHART
+// =============================================
+function buildQuadrant() {
+  const deptQ = BRM_DEPTS.filter(d=>d.disc>0).map(d=>({
+    name: d.name,
+    x: d.disc,
+    y: d.arppIP,
+    r: Math.sqrt(d.total)*3,
+    total: d.total
+  }));
+  
+  const medX = deptQ.reduce((s,d)=>s+d.x,0)/deptQ.length;
+  const medY = deptQ.reduce((s,d)=>s+d.y,0)/deptQ.length;
+  
+  new Chart(document.getElementById('quadChart'), {
+    type: 'bubble',
+    data: {
+      datasets: deptQ.map((d,i)=>({
+        label: d.name,
+        data: [{x:d.x,y:d.y,r:d.r}],
+        backgroundColor: C[i%C.length]+'99',
+        borderColor: C[i%C.length]
+      }))
+    },
+    options: {
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${deptQ[ctx.datasetIndex].name}: ₹${deptQ[ctx.datasetIndex].total.toFixed(1)}Cr`}}},
+      scales:{
+        x:{title:{display:true,text:'IP Discharges',font:{size:10}},ticks:{font:{size:9}}},
+        y:{title:{display:true,text:'ARPP-IP (₹)',font:{size:10}},ticks:{callback:v=>'₹'+Math.round(v/1000)+'K',font:{size:9}}}
+      }
+    }
+  });
+  
+  // Categorize
+  const stars=[], premium=[], cash=[], question=[];
+  deptQ.forEach(d=>{
+    const cat = d.x>=medX && d.y>=medY ? 'star' : d.x<medX && d.y>=medY ? 'premium' : d.x>=medX && d.y<medY ? 'cash' : 'question';
+    if(cat==='star') stars.push(d.name);
+    if(cat==='premium') premium.push(d.name);
+    if(cat==='cash') cash.push(d.name);
+    if(cat==='question') question.push(d.name);
+  });
+  document.getElementById('matStar').innerHTML = stars.join(' &bull; ') || 'None';
+  document.getElementById('matPremium').innerHTML = premium.join(' &bull; ') || 'None';
+  document.getElementById('matCash').innerHTML = cash.join(' &bull; ') || 'None';
+  document.getElementById('matQuestion').innerHTML = question.join(' &bull; ') || 'None';
+}
+
+// =============================================
+// MONTHLY CHARTS
+// =============================================
+function buildMonthly() {
+  // Stacked IP/OP
+  new Chart(document.getElementById('monthStack'), {
+    type: 'bar',
+    data: {
+      labels: months,
+      datasets: [
+        {label:'IP Revenue',data:monthlyIP,backgroundColor:'#1a3a5c',borderRadius:2},
+        {label:'OP Revenue',data:monthlyOP,backgroundColor:'#e67e22',borderRadius:2},
+        {label:'F&B Revenue',data:monthlyFB,backgroundColor:'#8e44ad',borderRadius:2}
+      ]
+    },
+    options: {
+      plugins:{legend:{position:'top',labels:{font:{size:10},boxWidth:12}}},
+      scales:{x:{stacked:true},y:{stacked:true,ticks:{callback:v=>'₹'+v+'Cr',font:{size:9}}}}
+    }
+  });
+  
+  // Department trends (estimated proportional)
+  const deptTrendData = {
+    'Medical Oncology': monthlyTotal.map(t=>t*0.144),
+    'Nephrology': monthlyTotal.map(t=>t*0.122),
+    'Neuro Surgery': monthlyTotal.map(t=>t*0.078),
+    'GI Surgery': monthlyTotal.map(t=>t*0.061),
+    'Cardiology': monthlyTotal.map(t=>t*0.055)
+  };
+  new Chart(document.getElementById('deptTrend'), {
+    type: 'line',
+    data: {
+      labels: months,
+      datasets: Object.entries(deptTrendData).map(([name,data],i)=>({
+        label: name.substring(0,12),
+        data,
+        borderColor: C[i],
+        backgroundColor: C[i]+'22',
+        fill: false,
+        tension: 0.3
+      }))
+    },
+    options: {
+      plugins:{legend:{position:'bottom',labels:{font:{size:8},boxWidth:8}}},
+      scales:{y:{ticks:{callback:v=>'₹'+v.toFixed(1)+'Cr',font:{size:9}}},x:{ticks:{font:{size:9}}}}
+    }
+  });
+  
+  // Discharge & ADR
+  const discharge = [1752, 1884, 1695, 1943, 2012, 1945, 1876, 1723, 1812, 2008];
+  new Chart(document.getElementById('discOcc'), {
+    type: 'bar',
+    data: {
+      labels: months,
+      datasets: [
+        {label:'Discharges',data:discharge,backgroundColor:'#1a3a5c',borderRadius:3,yAxisID:'y'},
+        {label:'ADR (₹ Cr)',data:monthlyADR,type:'line',borderColor:'#e74c3c',backgroundColor:'transparent',yAxisID:'y1',tension:0.3,pointRadius:4}
+      ]
+    },
+    options: {
+      plugins:{legend:{position:'top',labels:{font:{size:9},boxWidth:10}}},
+      scales:{
+        y:{position:'left',title:{display:true,text:'Discharges',font:{size:9}},ticks:{font:{size:8}}},
+        y1:{position:'right',title:{display:true,text:'ADR (₹ Cr)',font:{size:9}},ticks:{font:{size:8}},grid:{display:false}}
+      }
+    }
+  });
+}
+
+// =============================================
+// PAYOR CHARTS
+// =============================================
+function buildPayor() {
+  new Chart(document.getElementById('payorDonut'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Cash (₹247 Cr)','Insurance (₹96 Cr)','Government (₹21 Cr)','Corporate (₹9 Cr)'],
+      datasets: [{data:[payorData.cash.pct,payorData.insurance.pct,payorData.government.pct,payorData.corporate.pct],backgroundColor:['#1a3a5c','#27ae60','#e67e22','#8e44ad'],borderWidth:0}]
+    },
+    options: {cutout:'55%',plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:12}}}}
+  });
+  
+  new Chart(document.getElementById('insuranceBar'), {
+    type: 'bar',
+    data: {
+      labels: insurancePartners.map(p=>p.name.substring(0,15)),
+      datasets: [{data:insurancePartners.map(p=>p.amt),backgroundColor:C,borderRadius:4}]
+    },
+    options: {
+      indexAxis:'y',
+      plugins:{legend:{display:false}},
+      scales:{x:{ticks:{callback:v=>'₹'+v+'L',font:{size:9}}},y:{ticks:{font:{size:9}}}}
+    }
+  });
+}
+
+// =============================================
+// BENCHMARK CHARTS
+// =============================================
+function buildBenchmarks() {
+  // ARPOB comparison
+  new Chart(document.getElementById('bArpob'), {
+    type: 'bar',
+    data: {
+      labels: ['LHRC FY26','IHH India','Apollo'],
+      datasets: [{data:[35188,47100,60588],backgroundColor:['#1a3a5c','#e67e22','#27ae60'],borderRadius:4}]
+    },
+    options: {
+      plugins:{legend:{display:false}},
+      scales:{y:{ticks:{callback:v=>'₹'+Math.round(v/1000)+'K',font:{size:9}}}}
+    }
+  });
+  
+  // Occupancy
+  new Chart(document.getElementById('bOcc'), {
+    type: 'bar',
+    data: {
+      labels: ['LHRC FY26','IHH India','Apollo'],
+      datasets: [{data:[52,72,68],backgroundColor:['#1a3a5c','#e67e22','#27ae60'],borderRadius:4}]
+    },
+    options: {
+      plugins:{legend:{display:false}},
+      scales:{y:{ticks:{callback:v=>v+'%',font:{size:9}},max:100}}
+    }
+  });
+  
+  // ALOS
+  new Chart(document.getElementById('bAlos'), {
+    type: 'bar',
+    data: {
+      labels: ['LHRC FY26','IHH India','Apollo'],
+      datasets: [{data:[4.06,4.2,3.32],backgroundColor:['#1a3a5c','#e67e22','#27ae60'],borderRadius:4}]
+    },
+    options: {
+      plugins:{legend:{display:false}},
+      scales:{y:{title:{display:true,text:'Days',font:{size:9}},ticks:{font:{size:9}}}}
+    }
+  });
+  
+  // Payor mix comparison
+  new Chart(document.getElementById('bPayor'), {
+    type: 'bar',
+    data: {
+      labels: ['LHRC','IHH India','Apollo'],
+      datasets: [
+        {label:'Cash',data:[66,45,40],backgroundColor:'#1a3a5c'},
+        {label:'Insurance',data:[26,35,45],backgroundColor:'#27ae60'},
+        {label:'Govt/Corp',data:[8,20,15],backgroundColor:'#e67e22'}
+      ]
+    },
+    options: {
+      plugins:{legend:{position:'top',labels:{font:{size:9},boxWidth:10}}},
+      scales:{x:{stacked:true},y:{stacked:true,ticks:{callback:v=>v+'%',font:{size:9}},max:100}}
+    }
+  });
+}
+
+// =============================================
+// DOCTOR MIS
+// =============================================
+let _misIPChart, _misOPChart, _misTotChart;
+function initDocMIS() {
+  // Populate department dropdown
+  const depts = [...new Set(BRM_DOCTORS.map(d=>d.dept))].sort();
+  const deptSel = document.getElementById('misDeptSel');
+  deptSel.innerHTML = '<option value="">All Departments</option>' + depts.map(d=>`<option value="${d}">${d}</option>`).join('');
+  
+  // Populate summary dept filter
+  document.getElementById('sumDeptSel').innerHTML = '<option value="">All Departments</option>' + depts.map(d=>`<option value="${d}">${d}</option>`).join('');
+  
+  misDeptFilter();
+  renderDocSum();
+}
+
+function misDeptFilter() {
+  const dept = document.getElementById('misDeptSel').value;
+  const docs = dept ? BRM_DOCTORS.filter(d=>d.dept===dept) : BRM_DOCTORS;
+  const docSel = document.getElementById('misDocSel');
+  docSel.innerHTML = '<option value="">-- Select Doctor --</option>' + docs.sort((a,b)=>b.total-a.total).map(d=>`<option value="${d.name}">${d.name} (₹${d.total.toFixed(1)}Cr)</option>`).join('');
+}
+
+function misSearchDoc() {
+  const q = document.getElementById('misSearch').value.toLowerCase();
+  const docs = BRM_DOCTORS.filter(d=>d.name.toLowerCase().includes(q));
+  const docSel = document.getElementById('misDocSel');
+  docSel.innerHTML = '<option value="">-- Select Doctor --</option>' + docs.sort((a,b)=>b.total-a.total).map(d=>`<option value="${d.name}">${d.name} (₹${d.total.toFixed(1)}Cr)</option>`).join('');
+}
+
+function misLoadDoc() {
+  const name = document.getElementById('misDocSel').value;
+  if(!name) return;
+  const d = BRM_DOCTORS.find(doc=>doc.name===name);
+  if(!d) return;
+  
+  document.getElementById('misStatRow').style.display='block';
+  document.getElementById('misTrendSection').style.display='grid';
+  
+  // KPI strip
+  document.getElementById('misKPIStrip').innerHTML = `
+    <div class="kpi" style="border-color:#1a3a5c"><div class="kpi-label">Total Revenue</div><div class="kpi-value" style="color:#1a3a5c;font-size:0.95rem">₹${d.total.toFixed(2)} Cr</div></div>
+    <div class="kpi" style="border-color:#e67e22"><div class="kpi-label">IP Revenue</div><div class="kpi-value" style="color:#e67e22;font-size:0.95rem">₹${d.ip.toFixed(2)} Cr</div></div>
+    <div class="kpi" style="border-color:#27ae60"><div class="kpi-label">OP Revenue</div><div class="kpi-value" style="color:#27ae60;font-size:0.95rem">₹${d.op.toFixed(2)} Cr</div></div>
+    <div class="kpi" style="border-color:#8e44ad"><div class="kpi-label">Discharges</div><div class="kpi-value" style="color:#8e44ad;font-size:0.95rem">${d.disc.toLocaleString()}</div></div>
+    <div class="kpi" style="border-color:#1976d2"><div class="kpi-label">OP Visits</div><div class="kpi-value" style="color:#1976d2;font-size:0.95rem">${d.opv.toLocaleString()}</div></div>
+    <div class="kpi" style="border-color:#e74c3c"><div class="kpi-label">ARPP-IP</div><div class="kpi-value" style="color:#e74c3c;font-size:0.85rem">₹${d.arppIP.toLocaleString()}</div></div>
+    <div class="kpi" style="border-color:#c0392b"><div class="kpi-label">ARPOB</div><div class="kpi-value" style="color:#c0392b;font-size:0.85rem">₹${d.arpob.toLocaleString()}</div></div>
+    <div class="kpi" style="border-color:#7f8c8d"><div class="kpi-label">ARPP-OP</div><div class="kpi-value" style="color:#7f8c8d;font-size:0.85rem">₹${d.arppOP.toLocaleString()}</div></div>
+  `;
+  
+  // Simple monthly distribution (even split for demo)
+  const monthlyIPDoc = months.map(()=>(d.ip*100/10).toFixed(2));
+  const monthlyOPDoc = months.map(()=>(d.op*100/10).toFixed(2));
+  const monthlyTotDoc = months.map(()=>(d.total*100/10).toFixed(2));
+  
+  document.getElementById('misIPSub').textContent = `YTD IP: ₹${(d.ip*100).toFixed(0)} Lakhs`;
+  document.getElementById('misOPSub').textContent = `YTD OP: ₹${(d.op*100).toFixed(0)} Lakhs`;
+  document.getElementById('misTotSub').textContent = `YTD Total: ₹${(d.total*100).toFixed(0)} Lakhs`;
+  
+  const chartOpts = {
+    plugins:{legend:{display:false}},
+    scales:{y:{ticks:{callback:v=>'₹'+v+'L',font:{size:8}}},x:{ticks:{font:{size:9}}}}
+  };
+  
+  if(_misIPChart) _misIPChart.destroy();
+  if(_misOPChart) _misOPChart.destroy();
+  if(_misTotChart) _misTotChart.destroy();
+  
+  _misIPChart = new Chart(document.getElementById('misIPChart'),{type:'bar',data:{labels:months,datasets:[{data:monthlyIPDoc,backgroundColor:'#1a3a5c',borderRadius:3}]},options:chartOpts});
+  _misOPChart = new Chart(document.getElementById('misOPChart'),{type:'bar',data:{labels:months,datasets:[{data:monthlyOPDoc,backgroundColor:'#e67e22',borderRadius:3}]},options:chartOpts});
+  _misTotChart = new Chart(document.getElementById('misTotChart'),{type:'bar',data:{labels:months,datasets:[{data:monthlyTotDoc,backgroundColor:'#27ae60',borderRadius:3}]},options:chartOpts});
+}
+
+let _sumSortCol='total', _sumSortAsc=false;
+function sortDocSum(col) {
+  if(_sumSortCol===col) _sumSortAsc=!_sumSortAsc;
+  else {_sumSortCol=col;_sumSortAsc=false;}
+  renderDocSum();
+}
+
+function renderDocSum() {
+  const q = (document.getElementById('sumSearch')?.value||'').toLowerCase();
+  const dept = document.getElementById('sumDeptSel')?.value||'';
+  
+  let filtered = BRM_DOCTORS.filter(d=>{
+    if(dept && d.dept!==dept) return false;
+    if(q && !d.name.toLowerCase().includes(q) && !d.dept.toLowerCase().includes(q)) return false;
+    return true;
+  });
+  
+  filtered.sort((a,b)=>{
+    const va = _sumSortCol==='name'?a.name:_sumSortCol==='dept'?a.dept:a[_sumSortCol]||0;
+    const vb = _sumSortCol==='name'?b.name:_sumSortCol==='dept'?b.dept:b[_sumSortCol]||0;
+    if(typeof va==='string') return _sumSortAsc?va.localeCompare(vb):vb.localeCompare(va);
+    return _sumSortAsc?va-vb:vb-va;
+  });
+  
+  document.getElementById('sumCount').textContent = `${filtered.length} doctors`;
+  document.getElementById('tbDocSum').innerHTML = filtered.map((d,i)=>{
+    const tier = d.total>=10?'<span class="pill gp">Pillar</span>':d.total>=5?'<span class="pill op">Growth</span>':d.total>=2?'<span class="pill bp">Active</span>':'<span class="pill grp">Minor</span>';
+    return `<tr style="cursor:pointer" onclick="document.getElementById('misDocSel').value='${d.name}';misLoadDoc();">
+      <td style="font-weight:700">${i+1} ${d.name} ${tier}</td>
+      <td style="color:#718096;font-size:0.66rem">${d.dept}</td>
+      <td style="text-align:right;font-weight:700">₹${d.total.toFixed(2)}</td>
+      <td style="text-align:right">₹${d.ip.toFixed(2)}</td>
+      <td style="text-align:right">₹${d.op.toFixed(2)}</td>
+      <td style="text-align:right">${d.disc.toLocaleString()}</td>
+      <td style="text-align:right">${d.beds.toLocaleString()}</td>
+      <td style="text-align:right">${d.opv.toLocaleString()}</td>
+      <td style="text-align:right">₹${d.arppOP.toLocaleString()}</td>
+      <td style="text-align:right">₹${d.arppIP.toLocaleString()}</td>
+      <td style="text-align:right">₹${d.arpob.toLocaleString()}</td>
+    </tr>`;
+  }).join('');
+}
+
+// Initialize on load
+document.addEventListener('DOMContentLoaded', () => {
+  buildOverview();
+});
+
+
+</script>
+</body>
+</html>

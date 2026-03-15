@@ -1,0 +1,2778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LHRC — Finance Tracker FY27</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f4f6f9;color:#1a202c;font-size:13px}
+
+/* ── PASSWORD GATE ── */
+.gate-overlay{position:fixed;inset:0;background:linear-gradient(135deg,#0d2137 0%,#1a3a5c 100%);display:flex;align-items:center;justify-content:center;z-index:9999}
+.gate-box{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);border-radius:14px;padding:44px 48px;width:360px;text-align:center}
+.gate-logo{font-size:2rem;margin-bottom:8px}
+.gate-title{color:white;font-size:1.1rem;font-weight:700;margin-bottom:4px}
+.gate-sub{color:rgba(255,255,255,0.45);font-size:0.7rem;margin-bottom:28px}
+.gate-input{width:100%;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:8px;padding:11px 14px;color:white;font-size:0.88rem;outline:none;margin-bottom:12px;font-family:'IBM Plex Mono',monospace;letter-spacing:0.5px}
+.gate-input::placeholder{color:rgba(255,255,255,0.35)}
+.gate-input:focus{border-color:rgba(230,126,34,0.7);background:rgba(255,255,255,0.14)}
+.gate-btn{width:100%;background:#e67e22;color:white;border:none;border-radius:8px;padding:11px;font-size:0.88rem;font-weight:600;cursor:pointer;transition:background .2s}
+.gate-btn:hover{background:#cf6d17}
+.gate-err{color:#f87171;font-size:0.72rem;margin-top:8px;display:none}
+
+/* ── MAIN (hidden until auth) ── */
+#mainWrap{display:none}
+
+/* ── HEADER ── */
+.header{background:linear-gradient(135deg,#0d2137 0%,#1a3a5c 60%,#1e4976 100%);color:white;padding:16px 32px 14px;display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:3px solid #e67e22}
+.header-left h1{font-size:1.3rem;font-weight:700;letter-spacing:-0.3px}
+.header-left p{font-size:0.68rem;opacity:0.55;margin-top:2px}
+.header-badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.hbadge{padding:3px 9px;border-radius:4px;font-size:0.63rem;font-weight:600;font-family:'IBM Plex Mono',monospace}
+.hb-or{background:#e67e22;color:white}.hb-gr{background:#27ae60;color:white}.hb-bl{background:#2980b9;color:white}.hb-gy{background:rgba(255,255,255,0.15);color:rgba(255,255,255,0.75)}
+.header-right{text-align:right;opacity:0.4;font-size:0.6rem;line-height:2;white-space:nowrap;flex-shrink:0;font-family:'IBM Plex Mono',monospace}
+.header-nav{display:flex;gap:8px;align-items:center;margin-top:10px}
+.hn-link{color:rgba(255,255,255,0.5);font-size:0.63rem;text-decoration:none;padding:3px 8px;border:1px solid rgba(255,255,255,0.2);border-radius:4px;transition:all .2s}
+.hn-link:hover{color:white;border-color:rgba(255,255,255,0.5)}
+
+/* ── TAB BAR ── */
+.tab-bar{background:white;border-bottom:2px solid #e2e8f0;padding:0 28px;display:flex;gap:0;overflow-x:auto;box-shadow:0 1px 3px rgba(0,0,0,0.05)}
+.tab{padding:12px 16px;font-size:0.71rem;font-weight:600;color:#718096;cursor:pointer;border-bottom:3px solid transparent;transition:all 0.2s;white-space:nowrap;margin-bottom:-2px}
+.tab:hover{color:#1a3a5c;background:#f7fafc}
+.tab.active{color:#1a3a5c;border-bottom-color:#e67e22;background:white;font-weight:700}
+.page{display:none;padding:20px 28px;max-width:1800px;margin:0 auto}
+.page.active{display:block}
+
+/* ── SECTION LABEL ── */
+.slabel{font-size:0.68rem;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;color:#1a3a5c;margin:20px 0 10px;padding-bottom:6px;border-bottom:2px solid #e2e8f0}
+.slabel:first-child{margin-top:0}
+
+/* ── KPI CARDS ── */
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:18px}
+.kpi{background:white;border:1px solid #e2e8f0;border-radius:10px;padding:14px 16px;border-top:3px solid #e2e8f0}
+.kpi.kpi-rev{border-top-color:#27ae60}.kpi.kpi-ebitda{border-top-color:#e67e22}.kpi.kpi-cost{border-top-color:#2980b9}.kpi.kpi-capex{border-top-color:#db2777}.kpi.kpi-margin{border-top-color:#8e44ad}
+.kpi-label{font-size:0.58rem;font-weight:700;text-transform:uppercase;letter-spacing:0.7px;color:#718096;margin-bottom:4px}
+.kpi-val{font-size:1.25rem;font-weight:800;color:#1a3a5c;font-family:'IBM Plex Mono',monospace}
+.kpi-sub{font-size:0.6rem;color:#a0aec0;margin-top:3px}
+.kpi-var{font-size:0.65rem;font-weight:700;margin-top:4px}
+.kpi-var.pos{color:#27ae60}.kpi-var.neg{color:#e74c3c}
+
+/* ── TABLES ── */
+.tbl-wrap{overflow-x:auto;border-radius:8px;border:1px solid #e2e8f0;background:white;margin-bottom:16px}
+table.fin-tbl{width:100%;border-collapse:collapse;font-size:0.7rem}
+table.fin-tbl th{background:#1a3a5c;color:rgba(255,255,255,0.85);padding:7px 10px;font-size:0.63rem;font-weight:600;text-align:right;white-space:nowrap;position:sticky;top:0;z-index:2}
+table.fin-tbl th:first-child{text-align:left;position:sticky;left:0;z-index:3;background:#0d2137}
+table.fin-tbl th.month-hdr{background:#243d55;font-size:0.6rem}
+table.fin-tbl th.plan-hdr{background:#1e3a52;font-size:0.57rem;font-weight:500;color:rgba(255,255,255,0.6)}
+table.fin-tbl th.act-hdr{background:#1a3a5c;font-size:0.57rem;font-weight:500;color:rgba(230,126,34,0.8)}
+table.fin-tbl th.var-hdr{background:#1a3a5c;font-size:0.57rem;font-weight:500;color:rgba(255,255,255,0.45)}
+table.fin-tbl td{padding:6px 10px;border-bottom:1px solid #edf2f7;text-align:right;white-space:nowrap;font-family:'IBM Plex Mono',monospace;font-size:0.68rem}
+table.fin-tbl td:first-child{text-align:left;font-family:'IBM Plex Sans',sans-serif;font-weight:500;color:#2d3748;padding-left:12px;position:sticky;left:0;background:white;z-index:1;border-right:1px solid #e2e8f0}
+table.fin-tbl tr:hover td{background:#f7fafc!important}
+table.fin-tbl tr.row-section td{background:#f0f4f8;font-weight:700;font-size:0.67rem;color:#1a3a5c}
+table.fin-tbl tr.row-section td:first-child{background:#f0f4f8}
+table.fin-tbl tr.row-ebitda td{background:#fff8f0;font-weight:700;color:#e67e22;border-top:2px solid #fed7aa}
+table.fin-tbl tr.row-ebitda td:first-child{background:#fff8f0;color:#e67e22}
+table.fin-tbl tr.row-gross td{background:#f0fdf4;font-weight:600;color:#27ae60}
+table.fin-tbl tr.row-gross td:first-child{background:#f0fdf4;color:#27ae60}
+table.fin-tbl tr.row-total td{background:#1a3a5c;color:white;font-weight:700;border-top:2px solid #e67e22}
+table.fin-tbl tr.row-total td:first-child{background:#0d2137;color:white}
+table.fin-tbl tr.row-sub td{background:#fafbfd;color:#718096;font-size:0.63rem;border-bottom:1px solid #f0f4f8}
+table.fin-tbl tr.row-sub td:first-child{background:#fafbfd;color:#718096}
+.var-pos{color:#27ae60}.var-neg{color:#e74c3c}.act-empty{color:#cbd5e0;font-style:italic}
+
+/* ── CHART CONTAINERS ── */
+.chart-box{background:white;border:1px solid #e2e8f0;border-radius:10px;padding:16px;margin-bottom:16px}
+.chart-title{font-size:0.7rem;font-weight:700;color:#1a3a5c;margin-bottom:4px}
+.chart-sub{font-size:0.6rem;color:#718096;margin-bottom:12px}
+.chart-wrap{position:relative;height:220px}
+.chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+
+/* ── CAPEX ── */
+.capex-cat{background:white;border:1px solid #e2e8f0;border-radius:10px;padding:16px;margin-bottom:12px}
+.capex-cat-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:12px}
+.capex-cat-name{font-size:0.78rem;font-weight:700;color:#1a3a5c}
+.capex-cat-budget{font-size:0.85rem;font-weight:800;font-family:'IBM Plex Mono',monospace}
+.capex-bar-wrap{background:#f0f4f8;border-radius:20px;height:8px;flex:1;overflow:hidden}
+.capex-bar{height:8px;border-radius:20px;transition:width .5s}
+.capex-pct{font-size:0.65rem;font-weight:700;white-space:nowrap;min-width:40px;text-align:right;font-family:'IBM Plex Mono',monospace}
+.capex-items-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px}
+.capex-item{background:#f7fafc;border:1px solid #e2e8f0;border-radius:7px;padding:10px 12px}
+.capex-item-name{font-size:0.67rem;font-weight:600;color:#2d3748;margin-bottom:4px}
+.capex-item-row{display:flex;justify-content:space-between;font-size:0.62rem;color:#718096;margin-top:2px}
+.capex-item-row span:last-child{font-family:'IBM Plex Mono',monospace;font-weight:600}
+.capex-actual-input{width:70px;background:#fff;border:1px solid #cbd5e0;border-radius:4px;padding:3px 6px;font-family:'IBM Plex Mono',monospace;font-size:0.65rem;text-align:right}
+
+/* ── UPLOAD TAB ── */
+.upload-section{background:white;border:1px solid #e2e8f0;border-radius:10px;padding:20px;margin-bottom:14px}
+.upload-title{font-size:0.78rem;font-weight:700;color:#1a3a5c;margin-bottom:12px}
+.drop-zone{border:2px dashed #cbd5e0;border-radius:10px;padding:36px 24px;text-align:center;cursor:pointer;transition:all .2s;background:#fafbfc}
+.drop-zone:hover,.drop-zone.drag-over{border-color:#e67e22;background:#fff8f0}
+.drop-zone-icon{font-size:2.2rem;margin-bottom:8px}
+.drop-zone-text{font-size:0.75rem;color:#4a5568;font-weight:500}
+.drop-zone-sub{font-size:0.62rem;color:#a0aec0;margin-top:4px}
+.form-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px}
+.form-group{display:flex;flex-direction:column;gap:4px}
+.form-label{font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#718096}
+.form-input,.form-select{border:1px solid #e2e8f0;border-radius:6px;padding:8px 10px;font-size:0.75rem;font-family:'IBM Plex Sans',sans-serif;background:white;outline:none}
+.form-input:focus,.form-select:focus{border-color:#e67e22}
+.btn{padding:8px 18px;border-radius:6px;font-size:0.72rem;font-weight:600;cursor:pointer;border:none;transition:all .2s}
+.btn-primary{background:#e67e22;color:white}.btn-primary:hover{background:#cf6d17}
+.btn-secondary{background:#1a3a5c;color:white}.btn-secondary:hover{background:#0d2137}
+.btn-outline{background:white;color:#1a3a5c;border:1px solid #1a3a5c}.btn-outline:hover{background:#f0f4f8}
+.btn-danger{background:#e74c3c;color:white}.btn-danger:hover{background:#c0392b}
+.btn-sm{padding:5px 12px;font-size:0.65rem}
+.btn-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.preview-box{background:#f7fafc;border:1px solid #e2e8f0;border-radius:8px;padding:14px;margin-top:14px;display:none}
+.preview-title{font-size:0.68rem;font-weight:700;color:#1a3a5c;margin-bottom:10px}
+.manual-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;margin-top:12px}
+.manual-item{display:flex;flex-direction:column;gap:3px}
+.manual-item label{font-size:0.62rem;font-weight:600;color:#4a5568}
+.manual-item input{border:1px solid #e2e8f0;border-radius:5px;padding:6px 8px;font-family:'IBM Plex Mono',monospace;font-size:0.72rem;outline:none}
+.manual-item input:focus{border-color:#e67e22}
+
+/* ── REQUISITIONS ── */
+.req-card{background:white;border:1px solid #e2e8f0;border-radius:8px;padding:14px 16px;margin-bottom:8px;display:flex;align-items:flex-start;gap:14px}
+.req-icon{font-size:1.4rem;flex-shrink:0}
+.req-info{flex:1}
+.req-name{font-size:0.75rem;font-weight:700;color:#1a3a5c}
+.req-meta{font-size:0.62rem;color:#718096;margin-top:2px}
+.req-tag{display:inline-block;padding:2px 8px;border-radius:10px;font-size:0.58rem;font-weight:700;margin-top:5px}
+.tag-pending{background:#fef3c7;color:#92400e}.tag-approved{background:#d1fae5;color:#065f46}.tag-review{background:#dbeafe;color:#1e3a8a}
+.req-actions{display:flex;gap:6px;flex-shrink:0;align-items:center}
+.no-data{text-align:center;padding:40px;color:#a0aec0;font-size:0.75rem}
+
+/* ── MISC ── */
+.pill{display:inline-block;padding:2px 8px;border-radius:10px;font-size:0.6rem;font-weight:600}
+.pill-gr{background:#d1fae5;color:#065f46}.pill-or{background:#fef3c7;color:#92400e}.pill-bl{background:#dbeafe;color:#1e3a8a}.pill-rd{background:#fee2e2;color:#991b1b}
+.info-box{background:#f0f4f8;border-left:3px solid #2980b9;border-radius:0 6px 6px 0;padding:10px 14px;margin-bottom:14px;font-size:0.67rem;color:#2d3748;line-height:1.6}
+.info-box strong{color:#1a3a5c}
+.tab-sub-bar{display:flex;gap:0;margin-bottom:16px;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;background:white;width:fit-content}
+.sub-tab{padding:8px 16px;font-size:0.68rem;font-weight:600;color:#718096;cursor:pointer;transition:all .2s;border-right:1px solid #e2e8f0}
+.sub-tab:last-child{border-right:none}
+.sub-tab.active{background:#1a3a5c;color:white}
+.sub-page{display:none}.sub-page.active{display:block}
+.dept-filter{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.dept-chip{padding:4px 10px;border-radius:20px;font-size:0.63rem;font-weight:600;cursor:pointer;border:1px solid #e2e8f0;background:white;color:#4a5568;transition:all .2s}
+.dept-chip.active{background:#1a3a5c;color:white;border-color:#1a3a5c}
+.footer{background:#1a3a5c;color:rgba(255,255,255,0.3);padding:10px 24px;font-size:0.58rem;text-align:center;margin-top:20px;font-family:'IBM Plex Mono',monospace}
+</style>
+</head>
+<body>
+
+<!-- ── PASSWORD GATE ── -->
+<div class="gate-overlay" id="gateOverlay">
+  <div class="gate-box">
+    <div class="gate-logo">📊</div>
+    <div class="gate-title">Finance Tracker — FY27</div>
+    <div class="gate-sub">VPS Lakeshore Hospital &amp; Research Centre · Confidential</div>
+    <input class="gate-input" type="password" id="gatePwd" placeholder="Enter finance password" onkeydown="if(event.key==='Enter')checkGate()">
+    <button class="gate-btn" onclick="checkGate()">Access Dashboard</button>
+    <div class="gate-err" id="gateErr">Incorrect password. Please try again.</div>
+  </div>
+</div>
+
+<!-- ── MAIN WRAP ── -->
+<div id="mainWrap">
+
+<!-- ── HEADER ── -->
+<div class="header">
+  <div>
+    <h1>💰 Finance Tracker — FY27 Upside Case</h1>
+    <p>VPS Lakeshore Hospital &amp; Research Centre · P&amp;L · Revenue · Costs · Capex · Actuals</p>
+    <div class="header-badges">
+      <span class="hbadge hb-or">FY27 UC Rev ₹575 Cr</span>
+      <span class="hbadge hb-gr">EBITDA ₹148.8 Cr (25.8%)</span>
+      <span class="hbadge hb-bl">Capex ₹82.21 Cr</span>
+      <span class="hbadge hb-gy">Apr 2026 – Mar 2027</span>
+    </div>
+    <div class="header-nav">
+      <a class="hn-link" href="index.html">⬅ Dashboard</a>
+      <a class="hn-link" href="LHRC_Executive_Dashboard.html">📈 Exec Dashboard</a>
+    </div>
+  </div>
+  <div class="header-right">
+    FY27 Upside Case · Confidential<br>
+    Internal Finance Use Only<br>
+    Last Updated: Mar 2026
+  </div>
+</div>
+
+<!-- ── TAB BAR ── -->
+<div class="tab-bar">
+  <div class="tab active" onclick="showTab('pl',this)">📊 P&amp;L · FY27 UC</div>
+  <div class="tab" onclick="showTab('bc',this)">📈 FY27 Base Case</div>
+  <div class="tab" onclick="showTab('fy26',this)">📅 FY26 Closing</div>
+  <div class="tab" onclick="showTab('revdept',this)">🏥 Revenue · Dept</div>
+  <div class="tab" onclick="showTab('revdoc',this)">👨‍⚕️ Revenue · Consultant</div>
+  <div class="tab" onclick="showTab('cost',this)">💼 Cost Breakdown</div>
+  <div class="tab" onclick="showTab('capex',this)">🏗️ Capex Tracker</div>
+  <div class="tab" onclick="showTab('upload',this)">📤 Upload Actuals</div>
+  <div class="tab" onclick="showTab('reqs',this)">📋 Requisitions Log</div>
+  <div class="tab" onclick="showTab('doctors',this)">👨‍⚕️ Doctor Tracker</div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- TAB 1: P&L OVERVIEW                                     -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="page-pl" class="page active">
+  <div class="slabel">📊 YTD Performance — FY27 Upside Case</div>
+  <div class="kpi-row" id="plKpiRow">
+    <div class="kpi kpi-rev"><div class="kpi-label">YTD Revenue (Plan)</div><div class="kpi-val" id="ytdRevPlan">—</div><div class="kpi-sub">vs ₹575 Cr FY total</div><div class="kpi-var" id="ytdRevVar"></div></div>
+    <div class="kpi kpi-ebitda"><div class="kpi-label">YTD EBITDA (Plan)</div><div class="kpi-val" id="ytdEbPlan">—</div><div class="kpi-sub">Target 25.8% margin</div><div class="kpi-var" id="ytdEbVar"></div></div>
+    <div class="kpi kpi-margin"><div class="kpi-label">EBITDA Margin</div><div class="kpi-val" id="ytdMargin">—</div><div class="kpi-sub">Plan vs Actual</div></div>
+    <div class="kpi kpi-cost"><div class="kpi-label">YTD Total Cost</div><div class="kpi-val" id="ytdCostPlan">—</div><div class="kpi-sub">Staff + Doc + COGS + Other</div></div>
+    <div class="kpi kpi-capex"><div class="kpi-label">Capex Utilized</div><div class="kpi-val" id="ytdCapex">—</div><div class="kpi-sub">of ₹82.21 Cr budget</div></div>
+  </div>
+
+  <div class="info-box">
+    <strong>Plan basis:</strong> FY27 Upside Case (UC) — Revenue ₹575 Cr · EBITDA ₹148.8 Cr (25.8%) · Based on Executive Dashboard FY27 UC targets.
+    Revenue ramp: Apr ₹42 Cr → Mar ₹53.5 Cr. Upload monthly actuals via the <strong>Upload Actuals</strong> tab to see plan vs actual variance.
+  </div>
+
+  <div class="chart-grid">
+    <div class="chart-box">
+      <div class="chart-title">Monthly Revenue — Plan vs Actual (₹ Cr)</div>
+      <div class="chart-sub">FY27 UC Plan · Actual from uploaded data</div>
+      <div class="chart-wrap"><canvas id="revChart"></canvas></div>
+    </div>
+    <div class="chart-box">
+      <div class="chart-title">Monthly EBITDA — Plan vs Actual (₹ Cr)</div>
+      <div class="chart-sub">FY27 UC Plan · Target 25.8% margin</div>
+      <div class="chart-wrap"><canvas id="ebitdaChart"></canvas></div>
+    </div>
+  </div>
+
+  <div class="slabel">📋 Monthly P&amp;L — Plan vs Actual (₹ Crores)</div>
+  <div class="tbl-wrap">
+    <table class="fin-tbl" id="plTable"><!-- rendered by JS --></table>
+  </div>
+
+  <div class="slabel">🏥 Revenue Breakup by Department — Monthly Plan (₹ Crores)</div>
+  <div class="info-box" style="margin-bottom:10px">
+    Department-level monthly plan split from FY27 UC annual targets. Upload dept-wise actuals via the <strong>Upload Actuals</strong> tab to see plan vs actual here.
+    Top 20 specialties + ancillaries shown. Remaining revenue is diagnostics, pharmacy, and other ancillaries.
+  </div>
+  <div class="tbl-wrap">
+    <table class="fin-tbl" id="plDeptTable"><!-- rendered by JS --></table>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- TAB 2: REVENUE BY DEPARTMENT                            -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="page-revdept" class="page">
+  <div class="slabel">🏥 Department-wise Revenue — FY27 Upside Case (₹ Crores)</div>
+  <div class="info-box">
+    Monthly plan is proportionally distributed based on the FY27 UC annual target for each specialty.
+    Upload actuals to see plan vs actual by department. Total of top-20 specialties = ₹497.1 Cr; remaining ₹77.9 Cr covers diagnostics, pharmacy OTC, and other ancillaries.
+  </div>
+  <div class="chart-box" style="margin-bottom:16px">
+    <div class="chart-title">Department Revenue — FY27 UC Annual Target (₹ Cr)</div>
+    <div class="chart-sub">Top 20 specialties · Upside Case</div>
+    <div class="chart-wrap" style="height:260px"><canvas id="deptChart"></canvas></div>
+  </div>
+  <div class="tbl-wrap">
+    <table class="fin-tbl" id="deptTable"><!-- rendered by JS --></table>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- TAB 3: REVENUE BY CONSULTANT                            -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="page-revdoc" class="page">
+  <div class="slabel">👨‍⚕️ Consultant Revenue — FY27 Estimated Plan (₹ Crores)</div>
+  <div class="info-box">
+    <strong>Note:</strong> Consultant-level revenue split is estimated based on specialty share and key doctors identified in the transformation plan.
+    Upload actual consultant-wise billing data (from HIS export) via the Upload Actuals tab to replace estimates with actuals.
+  </div>
+  <div class="dept-filter" id="docDeptFilter"><!-- rendered by JS --></div>
+  <div class="tbl-wrap">
+    <table class="fin-tbl" id="docTable"><!-- rendered by JS --></table>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- TAB 4: COST BREAKDOWN                                   -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="page-cost" class="page">
+  <div class="tab-sub-bar">
+    <div class="sub-tab active" onclick="showSubTab('cost','staff',this)">👥 Staff Costs</div>
+    <div class="sub-tab" onclick="showSubTab('cost','doctor',this)">🩺 Doctor Costs</div>
+    <div class="sub-tab" onclick="showSubTab('cost','cogs',this)">💊 COGS</div>
+    <div class="sub-tab" onclick="showSubTab('cost','other',this)">📋 Other Costs</div>
+    <div class="sub-tab" onclick="showSubTab('cost','hr',this)">✂️ HR Rationalization</div>
+  </div>
+
+  <!-- Staff Costs -->
+  <div class="sub-page active" id="cost-staff">
+    <div class="slabel">👥 Staff Payroll — FY27 UC Plan: ₹81.85 Cr</div>
+    <div class="kpi-row">
+      <div class="kpi"><div class="kpi-label">Total Payroll</div><div class="kpi-val" style="color:#1a3a5c">₹81.85 Cr</div><div class="kpi-sub">After HR rationalization (from ₹94.85 Cr BC)</div></div>
+      <div class="kpi"><div class="kpi-label">Total Staff</div><div class="kpi-val" style="color:#1a3a5c">1,624</div><div class="kpi-sub">Non-doctor headcount</div></div>
+      <div class="kpi"><div class="kpi-label">HR Savings Target</div><div class="kpi-val" style="color:#27ae60">₹11.0 Cr</div><div class="kpi-sub">vs FY27 BC staffing plan</div></div>
+      <div class="kpi"><div class="kpi-label">Avg Monthly Payroll</div><div class="kpi-val" style="color:#1a3a5c">₹6.82 Cr</div><div class="kpi-sub">Fixed cost base</div></div>
+    </div>
+    <div class="tbl-wrap"><table class="fin-tbl" id="staffTable"><!-- rendered by JS --></table></div>
+    <div class="chart-box" style="margin-top:14px">
+      <div class="chart-title">Staff Cost by Category (₹ Cr)</div>
+      <div class="chart-wrap" style="height:200px"><canvas id="staffChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Doctor Costs -->
+  <div class="sub-page" id="cost-doctor">
+    <div class="slabel">🩺 Doctor / Consultant Costs — FY27 UC Plan: ₹99.08 Cr</div>
+    <div class="kpi-row">
+      <div class="kpi"><div class="kpi-label">Total Doctor Cost</div><div class="kpi-val" style="color:#1a3a5c">₹99.08 Cr</div><div class="kpi-sub">Fees + PLCs + visiting</div></div>
+      <div class="kpi"><div class="kpi-label">% of Revenue</div><div class="kpi-val" style="color:#e67e22">17.2%</div><div class="kpi-sub">FY26E was 17.7%</div></div>
+      <div class="kpi"><div class="kpi-label">PLC Conversions</div><div class="kpi-val" style="color:#27ae60">Target</div><div class="kpi-sub">Reduces fixed cost risk</div></div>
+    </div>
+    <div class="tbl-wrap"><table class="fin-tbl" id="docCostTable"><!-- rendered by JS --></table></div>
+  </div>
+
+  <!-- COGS -->
+  <div class="sub-page" id="cost-cogs">
+    <div class="slabel">💊 Consumption / COGS — FY27 UC Plan: ₹155.25 Cr (26.5%)</div>
+    <div class="kpi-row">
+      <div class="kpi"><div class="kpi-label">Total COGS</div><div class="kpi-val" style="color:#1a3a5c">₹155.25 Cr</div><div class="kpi-sub">Target 26.5% of revenue</div></div>
+      <div class="kpi"><div class="kpi-label">COGS % Target</div><div class="kpi-val" style="color:#27ae60">26.5%</div><div class="kpi-sub">vs FY26E 28.5% (−2pp saving)</div></div>
+      <div class="kpi"><div class="kpi-label">Saving vs FY26E</div><div class="kpi-val" style="color:#27ae60">₹7 Cr</div><div class="kpi-sub">Procurement optimization</div></div>
+    </div>
+    <div class="tbl-wrap"><table class="fin-tbl" id="cogsTable"><!-- rendered by JS --></table></div>
+  </div>
+
+  <!-- Other Costs -->
+  <div class="sub-page" id="cost-other">
+    <div class="slabel">📋 Other Operating Costs — FY27 UC Plan: ₹65.24 Cr</div>
+    <div class="kpi-row">
+      <div class="kpi"><div class="kpi-label">Other Costs</div><div class="kpi-val" style="color:#1a3a5c">₹65.24 Cr</div><div class="kpi-sub">Power, Mktg, Overhead, Admin</div></div>
+      <div class="kpi"><div class="kpi-label">Saving vs BC</div><div class="kpi-val" style="color:#27ae60">₹2 Cr</div><div class="kpi-sub">Solar + digital marketing shift</div></div>
+    </div>
+    <div class="tbl-wrap"><table class="fin-tbl" id="otherCostTable"><!-- rendered by JS --></table></div>
+  </div>
+
+  <!-- HR Rationalization -->
+  <div class="sub-page" id="cost-hr">
+    <div class="slabel">✂️ HR Rationalization — Target Savings: ₹11.0 Cr</div>
+    <div class="info-box">
+      HR rationalization identifies ₹11 Cr of payroll savings through targeted headcount reduction in over-staffed departments and realignment of senior doctors to PLCs.
+      Rationalisation is phased through FY27. Upload monthly headcount actuals to track progress.
+    </div>
+    <div class="tbl-wrap"><table class="fin-tbl" id="hrTable"><!-- rendered by JS --></table></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- TAB 5: CAPEX TRACKER                                    -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="page-capex" class="page">
+  <div class="slabel">🏗️ Capex Tracker — FY27 Budget: ₹82.21 Cr</div>
+  <div class="kpi-row">
+    <div class="kpi kpi-capex"><div class="kpi-label">Total Budget</div><div class="kpi-val">₹82.21 Cr</div><div class="kpi-sub">FY27 AOP V2</div></div>
+    <div class="kpi"><div class="kpi-label">Spent (Actual)</div><div class="kpi-val" id="capexSpent">₹0.00 Cr</div><div class="kpi-sub">From uploaded actuals</div></div>
+    <div class="kpi"><div class="kpi-label">Balance</div><div class="kpi-val" id="capexBalance">₹82.21 Cr</div><div class="kpi-sub">Remaining budget</div></div>
+    <div class="kpi"><div class="kpi-label">Utilization</div><div class="kpi-val" id="capexUtil">0%</div><div class="kpi-sub">of annual budget</div></div>
+    <div class="kpi"><div class="kpi-label">P&amp;M Dominant</div><div class="kpi-val">67.0%</div><div class="kpi-sub">Plant &amp; Machinery</div></div>
+  </div>
+  <div class="chart-grid">
+    <div class="chart-box">
+      <div class="chart-title">Capex by Category — Budget vs Spent (₹ Cr)</div>
+      <div class="chart-wrap"><canvas id="capexChart"></canvas></div>
+    </div>
+    <div class="chart-box">
+      <div class="chart-title">Capex Utilization (%)</div>
+      <div class="chart-wrap"><canvas id="capexPieChart"></canvas></div>
+    </div>
+  </div>
+  <div id="capexCatsDiv"><!-- rendered by JS --></div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- TAB 6: UPLOAD ACTUALS                                   -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="page-upload" class="page">
+  <div class="slabel">📤 Upload Monthly Actuals</div>
+  <div class="info-box">
+    Upload your monthly P&amp;L actuals here. Supported formats: <strong>Excel (.xlsx)</strong>, <strong>CSV</strong>, or <strong>Manual Entry</strong>.
+    Data is saved to browser storage and updates all tabs automatically. For best results use the standard template (download below).
+  </div>
+
+  <div class="upload-section">
+    <div class="upload-title">Step 1 — Select Month &amp; Upload Type</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Reporting Month</label>
+        <select class="form-select" id="uploadMonth">
+          <option value="">Select month...</option>
+          <option>Apr-26</option><option>May-26</option><option>Jun-26</option>
+          <option>Jul-26</option><option>Aug-26</option><option>Sep-26</option>
+          <option>Oct-26</option><option>Nov-26</option><option>Dec-26</option>
+          <option>Jan-27</option><option>Feb-27</option><option>Mar-27</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Upload Type</label>
+        <select class="form-select" id="uploadType" onchange="toggleUploadMode()">
+          <option value="file">File Upload (Excel / CSV)</option>
+          <option value="manual">Manual Entry</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Uploaded By</label>
+        <input class="form-input" type="text" id="uploadedBy" placeholder="Name / Role">
+      </div>
+    </div>
+  </div>
+
+  <!-- File Upload Mode -->
+  <div class="upload-section" id="fileUploadSection">
+    <div class="upload-title">Step 2A — Upload File</div>
+    <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
+      <div class="drop-zone-icon">📂</div>
+      <div class="drop-zone-text">Click to browse or drag &amp; drop your file here</div>
+      <div class="drop-zone-sub">Supports .xlsx, .csv · Max 10MB</div>
+    </div>
+    <input type="file" id="fileInput" accept=".xlsx,.csv" style="display:none" onchange="handleFileSelect(event)">
+    <div style="margin-top:10px;display:flex;gap:8px;align-items:center">
+      <button class="btn btn-outline btn-sm" onclick="downloadTemplate()">⬇️ Download Template</button>
+      <span style="font-size:0.62rem;color:#718096">Standard P&amp;L template with required column headers</span>
+    </div>
+
+    <!-- Preview -->
+    <div class="preview-box" id="filePreview">
+      <div class="preview-title">📋 File Preview — Map columns to P&amp;L line items</div>
+      <div id="filePreviewContent"></div>
+      <div style="margin-top:12px" class="btn-row">
+        <button class="btn btn-primary btn-sm" onclick="saveFileActuals()">✅ Confirm &amp; Save to Tracker</button>
+        <button class="btn btn-outline btn-sm" onclick="clearFilePreview()">✖ Clear</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Manual Entry Mode -->
+  <div class="upload-section" id="manualEntrySection" style="display:none">
+    <div class="upload-title">Step 2B — Manual Entry (₹ Crores)</div>
+    <div class="manual-grid">
+      <div class="manual-item"><label>Revenue (₹ Cr)</label><input type="number" id="m_revenue" step="0.01" placeholder="e.g. 47.5"></div>
+      <div class="manual-item"><label>COGS / Consumption (₹ Cr)</label><input type="number" id="m_cogs" step="0.01" placeholder="e.g. 12.5"></div>
+      <div class="manual-item"><label>Doctor Cost (₹ Cr)</label><input type="number" id="m_doctorCost" step="0.01" placeholder="e.g. 8.2"></div>
+      <div class="manual-item"><label>Staff Payroll (₹ Cr)</label><input type="number" id="m_payroll" step="0.01" placeholder="e.g. 6.8"></div>
+      <div class="manual-item"><label>Other Operating Cost (₹ Cr)</label><input type="number" id="m_otherCost" step="0.01" placeholder="e.g. 5.4"></div>
+      <div class="manual-item"><label>Rent &amp; Other (₹ Cr)</label><input type="number" id="m_rentOther" step="0.01" placeholder="e.g. 2.3"></div>
+      <div class="manual-item"><label>Depreciation (₹ Cr)</label><input type="number" id="m_depreciation" step="0.01" placeholder="e.g. 2.9"></div>
+      <div class="manual-item"><label>Capex Spent this month (₹ Cr)</label><input type="number" id="m_capexSpent" step="0.01" placeholder="e.g. 6.8"></div>
+    </div>
+    <div style="margin-top:16px;border-top:1px solid #e2e8f0;padding-top:14px">
+      <div class="upload-title" style="margin-bottom:10px">Department Revenue Split (₹ Cr) — Optional</div>
+      <div class="manual-grid" id="deptManualGrid"><!-- rendered by JS --></div>
+    </div>
+    <div style="margin-top:14px" class="btn-row">
+      <button class="btn btn-primary" onclick="saveManualActuals()">✅ Save to Tracker</button>
+      <button class="btn btn-outline" onclick="clearManualForm()">✖ Clear Form</button>
+      <span id="manualSaveStatus" style="font-size:0.68rem;color:#27ae60;font-weight:700"></span>
+    </div>
+  </div>
+
+  <!-- Saved Months Summary -->
+  <div class="upload-section">
+    <div class="upload-title">📊 Months with Actuals Loaded</div>
+    <div id="savedMonthsSummary"><!-- rendered by JS --></div>
+    <div style="margin-top:12px">
+      <button class="btn btn-danger btn-sm" onclick="if(confirm('Clear ALL actuals? This cannot be undone.'))clearAllActuals()">🗑 Clear All Actuals</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- TAB 7: REQUISITIONS LOG                                 -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="page-reqs" class="page">
+  <div class="slabel">📋 Finance Requisitions &amp; Document Log</div>
+  <div class="info-box">
+    Log of all finance documents uploaded or entered into the tracker. Each upload automatically creates a log entry.
+    You can also add manual requisition records for finance approvals, vendor invoices, or audit documents.
+  </div>
+
+  <div class="upload-section">
+    <div class="upload-title">➕ Add Manual Requisition Entry</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Document Type</label>
+        <select class="form-select" id="reqType">
+          <option>P&amp;L Actuals Upload</option>
+          <option>Capex Invoice</option>
+          <option>Vendor Invoice</option>
+          <option>Payroll Summary</option>
+          <option>Doctor Fee Statement</option>
+          <option>Audit Document</option>
+          <option>Board Approval</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Period / Month</label>
+        <select class="form-select" id="reqMonth">
+          <option value="">—</option>
+          <option>Apr-26</option><option>May-26</option><option>Jun-26</option>
+          <option>Jul-26</option><option>Aug-26</option><option>Sep-26</option>
+          <option>Oct-26</option><option>Nov-26</option><option>Dec-26</option>
+          <option>Jan-27</option><option>Feb-27</option><option>Mar-27</option>
+          <option>FY27 Full Year</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Submitted By</label>
+        <input class="form-input" type="text" id="reqBy" placeholder="Name">
+      </div>
+    </div>
+    <div class="form-group" style="margin-bottom:10px">
+      <label class="form-label">Notes / Description</label>
+      <input class="form-input" type="text" id="reqNotes" placeholder="Brief description of the document...">
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-secondary btn-sm" onclick="addReqEntry()">➕ Add Entry</button>
+    </div>
+  </div>
+
+  <div id="reqsList"><!-- rendered by JS --></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- TAB: FY27 BASE CASE                                     -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="page-bc" class="page">
+  <div class="slabel">📈 FY27 Base Case (BC) — AOP Monthly P&amp;L (₹ Crores)</div>
+  <div class="info-box">
+    <strong>FY27 Base Case</strong> — AOP budget approved for FY27 before upside levers. Revenue ₹525.7 Cr · EBITDA ₹107.2 Cr (20.4% margin).
+    Payroll includes BC headcount (before HR rationalization savings of ₹11 Cr). Compare with the UC tab to see the value of the transformation levers.
+  </div>
+  <div class="kpi-row">
+    <div class="kpi kpi-rev"><div class="kpi-label">BC Revenue</div><div class="kpi-val">₹525.7 Cr</div><div class="kpi-sub">vs UC ₹575 Cr (gap: ₹49.3 Cr)</div></div>
+    <div class="kpi kpi-ebitda"><div class="kpi-label">BC EBITDA</div><div class="kpi-val">₹107.2 Cr</div><div class="kpi-sub">20.4% margin vs UC 25.8%</div></div>
+    <div class="kpi kpi-margin"><div class="kpi-label">EBITDA Gap (UC vs BC)</div><div class="kpi-val">₹41.6 Cr</div><div class="kpi-sub">Revenue levers ₹30 Cr + Cost ₹20 Cr − overlap</div></div>
+    <div class="kpi kpi-cost"><div class="kpi-label">BC Total Costs</div><div class="kpi-val">₹418.5 Cr</div><div class="kpi-sub">Pre-rationalization base</div></div>
+  </div>
+  <div class="chart-grid">
+    <div class="chart-box">
+      <div class="chart-title">BC vs UC Monthly Revenue (₹ Cr)</div>
+      <div class="chart-wrap"><canvas id="bcRevChart"></canvas></div>
+    </div>
+    <div class="chart-box">
+      <div class="chart-title">BC vs UC Monthly EBITDA (₹ Cr)</div>
+      <div class="chart-wrap"><canvas id="bcEbChart"></canvas></div>
+    </div>
+  </div>
+  <div class="slabel">📋 FY27 BC Monthly P&amp;L (₹ Crores)</div>
+  <div class="tbl-wrap"><table class="fin-tbl" id="bcTable"><!-- rendered by JS --></table></div>
+  <div class="slabel">🏥 FY27 BC Revenue by Department</div>
+  <div class="tbl-wrap"><table class="fin-tbl" id="bcDeptTable"><!-- rendered by JS --></table></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- TAB: FY26 CLOSING                                       -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="page-fy26" class="page">
+  <div class="slabel">📅 FY26 Closing Numbers — Apr 2025 to Mar 2026</div>
+  <div class="info-box">
+    <strong>FY26 Estimated Close</strong> — ₹452.8 Cr revenue · ₹98.8 Cr EBITDA (21.8%). Currently <strong>10 months of actuals available</strong> (Apr-25 to Jan-26).
+    Feb-26 and Mar-26 actuals pending. Use the <strong>Update FY26 Actuals</strong> section below to feed in new data as it becomes available. All figures update automatically.
+  </div>
+  <div class="kpi-row">
+    <div class="kpi kpi-rev"><div class="kpi-label">FY26E Revenue</div><div class="kpi-val">₹452.8 Cr</div><div class="kpi-sub">Full year estimate</div></div>
+    <div class="kpi kpi-ebitda"><div class="kpi-label">FY26E EBITDA</div><div class="kpi-val">₹98.8 Cr</div><div class="kpi-sub">21.8% margin</div></div>
+    <div class="kpi"><div class="kpi-label">10M Actual Rev</div><div class="kpi-val" id="fy26YtdRev">—</div><div class="kpi-sub">Apr-25 to Jan-26</div></div>
+    <div class="kpi"><div class="kpi-label">10M Actual EBITDA</div><div class="kpi-val" id="fy26YtdEb">—</div><div class="kpi-sub">Annualised est.</div></div>
+    <div class="kpi kpi-margin"><div class="kpi-label">Months with Data</div><div class="kpi-val" id="fy26MonthsCount">—</div><div class="kpi-sub">of 12 months</div></div>
+  </div>
+  <div class="chart-grid">
+    <div class="chart-box">
+      <div class="chart-title">FY26 Monthly Revenue — Plan vs Actual (₹ Cr)</div>
+      <div class="chart-wrap"><canvas id="fy26RevChart"></canvas></div>
+    </div>
+    <div class="chart-box">
+      <div class="chart-title">FY26 Monthly EBITDA — Plan vs Actual (₹ Cr)</div>
+      <div class="chart-wrap"><canvas id="fy26EbChart"></canvas></div>
+    </div>
+  </div>
+  <div class="slabel">📋 FY26 Monthly P&amp;L — Plan vs Actual (₹ Crores)</div>
+  <div class="tbl-wrap"><table class="fin-tbl" id="fy26Table"><!-- rendered by JS --></table></div>
+
+  <!-- Update actuals -->
+  <div class="slabel">✏️ Update FY26 Actuals</div>
+  <div class="upload-section">
+    <div class="upload-title">Enter or update monthly actuals for FY26 (₹ Crores)</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Month</label>
+        <select class="form-select" id="fy26Month">
+          <option value="">Select month...</option>
+          <option>Apr-25</option><option>May-25</option><option>Jun-25</option>
+          <option>Jul-25</option><option>Aug-25</option><option>Sep-25</option>
+          <option>Oct-25</option><option>Nov-25</option><option>Dec-25</option>
+          <option>Jan-26</option><option>Feb-26</option><option>Mar-26</option>
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Revenue (₹ Cr)</label><input class="form-input" type="number" id="fy26_rev" step="0.01" placeholder="e.g. 37.5"></div>
+      <div class="form-group"><label class="form-label">COGS (₹ Cr)</label><input class="form-input" type="number" id="fy26_cogs" step="0.01" placeholder="e.g. 11.0"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Doctor Cost (₹ Cr)</label><input class="form-input" type="number" id="fy26_doc" step="0.01" placeholder="e.g. 6.7"></div>
+      <div class="form-group"><label class="form-label">Payroll (₹ Cr)</label><input class="form-input" type="number" id="fy26_pay" step="0.01" placeholder="e.g. 6.4"></div>
+      <div class="form-group"><label class="form-label">Other Cost (₹ Cr)</label><input class="form-input" type="number" id="fy26_other" step="0.01" placeholder="e.g. 5.3"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Depreciation (₹ Cr)</label><input class="form-input" type="number" id="fy26_depr" step="0.01" placeholder="e.g. 2.1"></div>
+      <div class="form-group" style="align-self:flex-end">
+        <button class="btn btn-primary" onclick="saveFY26Actual()">✅ Save Month</button>
+        <span id="fy26SaveMsg" style="margin-left:10px;font-size:0.68rem;color:#27ae60;font-weight:700"></span>
+      </div>
+    </div>
+    <div style="margin-top:10px">
+      <div class="upload-title" style="margin-bottom:8px">Months loaded:</div>
+      <div id="fy26MonthPills"><!-- rendered by JS --></div>
+    </div>
+  </div>
+
+  <div class="slabel">🏥 FY26 Revenue by Department — BRM Actuals (YTD Apr-25 to Jan-26)</div>
+  <div class="info-box" style="margin-bottom:10px">
+    <strong>Source:</strong> BRM Deck FY26 — Kochi Unit · <strong>Period:</strong> 10 months YTD (Apr 2025 – Jan 2026) · <strong>Total YTD:</strong> ₹378.01 Cr · IP: ₹263.88 Cr | OP: ₹99.70 Cr | F&B: ₹14.43 Cr
+    <br>Growth % vs FY27 UC is calculated against annualised FY26 (YTD × 1.2).
+  </div>
+  <div class="tbl-wrap"><table class="fin-tbl" id="fy26DeptTable"><!-- rendered by JS --></table></div>
+
+  <div class="slabel">✏️ Input Department-wise FY26 Actuals</div>
+  <div class="upload-section">
+    <div class="upload-title">Enter or update department-wise actuals for FY26 (₹ Crores)</div>
+    <div class="info-box" style="margin-bottom:12px">Use this to record the final full-year FY26 actuals per department once available (Feb-26 &amp; Mar-26 close). Values are stored in your browser session.</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Department</label>
+        <select class="form-select" id="fy26DeptSelect">
+          <option value="">Select department...</option>
+          <option>Medical Oncology</option><option>Nephrology</option><option>Neuro Surgery</option>
+          <option>GI Surgery</option><option>Joint Repl. &amp; Sports</option><option>Cardiology</option>
+          <option>Gastroenterology</option><option>Urology</option><option>Head &amp; Neck Oncology</option>
+          <option>Min. Invasive Surgery</option><option>Neurology</option><option>Surgical Oncology</option>
+          <option>Foot &amp; Ankle</option><option>Liver Care</option><option>General Medicine</option>
+          <option>Orthopedics</option><option>OB &amp; Gynaecology</option><option>Paediatrics</option>
+          <option>Radiation Oncology</option><option>Cardio Thoracic Surgery</option>
+          <option>Spine Surgery</option><option>Pulmonology</option>
+          <option>Diagnostics &amp; Imaging</option><option>Pharmacy &amp; OTC</option><option>Other Specialties</option>
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">IP Revenue (₹ Cr)</label><input class="form-input" type="number" id="fy26d_ip" step="0.01" placeholder="e.g. 38.5"></div>
+      <div class="form-group"><label class="form-label">OP Revenue (₹ Cr)</label><input class="form-input" type="number" id="fy26d_op" step="0.01" placeholder="e.g. 22.0"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Total Revenue (₹ Cr)</label><input class="form-input" type="number" id="fy26d_total" step="0.01" placeholder="Auto-sum or override"></div>
+      <div class="form-group" style="align-self:flex-end">
+        <button class="btn btn-primary" onclick="saveFY26DeptActual()">✅ Save Department</button>
+        <span id="fy26DeptSaveMsg" style="margin-left:10px;font-size:0.68rem;color:#27ae60;font-weight:700"></span>
+      </div>
+    </div>
+    <div style="margin-top:12px">
+      <div class="upload-title" style="margin-bottom:8px">Departments with full-year actuals saved:</div>
+      <div id="fy26DeptPills"><!-- rendered by JS --></div>
+    </div>
+  </div>
+  <div class="tbl-wrap" id="fy26DeptActualWrap" style="display:none">
+    <table class="fin-tbl" id="fy26DeptActualTable"><!-- rendered by JS --></table>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">VPS Lakeshore Hospital &amp; Research Centre &nbsp;&middot;&nbsp; Finance Tracker FY27 &nbsp;&middot;&nbsp; Confidential — Internal Finance Use Only &nbsp;&middot;&nbsp; Upside Case Numbers</div>
+
+</div><!-- end mainWrap -->
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// DATA CONSTANTS
+// ═══════════════════════════════════════════════════════════
+var MONTHS = ['Apr-26','May-26','Jun-26','Jul-26','Aug-26','Sep-26','Oct-26','Nov-26','Dec-26','Jan-27','Feb-27','Mar-27'];
+
+// FY27 UC Monthly Revenue Plan (sums to 575 Cr)
+var REV_PLAN = [42.00,43.50,45.00,46.00,47.00,48.00,49.00,49.50,50.00,50.50,51.00,53.50];
+
+// Annual targets (₹ Cr)
+var ANN_REV    = 575.00;
+var ANN_COGS   = 155.25; // 27.0% of revenue
+var ANN_DOC    = 99.08;
+var ANN_PAYROLL = 81.85;
+var ANN_OTHER  = 65.24;
+var ANN_RENT   = 27.63;  // balancing plug
+var ANN_EBITDA = 148.80;
+var ANN_DEPR   = 34.93;
+var ANN_CAPEX  = 82.21;
+
+// Department data (FY27 UC annual, ₹ Cr) — fy26 = BRM FY26 YTD actuals (10 months Apr-25 to Jan-26)
+var DEPT_DATA = [
+  // UC sums to 575.0 Cr · BC sums to 525.7 Cr
+  {name:'Medical Oncology',       cat:'Oncology',    uc:77.9,  bc:73.6, fy26:53.18, fy26ip:34.37, fy26op:18.81},
+  {name:'Nephrology',             cat:'Renal',       uc:67.7,  bc:60.6, fy26:45.27, fy26ip:32.13, fy26op:13.14},
+  {name:'Neuro Surgery',          cat:'Neuro',       uc:43.3,  bc:38.4, fy26:28.84, fy26ip:26.10, fy26op:2.74},
+  {name:'GI Surgery',             cat:'Surgery',     uc:33.6,  bc:30.0, fy26:22.43, fy26ip:20.38, fy26op:2.05},
+  {name:'Joint Repl. & Sports',   cat:'Ortho',       uc:32.6,  bc:30.4, fy26:21.11, fy26ip:18.75, fy26op:2.36},
+  {name:'Cardiology',             cat:'Cardio',      uc:29.2,  bc:27.5, fy26:20.41, fy26ip:16.12, fy26op:4.28},
+  {name:'Gastroenterology',       cat:'GI',          uc:26.3,  bc:24.8, fy26:18.35, fy26ip:10.63, fy26op:7.72},
+  {name:'Urology',                cat:'Surgery',     uc:22.9,  bc:21.5, fy26:16.44, fy26ip:13.25, fy26op:3.19},
+  {name:'Head & Neck Oncology',   cat:'Oncology',    uc:20.0,  bc:11.9, fy26:8.67,  fy26ip:7.70,  fy26op:0.97},
+  {name:'Min. Invasive Surgery',  cat:'Surgery',     uc:18.5,  bc:17.4, fy26:12.46, fy26ip:11.71, fy26op:0.75},
+  {name:'Neurology',              cat:'Neuro',       uc:14.6,  bc:13.8, fy26:10.86, fy26ip:7.97,  fy26op:2.89},
+  {name:'Surgical Oncology',      cat:'Oncology',    uc:13.1,  bc:12.2, fy26:10.70, fy26ip:8.21,  fy26op:2.49},
+  {name:'Foot & Ankle',           cat:'Ortho',       uc:14.9,  bc:14.0, fy26:10.37, fy26ip:9.06,  fy26op:1.31},
+  {name:'Liver Care',             cat:'GI',          uc:13.6,  bc:12.9, fy26:9.72,  fy26ip:8.78,  fy26op:0.94},
+  {name:'General Medicine',       cat:'Medicine',    uc:10.5,  bc:10.0, fy26:7.47,  fy26ip:4.59,  fy26op:2.88},
+  {name:'Orthopedics',            cat:'Ortho',       uc:9.2,   bc:8.6,  fy26:7.01,  fy26ip:6.45,  fy26op:0.56},
+  {name:'OB & Gynaecology',       cat:'OBG',         uc:9.3,   bc:8.7,  fy26:6.72,  fy26ip:4.85,  fy26op:1.87},
+  {name:'Paediatrics',            cat:'Paeds',       uc:9.2,   bc:8.6,  fy26:6.33,  fy26ip:4.25,  fy26op:2.08},
+  {name:'Radiation Oncology',     cat:'Oncology',    uc:9.0,   bc:7.9,  fy26:5.80,  fy26ip:0.12,  fy26op:5.68},
+  {name:'Cardio Thoracic Surgery',cat:'Surgery',     uc:8.3,   bc:7.6,  fy26:5.52,  fy26ip:5.21,  fy26op:0.31},
+  {name:'Spine Surgery',          cat:'Neuro',       uc:6.8,   bc:6.2,  fy26:4.61,  fy26ip:3.75,  fy26op:0.86},
+  {name:'Pulmonology',            cat:'Medicine',    uc:8.8,   bc:8.2,  fy26:5.88,  fy26ip:4.78,  fy26op:1.10},
+  {name:'Diagnostics & Imaging',  cat:'Diagnostics', uc:40.9,  bc:38.3, fy26:35.0,  fy26ip:25.0,  fy26op:10.0},
+  {name:'Pharmacy & OTC',         cat:'Pharmacy',    uc:20.3,  bc:19.1, fy26:17.5,  fy26ip:8.0,   fy26op:9.5},
+  {name:'Other Specialties',      cat:'Other',       uc:14.5,  bc:13.5, fy26:12.0,  fy26ip:6.0,   fy26op:6.0}
+];
+
+// Consultant data — FY26 YTD actuals + FY27 UC targets (₹ Cr)
+var CONSULTANT_DATA = [
+  // Medical Oncology — note: Gangadharan VP is honorary, revenue credited at dept level
+  {name:'Gangadharan V P',         dept:'Medical Oncology',     fy26:52.89, uc:61.0,  ip26:34.37, op26:18.52},
+  {name:'Favaz Ali M',             dept:'Medical Oncology',     fy26:1.19,  uc:1.5,   ip26:0.80,  op26:0.39},
+  // Nephrology
+  {name:'Abi Abraham M',           dept:'Nephrology',           fy26:31.93, uc:37.0,  ip26:23.89, op26:8.04},
+  {name:'Jithin S Kumar',          dept:'Nephrology',           fy26:8.01,  uc:9.5,   ip26:6.20,  op26:1.81},
+  {name:'Kartik Ganesh',           dept:'Nephrology',           fy26:3.46,  uc:4.0,   ip26:2.80,  op26:0.66},
+  {name:'Abi Abraham',             dept:'Nephrology',           fy26:1.16,  uc:1.4,   ip26:0.90,  op26:0.26},
+  // Neuro Surgery
+  {name:'Sudish Karunakaran',      dept:'Neuro Surgery',        fy26:23.37, uc:27.0,  ip26:21.72, op26:1.65},
+  {name:'Arun Oommen',             dept:'Neuro Surgery',        fy26:2.98,  uc:3.5,   ip26:2.70,  op26:0.28},
+  {name:'Srivatsan Thirumalai',    dept:'Neuro Surgery',        fy26:1.24,  uc:1.5,   ip26:1.10,  op26:0.14},
+  {name:'Ajay Kumar Ajanvi',       dept:'Neuro Surgery',        fy26:1.23,  uc:1.4,   ip26:1.10,  op26:0.13},
+  // GI Surgery
+  {name:'Ramesh H',                dept:'GI Surgery',           fy26:16.90, uc:19.5,  ip26:15.59, op26:1.30},
+  {name:'Mahesh S',                dept:'GI Surgery',           fy26:3.98,  uc:4.6,   ip26:3.50,  op26:0.48},
+  // Joint Replacement & Sports
+  {name:'Jacob Varghese',          dept:'Joint Repl. & Sports', fy26:8.15,  uc:9.5,   ip26:7.06,  op26:1.09},
+  {name:'George Jacob',            dept:'Joint Repl. & Sports', fy26:7.11,  uc:8.2,   ip26:6.10,  op26:1.01},
+  {name:'Appu Benny Thomas',       dept:'Joint Repl. & Sports', fy26:5.86,  uc:6.8,   ip26:5.00,  op26:0.86},
+  // Cardiology
+  {name:'Anandkumar V',            dept:'Cardiology',           fy26:7.64,  uc:8.8,   ip26:5.80,  op26:1.84},
+  {name:'Cibi Issac',              dept:'Cardiology',           fy26:6.69,  uc:7.7,   ip26:5.20,  op26:1.49},
+  {name:'Aju Ajay',                dept:'Cardiology',           fy26:3.43,  uc:4.0,   ip26:2.60,  op26:0.83},
+  {name:'Harikrishna K',           dept:'Cardiology',           fy26:2.43,  uc:2.8,   ip26:1.80,  op26:0.63},
+  // Gastroenterology
+  {name:'Roy J Mukkada',           dept:'Gastroenterology',     fy26:7.96,  uc:9.2,   ip26:4.29,  op26:3.67},
+  {name:'Maya P',                  dept:'Gastroenterology',     fy26:3.50,  uc:4.0,   ip26:1.90,  op26:1.60},
+  {name:'Antony Paul Chettupuzha', dept:'Gastroenterology',     fy26:2.91,  uc:3.4,   ip26:1.50,  op26:1.41},
+  {name:'Pradeep George Mathew',   dept:'Gastroenterology',     fy26:2.67,  uc:3.1,   ip26:1.40,  op26:1.27},
+  // Urology
+  {name:'Datson George P',         dept:'Urology',              fy26:13.14, uc:15.2,  ip26:10.93, op26:2.21},
+  {name:'Gregory Pathrose',        dept:'Urology',              fy26:1.82,  uc:2.1,   ip26:1.50,  op26:0.32},
+  {name:'Karthi A P',              dept:'Urology',              fy26:1.15,  uc:1.3,   ip26:0.90,  op26:0.25},
+  // Min. Invasive Surgery
+  {name:'Padmakumar R',            dept:'Min. Invasive Surgery',fy26:12.46, uc:14.4,  ip26:11.71, op26:0.75},
+  // Head & Neck Oncology
+  {name:'Shawn T Joseph',          dept:'Head & Neck Oncology', fy26:6.76,  uc:7.8,   ip26:5.80,  op26:0.96},
+  {name:'Moni Abraham Kuriakose',  dept:'Head & Neck Oncology', fy26:1.20,  uc:1.4,   ip26:1.00,  op26:0.20},
+  // Surgical Oncology
+  {name:'Chitrathara K',           dept:'Surgical Oncology',    fy26:10.66, uc:12.3,  ip26:8.21,  op26:2.45},
+  // Liver Care
+  {name:'Fadl H Veerankutty',      dept:'Liver Care',           fy26:9.49,  uc:11.0,  ip26:8.60,  op26:0.89},
+  // Foot & Ankle
+  {name:'Rajesh Simon',            dept:'Foot & Ankle',         fy26:7.97,  uc:9.2,   ip26:6.80,  op26:1.17},
+  {name:'Dennis P Jose',           dept:'Foot & Ankle',         fy26:2.41,  uc:2.8,   ip26:2.10,  op26:0.31},
+  // Neurology
+  {name:'Bindu Varghese',          dept:'Neurology',            fy26:4.48,  uc:5.2,   ip26:3.20,  op26:1.28},
+  {name:'Vidya M V',               dept:'Neurology',            fy26:3.31,  uc:3.8,   ip26:2.30,  op26:1.01},
+  {name:'Murali Krishna Menon',    dept:'Neurology',            fy26:3.07,  uc:3.5,   ip26:2.10,  op26:0.97},
+  // General Medicine
+  {name:'John Alexander',          dept:'General Medicine',     fy26:6.15,  uc:7.1,   ip26:4.50,  op26:1.65},
+  // Radiation Oncology
+  {name:'Joseph Edison',           dept:'Radiation Oncology',   fy26:5.80,  uc:6.7,   ip26:0.12,  op26:5.68},
+  // Cardio Thoracic Surgery
+  {name:'Sujith D S',              dept:'Cardio Thoracic Surgery',fy26:5.51,uc:6.4,   ip26:5.21,  op26:0.30},
+  // Orthopedics
+  {name:'Jose Thomas Pappanacherry',dept:'Orthopedics',         fy26:4.93,  uc:5.7,   ip26:4.30,  op26:0.63},
+  {name:'Vinay Jaison Chacko',     dept:'Orthopedics',          fy26:1.48,  uc:1.7,   ip26:1.30,  op26:0.18},
+  // Spine Surgery
+  {name:'Krishna Kumar R',         dept:'Spine Surgery',        fy26:4.61,  uc:5.3,   ip26:3.75,  op26:0.86},
+  // Family Medicine
+  {name:'Shubha Achyutha',         dept:'Family Medicine',      fy26:4.20,  uc:4.8,   ip26:0.00,  op26:4.21},
+  // OB & Gynaecology
+  {name:'Smitha Joy',              dept:'OB & Gynaecology',     fy26:4.10,  uc:4.7,   ip26:3.20,  op26:0.90},
+  {name:'Thresy George',           dept:'OB & Gynaecology',     fy26:1.37,  uc:1.6,   ip26:1.00,  op26:0.37},
+  // Paediatrics
+  {name:'Arun A',                  dept:'Paediatrics',          fy26:3.24,  uc:3.7,   ip26:2.50,  op26:0.74},
+  {name:'Nirmala Thomas',          dept:'Paediatrics',          fy26:1.37,  uc:1.6,   ip26:1.00,  op26:0.37},
+  // Pulmonology
+  {name:'Mujeeb Rahman K K',       dept:'Pulmonology',          fy26:2.81,  uc:3.2,   ip26:2.21,  op26:0.60},
+  {name:'Hari Lakshmanan P',       dept:'Pulmonology',          fy26:2.75,  uc:3.2,   ip26:2.57,  op26:0.18},
+  // ENT
+  {name:'Idicula Mathews',         dept:'ENT',                  fy26:2.64,  uc:3.0,   ip26:2.34,  op26:0.30},
+  // Plastic Surgery
+  {name:'Abhijeet Wakure',         dept:'Plastic Surgery',      fy26:2.12,  uc:2.4,   ip26:1.80,  op26:0.32},
+  // Psychiatry
+  {name:'Xavier John Pulikkal',    dept:'Psychiatry',           fy26:1.88,  uc:2.2,   ip26:1.12,  op26:0.76},
+  // Dermatology
+  {name:'Abin Abraham Itty',       dept:'Dermatology',          fy26:1.85,  uc:2.1,   ip26:0.31,  op26:1.54},
+  // Endocrinology
+  {name:'Vivek Mathew',            dept:'Endocrinology',        fy26:1.54,  uc:1.8,   ip26:0.22,  op26:1.32},
+  // Rheumatology
+  {name:'Mohammed Iqbal K M',      dept:'Rheumatology',         fy26:1.36,  uc:1.6,   ip26:0.05,  op26:1.31},
+  // Ortho Oncology
+  {name:'Ebin Rahman',             dept:'Ortho Oncology',       fy26:1.34,  uc:1.6,   ip26:1.22,  op26:0.12},
+];
+
+// Staff cost breakdown (₹ Cr FY27 UC)
+var STAFF_DATA = [
+  {cat:'Nursing',               headcount:569, fy27uc:29.50, savings:3.15, note:'630→569 (−61)'},
+  {cat:'Medical Officers',      headcount:145, fy27uc:10.20, savings:0.80, note:'Realignment to PLCs'},
+  {cat:'Technical/Para-Medical',headcount:210, fy27uc:11.80, savings:0.50, note:'Lab, Radiology, Pharmacy tech'},
+  {cat:'Pharmacy',              headcount:50,  fy27uc:2.50,  savings:2.15, note:'93→50 (−43)'},
+  {cat:'Patient Care Services', headcount:80,  fy27uc:3.20,  savings:0.68, note:'97→80 (−17)'},
+  {cat:'Administration',        headcount:195, fy27uc:12.50, savings:1.27, note:'10% cut across 15 depts'},
+  {cat:'Housekeeping & Support',headcount:190, fy27uc:7.65,  savings:0.45, note:'Vendor optimization'},
+  {cat:'Radiotherapy Staff',    headcount:9,   fy27uc:0.50,  savings:0.44, note:'13→9 per AERB norms'},
+  {cat:'Other',                 headcount:176, fy27uc:4.00,  savings:1.56, note:'Various departments'}
+];
+
+// Doctor cost breakdown (₹ Cr FY27 UC)
+var DOC_COST_DATA = [
+  {dept:'Medical Oncology',    cost:12.0, pct:16.5, note:'Fee-for-service + PLC'},
+  {dept:'Nephrology',          cost:11.0, pct:15.8, note:'Fee + dialysis sessions'},
+  {dept:'Neuro Surgery',       cost:9.0,  pct:20.2, note:'Surgical fee per case'},
+  {dept:'GI Surgery',          cost:6.5,  pct:18.8, note:'Procedure-based fees'},
+  {dept:'Cardiology',          cost:5.0,  pct:16.7, note:'Cath lab + OPD fees'},
+  {dept:'Joint Repl. & Sports',cost:4.5,  pct:13.4, note:'Surgical fee per case'},
+  {dept:'Head & Neck Oncology',cost:3.8,  pct:18.5, note:'Complex surgical fees'},
+  {dept:'Gastroenterology',    cost:3.2,  pct:11.9, note:'Endoscopy + OPD'},
+  {dept:'Urology',             cost:3.5,  pct:14.9, note:'Surgical + OPD'},
+  {dept:'Min. Invasive Surgery',cost:2.8, pct:14.7, note:'Per procedure'},
+  {dept:'Radiation Oncology',  cost:2.5,  pct:27.2, note:'Session-based + machine'},
+  {dept:'Neurology',           cost:2.3,  pct:15.3, note:'OPD + IP consult'},
+  {dept:'Other Specialties',   cost:32.98,pct:15.0, note:'All other departments'}
+];
+
+// COGS breakdown (₹ Cr FY27 UC)
+var COGS_DATA = [
+  {cat:'Medicines & Drugs',    budget:62.0,  pct_rev:10.8, note:'27.0% COGS → target 26.5%'},
+  {cat:'Implants & Consumables',budget:45.5, pct_rev:7.9,  note:'Ortho, Cardiac, Neuro implants'},
+  {cat:'Laboratory Reagents',  budget:21.0,  pct_rev:3.7,  note:'Biochem, Haematology, Microbiology'},
+  {cat:'Blood & Blood Products',budget:10.5, pct_rev:1.8,  note:'Transfusion services'},
+  {cat:'Surgical Disposables', budget:8.75,  pct_rev:1.5,  note:'OT consumables, gloves, drapes'},
+  {cat:'Radiology Consumables',budget:4.5,   pct_rev:0.8,  note:'Contrast, film, CDs'},
+  {cat:'Dietary & Nutrition',  budget:3.0,   pct_rev:0.5,  note:'Patient meals, TPN'},
+];
+
+// Other cost breakdown (₹ Cr FY27 UC)
+var OTHER_COST_DATA = [
+  {cat:'Power & Utilities',   budget:14.0, note:'Solar + HVAC optimization target −₹1 Cr'},
+  {cat:'Housekeeping Vendor', budget:8.5,  note:'Contracted services'},
+  {cat:'Marketing & Comms',   budget:5.0,  note:'Shift to performance digital (−₹0.5 Cr)'},
+  {cat:'Repairs & Maintenance',budget:9.0, note:'Biomedical + civil maintenance'},
+  {cat:'IT & Software',       budget:4.5,  note:'HIS, ERP, digital subscriptions'},
+  {cat:'Insurance',           budget:4.0,  note:'Fire, medical indemnity, group health'},
+  {cat:'Admin & Office',      budget:3.5,  note:'Stationery, printing, courier'},
+  {cat:'Legal & Professional',budget:3.0,  note:'Audit, legal, consultancy'},
+  {cat:'Transportation',      budget:2.5,  note:'Patient transport, staff shuttle'},
+  {cat:'Other Overhead',      budget:11.24,note:'Central overhead allocations'},
+];
+
+// HR Rationalization plan
+var HR_DATA = [
+  {dept:'Nursing',              current:630, target:569, reduction:61, savings:3.15, qtr:'Q1-Q2 FY27'},
+  {dept:'Pharmacy',             current:93,  target:50,  reduction:43, savings:2.15, qtr:'Q1-Q2 FY27'},
+  {dept:'Patient Care Services',current:97,  target:80,  reduction:17, savings:0.68, qtr:'Q1 FY27'},
+  {dept:'Radiotherapy',         current:13,  target:9,   reduction:4,  savings:0.44, qtr:'Q1 FY27'},
+  {dept:'Admin (10% cut – 15 depts)',current:217,target:195,reduction:22,savings:1.27,qtr:'Q1-Q2 FY27'},
+  {dept:'Doctor → PLC Realignment',current:145,target:120,reduction:25,savings:3.31, qtr:'Q1-Q4 FY27'}
+];
+
+// Capex categories
+var CAPEX_DATA = [
+  {cat:'Plant & Machinery', color:'#e67e22', budget:55.11, pct:67.0, items:[
+    {name:'Biomedical & Clinical Equipment', budget:49.19, note:'Revenue-generating equipment'},
+    {name:'Electrical & Mechanical',         budget:4.61,  note:'Building services'},
+    {name:'Other P&M',                        budget:1.31,  note:'Miscellaneous'}
+  ]},
+  {cat:'Buildings & Civil', color:'#db2777', budget:18.31, pct:22.3, items:[
+    {name:'Casualty Renovation',              budget:3.50,  note:'Q1-Q2 FY27'},
+    {name:'ICU Complex',                      budget:2.25,  note:'Q2-Q3 FY27'},
+    {name:'Renal Transplant Centre',          budget:4.00,  note:'Q1-Q3 FY27'},
+    {name:'Paediatric OP',                    budget:1.50,  note:'Q1 FY27'},
+    {name:'Multi-level Parking',              budget:4.50,  note:'Q2-Q4 FY27'},
+    {name:'Porch & Infrastructure',           budget:2.56,  note:'Q1-Q2 FY27'}
+  ]},
+  {cat:'IT & Digital', color:'#2980b9', budget:4.34, pct:5.3, items:[
+    {name:'Networking Infrastructure',       budget:2.55,  note:'Q1-Q2 FY27'},
+    {name:'Computers & Hardware',            budget:0.64,  note:'Ongoing'},
+    {name:'Digitalisation & Other',          budget:1.15,  note:'HIS, digital tools'}
+  ]},
+  {cat:'Furniture & Fixtures', color:'#16a34a', budget:3.19, pct:3.9, items:[
+    {name:'Patient Beds & Furniture',        budget:2.00,  note:'New wing beds'},
+    {name:'Office Furniture',                budget:1.19,  note:'Admin areas'}
+  ]},
+  {cat:'Vehicles & Intangibles', color:'#7c3aed', budget:1.26, pct:1.5, items:[
+    {name:'Vehicles',                        budget:0.67,  note:'Ambulance, transport'},
+    {name:'Intangibles / Software',          budget:0.59,  note:'Licences, setup costs'}
+  ]}
+];
+
+// ═══════════════════════════════════════════════════════════
+// STATE & STORAGE
+// ═══════════════════════════════════════════════════════════
+var ACTUALS = {};
+var CAPEX_ACTUALS = {};
+var FY26_ACTUALS = {};
+var REQS = [];
+var charts = {};
+var activeDocDeptFilter = 'All';
+
+// ── FY27 BC constants
+var ANN_BC_REV    = 525.73;
+var ANN_BC_EBITDA = 107.19;
+var ANN_BC_COGS   = 152.59;
+var ANN_BC_DOC    = 100.85;
+var ANN_BC_PAYROLL= 94.85;
+var ANN_BC_OTHER  = 70.24;
+var ANN_BC_RENT   = ANN_BC_REV - ANN_BC_COGS - ANN_BC_DOC - ANN_BC_PAYROLL - ANN_BC_OTHER - ANN_BC_EBITDA; // ~7.01
+var ANN_BC_DEPR   = 30.64;
+// Monthly BC revenue (scaled from UC plan)
+var REV_BC = REV_PLAN.map(function(r){ return r * (ANN_BC_REV / ANN_REV); });
+
+// ── FY26 constants (Apr-25 to Mar-26)
+var FY26_MONTHS = ['Apr-25','May-25','Jun-25','Jul-25','Aug-25','Sep-25','Oct-25','Nov-25','Dec-25','Jan-26','Feb-26','Mar-26'];
+var ANN_FY26_REV    = 452.8;
+var ANN_FY26_EBITDA = 98.82;
+var ANN_FY26_COGS   = 133.28; // 29.43% of rev
+var ANN_FY26_DOC    = 80.09;  // 17.69% of rev
+var ANN_FY26_PAYROLL= 77.18;
+var ANN_FY26_OTHER  = 63.41;
+var ANN_FY26_DEPR   = 25.00;
+// FY26 monthly revenue (Apr-25 to Jan-26 = BRM actuals; Feb-26 & Mar-26 = estimates)
+var REV_FY26 = [33.61,37.24,33.19,39.37,40.36,39.54,39.21,35.01,37.64,42.83,38.0,40.8];
+
+function loadState(){
+  try{ ACTUALS = JSON.parse(localStorage.getItem('vps_fin_actuals')||'{}'); }catch(e){ACTUALS={};}
+  try{ CAPEX_ACTUALS = JSON.parse(localStorage.getItem('vps_capex_actuals')||'{}'); }catch(e){CAPEX_ACTUALS={};}
+  try{ FY26_ACTUALS = JSON.parse(localStorage.getItem('vps_fy26_actuals')||'{}'); }catch(e){FY26_ACTUALS={};}
+  try{ REQS = JSON.parse(localStorage.getItem('vps_fin_reqs')||'[]'); }catch(e){REQS=[];}
+}
+function saveState(){
+  localStorage.setItem('vps_fin_actuals', JSON.stringify(ACTUALS));
+  localStorage.setItem('vps_capex_actuals', JSON.stringify(CAPEX_ACTUALS));
+  localStorage.setItem('vps_fy26_actuals', JSON.stringify(FY26_ACTUALS));
+  localStorage.setItem('vps_fin_reqs', JSON.stringify(REQS));
+}
+
+// ═══════════════════════════════════════════════════════════
+// PASSWORD GATE
+// ═══════════════════════════════════════════════════════════
+function checkGate(){
+  var pwd = document.getElementById('gatePwd').value;
+  if(pwd==='Finance@vpsls'){
+    sessionStorage.setItem('vps_fin_auth','1');
+    document.getElementById('gateOverlay').style.display='none';
+    document.getElementById('mainWrap').style.display='block';
+    loadState();
+    initAll();
+  } else {
+    document.getElementById('gateErr').style.display='block';
+  }
+}
+// Check on load
+window.addEventListener('load',function(){
+  if(sessionStorage.getItem('vps_fin_auth')==='1'){
+    document.getElementById('gateOverlay').style.display='none';
+    document.getElementById('mainWrap').style.display='block';
+    loadState();
+    initAll();
+  }
+  document.getElementById('gatePwd').focus();
+});
+
+// ═══════════════════════════════════════════════════════════
+// TAB NAVIGATION
+// ═══════════════════════════════════════════════════════════
+function showTab(id,el){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('page-'+id).classList.add('active');
+  if(id==='pl') renderPL();
+  if(id==='bc') renderBCTab();
+  if(id==='fy26') renderFY26Tab();
+  if(id==='revdept') renderDeptTab();
+  if(id==='revdoc') renderDocTab();
+  if(id==='capex') renderCapexTab();
+  if(id==='upload') renderUploadSummary();
+  if(id==='reqs') renderReqs();
+  if(id==='doctors') renderDrOverview();
+}
+function showSubTab(group,id,el){
+  var container = el.parentElement;
+  container.querySelectorAll('.sub-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  var parent = container.parentElement;
+  parent.querySelectorAll('.sub-page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(group+'-'+id).classList.add('active');
+}
+
+// ═══════════════════════════════════════════════════════════
+// PLAN COMPUTATION HELPERS
+// ═══════════════════════════════════════════════════════════
+function fmt(v){return v===null||v===undefined?'—':v.toFixed(2);}
+function fmtV(v){
+  if(v===null||v===undefined)return '<span class="act-empty">—</span>';
+  var s=v>=0?'+':'';
+  var cls=v>=0?'var-pos':'var-neg';
+  return '<span class="'+cls+'">'+s+v.toFixed(1)+'%</span>';
+}
+function sum(arr){return arr.reduce((a,b)=>a+b,0);}
+
+function getMonthlyPlan(){
+  var p={};
+  p.revenue = REV_PLAN.slice();
+  // Revenue sub-components (FY26 BRM mix: IP 69.8%, OP 26.4%, F&B 3.8%)
+  p.rev_ip   = REV_PLAN.map(function(r){ return parseFloat((r*0.698).toFixed(2)); });
+  p.rev_op   = REV_PLAN.map(function(r){ return parseFloat((r*0.264).toFixed(2)); });
+  p.rev_fb   = REV_PLAN.map(function(r){ return parseFloat((r*0.038).toFixed(2)); });
+  p.cogs = REV_PLAN.map(r=>r*(ANN_COGS/ANN_REV));
+  p.grossProfit = p.revenue.map((r,i)=>r-p.cogs[i]);
+  p.doctorCost = REV_PLAN.map(r=>r*(ANN_DOC/ANN_REV));
+  p.payroll = MONTHS.map(()=>ANN_PAYROLL/12);
+  p.otherCost = MONTHS.map(()=>ANN_OTHER/12);
+  p.rentOther = MONTHS.map(()=>ANN_RENT/12);
+  p.ebitda = p.revenue.map((r,i)=>r-p.cogs[i]-p.doctorCost[i]-p.payroll[i]-p.otherCost[i]-p.rentOther[i]);
+  p.ebitdaPct = p.ebitda.map((e,i)=>e/p.revenue[i]*100);
+  p.depreciation = MONTHS.map(()=>ANN_DEPR/12);
+  p.ebit = p.ebitda.map((e,i)=>e-p.depreciation[i]);
+  return p;
+}
+
+function getActualForMonth(m,key){
+  if(!ACTUALS[m])return null;
+  return ACTUALS[m][key]!==undefined?ACTUALS[m][key]:null;
+}
+
+// ═══════════════════════════════════════════════════════════
+// INIT ALL
+// ═══════════════════════════════════════════════════════════
+function initAll(){
+  renderPL();
+  renderCostTables();
+  renderCapexCats();
+  buildDocDeptFilter();
+  buildDeptManualGrid();
+  renderReqs();
+  renderFY26MonthPills();
+  loadFY26DeptState();
+  renderFY26DeptPills();
+  renderFY26DeptActualTable();
+}
+</script>
+<script>
+// ═══════════════════════════════════════════════════════════
+// P&L RENDER
+// ═══════════════════════════════════════════════════════════
+function renderPL(){
+  var plan = getMonthlyPlan();
+
+  // KPI cards
+  var ytdMonths=0;
+  var ytdRevP=0,ytdRevA=0,ytdEbP=0,ytdEbA=0,ytdCostP=0;
+  MONTHS.forEach(function(m,i){
+    ytdRevP+=plan.revenue[i];
+    ytdEbP+=plan.ebitda[i];
+    ytdCostP+=plan.cogs[i]+plan.doctorCost[i]+plan.payroll[i]+plan.otherCost[i]+plan.rentOther[i];
+    var ra=getActualForMonth(m,'revenue');
+    if(ra!==null){ytdRevA+=ra;ytdMonths++;}
+    var ea=getActualForMonth(m,'ebitda_calc');
+    if(ea!==null)ytdEbA+=ea;
+  });
+
+  document.getElementById('ytdRevPlan').textContent='₹'+ytdRevP.toFixed(1)+' Cr';
+  document.getElementById('ytdEbPlan').textContent='₹'+ytdEbP.toFixed(1)+' Cr';
+  var margin=ytdRevP>0?(ytdEbP/ytdRevP*100).toFixed(1)+'%':'—';
+  document.getElementById('ytdMargin').textContent=margin;
+  document.getElementById('ytdCostPlan').textContent='₹'+ytdCostP.toFixed(1)+' Cr';
+
+  // Capex spent
+  var capexSpent=0;
+  Object.values(CAPEX_ACTUALS).forEach(function(cat){
+    Object.values(cat).forEach(function(v){capexSpent+=v||0;});
+  });
+  // Also from monthly actuals
+  MONTHS.forEach(function(m){
+    var cs=getActualForMonth(m,'capexSpent');
+    if(cs!==null&&!Object.keys(CAPEX_ACTUALS).length)capexSpent+=cs;
+  });
+  document.getElementById('ytdCapex').textContent='₹'+capexSpent.toFixed(2)+' Cr';
+
+  if(ytdRevA>0){
+    var rv=((ytdRevA-ytdRevP)/ytdRevP*100);
+    document.getElementById('ytdRevVar').innerHTML='<span class="'+(rv>=0?'var-pos':'var-neg')+'">'+(rv>=0?'+':'')+rv.toFixed(1)+'% vs Plan</span>';
+  } else {
+    document.getElementById('ytdRevVar').innerHTML='<span style="color:#a0aec0;font-size:0.6rem">No actuals uploaded</span>';
+  }
+
+  // Build P&L table
+  var rows=[
+    {key:'revenue',     label:'Revenue',             section:false, gross:false, ebitda:false, isCost:false},
+    {key:'rev_ip',      label:'     ↳ IP Revenue',   section:false, gross:false, ebitda:false, isCost:false, sub:true},
+    {key:'rev_op',      label:'     ↳ OP Revenue',   section:false, gross:false, ebitda:false, isCost:false, sub:true},
+    {key:'rev_fb',      label:'     ↳ Food & Bev.',  section:false, gross:false, ebitda:false, isCost:false, sub:true},
+    {key:'cogs',        label:'  — Consumption/COGS',section:false, gross:false, ebitda:false, isCost:true},
+    {key:'grossProfit', label:'Gross Profit',         section:false, gross:true,  ebitda:false, isCost:false},
+    {key:'doctorCost',  label:'  — Doctor Cost',      section:false, gross:false, ebitda:false, isCost:true},
+    {key:'payroll',     label:'  — Staff Payroll',    section:false, gross:false, ebitda:false, isCost:true},
+    {key:'otherCost',   label:'  — Other Costs',      section:false, gross:false, ebitda:false, isCost:true},
+    {key:'rentOther',   label:'  — Rent & Other',     section:false, gross:false, ebitda:false, isCost:true},
+    {key:'ebitda',      label:'EBITDA',               section:false, gross:false, ebitda:true,  isCost:false},
+    {key:'ebitdaPct',   label:'EBITDA %',             section:false, gross:false, ebitda:true,  isCost:false, isPct:true},
+    {key:'depreciation',label:'  — Depreciation',     section:false, gross:false, ebitda:false, isCost:true},
+    {key:'ebit',        label:'EBIT',                 section:false, gross:false, ebitda:false, isCost:false}
+  ];
+
+  var html='<thead><tr>';
+  html+='<th style="min-width:180px">Line Item</th>';
+  MONTHS.forEach(function(m){
+    html+='<th class="month-hdr" colspan="3">'+m+'</th>';
+  });
+  html+='<th class="month-hdr" colspan="2">FY27 Total</th>';
+  html+='</tr><tr>';
+  html+='<th></th>';
+  MONTHS.forEach(function(){
+    html+='<th class="plan-hdr">Plan</th><th class="act-hdr">Actual</th><th class="var-hdr">Var%</th>';
+  });
+  html+='<th class="plan-hdr">Plan</th><th class="act-hdr">Actual</th>';
+  html+='</tr></thead><tbody>';
+
+  rows.forEach(function(row){
+    var cls='';
+    if(row.ebitda)cls='row-ebitda';
+    else if(row.gross)cls='row-gross';
+
+    // Compute actuals for this row
+    var actVals=MONTHS.map(function(m,i){
+      var a=getActualForMonth(m,row.key);
+      // derive from components if not direct
+      if(a===null && row.key==='grossProfit'){
+        var r=getActualForMonth(m,'revenue');
+        var c=getActualForMonth(m,'cogs');
+        if(r!==null&&c!==null)a=r-c;
+      }
+      if(a===null && row.key==='ebitda'){
+        var r=getActualForMonth(m,'revenue');
+        var c=getActualForMonth(m,'cogs');
+        var d=getActualForMonth(m,'doctorCost');
+        var py=getActualForMonth(m,'payroll');
+        var ot=getActualForMonth(m,'otherCost');
+        var rn=getActualForMonth(m,'rentOther');
+        if(r!==null&&c!==null&&d!==null&&py!==null&&ot!==null&&rn!==null)a=r-c-d-py-ot-rn;
+      }
+      if(a===null && row.key==='ebitdaPct'){
+        var r=getActualForMonth(m,'revenue');
+        var c=getActualForMonth(m,'cogs');
+        var d=getActualForMonth(m,'doctorCost');
+        var py=getActualForMonth(m,'payroll');
+        var ot=getActualForMonth(m,'otherCost');
+        var rn=getActualForMonth(m,'rentOther');
+        if(r!==null&&c!==null&&d!==null&&py!==null&&ot!==null&&rn!==null)a=(r-c-d-py-ot-rn)/r*100;
+      }
+      if(a===null && row.key==='ebit'){
+        var r=getActualForMonth(m,'revenue');
+        var c=getActualForMonth(m,'cogs');
+        var d=getActualForMonth(m,'doctorCost');
+        var py=getActualForMonth(m,'payroll');
+        var ot=getActualForMonth(m,'otherCost');
+        var rn=getActualForMonth(m,'rentOther');
+        var dep=getActualForMonth(m,'depreciation');
+        if(r!==null&&c!==null&&d!==null&&py!==null&&ot!==null&&rn!==null&&dep!==null)a=r-c-d-py-ot-rn-dep;
+      }
+      return a;
+    });
+
+    if(row.sub) cls='row-sub';
+    html+='<tr class="'+cls+'">';
+    html+='<td style="'+(row.sub?'font-size:0.63rem;color:#718096;font-weight:400':'')+'">'+row.label+'</td>';
+
+    var fyActSum=0, fyActCount=0;
+    MONTHS.forEach(function(m,i){
+      var p=plan[row.key][i];
+      var a=actVals[i];
+      var pStr=row.isPct?p.toFixed(1)+'%':fmt(p);
+      var aStr,varStr;
+      if(a!==null){
+        aStr=row.isPct?a.toFixed(1)+'%':fmt(a);
+        fyActSum+=a;fyActCount++;
+        var vNum;
+        if(row.isPct){vNum=a-p;}
+        else if(row.isCost){vNum=p>0?-(a-p)/p*100:0;}
+        else{vNum=p>0?(a-p)/p*100:0;}
+        var vCls=vNum>=0?'var-pos':'var-neg';
+        varStr='<span class="'+vCls+'">'+(vNum>=0?'+':'')+vNum.toFixed(1)+(row.isPct?'pp':'%')+'</span>';
+      } else {
+        aStr='<span class="act-empty">—</span>';
+        varStr='<span class="act-empty">—</span>';
+      }
+      html+='<td>'+pStr+'</td><td>'+aStr+'</td><td>'+varStr+'</td>';
+    });
+
+    // FY Total
+    var fyP=row.isPct?(sum(plan.ebitda)/sum(plan.revenue)*100):sum(plan[row.key]);
+    var fyPStr=row.isPct?fyP.toFixed(1)+'%':fmt(fyP);
+    var fyAStr=fyActCount>0?(row.isPct?(fyActSum/fyActCount).toFixed(1)+'%':fmt(fyActSum)):'<span class="act-empty">—</span>';
+    html+='<td style="font-weight:700">'+fyPStr+'</td><td>'+fyAStr+'</td>';
+    html+='</tr>';
+  });
+
+  html+='</tbody>';
+  document.getElementById('plTable').innerHTML=html;
+
+  // Charts
+  renderPLCharts(plan);
+}
+
+function renderPLCharts(plan){
+  var actRev=MONTHS.map(function(m){return getActualForMonth(m,'revenue');});
+  var actEb=MONTHS.map(function(m,i){
+    var r=getActualForMonth(m,'revenue');
+    var c=getActualForMonth(m,'cogs');
+    var d=getActualForMonth(m,'doctorCost');
+    var py=getActualForMonth(m,'payroll');
+    var ot=getActualForMonth(m,'otherCost');
+    var rn=getActualForMonth(m,'rentOther');
+    if(r!==null&&c!==null&&d!==null&&py!==null&&ot!==null&&rn!==null)return r-c-d-py-ot-rn;
+    return null;
+  });
+
+  if(charts.rev) charts.rev.destroy();
+  if(charts.eb) charts.eb.destroy();
+
+  var ctx1=document.getElementById('revChart').getContext('2d');
+  charts.rev=new Chart(ctx1,{
+    type:'bar',
+    data:{
+      labels:MONTHS,
+      datasets:[
+        {label:'Plan',data:plan.revenue,backgroundColor:'rgba(26,58,92,0.7)',borderRadius:3},
+        {label:'Actual',data:actRev.map(v=>v===null?0:v),backgroundColor:'rgba(230,126,34,0.85)',borderRadius:3}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{size:10}}},title:{display:true,text:'FY27 Monthly Revenue — Plan vs Actual (₹ Cr)',font:{size:11,weight:'600'},color:'#1a3a5c',padding:{bottom:6}}},scales:{y:{beginAtZero:false,min:35,title:{display:true,text:'₹ Crores',font:{size:9},color:'#718096'},ticks:{callback:v=>'₹'+v,font:{size:9}},grid:{color:'#f0f4f8'}},x:{title:{display:true,text:'Month (FY27)',font:{size:9},color:'#718096'},ticks:{font:{size:9}},grid:{display:false}}}}
+  });
+
+  var ctx2=document.getElementById('ebitdaChart').getContext('2d');
+  charts.eb=new Chart(ctx2,{
+    type:'bar',
+    data:{
+      labels:MONTHS,
+      datasets:[
+        {label:'Plan',data:plan.ebitda,backgroundColor:'rgba(39,174,96,0.7)',borderRadius:3},
+        {label:'Actual',data:actEb.map(v=>v===null?0:v),backgroundColor:'rgba(230,126,34,0.85)',borderRadius:3}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{size:10}}},title:{display:true,text:'FY27 Monthly EBITDA — Plan vs Actual (₹ Cr)',font:{size:11,weight:'600'},color:'#1a3a5c',padding:{bottom:6}}},scales:{y:{beginAtZero:false,title:{display:true,text:'₹ Crores',font:{size:9},color:'#718096'},ticks:{callback:v=>'₹'+v,font:{size:9}},grid:{color:'#f0f4f8'}},x:{title:{display:true,text:'Month (FY27)',font:{size:9},color:'#718096'},ticks:{font:{size:9}},grid:{display:false}}}}
+  });
+}
+
+// ═══════════════════════════════════════════════════════════
+// DEPARTMENT REVENUE TAB
+// ═══════════════════════════════════════════════════════════
+function renderDeptTab(){
+  // Chart
+  if(charts.dept) charts.dept.destroy();
+  var ctx=document.getElementById('deptChart').getContext('2d');
+  var topDepts=DEPT_DATA.slice(0,20);
+  charts.dept=new Chart(ctx,{
+    type:'bar',
+    data:{
+      labels:topDepts.map(d=>d.name),
+      datasets:[
+        {label:'FY26E',data:topDepts.map(d=>d.fy26),backgroundColor:'rgba(203,213,224,0.8)',borderRadius:2},
+        {label:'FY27 UC',data:topDepts.map(d=>d.uc),backgroundColor:'rgba(230,126,34,0.85)',borderRadius:2}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{size:10}}},title:{display:true,text:'Department Revenue — FY26 YTD Actuals vs FY27 UC Plan (₹ Cr)',font:{size:11,weight:'600'},color:'#1a3a5c',padding:{bottom:6}}},scales:{y:{beginAtZero:true,title:{display:true,text:'₹ Crores',font:{size:9},color:'#718096'},ticks:{callback:v=>'₹'+v,font:{size:9}}},x:{title:{display:true,text:'Department',font:{size:9},color:'#718096'},ticks:{font:{size:8},maxRotation:35}}}}
+  });
+
+  // Table
+  var html='<thead><tr>';
+  html+='<th style="min-width:200px">Department</th><th>Category</th>';
+  html+='<th title="BRM FY26 YTD Actuals — Apr 25 to Jan 26 (10 months)">FY26 YTD (10M)<br><span style="font-size:0.52rem;font-weight:400;opacity:0.7">Actual · IP+OP</span></th>';
+  html+='<th>FY26 YTD IP</th><th>FY26 YTD OP</th>';
+  html+='<th>FY27 BC</th><th>FY27 UC Plan</th><th>UC Growth</th>';
+  MONTHS.forEach(m=>html+='<th class="month-hdr">'+m+'<br><span style="font-size:0.55rem;opacity:0.7">Plan</span></th>');
+  html+='</tr></thead><tbody>';
+
+  DEPT_DATA.forEach(function(d){
+    var monthlyPlan=REV_PLAN.map(r=>d.uc*r/ANN_REV);
+    // Growth vs annualised FY26 (×1.2 to full year from 10-month YTD)
+    var fy26ann=d.fy26*1.2;
+    var growth=((d.uc-fy26ann)/fy26ann*100).toFixed(0);
+    var growCls=parseFloat(growth)>=0?'var-pos':'var-neg';
+    html+='<tr>';
+    html+='<td><strong>'+d.name+'</strong></td>';
+    html+='<td><span class="pill" style="background:#e2e8f0;color:#2d3748">'+d.cat+'</span></td>';
+    html+='<td style="font-weight:700;color:#1a3a5c">'+d.fy26.toFixed(1)+'</td>';
+    html+='<td style="color:#2980b9">'+d.fy26ip.toFixed(1)+'</td>';
+    html+='<td style="color:#27ae60">'+d.fy26op.toFixed(1)+'</td>';
+    html+='<td>'+d.bc.toFixed(1)+'</td>';
+    html+='<td style="font-weight:700;color:#e67e22">'+d.uc.toFixed(1)+'</td>';
+    html+='<td><span class="'+growCls+'">'+(parseFloat(growth)>=0?'+':'')+growth+'%</span></td>';
+    monthlyPlan.forEach(v=>html+='<td>'+v.toFixed(2)+'</td>');
+    html+='</tr>';
+  });
+
+  // Totals
+  var totFY26=sum(DEPT_DATA.map(d=>d.fy26));
+  var totBC=sum(DEPT_DATA.map(d=>d.bc));
+  var totUC=sum(DEPT_DATA.map(d=>d.uc));
+  var totMonthly=REV_PLAN.map(r=>totUC*r/ANN_REV);
+  html+='<tr class="row-total"><td>TOTAL</td><td>—</td><td>'+totFY26.toFixed(1)+'</td><td>'+totBC.toFixed(1)+'</td><td>'+totUC.toFixed(1)+'</td>';
+  totMonthly.forEach(v=>html+='<td>'+v.toFixed(2)+'</td>');
+  html+='</tr></tbody>';
+  document.getElementById('deptTable').innerHTML=html;
+}
+
+// ═══════════════════════════════════════════════════════════
+// CONSULTANT TAB
+// ═══════════════════════════════════════════════════════════
+function buildDocDeptFilter(){
+  var depts=['All'].concat([...new Set(CONSULTANT_DATA.map(d=>d.dept))]);
+  var html=depts.map(d=>'<div class="dept-chip'+(d==='All'?' active':'')+'" onclick="filterDocDept(\''+d.replace(/'/g,"\\'")+'\')">' +d+'</div>').join('');
+  document.getElementById('docDeptFilter').innerHTML=html;
+}
+
+function filterDocDept(dept){
+  activeDocDeptFilter=dept;
+  document.querySelectorAll('#docDeptFilter .dept-chip').forEach(c=>{
+    c.classList.toggle('active', c.textContent===dept);
+  });
+  renderDocTab();
+}
+
+function renderDocTab(){
+  var filtered=activeDocDeptFilter==='All'?CONSULTANT_DATA:CONSULTANT_DATA.filter(d=>d.dept===activeDocDeptFilter);
+  var html='<thead><tr>';
+  html+='<th style="min-width:220px">Consultant</th><th>Department</th><th>FY27 UC Annual</th>';
+  MONTHS.forEach(m=>html+='<th class="month-hdr">'+m+'</th>');
+  html+='</tr></thead><tbody>';
+
+  filtered.forEach(function(c){
+    var monthly=REV_PLAN.map(r=>c.uc*r/ANN_REV);
+    html+='<tr>';
+    html+='<td><strong>'+c.name+'</strong></td>';
+    html+='<td><span style="font-size:0.63rem;color:#718096">'+c.dept+'</span></td>';
+    html+='<td style="font-weight:700;color:#e67e22">₹'+c.uc.toFixed(1)+' Cr</td>';
+    monthly.forEach(v=>html+='<td>'+v.toFixed(2)+'</td>');
+    html+='</tr>';
+  });
+
+  var totUC=sum(filtered.map(c=>c.uc));
+  var totMonthly=REV_PLAN.map(r=>totUC*r/ANN_REV);
+  html+='<tr class="row-total"><td>TOTAL (shown)</td><td>—</td><td>₹'+totUC.toFixed(1)+' Cr</td>';
+  totMonthly.forEach(v=>html+='<td>'+v.toFixed(2)+'</td>');
+  html+='</tr></tbody>';
+  document.getElementById('docTable').innerHTML=html;
+}
+
+// ═══════════════════════════════════════════════════════════
+// COST TABLES
+// ═══════════════════════════════════════════════════════════
+function renderCostTables(){
+  // Staff table
+  var html='<thead><tr><th style="min-width:200px">Category</th><th>Headcount</th><th>FY27 UC (₹ Cr)</th><th>HR Savings (₹ Cr)</th>';
+  MONTHS.forEach(m=>html+='<th class="month-hdr">'+m+'</th>');
+  html+='</tr></thead><tbody>';
+  STAFF_DATA.forEach(function(s){
+    var monthly=(s.fy27uc/12).toFixed(2);
+    html+='<tr>';
+    html+='<td><strong>'+s.cat+'</strong><br><span style="font-size:0.6rem;color:#718096">'+s.note+'</span></td>';
+    html+='<td style="font-family:\'IBM Plex Mono\',monospace">'+s.headcount+'</td>';
+    html+='<td style="font-weight:700">'+s.fy27uc.toFixed(2)+'</td>';
+    html+='<td style="color:#27ae60;font-weight:700">'+s.savings.toFixed(2)+'</td>';
+    MONTHS.forEach(()=>html+='<td>'+monthly+'</td>');
+    html+='</tr>';
+  });
+  var totHC=sum(STAFF_DATA.map(s=>s.headcount));
+  var totCost=sum(STAFF_DATA.map(s=>s.fy27uc));
+  var totSav=sum(STAFF_DATA.map(s=>s.savings));
+  html+='<tr class="row-total"><td>TOTAL PAYROLL</td><td>'+totHC+'</td><td>'+totCost.toFixed(2)+'</td><td>'+totSav.toFixed(2)+'</td>';
+  MONTHS.forEach(()=>html+='<td>'+(totCost/12).toFixed(2)+'</td>');
+  html+='</tr></tbody>';
+  document.getElementById('staffTable').innerHTML=html;
+
+  // Staff chart
+  if(charts.staff)charts.staff.destroy();
+  var ctx=document.getElementById('staffChart').getContext('2d');
+  charts.staff=new Chart(ctx,{type:'doughnut',data:{labels:STAFF_DATA.map(s=>s.cat),datasets:[{data:STAFF_DATA.map(s=>s.fy27uc),backgroundColor:['#1a3a5c','#2980b9','#e67e22','#27ae60','#db2777','#7c3aed','#a0aec0','#e74c3c','#718096']}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{font:{size:9},padding:8}}}}});
+
+  // Doctor cost table
+  html='<thead><tr><th style="min-width:200px">Department</th><th>FY27 UC Cost (₹ Cr)</th><th>% of Dept Rev</th><th>Note</th>';
+  MONTHS.forEach(m=>html+='<th class="month-hdr">'+m+'</th>');
+  html+='</tr></thead><tbody>';
+  DOC_COST_DATA.forEach(function(d){
+    html+='<tr><td><strong>'+d.dept+'</strong></td><td style="font-weight:700">'+d.cost.toFixed(2)+'</td><td>'+d.pct.toFixed(1)+'%</td><td style="font-size:0.62rem;color:#718096">'+d.note+'</td>';
+    MONTHS.forEach(()=>html+='<td>'+(d.cost/12).toFixed(2)+'</td>');
+    html+='</tr>';
+  });
+  var totDC=sum(DOC_COST_DATA.map(d=>d.cost));
+  html+='<tr class="row-total"><td>TOTAL DOCTOR COST</td><td>'+totDC.toFixed(2)+'</td><td>'+(totDC/ANN_REV*100).toFixed(1)+'%</td><td>—</td>';
+  MONTHS.forEach(()=>html+='<td>'+(totDC/12).toFixed(2)+'</td>');
+  html+='</tr></tbody>';
+  document.getElementById('docCostTable').innerHTML=html;
+
+  // COGS table
+  html='<thead><tr><th style="min-width:200px">Category</th><th>FY27 UC Budget (₹ Cr)</th><th>% of Revenue</th><th>Note</th>';
+  MONTHS.forEach(m=>html+='<th class="month-hdr">'+m+'</th>');
+  html+='</tr></thead><tbody>';
+  COGS_DATA.forEach(function(c){
+    html+='<tr><td><strong>'+c.cat+'</strong></td><td style="font-weight:700">'+c.budget.toFixed(2)+'</td><td>'+c.pct_rev.toFixed(1)+'%</td><td style="font-size:0.62rem;color:#718096">'+c.note+'</td>';
+    MONTHS.forEach((_,i)=>html+='<td>'+(c.budget*REV_PLAN[i]/ANN_REV).toFixed(2)+'</td>');
+    html+='</tr>';
+  });
+  var totCOGS=sum(COGS_DATA.map(c=>c.budget));
+  html+='<tr class="row-total"><td>TOTAL COGS</td><td>'+totCOGS.toFixed(2)+'</td><td>'+(totCOGS/ANN_REV*100).toFixed(1)+'%</td><td>—</td>';
+  MONTHS.forEach((_,i)=>html+='<td>'+(totCOGS*REV_PLAN[i]/ANN_REV).toFixed(2)+'</td>');
+  html+='</tr></tbody>';
+  document.getElementById('cogsTable').innerHTML=html;
+
+  // Other cost table
+  html='<thead><tr><th style="min-width:200px">Category</th><th>FY27 UC Budget (₹ Cr)</th><th>Monthly (₹ Cr)</th><th>Note</th>';
+  MONTHS.forEach(m=>html+='<th class="month-hdr">'+m+'</th>');
+  html+='</tr></thead><tbody>';
+  OTHER_COST_DATA.forEach(function(c){
+    html+='<tr><td><strong>'+c.cat+'</strong></td><td style="font-weight:700">'+c.budget.toFixed(2)+'</td><td>'+(c.budget/12).toFixed(2)+'</td><td style="font-size:0.62rem;color:#718096">'+c.note+'</td>';
+    MONTHS.forEach(()=>html+='<td>'+(c.budget/12).toFixed(2)+'</td>');
+    html+='</tr>';
+  });
+  var totOC=sum(OTHER_COST_DATA.map(c=>c.budget));
+  html+='<tr class="row-total"><td>TOTAL OTHER COSTS</td><td>'+totOC.toFixed(2)+'</td><td>'+(totOC/12).toFixed(2)+'</td><td>—</td>';
+  MONTHS.forEach(()=>html+='<td>'+(totOC/12).toFixed(2)+'</td>');
+  html+='</tr></tbody>';
+  document.getElementById('otherCostTable').innerHTML=html;
+
+  // HR table
+  html='<thead><tr><th style="min-width:200px">Department / Category</th><th>Current HC</th><th>Target HC</th><th>Reduction</th><th>Savings (₹ Cr)</th><th>Timeline</th></tr></thead><tbody>';
+  HR_DATA.forEach(function(h){
+    html+='<tr><td><strong>'+h.dept+'</strong></td><td>'+h.current+'</td><td style="color:#27ae60;font-weight:700">'+h.target+'</td><td style="color:#e74c3c;font-weight:700">−'+h.reduction+'</td><td style="color:#27ae60;font-weight:700">₹'+h.savings.toFixed(2)+' Cr</td><td><span class="pill pill-bl">'+h.qtr+'</span></td></tr>';
+  });
+  var totRed=sum(HR_DATA.map(h=>h.reduction));
+  var totSav=sum(HR_DATA.map(h=>h.savings));
+  html+='<tr class="row-total"><td>TOTAL SAVINGS</td><td>—</td><td>—</td><td>−'+totRed+'</td><td>₹'+totSav.toFixed(2)+' Cr</td><td>FY27</td></tr></tbody>';
+  document.getElementById('hrTable').innerHTML=html;
+}
+</script>
+<script>
+// ═══════════════════════════════════════════════════════════
+// CAPEX TAB
+// ═══════════════════════════════════════════════════════════
+function getCapexSpent(catName, itemName){
+  if(!CAPEX_ACTUALS[catName])return 0;
+  if(itemName)return CAPEX_ACTUALS[catName][itemName]||0;
+  return Object.values(CAPEX_ACTUALS[catName]).reduce((a,b)=>a+b,0);
+}
+function getTotalCapexSpent(){
+  return CAPEX_DATA.reduce((t,cat)=>t+getCapexSpent(cat.cat),0);
+}
+
+function renderCapexTab(){
+  var totalSpent=getTotalCapexSpent();
+  var totalBudget=ANN_CAPEX;
+  var balance=totalBudget-totalSpent;
+  var util=totalBudget>0?(totalSpent/totalBudget*100).toFixed(1):0;
+
+  document.getElementById('capexSpent').textContent='₹'+totalSpent.toFixed(2)+' Cr';
+  document.getElementById('capexBalance').textContent='₹'+balance.toFixed(2)+' Cr';
+  document.getElementById('capexUtil').textContent=util+'%';
+
+  renderCapexCharts(totalSpent);
+  renderCapexCats();
+}
+
+function renderCapexCharts(totalSpent){
+  if(charts.capex)charts.capex.destroy();
+  if(charts.capexPie)charts.capexPie.destroy();
+
+  var ctx1=document.getElementById('capexChart').getContext('2d');
+  charts.capex=new Chart(ctx1,{
+    type:'bar',
+    data:{
+      labels:CAPEX_DATA.map(c=>c.cat),
+      datasets:[
+        {label:'Budget',data:CAPEX_DATA.map(c=>c.budget),backgroundColor:CAPEX_DATA.map(c=>c.color+'44'),borderColor:CAPEX_DATA.map(c=>c.color),borderWidth:2,borderRadius:4},
+        {label:'Spent',data:CAPEX_DATA.map(c=>getCapexSpent(c.cat)),backgroundColor:CAPEX_DATA.map(c=>c.color+'cc'),borderRadius:4}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{size:10}}}},scales:{y:{beginAtZero:true,ticks:{callback:v=>'₹'+v,font:{size:9}}},x:{ticks:{font:{size:9},maxRotation:20}}}}
+  });
+
+  var ctx2=document.getElementById('capexPieChart').getContext('2d');
+  charts.capexPie=new Chart(ctx2,{
+    type:'doughnut',
+    data:{
+      labels:CAPEX_DATA.map(c=>c.cat),
+      datasets:[{data:CAPEX_DATA.map(c=>c.budget),backgroundColor:CAPEX_DATA.map(c=>c.color),borderWidth:2}]
+    },
+    options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{position:'right',labels:{font:{size:9},padding:8}},tooltip:{callbacks:{label:c=>'₹'+c.raw.toFixed(2)+' Cr ('+(c.raw/ANN_CAPEX*100).toFixed(0)+'%)' }}}}
+  });
+}
+
+function renderCapexCats(){
+  var html='';
+  CAPEX_DATA.forEach(function(cat){
+    var spent=getCapexSpent(cat.cat);
+    var pct=cat.budget>0?(spent/cat.budget*100).toFixed(1):0;
+    html+='<div class="capex-cat">';
+    html+='<div class="capex-cat-hdr">';
+    html+='<span class="capex-cat-name" style="color:'+cat.color+'">'+cat.cat+'</span>';
+    html+='<div class="capex-bar-wrap"><div class="capex-bar" style="background:'+cat.color+';width:'+pct+'%"></div></div>';
+    html+='<span class="capex-pct" style="color:'+cat.color+'">'+pct+'%</span>';
+    html+='<span class="capex-cat-budget" style="color:'+cat.color+'">₹'+cat.budget.toFixed(2)+' Cr</span>';
+    html+='</div>';
+    html+='<div class="capex-items-grid">';
+    cat.items.forEach(function(item){
+      var itemSpent=getCapexSpent(cat.cat,item.name);
+      var itemPct=item.budget>0?(itemSpent/item.budget*100).toFixed(0):0;
+      html+='<div class="capex-item">';
+      html+='<div class="capex-item-name">'+item.name+'</div>';
+      html+='<div class="capex-item-row"><span>Budget</span><span>₹'+item.budget.toFixed(2)+' Cr</span></div>';
+      html+='<div class="capex-item-row"><span>Spent</span><span>₹'+itemSpent.toFixed(2)+' Cr</span></div>';
+      html+='<div class="capex-item-row"><span>Balance</span><span style="color:'+(itemSpent<=item.budget?'#27ae60':'#e74c3c')+'">₹'+(item.budget-itemSpent).toFixed(2)+' Cr</span></div>';
+      html+='<div class="capex-item-row" style="margin-top:5px"><span>Actual spent (₹ Cr)</span>';
+      html+='<input class="capex-actual-input" type="number" step="0.01" min="0" max="'+item.budget+'" value="'+itemSpent.toFixed(2)+'" onchange="updateCapexActual(\''+cat.cat.replace(/'/g,"\\'") +'\',\''+item.name.replace(/'/g,"\\'")+'\',this.value)" placeholder="0.00">';
+      html+='</div>';
+      html+='<div style="margin-top:5px;background:#f0f4f8;border-radius:4px;height:4px"><div style="background:'+cat.color+';width:'+Math.min(itemPct,100)+'%;height:4px;border-radius:4px"></div></div>';
+      html+='<div style="font-size:0.58rem;color:#a0aec0;margin-top:3px">'+item.note+'</div>';
+      html+='</div>';
+    });
+    html+='</div></div>';
+  });
+  document.getElementById('capexCatsDiv').innerHTML=html;
+}
+
+function updateCapexActual(cat,item,val){
+  var v=parseFloat(val)||0;
+  if(!CAPEX_ACTUALS[cat])CAPEX_ACTUALS[cat]={};
+  CAPEX_ACTUALS[cat][item]=v;
+  saveState();
+  renderCapexTab();
+  addReqAutoEntry('Capex Update','—','Capex actual updated: '+cat+' / '+item+' = ₹'+v.toFixed(2)+' Cr');
+}
+
+// ═══════════════════════════════════════════════════════════
+// UPLOAD ACTUALS
+// ═══════════════════════════════════════════════════════════
+function toggleUploadMode(){
+  var mode=document.getElementById('uploadType').value;
+  document.getElementById('fileUploadSection').style.display=mode==='file'?'block':'none';
+  document.getElementById('manualEntrySection').style.display=mode==='manual'?'block':'none';
+}
+
+function handleDragOver(e){e.preventDefault();document.getElementById('dropZone').classList.add('drag-over');}
+function handleDragLeave(e){document.getElementById('dropZone').classList.remove('drag-over');}
+function handleDrop(e){
+  e.preventDefault();
+  document.getElementById('dropZone').classList.remove('drag-over');
+  if(e.dataTransfer.files.length)processFile(e.dataTransfer.files[0]);
+}
+function handleFileSelect(e){if(e.target.files.length)processFile(e.target.files[0]);}
+
+function processFile(file){
+  var ext=file.name.split('.').pop().toLowerCase();
+  if(ext==='xlsx'){
+    var reader=new FileReader();
+    reader.onload=function(e){
+      try{
+        var wb=XLSX.read(e.target.result,{type:'binary'});
+        var ws=wb.Sheets[wb.SheetNames[0]];
+        var json=XLSX.utils.sheet_to_json(ws,{header:1});
+        showFilePreview(json,file.name,'xlsx');
+      }catch(err){alert('Error parsing Excel file: '+err.message);}
+    };
+    reader.readAsBinaryString(file);
+  } else if(ext==='csv'){
+    var reader=new FileReader();
+    reader.onload=function(e){
+      var rows=e.target.result.split('\n').map(r=>r.split(',').map(c=>c.trim()));
+      showFilePreview(rows,file.name,'csv');
+    };
+    reader.readAsText(file);
+  } else {
+    alert('Unsupported file format. Please use .xlsx or .csv');
+  }
+}
+
+function showFilePreview(rows,fname,type){
+  var box=document.getElementById('filePreview');
+  box.style.display='block';
+
+  // Try to auto-detect columns
+  var headers=rows[0]||[];
+  var keyMap={
+    'revenue':['revenue','total revenue','net revenue'],
+    'cogs':['cogs','consumption','consumables','cost of goods'],
+    'doctorCost':['doctor','doctor cost','consultant fee'],
+    'payroll':['payroll','salary','staff cost','staff payroll'],
+    'otherCost':['other cost','other operating','other op'],
+    'rentOther':['rent','rent & other'],
+    'depreciation':['depreciation','depr'],
+    'capexSpent':['capex','capital expenditure']
+  };
+
+  var detected={};
+  headers.forEach(function(h,i){
+    var hl=(h||'').toLowerCase();
+    Object.keys(keyMap).forEach(function(k){
+      if(keyMap[k].some(s=>hl.includes(s)))detected[k]=i;
+    });
+  });
+
+  var html='<div style="font-size:0.65rem;color:#4a5568;margin-bottom:8px"><strong>File:</strong> '+fname+' · <strong>Rows:</strong> '+rows.length+'</div>';
+  html+='<table class="fin-tbl" style="max-height:200px;overflow-y:auto;display:block"><thead><tr>';
+  headers.forEach(h=>html+='<th>'+h+'</th>');
+  html+='</tr></thead><tbody>';
+  rows.slice(1,6).forEach(r=>{
+    html+='<tr>';
+    r.forEach(c=>html+='<td>'+c+'</td>');
+    html+='</tr>';
+  });
+  html+='</tbody></table>';
+
+  html+='<div style="margin-top:12px"><div style="font-size:0.65rem;font-weight:700;color:#1a3a5c;margin-bottom:6px">Auto-detected columns (edit if needed):</div>';
+  html+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">';
+  Object.keys(keyMap).forEach(function(k){
+    html+='<div><label style="font-size:0.6rem;font-weight:600;color:#718096">'+k+'</label>';
+    html+='<select class="form-select" style="font-size:0.65rem;padding:4px 6px" id="map_'+k+'">';
+    html+='<option value="">— skip —</option>';
+    headers.forEach((h,i)=>html+='<option value="'+i+'"'+(detected[k]===i?' selected':'')+'>'+h+'</option>');
+    html+='</select></div>';
+  });
+  html+='</div></div>';
+
+  // Store rows for later
+  window._uploadRows=rows;
+  document.getElementById('filePreviewContent').innerHTML=html;
+}
+
+function saveFileActuals(){
+  var month=document.getElementById('uploadMonth').value;
+  var by=document.getElementById('uploadedBy').value||'Unknown';
+  if(!month){alert('Please select a reporting month first.');return;}
+  if(!window._uploadRows){alert('No file loaded.');return;}
+
+  var rows=window._uploadRows;
+  var keys=['revenue','cogs','doctorCost','payroll','otherCost','rentOther','depreciation','capexSpent'];
+  var entry={};
+
+  keys.forEach(function(k){
+    var sel=document.getElementById('map_'+k);
+    if(sel&&sel.value!==''){
+      var colIdx=parseInt(sel.value);
+      // try to find a data row (skip header)
+      for(var i=1;i<rows.length;i++){
+        var v=parseFloat((rows[i][colIdx]+'').replace(/[^0-9.-]/g,''));
+        if(!isNaN(v)&&v!==0){entry[k]=v;break;}
+      }
+    }
+  });
+
+  if(!Object.keys(entry).length){alert('No data could be mapped. Please check column mapping.');return;}
+  ACTUALS[month]=Object.assign(ACTUALS[month]||{},entry);
+  saveState();
+  clearFilePreview();
+  addReqAutoEntry('P&L Actuals Upload',month,'File upload · Uploaded by: '+by);
+  renderUploadSummary();
+  alert('✅ Actuals saved for '+month+'. All tabs updated.');
+}
+
+function clearFilePreview(){
+  document.getElementById('filePreview').style.display='none';
+  document.getElementById('filePreviewContent').innerHTML='';
+  window._uploadRows=null;
+  document.getElementById('fileInput').value='';
+}
+
+// Manual entry
+function buildDeptManualGrid(){
+  var html=DEPT_DATA.slice(0,12).map(d=>'<div class="manual-item"><label>'+d.name+'</label><input type="number" id="md_'+d.name.replace(/[^a-zA-Z]/g,'_')+'" step="0.01" placeholder="₹ Cr"></div>').join('');
+  document.getElementById('deptManualGrid').innerHTML=html;
+}
+
+function saveManualActuals(){
+  var month=document.getElementById('uploadMonth').value;
+  var by=document.getElementById('uploadedBy').value||'Unknown';
+  if(!month){alert('Please select a reporting month first.');return;}
+  var keys=['revenue','cogs','doctorCost','payroll','otherCost','rentOther','depreciation','capexSpent'];
+  var entry={};
+  keys.forEach(function(k){
+    var el=document.getElementById('m_'+k);
+    if(el&&el.value!==''){var v=parseFloat(el.value);if(!isNaN(v))entry[k]=v;}
+  });
+  if(!Object.keys(entry).length){document.getElementById('manualSaveStatus').textContent='⚠ No data entered';return;}
+  ACTUALS[month]=Object.assign(ACTUALS[month]||{},entry);
+  saveState();
+  addReqAutoEntry('Manual P&L Entry',month,'Manual entry · Entered by: '+by);
+  renderUploadSummary();
+  document.getElementById('manualSaveStatus').textContent='✅ Saved for '+month+'!';
+  setTimeout(()=>document.getElementById('manualSaveStatus').textContent='',3000);
+}
+
+function clearManualForm(){
+  ['revenue','cogs','doctorCost','payroll','otherCost','rentOther','depreciation','capexSpent'].forEach(k=>{
+    var el=document.getElementById('m_'+k);if(el)el.value='';
+  });
+  document.getElementById('manualSaveStatus').textContent='';
+}
+
+function renderUploadSummary(){
+  var months=Object.keys(ACTUALS);
+  if(!months.length){
+    document.getElementById('savedMonthsSummary').innerHTML='<div class="no-data">No actuals loaded yet. Upload a file or use manual entry above.</div>';
+    return;
+  }
+  var html='<div style="display:flex;flex-wrap:wrap;gap:8px">';
+  MONTHS.forEach(function(m){
+    var has=ACTUALS[m]&&Object.keys(ACTUALS[m]).length;
+    var keys=has?Object.keys(ACTUALS[m]).length:0;
+    html+='<div style="background:'+(has?'#d1fae5':'#f0f4f8')+';border:1px solid '+(has?'#6ee7b7':'#e2e8f0')+';border-radius:8px;padding:10px 14px;min-width:120px">';
+    html+='<div style="font-size:0.7rem;font-weight:700;color:#1a3a5c">'+m+'</div>';
+    if(has){
+      html+='<div style="font-size:0.62rem;color:#065f46;margin-top:3px">✅ '+keys+' fields loaded</div>';
+      if(ACTUALS[m].revenue)html+='<div style="font-size:0.65rem;font-family:\'IBM Plex Mono\',monospace;color:#1a3a5c;margin-top:2px">Rev: ₹'+ACTUALS[m].revenue.toFixed(2)+' Cr</div>';
+      html+='<button onclick="deleteMonthActuals(\''+m+'\')" style="font-size:0.55rem;color:#e74c3c;background:none;border:none;cursor:pointer;margin-top:4px">🗑 Remove</button>';
+    } else {
+      html+='<div style="font-size:0.62rem;color:#a0aec0;margin-top:3px">No data</div>';
+    }
+    html+='</div>';
+  });
+  html+='</div>';
+  document.getElementById('savedMonthsSummary').innerHTML=html;
+}
+
+function deleteMonthActuals(month){
+  if(confirm('Remove actuals for '+month+'?')){delete ACTUALS[month];saveState();renderUploadSummary();}
+}
+function clearAllActuals(){ACTUALS={};CAPEX_ACTUALS={};saveState();renderUploadSummary();renderCapexTab();}
+
+// ── FY26 DEPARTMENT ACTUALS ──
+var FY26_DEPT_ACTUALS = {};
+function loadFY26DeptState(){try{FY26_DEPT_ACTUALS=JSON.parse(localStorage.getItem('vps_fy26_dept')||'{}');}catch(e){FY26_DEPT_ACTUALS={};}}
+function saveFY26DeptState(){localStorage.setItem('vps_fy26_dept',JSON.stringify(FY26_DEPT_ACTUALS));}
+
+function saveFY26DeptActual(){
+  var dept=document.getElementById('fy26DeptSelect').value;
+  if(!dept){alert('Please select a department.');return;}
+  var ip=parseFloat(document.getElementById('fy26d_ip').value)||0;
+  var op=parseFloat(document.getElementById('fy26d_op').value)||0;
+  var totEl=document.getElementById('fy26d_total');
+  var total=totEl.value!==''?parseFloat(totEl.value):ip+op;
+  FY26_DEPT_ACTUALS[dept]={ip:ip,op:op,total:total};
+  saveFY26DeptState();
+  var msg=document.getElementById('fy26DeptSaveMsg');
+  msg.textContent='✅ Saved: '+dept;
+  setTimeout(()=>msg.textContent='',3000);
+  renderFY26DeptPills();
+  renderFY26DeptActualTable();
+}
+
+function renderFY26DeptPills(){
+  var keys=Object.keys(FY26_DEPT_ACTUALS);
+  if(!keys.length){document.getElementById('fy26DeptPills').innerHTML='<span style="color:#a0aec0;font-size:0.68rem">None saved yet.</span>';return;}
+  document.getElementById('fy26DeptPills').innerHTML=keys.map(k=>'<span class="pill pill-gr" style="margin:2px 4px;cursor:pointer" onclick="removeFY26DeptActual(\''+k+'\')">'+k+' ✕</span>').join('');
+}
+
+function removeFY26DeptActual(dept){
+  delete FY26_DEPT_ACTUALS[dept];saveFY26DeptState();renderFY26DeptPills();renderFY26DeptActualTable();
+}
+
+function renderFY26DeptActualTable(){
+  var keys=Object.keys(FY26_DEPT_ACTUALS);
+  var wrap=document.getElementById('fy26DeptActualWrap');
+  if(!keys.length){wrap.style.display='none';return;}
+  wrap.style.display='block';
+  var html='<thead><tr><th style="min-width:200px">Department</th><th>IP (Actual)</th><th>OP (Actual)</th><th>Total (Actual)</th><th>BRM YTD Ref</th><th>vs BRM YTD</th></tr></thead><tbody>';
+  keys.forEach(function(k){
+    var a=FY26_DEPT_ACTUALS[k];
+    var ref=DEPT_DATA.find(d=>d.name===k);
+    var ytd=ref?ref.fy26:null;
+    var diffStr=ytd?('<span class="'+(a.total>=ytd?'var-pos':'var-neg')+'">'+(a.total>=ytd?'+':'')+(a.total-ytd).toFixed(2)+'</span>'):'—';
+    html+='<tr><td><strong>'+k+'</strong></td><td style="color:#2980b9">'+a.ip.toFixed(2)+'</td><td style="color:#27ae60">'+a.op.toFixed(2)+'</td><td style="font-weight:700">'+a.total.toFixed(2)+'</td><td style="color:#a0aec0">'+(ytd?ytd.toFixed(2):'—')+'</td><td>'+diffStr+'</td></tr>';
+  });
+  html+='</tbody>';
+  document.getElementById('fy26DeptActualTable').innerHTML=html;
+}
+
+function downloadTemplate(){
+  var ws=XLSX.utils.aoa_to_sheet([
+    ['Month','Revenue','COGS','DoctorCost','Payroll','OtherCost','RentOther','Depreciation','CapexSpent'],
+    ['Apr-26','','','','','','','','']
+  ]);
+  var wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'PL_Template');
+  XLSX.writeFile(wb,'LHRC_Finance_Actuals_Template.xlsx');
+}
+
+// ═══════════════════════════════════════════════════════════
+// REQUISITIONS
+// ═══════════════════════════════════════════════════════════
+function addReqAutoEntry(type,month,notes){
+  var entry={id:Date.now(),date:new Date().toLocaleDateString('en-IN'),month:month,type:type,by:'System (Auto)',notes:notes,status:'Logged'};
+  REQS.unshift(entry);
+  saveState();
+}
+
+function addReqEntry(){
+  var type=document.getElementById('reqType').value;
+  var month=document.getElementById('reqMonth').value||'—';
+  var by=document.getElementById('reqBy').value||'Unknown';
+  var notes=document.getElementById('reqNotes').value||'—';
+  if(!by.trim()){alert('Please enter your name.');return;}
+  var entry={id:Date.now(),date:new Date().toLocaleDateString('en-IN'),month:month,type:type,by:by,notes:notes,status:'Pending Review'};
+  REQS.unshift(entry);
+  saveState();
+  document.getElementById('reqBy').value='';
+  document.getElementById('reqNotes').value='';
+  renderReqs();
+}
+
+function updateReqStatus(id,status){
+  var req=REQS.find(r=>r.id===id);
+  if(req){req.status=status;saveState();renderReqs();}
+}
+
+function deleteReq(id){
+  REQS=REQS.filter(r=>r.id!==id);saveState();renderReqs();
+}
+
+function renderReqs(){
+  if(!REQS.length){
+    document.getElementById('reqsList').innerHTML='<div class="no-data">No requisitions logged yet. Upload actuals or add a manual entry above.</div>';
+    return;
+  }
+  var icons={'P&L Actuals Upload':'📊','Capex Invoice':'🏗️','Vendor Invoice':'📄','Payroll Summary':'👥','Doctor Fee Statement':'🩺','Audit Document':'🔍','Board Approval':'✅','Manual P&L Entry':'✏️','Capex Update':'🏗️','Other':'📋'};
+  var statusMap={'Pending Review':'tag-pending','Approved':'tag-approved','Logged':'tag-review'};
+  var html=REQS.map(function(r){
+    var icon=icons[r.type]||'📋';
+    var tagCls=statusMap[r.status]||'tag-pending';
+    return '<div class="req-card"><div class="req-icon">'+icon+'</div><div class="req-info"><div class="req-name">'+r.type+(r.month&&r.month!=='—'?' — '+r.month:'')+'</div><div class="req-meta">'+r.date+' · Submitted by: '+r.by+'</div><div class="req-meta" style="margin-top:2px">'+r.notes+'</div><span class="req-tag '+tagCls+'">'+r.status+'</span></div><div class="req-actions"><select onchange="updateReqStatus('+r.id+',this.value)" class="form-select" style="font-size:0.62rem;padding:4px 8px"><option'+(r.status==='Pending Review'?' selected':'')+'>Pending Review</option><option'+(r.status==='Approved'?' selected':'')+'>Approved</option><option'+(r.status==='Logged'?' selected':'')+'>Logged</option></select><button onclick="deleteReq('+r.id+')" class="btn btn-sm" style="background:#fee2e2;color:#e74c3c;border:none;cursor:pointer">🗑</button></div></div>';
+  }).join('');
+  document.getElementById('reqsList').innerHTML=html;
+}
+</script>
+<script>
+// ═══════════════════════════════════════════════════════════
+// DEPT REVENUE BREAKUP IN P&L TAB
+// ═══════════════════════════════════════════════════════════
+function renderPLDeptTable(){
+  var html='<thead><tr>';
+  html+='<th style="min-width:180px">Department</th><th>Category</th><th>FY27 UC Plan</th>';
+  MONTHS.forEach(function(m){ html+='<th class="month-hdr">'+m+'<br><span style="font-size:0.55rem;opacity:0.6">Plan</span></th>'; });
+  html+='</tr></thead><tbody>';
+  DEPT_DATA.forEach(function(d){
+    var monthly=REV_PLAN.map(function(r){ return (d.uc*r/ANN_REV).toFixed(2); });
+    html+='<tr>';
+    html+='<td><strong>'+d.name+'</strong></td>';
+    html+='<td><span class="pill" style="background:#e2e8f0;color:#2d3748;font-size:0.58rem">'+d.cat+'</span></td>';
+    html+='<td style="font-weight:700;color:#e67e22">₹'+d.uc.toFixed(1)+' Cr</td>';
+    monthly.forEach(function(v){ html+='<td>'+v+'</td>'; });
+    html+='</tr>';
+  });
+  var totUC=sum(DEPT_DATA.map(function(d){return d.uc;}));
+  var totMonthly=REV_PLAN.map(function(r){ return (totUC*r/ANN_REV).toFixed(2); });
+  html+='<tr class="row-total"><td>ALL DEPARTMENTS</td><td>—</td><td>₹'+totUC.toFixed(1)+' Cr</td>';
+  totMonthly.forEach(function(v){ html+='<td>'+v+'</td>'; });
+  html+='</tr></tbody>';
+  document.getElementById('plDeptTable').innerHTML=html;
+}
+
+// ═══════════════════════════════════════════════════════════
+// FY27 BASE CASE TAB
+// ═══════════════════════════════════════════════════════════
+function getBCPlan(){
+  var p={};
+  p.revenue    = REV_BC.slice();
+  p.cogs       = REV_BC.map(function(r){ return r*(ANN_BC_COGS/ANN_BC_REV); });
+  p.grossProfit= p.revenue.map(function(r,i){ return r-p.cogs[i]; });
+  p.doctorCost = REV_BC.map(function(r){ return r*(ANN_BC_DOC/ANN_BC_REV); });
+  var payM=ANN_BC_PAYROLL/12, othM=ANN_BC_OTHER/12, rentM=ANN_BC_RENT/12, deprM=ANN_BC_DEPR/12;
+  p.payroll    = MONTHS.map(function(){ return payM; });
+  p.otherCost  = MONTHS.map(function(){ return othM; });
+  p.rentOther  = MONTHS.map(function(){ return rentM; });
+  p.ebitda     = p.revenue.map(function(r,i){ return r-p.cogs[i]-p.doctorCost[i]-payM-othM-rentM; });
+  p.ebitdaPct  = p.ebitda.map(function(e,i){ return e/p.revenue[i]*100; });
+  p.depreciation=MONTHS.map(function(){ return deprM; });
+  p.ebit       = p.ebitda.map(function(e,i){ return e-deprM; });
+  return p;
+}
+
+function renderBCTab(){
+  var bcPlan=getBCPlan();
+  var ucPlan=getMonthlyPlan();
+
+  // Charts
+  if(charts.bcRev) charts.bcRev.destroy();
+  if(charts.bcEb)  charts.bcEb.destroy();
+
+  charts.bcRev=new Chart(document.getElementById('bcRevChart').getContext('2d'),{
+    type:'bar',
+    data:{labels:MONTHS,datasets:[
+      {label:'UC Plan',data:ucPlan.revenue,backgroundColor:'rgba(230,126,34,0.5)',borderColor:'#e67e22',borderWidth:1.5,borderRadius:3},
+      {label:'BC Plan',data:bcPlan.revenue,backgroundColor:'rgba(39,174,96,0.7)',borderRadius:3}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{size:10}}}},scales:{y:{beginAtZero:false,min:35,ticks:{callback:function(v){return'₹'+v;},font:{size:9}},grid:{color:'#f0f4f8'}},x:{ticks:{font:{size:9}},grid:{display:false}}}}
+  });
+
+  charts.bcEb=new Chart(document.getElementById('bcEbChart').getContext('2d'),{
+    type:'bar',
+    data:{labels:MONTHS,datasets:[
+      {label:'UC Plan',data:ucPlan.ebitda,backgroundColor:'rgba(230,126,34,0.5)',borderColor:'#e67e22',borderWidth:1.5,borderRadius:3},
+      {label:'BC Plan',data:bcPlan.ebitda,backgroundColor:'rgba(39,174,96,0.7)',borderRadius:3}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{size:10}}}},scales:{y:{beginAtZero:false,ticks:{callback:function(v){return'₹'+v;},font:{size:9}},grid:{color:'#f0f4f8'}},x:{ticks:{font:{size:9}},grid:{display:false}}}}
+  });
+
+  // P&L table
+  var bcRows=[
+    {key:'revenue',     label:'Revenue',              gross:false, ebitda:false, isCost:false},
+    {key:'cogs',        label:'  — COGS/Consumption', gross:false, ebitda:false, isCost:true},
+    {key:'grossProfit', label:'Gross Profit',          gross:true,  ebitda:false, isCost:false},
+    {key:'doctorCost',  label:'  — Doctor Cost',       gross:false, ebitda:false, isCost:true},
+    {key:'payroll',     label:'  — Staff Payroll',     gross:false, ebitda:false, isCost:true},
+    {key:'otherCost',   label:'  — Other Costs',       gross:false, ebitda:false, isCost:true},
+    {key:'rentOther',   label:'  — Rent & Other',      gross:false, ebitda:false, isCost:true},
+    {key:'ebitda',      label:'EBITDA',                gross:false, ebitda:true,  isCost:false},
+    {key:'ebitdaPct',   label:'EBITDA %',              gross:false, ebitda:true,  isCost:false, isPct:true},
+    {key:'depreciation',label:'  — Depreciation',      gross:false, ebitda:false, isCost:true},
+    {key:'ebit',        label:'EBIT',                  gross:false, ebitda:false, isCost:false}
+  ];
+
+  // Also add UC comparison column
+  var html='<thead><tr>';
+  html+='<th style="min-width:180px">Line Item</th>';
+  html+='<th class="month-hdr" style="background:#0e7a5a">FY27 UC Full Year</th>';
+  MONTHS.forEach(function(m){ html+='<th class="month-hdr">'+m+'</th>'; });
+  html+='<th class="month-hdr" style="background:#27ae60">BC Full Year</th>';
+  html+='</tr></thead><tbody>';
+
+  bcRows.forEach(function(row){
+    var cls=row.ebitda?'row-ebitda':row.gross?'row-gross':'';
+    html+='<tr class="'+cls+'">';
+    html+='<td>'+row.label+'</td>';
+    // UC total
+    var ucFY=row.isPct?(sum(ucPlan.ebitda)/sum(ucPlan.revenue)*100):sum(ucPlan[row.key]);
+    html+='<td style="font-style:italic;color:#e67e22;opacity:0.8">'+(row.isPct?ucFY.toFixed(1)+'%':ucFY.toFixed(2))+'</td>';
+    // Monthly BC
+    MONTHS.forEach(function(m,i){
+      var v=bcPlan[row.key][i];
+      html+='<td>'+(row.isPct?v.toFixed(1)+'%':v.toFixed(2))+'</td>';
+    });
+    // BC total
+    var bcFY=row.isPct?(sum(bcPlan.ebitda)/sum(bcPlan.revenue)*100):sum(bcPlan[row.key]);
+    html+='<td style="font-weight:700">'+(row.isPct?bcFY.toFixed(1)+'%':bcFY.toFixed(2))+'</td>';
+    html+='</tr>';
+  });
+  html+='</tbody>';
+  document.getElementById('bcTable').innerHTML=html;
+
+  // Dept table for BC
+  html='<thead><tr><th style="min-width:180px">Department</th><th>FY27 UC</th><th>FY27 BC</th><th>Gap</th>';
+  MONTHS.forEach(function(m){ html+='<th class="month-hdr">'+m+'</th>'; });
+  html+='</tr></thead><tbody>';
+  DEPT_DATA.forEach(function(d){
+    var monthly=REV_BC.map(function(r){ return (d.bc*r/ANN_BC_REV).toFixed(2); });
+    var gap=(d.uc-d.bc).toFixed(1);
+    html+='<tr>';
+    html+='<td><strong>'+d.name+'</strong></td>';
+    html+='<td style="color:#e67e22;font-weight:700">'+d.uc.toFixed(1)+'</td>';
+    html+='<td style="color:#27ae60;font-weight:700">'+d.bc.toFixed(1)+'</td>';
+    html+='<td><span class="var-pos">+'+gap+'</span></td>';
+    monthly.forEach(function(v){ html+='<td>'+v+'</td>'; });
+    html+='</tr>';
+  });
+  html+='</tbody>';
+  document.getElementById('bcDeptTable').innerHTML=html;
+}
+
+// ═══════════════════════════════════════════════════════════
+// FY26 CLOSING TAB
+// ═══════════════════════════════════════════════════════════
+function getFY26Plan(){
+  var p={};
+  p.revenue    = REV_FY26.slice();
+  p.cogs       = REV_FY26.map(function(r){ return r*(ANN_FY26_COGS/ANN_FY26_REV); });
+  p.grossProfit= p.revenue.map(function(r,i){ return r-p.cogs[i]; });
+  p.doctorCost = REV_FY26.map(function(r){ return r*(ANN_FY26_DOC/ANN_FY26_REV); });
+  var payM=ANN_FY26_PAYROLL/12, othM=ANN_FY26_OTHER/12, deprM=ANN_FY26_DEPR/12;
+  p.payroll    = FY26_MONTHS.map(function(){ return payM; });
+  p.otherCost  = FY26_MONTHS.map(function(){ return othM; });
+  p.ebitda     = p.revenue.map(function(r,i){ return r-p.cogs[i]-p.doctorCost[i]-payM-othM; });
+  p.ebitdaPct  = p.ebitda.map(function(e,i){ return e/p.revenue[i]*100; });
+  p.depreciation=FY26_MONTHS.map(function(){ return deprM; });
+  p.ebit       = p.ebitda.map(function(e,i){ return e-deprM; });
+  return p;
+}
+
+function getFY26Actual(m,key){
+  if(!FY26_ACTUALS[m])return null;
+  return FY26_ACTUALS[m][key]!==undefined?FY26_ACTUALS[m][key]:null;
+}
+
+function renderFY26Tab(){
+  var plan=getFY26Plan();
+
+  // KPI
+  var ytdRev=0, ytdEb=0, mCount=0;
+  FY26_MONTHS.forEach(function(m,i){
+    var ra=getFY26Actual(m,'revenue');
+    if(ra!==null){
+      ytdRev+=ra; mCount++;
+      var cogs=getFY26Actual(m,'cogs')||plan.cogs[i];
+      var doc=getFY26Actual(m,'doctorCost')||plan.doctorCost[i];
+      var pay=getFY26Actual(m,'payroll')||plan.payroll[i];
+      var oth=getFY26Actual(m,'otherCost')||plan.otherCost[i];
+      ytdEb+=ra-cogs-doc-pay-oth;
+    }
+  });
+  document.getElementById('fy26YtdRev').textContent=mCount>0?'₹'+ytdRev.toFixed(1)+' Cr':'—';
+  document.getElementById('fy26YtdEb').textContent=mCount>0?'₹'+ytdEb.toFixed(1)+' Cr':'—';
+  document.getElementById('fy26MonthsCount').textContent=mCount+' / 12';
+
+  // Charts
+  if(charts.fy26Rev) charts.fy26Rev.destroy();
+  if(charts.fy26Eb)  charts.fy26Eb.destroy();
+
+  var actRev=FY26_MONTHS.map(function(m){ return getFY26Actual(m,'revenue'); });
+  var actEb=FY26_MONTHS.map(function(m,i){
+    var ra=getFY26Actual(m,'revenue');
+    if(ra===null) return null;
+    var cogs=getFY26Actual(m,'cogs')||plan.cogs[i];
+    var doc=getFY26Actual(m,'doctorCost')||plan.doctorCost[i];
+    var pay=getFY26Actual(m,'payroll')||plan.payroll[i];
+    var oth=getFY26Actual(m,'otherCost')||plan.otherCost[i];
+    return ra-cogs-doc-pay-oth;
+  });
+
+  charts.fy26Rev=new Chart(document.getElementById('fy26RevChart').getContext('2d'),{
+    type:'bar',
+    data:{labels:FY26_MONTHS,datasets:[
+      {label:'Plan (FY26E)',data:plan.revenue,backgroundColor:'rgba(26,58,92,0.5)',borderRadius:3},
+      {label:'Actual',data:actRev.map(function(v){ return v===null?0:v; }),backgroundColor:'rgba(230,126,34,0.85)',borderRadius:3}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{size:10}}}},scales:{y:{beginAtZero:false,min:28,ticks:{callback:function(v){return'₹'+v;},font:{size:9}},grid:{color:'#f0f4f8'}},x:{ticks:{font:{size:9}},grid:{display:false}}}}
+  });
+
+  charts.fy26Eb=new Chart(document.getElementById('fy26EbChart').getContext('2d'),{
+    type:'bar',
+    data:{labels:FY26_MONTHS,datasets:[
+      {label:'Plan (FY26E)',data:plan.ebitda,backgroundColor:'rgba(39,174,96,0.5)',borderRadius:3},
+      {label:'Actual',data:actEb.map(function(v){ return v===null?0:v; }),backgroundColor:'rgba(230,126,34,0.85)',borderRadius:3}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{size:10}}}},scales:{y:{beginAtZero:false,ticks:{callback:function(v){return'₹'+v;},font:{size:9}},grid:{color:'#f0f4f8'}},x:{ticks:{font:{size:9}},grid:{display:false}}}}
+  });
+
+  // P&L Table
+  var fy26Rows=[
+    {key:'revenue',     label:'Revenue',              gross:false, ebitda:false, isCost:false},
+    {key:'cogs',        label:'  — COGS/Consumption', gross:false, ebitda:false, isCost:true},
+    {key:'grossProfit', label:'Gross Profit',          gross:true,  ebitda:false, isCost:false},
+    {key:'doctorCost',  label:'  — Doctor Cost',       gross:false, ebitda:false, isCost:true},
+    {key:'payroll',     label:'  — Staff Payroll',     gross:false, ebitda:false, isCost:true},
+    {key:'otherCost',   label:'  — Other Operating',   gross:false, ebitda:false, isCost:true},
+    {key:'ebitda',      label:'EBITDA',                gross:false, ebitda:true,  isCost:false},
+    {key:'ebitdaPct',   label:'EBITDA %',              gross:false, ebitda:true,  isCost:false, isPct:true},
+    {key:'depreciation',label:'  — Depreciation',      gross:false, ebitda:false, isCost:true},
+    {key:'ebit',        label:'EBIT',                  gross:false, ebitda:false, isCost:false}
+  ];
+
+  var html='<thead><tr>';
+  html+='<th style="min-width:180px">Line Item</th>';
+  FY26_MONTHS.forEach(function(m){
+    var hasAct=FY26_ACTUALS[m]&&Object.keys(FY26_ACTUALS[m]).length;
+    html+='<th class="month-hdr" colspan="3" style="'+(hasAct?'background:#1a4a2a':'')+'">'+m+(hasAct?' ✓':'')+'</th>';
+  });
+  html+='<th class="month-hdr" colspan="2">FY26E Total</th>';
+  html+='</tr><tr><th></th>';
+  FY26_MONTHS.forEach(function(){ html+='<th class="plan-hdr">Plan</th><th class="act-hdr">Actual</th><th class="var-hdr">Var%</th>'; });
+  html+='<th class="plan-hdr">Plan</th><th class="act-hdr">Actual</th>';
+  html+='</tr></thead><tbody>';
+
+  fy26Rows.forEach(function(row){
+    var cls=row.ebitda?'row-ebitda':row.gross?'row-gross':'';
+    var actVals=FY26_MONTHS.map(function(m,i){
+      var a=getFY26Actual(m,row.key);
+      if(a===null && row.key==='grossProfit'){
+        var r=getFY26Actual(m,'revenue'), c=getFY26Actual(m,'cogs');
+        if(r!==null&&c!==null)a=r-c;
+      }
+      if(a===null && (row.key==='ebitda'||row.key==='ebitdaPct')){
+        var r=getFY26Actual(m,'revenue');
+        if(r!==null){
+          var c=getFY26Actual(m,'cogs')||plan.cogs[i];
+          var d=getFY26Actual(m,'doctorCost')||plan.doctorCost[i];
+          var py=getFY26Actual(m,'payroll')||plan.payroll[i];
+          var ot=getFY26Actual(m,'otherCost')||plan.otherCost[i];
+          var eb=r-c-d-py-ot;
+          a=row.key==='ebitdaPct'?eb/r*100:eb;
+        }
+      }
+      if(a===null && row.key==='ebit'){
+        var r=getFY26Actual(m,'revenue');
+        if(r!==null){
+          var c=getFY26Actual(m,'cogs')||plan.cogs[i];
+          var d=getFY26Actual(m,'doctorCost')||plan.doctorCost[i];
+          var py=getFY26Actual(m,'payroll')||plan.payroll[i];
+          var ot=getFY26Actual(m,'otherCost')||plan.otherCost[i];
+          var dep=getFY26Actual(m,'depreciation')||plan.depreciation[i];
+          a=r-c-d-py-ot-dep;
+        }
+      }
+      return a;
+    });
+
+    html+='<tr class="'+cls+'">';
+    html+='<td>'+row.label+'</td>';
+    var fyActSum=0, fyActCount=0;
+    FY26_MONTHS.forEach(function(m,i){
+      var p=plan[row.key][i];
+      var a=actVals[i];
+      var pStr=row.isPct?p.toFixed(1)+'%':p.toFixed(2);
+      var aStr,varStr;
+      if(a!==null){
+        aStr=row.isPct?a.toFixed(1)+'%':a.toFixed(2); fyActSum+=a; fyActCount++;
+        var vNum=row.isPct?(a-p):(row.isCost?(p>0?-(a-p)/p*100:0):(p>0?(a-p)/p*100:0));
+        var vCls=vNum>=0?'var-pos':'var-neg';
+        varStr='<span class="'+vCls+'">'+(vNum>=0?'+':'')+vNum.toFixed(1)+(row.isPct?'pp':'%')+'</span>';
+      } else {
+        aStr='<span class="act-empty">—</span>';
+        varStr='<span class="act-empty">—</span>';
+      }
+      html+='<td>'+pStr+'</td><td>'+aStr+'</td><td>'+varStr+'</td>';
+    });
+    var fyP=row.isPct?(sum(plan.ebitda)/sum(plan.revenue)*100):sum(plan[row.key]);
+    html+='<td style="font-weight:700">'+(row.isPct?fyP.toFixed(1)+'%':fyP.toFixed(2))+'</td>';
+    html+='<td>'+(fyActCount>0?(row.isPct?(fyActSum/fyActCount).toFixed(1)+'%':fyActSum.toFixed(2)):'<span class="act-empty">—</span>')+'</td>';
+    html+='</tr>';
+  });
+  html+='</tbody>';
+  document.getElementById('fy26Table').innerHTML=html;
+
+  // Dept table for FY26
+  var deptHtml='<thead><tr><th style="min-width:180px">Department</th><th>FY26E Annual</th>';
+  FY26_MONTHS.forEach(function(m){ deptHtml+='<th class="month-hdr">'+m+'</th>'; });
+  deptHtml+='</tr></thead><tbody>';
+  DEPT_DATA.forEach(function(d){
+    var monthly=REV_FY26.map(function(r){ return (d.fy26*r/ANN_FY26_REV).toFixed(2); });
+    deptHtml+='<tr><td><strong>'+d.name+'</strong></td>';
+    deptHtml+='<td style="font-weight:700;color:#2980b9">₹'+d.fy26.toFixed(1)+' Cr</td>';
+    monthly.forEach(function(v){ deptHtml+='<td>'+v+'</td>'; });
+    deptHtml+='</tr>';
+  });
+  deptHtml+='</tbody>';
+  document.getElementById('fy26DeptTable').innerHTML=deptHtml;
+
+  renderFY26MonthPills();
+}
+
+function saveFY26Actual(){
+  var month=document.getElementById('fy26Month').value;
+  if(!month){alert('Please select a month first.');return;}
+  var entry={};
+  var fields=['rev','cogs','doc','pay','other','depr'];
+  var keys=['revenue','cogs','doctorCost','payroll','otherCost','depreciation'];
+  fields.forEach(function(f,i){
+    var el=document.getElementById('fy26_'+f);
+    if(el&&el.value!==''){var v=parseFloat(el.value);if(!isNaN(v))entry[keys[i]]=v;}
+  });
+  if(!Object.keys(entry).length){alert('Please enter at least one value.');return;}
+  FY26_ACTUALS[month]=Object.assign(FY26_ACTUALS[month]||{},entry);
+  saveState();
+  addReqAutoEntry('FY26 Actuals Entry',month,'FY26 month updated: '+Object.keys(entry).join(', '));
+  document.getElementById('fy26SaveMsg').textContent='✅ Saved for '+month+'!';
+  setTimeout(function(){document.getElementById('fy26SaveMsg').textContent='';},3000);
+  renderFY26Tab();
+}
+
+function renderFY26MonthPills(){
+  var el=document.getElementById('fy26MonthPills');
+  if(!el)return;
+  var html=FY26_MONTHS.map(function(m){
+    var has=FY26_ACTUALS[m]&&Object.keys(FY26_ACTUALS[m]).length;
+    return '<span style="display:inline-block;padding:4px 10px;border-radius:12px;font-size:0.63rem;font-weight:700;margin:3px;background:'+(has?'#d1fae5':'#f0f4f8')+';color:'+(has?'#065f46':'#a0aec0')+';border:1px solid '+(has?'#6ee7b7':'#e2e8f0')+'">'+m+(has?' ✓':' —')+'</span>';
+  }).join('');
+  el.innerHTML=html;
+}
+</script>
+<script>
+// Patch renderPL to also build dept table
+var _origRenderPL=renderPL;
+renderPL=function(){
+  _origRenderPL();
+  if(document.getElementById('plDeptTable')) renderPLDeptTable();
+};
+</script>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- TAB: DOCTOR TRACKER                                     -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div id="page-doctors" class="page">
+  <div class="slabel">👨‍⚕️ Doctor Revenue Tracker — FY26 BRM Actuals &amp; FY27 Targets</div>
+  <div class="info-box">
+    FY26 YTD figures are 10-month actuals (Apr-25 to Jan-26) from the BRM deck. FY27 targets are annualised FY26 (×1.2) plus a growth premium: 20% for top earners (&gt;₹5 Cr), 15% for mid-tier (₹1–5 Cr), 10% for developing (&lt;₹1 Cr). You can override targets per doctor using the input below.
+  </div>
+
+  <!-- sub-tabs -->
+  <div class="tab-sub-bar" style="margin-bottom:18px">
+    <div class="sub-tab active" id="dtab-overview"  onclick="drShowTab('overview',this)">📊 Overview</div>
+    <div class="sub-tab"        id="dtab-alldocs"   onclick="drShowTab('alldocs',this)">👥 All Doctors</div>
+    <div class="sub-tab"        id="dtab-deptview"  onclick="drShowTab('deptview',this)">🏥 By Department</div>
+    <div class="sub-tab"        id="dtab-fy27"      onclick="drShowTab('fy27',this)">🎯 FY27 Targets</div>
+    <div class="sub-tab"        id="dtab-actuals"   onclick="drShowTab('actuals',this)">📝 Enter Actuals</div>
+  </div>
+
+  <!-- ── OVERVIEW ── -->
+  <div id="drpage-overview" class="drpage">
+    <div class="kpi-row" style="margin-bottom:16px">
+      <div class="kpi kpi-rev"><div class="kpi-label">FY26 YTD Total</div><div class="kpi-val">₹370.8 Cr</div><div class="kpi-sub">10M Apr-25 → Jan-26 · IP+OP</div></div>
+      <div class="kpi kpi-ebitda"><div class="kpi-label">Consultants Tracked</div><div class="kpi-val">80+</div><div class="kpi-sub">Named doctors from BRM</div></div>
+      <div class="kpi kpi-margin"><div class="kpi-label">Top Dept — Medical Oncology</div><div class="kpi-val">₹53.18 Cr</div><div class="kpi-sub">FY26 YTD #1</div></div>
+      <div class="kpi kpi-cost"><div class="kpi-label">Monthly Run Rate</div><div class="kpi-val">₹37.1 Cr</div><div class="kpi-sub">Avg IP+OP (Apr-25 – Jan-26)</div></div>
+    </div>
+    <div class="chart-grid">
+      <div class="chart-box">
+        <div class="chart-title">Top 15 Doctors by FY26 YTD Revenue (₹ Cr)</div>
+        <div class="chart-wrap" style="height:320px"><canvas id="drTop15Chart"></canvas></div>
+      </div>
+      <div class="chart-box">
+        <div class="chart-title">Department Revenue — FY26 YTD (₹ Cr)</div>
+        <div class="chart-wrap" style="height:320px"><canvas id="drDeptChart"></canvas></div>
+      </div>
+    </div>
+    <div class="chart-grid">
+      <div class="chart-box">
+        <div class="chart-title">Monthly Revenue Trend — IP vs OP vs F&amp;B (₹ Cr)</div>
+        <div class="chart-wrap"><canvas id="drMonthChart"></canvas></div>
+      </div>
+      <div class="chart-box">
+        <div class="chart-title">IP vs OP Revenue Split — Top 12 Doctors (₹ Cr)</div>
+        <div class="chart-wrap"><canvas id="drIpOpChart"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ALL DOCTORS ── -->
+  <div id="drpage-alldocs" class="drpage" style="display:none">
+    <div style="display:flex;gap:10px;align-items:center;margin-bottom:12px;flex-wrap:wrap">
+      <input id="drSearch" type="text" placeholder="🔍 Search doctor or department…"
+        style="padding:7px 12px;border:1px solid #e2e8f0;border-radius:6px;font-size:0.72rem;width:240px;outline:none"
+        oninput="renderDrAllTable()">
+      <div id="drDeptChips" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+    </div>
+    <div style="overflow-x:auto"><table class="fin-tbl" id="drAllTable">
+      <thead><tr>
+        <th style="text-align:left">Doctor</th>
+        <th style="text-align:left">Department</th>
+        <th>FY26 YTD IP (₹Cr)</th>
+        <th>FY26 YTD OP (₹Cr)</th>
+        <th>FY26 YTD Total</th>
+        <th>FY27 Target</th>
+        <th>Growth %</th>
+      </tr></thead>
+      <tbody id="drAllTbody"></tbody>
+    </table></div>
+  </div>
+
+  <!-- ── BY DEPARTMENT ── -->
+  <div id="drpage-deptview" class="drpage" style="display:none">
+    <div style="overflow-x:auto"><table class="fin-tbl" id="drDeptTable">
+      <thead><tr>
+        <th style="text-align:left">Department</th>
+        <th>FY26 YTD IP (₹Cr)</th>
+        <th>FY26 YTD OP (₹Cr)</th>
+        <th>FY26 YTD Total</th>
+        <th>No. of Doctors</th>
+        <th>FY27 Dept Target</th>
+        <th>Growth %</th>
+      </tr></thead>
+      <tbody id="drDeptTbody"></tbody>
+    </table></div>
+  </div>
+
+  <!-- ── FY27 TARGETS ── -->
+  <div id="drpage-fy27" class="drpage" style="display:none">
+    <div class="info-box" style="margin-bottom:14px">Override any doctor's FY27 target below. Changes are saved locally in your browser.</div>
+    <div style="overflow-x:auto"><table class="fin-tbl">
+      <thead><tr>
+        <th style="text-align:left">Doctor</th>
+        <th style="text-align:left">Department</th>
+        <th>FY26 YTD (₹Cr)</th>
+        <th>Default Target (₹Cr)</th>
+        <th>Your Target (₹Cr)</th>
+        <th>Override</th>
+      </tr></thead>
+      <tbody id="drTargetTbody"></tbody>
+    </table></div>
+  </div>
+
+  <!-- ── ENTER ACTUALS ── -->
+  <div id="drpage-actuals" class="drpage" style="display:none">
+    <div class="upload-section" style="margin-bottom:20px">
+      <div class="upload-title">📝 Enter Doctor Monthly Actual</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Doctor</label>
+          <select class="form-select" id="drActDoctor"><option value="">— select —</option></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Month (FY27)</label>
+          <select class="form-select" id="drActMonth">
+            <option>Apr-26</option><option>May-26</option><option>Jun-26</option>
+            <option>Jul-26</option><option>Aug-26</option><option>Sep-26</option>
+            <option>Oct-26</option><option>Nov-26</option><option>Dec-26</option>
+            <option>Jan-27</option><option>Feb-27</option><option>Mar-27</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">IP Revenue (₹ Cr)</label>
+          <input class="form-input" type="number" id="drActIP" step="0.01" placeholder="0.00">
+        </div>
+        <div class="form-group">
+          <label class="form-label">OP Revenue (₹ Cr)</label>
+          <input class="form-input" type="number" id="drActOP" step="0.01" placeholder="0.00">
+        </div>
+      </div>
+      <button class="btn-primary" onclick="saveDrActual()">💾 Save Actual</button>
+      <span id="drActMsg" style="margin-left:12px;font-size:0.72rem;color:#27ae60"></span>
+    </div>
+    <div id="drActSummary"></div>
+  </div>
+</div><!-- /page-doctors -->
+
+<script>
+// ═══════════════════════════════════════════════════════
+// DOCTOR TRACKER DATA
+// ═══════════════════════════════════════════════════════
+var DOCTORS = [
+  {name:'Gangadharan V P',          dept:'Medical Oncology',              ip26:34.37, op26:18.52, fy26:52.89},
+  {name:'Abi Abraham M',            dept:'Nephrology',                    ip26:23.89, op26:8.04,  fy26:31.93},
+  {name:'Sudish Karunakaran',       dept:'Neuro Surgery',                 ip26:21.72, op26:1.65,  fy26:23.37},
+  {name:'Ramesh H',                 dept:'GI Surgery',                    ip26:15.59, op26:1.30,  fy26:16.90},
+  {name:'Datson George P',          dept:'Urology',                       ip26:10.93, op26:2.21,  fy26:13.14},
+  {name:'Padmakumar R',             dept:'Minimally Invasive Surgery',    ip26:11.71, op26:0.75,  fy26:12.46},
+  {name:'Chitrathara K',            dept:'Surgical Oncology',             ip26:8.21,  op26:2.45,  fy26:10.66},
+  {name:'Fadl H Veerankutty',       dept:'Comprehensive Liver Care',      ip26:8.60,  op26:0.89,  fy26:9.49},
+  {name:'Jacob Varghese',           dept:'Joint Replacement & Sports Med',ip26:7.06,  op26:1.09,  fy26:8.15},
+  {name:'Jithin S Kumar',           dept:'Nephrology',                    ip26:6.20,  op26:1.81,  fy26:8.01},
+  {name:'Rajesh Simon',             dept:'Foot & Ankle',                  ip26:6.80,  op26:1.17,  fy26:7.97},
+  {name:'Roy J Mukkada',            dept:'Gastroenterology',              ip26:4.29,  op26:3.67,  fy26:7.96},
+  {name:'Anandkumar V',             dept:'Cardiology',                    ip26:5.80,  op26:1.84,  fy26:7.64},
+  {name:'George Jacob',             dept:'Joint Replacement & Sports Med',ip26:6.10,  op26:1.01,  fy26:7.11},
+  {name:'Shawn T Joseph',           dept:'Head And Neck Oncology',        ip26:5.80,  op26:0.96,  fy26:6.76},
+  {name:'Cibi Issac',               dept:'Cardiology',                    ip26:5.20,  op26:1.49,  fy26:6.69},
+  {name:'John Alexander',           dept:'General Medicine',              ip26:4.50,  op26:1.65,  fy26:6.15},
+  {name:'Appu Benny Thomas',        dept:'Joint Replacement & Sports Med',ip26:5.00,  op26:0.86,  fy26:5.86},
+  {name:'Joseph Edison',            dept:'Radiation Oncology',            ip26:0.12,  op26:5.68,  fy26:5.80},
+  {name:'Sujith D S',               dept:'Cardio Thoracic Surgery',       ip26:5.21,  op26:0.30,  fy26:5.51},
+  {name:'Jose Thomas Pappanacherry',dept:'Orthopedics',                   ip26:4.30,  op26:0.63,  fy26:4.93},
+  {name:'Krishna Kumar R',          dept:'Spine Surgery',                 ip26:3.75,  op26:0.86,  fy26:4.61},
+  {name:'Bindu Varghese',           dept:'Neurology',                     ip26:3.20,  op26:1.28,  fy26:4.48},
+  {name:'Shubha Achyutha',          dept:'Family Medicine',               ip26:0.00,  op26:4.21,  fy26:4.20},
+  {name:'Smitha Joy',               dept:'OB & Gynec.',                   ip26:3.20,  op26:0.90,  fy26:4.10},
+  {name:'Mahesh S',                 dept:'GI Surgery',                    ip26:3.50,  op26:0.48,  fy26:3.98},
+  {name:'Maya P',                   dept:'Gastroenterology',              ip26:1.90,  op26:1.60,  fy26:3.50},
+  {name:'Kartik Ganesh',            dept:'Nephrology',                    ip26:2.80,  op26:0.66,  fy26:3.46},
+  {name:'Aju Ajay',                 dept:'Cardiology',                    ip26:2.60,  op26:0.83,  fy26:3.43},
+  {name:'Vidya M V',                dept:'Neurology',                     ip26:2.30,  op26:1.01,  fy26:3.31},
+  {name:'Arun A',                   dept:'Pediatrics',                    ip26:2.50,  op26:0.74,  fy26:3.24},
+  {name:'Murali Krishna Menon',     dept:'Neurology',                     ip26:2.10,  op26:0.97,  fy26:3.07},
+  {name:'Arun Oommen',              dept:'Neuro Surgery',                 ip26:2.70,  op26:0.28,  fy26:2.98},
+  {name:'Antony Paul Chettupuzha',  dept:'Gastroenterology',              ip26:1.50,  op26:1.41,  fy26:2.91},
+  {name:'Mujeeb Rahman K K',        dept:'Pulmonology',                   ip26:2.21,  op26:0.60,  fy26:2.81},
+  {name:'Hari Lakshmanan P',        dept:'Pulmonology',                   ip26:2.57,  op26:0.18,  fy26:2.75},
+  {name:'Pradeep George Mathew',    dept:'Gastroenterology',              ip26:1.40,  op26:1.27,  fy26:2.67},
+  {name:'Idicula Mathews',          dept:'ENT',                           ip26:2.34,  op26:0.30,  fy26:2.64},
+  {name:'Harikrishna K',            dept:'Cardiology',                    ip26:1.80,  op26:0.63,  fy26:2.43},
+  {name:'Dennis P Jose',            dept:'Foot & Ankle',                  ip26:2.10,  op26:0.31,  fy26:2.41},
+  {name:'Abhijeet Wakure',          dept:'Plastic Surgery',               ip26:1.80,  op26:0.32,  fy26:2.12},
+  {name:'Xavier John Pulikkal',     dept:'Psychiatry',                    ip26:1.12,  op26:0.76,  fy26:1.88},
+  {name:'Abin Abraham Itty',        dept:'Dermatology & VD',              ip26:0.31,  op26:1.54,  fy26:1.85},
+  {name:'Gregory Pathrose',         dept:'Urology',                       ip26:1.50,  op26:0.32,  fy26:1.82},
+  {name:'Senthil R',                dept:'Nuclear Medicine',              ip26:0.89,  op26:0.72,  fy26:1.61},
+  {name:'Vivek Mathew',             dept:'Endocrinology',                 ip26:0.22,  op26:1.32,  fy26:1.54},
+  {name:'Vinay Jaison Chacko',      dept:'Orthopedics',                   ip26:1.30,  op26:0.18,  fy26:1.48},
+  {name:'Thresy George',            dept:'OB & Gynec.',                   ip26:1.00,  op26:0.37,  fy26:1.37},
+  {name:'Nirmala Thomas',           dept:'Pediatrics',                    ip26:1.00,  op26:0.37,  fy26:1.37},
+  {name:'Mohammed Iqbal K M',       dept:'Rheumatology & Gen. Medicine',  ip26:0.05,  op26:1.31,  fy26:1.36},
+  {name:'Ebin Rahman',              dept:'Ortho Oncology',                ip26:1.22,  op26:0.12,  fy26:1.34},
+  {name:'Srivatsan Thirumalai',     dept:'Neuro Surgery',                 ip26:1.10,  op26:0.14,  fy26:1.24},
+  {name:'Ajay Kumar Ajanvi',        dept:'Neuro Surgery',                 ip26:1.10,  op26:0.13,  fy26:1.23},
+  {name:'Moni Abraham Kuriakose',   dept:'Head And Neck Oncology',        ip26:1.00,  op26:0.20,  fy26:1.20},
+  {name:'Favaz Ali M',              dept:'Medical Oncology',              ip26:0.80,  op26:0.39,  fy26:1.19},
+  {name:'Abi Abraham',              dept:'Nephrology',                    ip26:0.90,  op26:0.26,  fy26:1.16},
+  {name:'Karthi A P',               dept:'Urology',                       ip26:0.90,  op26:0.25,  fy26:1.15},
+  {name:'Deepak T N',               dept:'Cardiology',                    ip26:0.70,  op26:0.40,  fy26:1.10},
+  {name:'Sarin Joseph',             dept:'Gastroenterology',              ip26:0.60,  op26:0.45,  fy26:1.05},
+  {name:'Siby Thomas',              dept:'General Surgery',               ip26:0.80,  op26:0.20,  fy26:1.00},
+  {name:'Rajeev Nair',              dept:'Orthopedics',                   ip26:0.75,  op26:0.20,  fy26:0.95},
+  {name:'Dinu Chandran',            dept:'Neurology',                     ip26:0.55,  op26:0.35,  fy26:0.90},
+  {name:'Priya Varghese',           dept:'OB & Gynec.',                   ip26:0.65,  op26:0.20,  fy26:0.85},
+  {name:'Lijo Philip',              dept:'Spine Surgery',                 ip26:0.70,  op26:0.10,  fy26:0.80},
+  {name:'Anand S',                  dept:'Pediatrics',                    ip26:0.55,  op26:0.22,  fy26:0.77},
+  {name:'Salim A',                  dept:'Pulmonology',                   ip26:0.50,  op26:0.22,  fy26:0.72},
+  {name:'Vishnu K',                 dept:'Cardiology',                    ip26:0.40,  op26:0.28,  fy26:0.68},
+  {name:'Geetha R',                 dept:'Endocrinology',                 ip26:0.10,  op26:0.55,  fy26:0.65},
+  {name:'Anup Mohan',               dept:'Dermatology & VD',              ip26:0.10,  op26:0.50,  fy26:0.60},
+  {name:'Thomas V',                 dept:'General Medicine',              ip26:0.30,  op26:0.28,  fy26:0.58},
+  {name:'Sreejith K',               dept:'Urology',                       ip26:0.40,  op26:0.15,  fy26:0.55},
+  {name:'Meera Jose',               dept:'Family Medicine',               ip26:0.00,  op26:0.52,  fy26:0.52},
+  {name:'Binu Sebastian',           dept:'Psychiatry',                    ip26:0.25,  op26:0.22,  fy26:0.47},
+  {name:'Harish T',                 dept:'ENT',                           ip26:0.30,  op26:0.15,  fy26:0.45},
+  {name:'Rekha P',                  dept:'Ophthalmology',                 ip26:0.15,  op26:0.28,  fy26:0.43},
+  {name:'Suresh M',                 dept:'Gastroenterology',              ip26:0.20,  op26:0.20,  fy26:0.40},
+  {name:'Aneesh G',                 dept:'Orthopedics',                   ip26:0.30,  op26:0.08,  fy26:0.38},
+  {name:'Jaya K',                   dept:'Pediatrics',                    ip26:0.20,  op26:0.16,  fy26:0.36},
+  {name:'Rajan T',                  dept:'General Medicine',              ip26:0.18,  op26:0.17,  fy26:0.35},
+  {name:'Preethi N',                dept:'Dermatology & VD',              ip26:0.05,  op26:0.28,  fy26:0.33},
+  {name:'Sunil K',                  dept:'Plastic Surgery',               ip26:0.22,  op26:0.10,  fy26:0.32},
+  {name:'Leena M',                  dept:'OB & Gynec.',                   ip26:0.20,  op26:0.10,  fy26:0.30}
+];
+
+var DR_MONTHS_FY26 = ['Apr-25','May-25','Jun-25','Jul-25','Aug-25','Sep-25','Oct-25','Nov-25','Dec-25','Jan-26'];
+var DR_MONTHLY_IP  = [22.93,25.94,22.94,27.10,28.08,27.90,27.61,24.47,26.55,30.36];
+var DR_MONTHLY_OP  = [9.34, 9.89, 8.94,10.72,10.76,10.16,10.14, 9.18, 9.66,10.91];
+var DR_MONTHLY_FB  = [1.33, 1.41, 1.32, 1.55, 1.52, 1.48, 1.46, 1.37, 1.43, 1.56];
+
+var DR_DEPT_FY26 = [
+  {name:'Medical Oncology',              ip:34.37, op:18.81, total:53.18},
+  {name:'Nephrology',                    ip:32.13, op:13.14, total:45.27},
+  {name:'Neuro Surgery',                 ip:26.10, op:2.74,  total:28.84},
+  {name:'GI Surgery',                    ip:20.38, op:2.05,  total:22.43},
+  {name:'Joint Replacement & Sports Med',ip:18.75, op:2.36,  total:21.11},
+  {name:'Cardiology',                    ip:16.12, op:4.28,  total:20.41},
+  {name:'Gastroenterology',              ip:10.63, op:7.72,  total:18.35},
+  {name:'Urology',                       ip:13.25, op:3.19,  total:16.44},
+  {name:'Minimally Invasive Surgery',    ip:11.71, op:0.75,  total:12.46},
+  {name:'Neurology',                     ip:7.97,  op:2.89,  total:10.86},
+  {name:'Surgical Oncology',             ip:8.21,  op:2.49,  total:10.70},
+  {name:'Foot & Ankle',                  ip:9.06,  op:1.31,  total:10.37},
+  {name:'Comprehensive Liver Care',      ip:8.78,  op:0.94,  total:9.72},
+  {name:'Head And Neck Oncology',        ip:7.70,  op:0.97,  total:8.67},
+  {name:'General Medicine',              ip:4.59,  op:2.88,  total:7.47},
+  {name:'Orthopedics',                   ip:6.45,  op:0.56,  total:7.01},
+  {name:'OB & Gynec.',                   ip:4.85,  op:1.87,  total:6.72},
+  {name:'Pediatrics',                    ip:4.25,  op:2.08,  total:6.33},
+  {name:'Radiation Oncology',            ip:0.12,  op:5.68,  total:5.80},
+  {name:'Cardio Thoracic Surgery',       ip:5.21,  op:0.31,  total:5.52},
+  {name:'Spine Surgery',                 ip:3.75,  op:0.86,  total:4.61},
+  {name:'Plastic Surgery',               ip:4.02,  op:0.42,  total:4.44},
+  {name:'Family Medicine',               ip:0.00,  op:4.21,  total:4.20},
+  {name:'ENT',                           ip:2.34,  op:0.92,  total:3.26},
+  {name:'Pulmonology',                   ip:2.57,  op:0.50,  total:3.07}
+];
+
+var DR_TARGETS = {};
+var DR_ACTUALS = {};
+var drActiveDept = 'All';
+var drCharts = {};
+
+function drDefaultTarget(d){
+  var ann = d.fy26 * 1.2;
+  var gr = d.fy26 >= 5 ? 0.20 : d.fy26 >= 1 ? 0.15 : 0.10;
+  return parseFloat((ann * (1 + gr)).toFixed(2));
+}
+
+function drLoadState(){
+  try{ DR_TARGETS = JSON.parse(localStorage.getItem('lhrc_dr_targets')||'{}'); }catch(e){ DR_TARGETS={}; }
+  try{ DR_ACTUALS = JSON.parse(localStorage.getItem('lhrc_dr_actuals')||'{}'); }catch(e){ DR_ACTUALS={}; }
+}
+
+function drSaveState(){
+  localStorage.setItem('lhrc_dr_targets', JSON.stringify(DR_TARGETS));
+  localStorage.setItem('lhrc_dr_actuals', JSON.stringify(DR_ACTUALS));
+}
+
+function drShowTab(id, el){
+  document.querySelectorAll('.drpage').forEach(function(p){ p.style.display='none'; });
+  document.querySelectorAll('.tab-sub-bar .sub-tab').forEach(function(t){ t.classList.remove('active'); });
+  document.getElementById('drpage-'+id).style.display='';
+  if(el) el.classList.add('active');
+  if(id==='overview')  renderDrOverview();
+  if(id==='alldocs')   renderDrAllTable();
+  if(id==='deptview')  renderDrDeptTable();
+  if(id==='fy27')      renderDrTargetsTable();
+  if(id==='actuals')   { buildDrSelect(); renderDrActualsSummary(); }
+}
+
+function drGetTarget(d){
+  return DR_TARGETS[d.name] !== undefined ? DR_TARGETS[d.name] : drDefaultTarget(d);
+}
+
+function drGrowthColor(pct){
+  return pct >= 20 ? '#27ae60' : pct >= 10 ? '#e67e22' : '#e74c3c';
+}
+
+function renderDrOverview(){
+  // Destroy old charts
+  ['drTop15Chart','drDeptChart','drMonthChart','drIpOpChart'].forEach(function(id){
+    if(drCharts[id]){ drCharts[id].destroy(); delete drCharts[id]; }
+  });
+
+  // Top 15 doctors
+  var sorted = DOCTORS.slice().sort(function(a,b){ return b.fy26-a.fy26; }).slice(0,15);
+  var c1 = document.getElementById('drTop15Chart');
+  if(c1){
+    drCharts['drTop15Chart'] = new Chart(c1, {
+      type:'bar',
+      data:{
+        labels: sorted.map(function(d){ return d.name; }),
+        datasets:[
+          {label:'IP Revenue',data:sorted.map(function(d){return d.ip26;}),backgroundColor:'rgba(26,58,92,0.85)',borderRadius:3},
+          {label:'OP Revenue',data:sorted.map(function(d){return d.op26;}),backgroundColor:'rgba(230,126,34,0.75)',borderRadius:3}
+        ]
+      },
+      options:{
+        indexAxis:'y', responsive:true, maintainAspectRatio:false,
+        plugins:{legend:{position:'bottom'},title:{display:true,text:'FY26 YTD (Apr-25–Jan-26) · ₹ Crores',font:{size:10},color:'#718096'}},
+        scales:{
+          x:{stacked:true,title:{display:true,text:'₹ Crores',font:{size:9},color:'#718096'}},
+          y:{stacked:true,ticks:{font:{size:9}}}
+        }
+      }
+    });
+  }
+
+  // Dept chart
+  var c2 = document.getElementById('drDeptChart');
+  if(c2){
+    var topDepts = DR_DEPT_FY26.slice(0,12);
+    drCharts['drDeptChart'] = new Chart(c2, {
+      type:'bar',
+      data:{
+        labels: topDepts.map(function(d){ return d.name; }),
+        datasets:[
+          {label:'IP',data:topDepts.map(function(d){return d.ip;}),backgroundColor:'rgba(26,58,92,0.85)',borderRadius:3},
+          {label:'OP',data:topDepts.map(function(d){return d.op;}),backgroundColor:'rgba(230,126,34,0.75)',borderRadius:3}
+        ]
+      },
+      options:{
+        indexAxis:'y', responsive:true, maintainAspectRatio:false,
+        plugins:{legend:{position:'bottom'},title:{display:true,text:'Top 12 Departments · FY26 YTD ₹ Cr',font:{size:10},color:'#718096'}},
+        scales:{
+          x:{stacked:true,title:{display:true,text:'₹ Crores',font:{size:9},color:'#718096'}},
+          y:{stacked:true,ticks:{font:{size:9}}}
+        }
+      }
+    });
+  }
+
+  // Monthly trend
+  var c3 = document.getElementById('drMonthChart');
+  if(c3){
+    drCharts['drMonthChart'] = new Chart(c3, {
+      type:'line',
+      data:{
+        labels: DR_MONTHS_FY26,
+        datasets:[
+          {label:'IP',data:DR_MONTHLY_IP,borderColor:'#1a3a5c',backgroundColor:'rgba(26,58,92,0.08)',fill:true,tension:0.3,pointRadius:4},
+          {label:'OP',data:DR_MONTHLY_OP,borderColor:'#e67e22',backgroundColor:'rgba(230,126,34,0.08)',fill:true,tension:0.3,pointRadius:4},
+          {label:'F&B',data:DR_MONTHLY_FB,borderColor:'#27ae60',backgroundColor:'rgba(39,174,96,0.08)',fill:true,tension:0.3,pointRadius:4}
+        ]
+      },
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        plugins:{legend:{position:'bottom'},title:{display:true,text:'Monthly IP · OP · F&B Revenue (₹ Cr)',font:{size:10},color:'#718096'}},
+        scales:{
+          y:{title:{display:true,text:'₹ Crores',font:{size:9},color:'#718096'}},
+          x:{title:{display:true,text:'Month'}}
+        }
+      }
+    });
+  }
+
+  // IP vs OP split top 12
+  var c4 = document.getElementById('drIpOpChart');
+  if(c4){
+    var top12 = DOCTORS.slice().sort(function(a,b){ return b.fy26-a.fy26; }).slice(0,12);
+    drCharts['drIpOpChart'] = new Chart(c4, {
+      type:'bar',
+      data:{
+        labels: top12.map(function(d){ return d.name.split(' ')[0]+' '+((d.name.split(' ')[1]||'')[0]||''); }),
+        datasets:[
+          {label:'IP',data:top12.map(function(d){return d.ip26;}),backgroundColor:'rgba(26,58,92,0.85)',borderRadius:3},
+          {label:'OP',data:top12.map(function(d){return d.op26;}),backgroundColor:'rgba(230,126,34,0.75)',borderRadius:3}
+        ]
+      },
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        plugins:{legend:{position:'bottom'},title:{display:true,text:'IP vs OP Split · Top 12 Doctors (₹ Cr)',font:{size:10},color:'#718096'}},
+        scales:{
+          x:{stacked:true,title:{display:true,text:'Doctor',font:{size:9},color:'#718096'}},
+          y:{stacked:true,title:{display:true,text:'₹ Crores',font:{size:9},color:'#718096'}}
+        }
+      }
+    });
+  }
+}
+
+function buildDrDeptChips(){
+  var depts = ['All'].concat(DR_DEPT_FY26.map(function(d){ return d.name; }));
+  var el = document.getElementById('drDeptChips');
+  if(!el) return;
+  el.innerHTML = depts.map(function(d){
+    var active = d === drActiveDept;
+    return '<span onclick="drSetDept(\''+d.replace(/'/g,"\\'")+'\')" style="cursor:pointer;display:inline-block;padding:4px 10px;border-radius:12px;font-size:0.63rem;font-weight:600;margin:2px;background:'+(active?'#1a3a5c':'#f0f4f8')+';color:'+(active?'white':'#718096')+';border:1px solid '+(active?'#1a3a5c':'#e2e8f0')+'">'+d+'</span>';
+  }).join('');
+}
+
+function drSetDept(dept){
+  drActiveDept = dept;
+  buildDrDeptChips();
+  renderDrAllTable();
+}
+
+function renderDrAllTable(){
+  buildDrDeptChips();
+  var q = (document.getElementById('drSearch')||{value:''}).value.toLowerCase();
+  var rows = DOCTORS.filter(function(d){
+    var deptOk = drActiveDept === 'All' || d.dept === drActiveDept;
+    var searchOk = !q || d.name.toLowerCase().includes(q) || d.dept.toLowerCase().includes(q);
+    return deptOk && searchOk;
+  }).sort(function(a,b){ return b.fy26-a.fy26; });
+
+  var html = rows.map(function(d,i){
+    var tgt = drGetTarget(d);
+    var ann = d.fy26 * 1.2;
+    var grPct = ann > 0 ? ((tgt-ann)/ann*100).toFixed(1) : '—';
+    var rowBg = i%2===0 ? 'white' : '#f7fafc';
+    return '<tr style="background:'+rowBg+'">'
+      +'<td style="text-align:left;background:'+rowBg+'">' + d.name + '</td>'
+      +'<td style="text-align:left;font-size:0.63rem;color:#718096">' + d.dept + '</td>'
+      +'<td>' + d.ip26.toFixed(2) + '</td>'
+      +'<td>' + d.op26.toFixed(2) + '</td>'
+      +'<td style="font-weight:700;color:#1a3a5c">' + d.fy26.toFixed(2) + '</td>'
+      +'<td style="font-weight:700;color:#27ae60">' + tgt.toFixed(2) + '</td>'
+      +'<td style="color:'+drGrowthColor(parseFloat(grPct))+'">'+grPct+'%</td>'
+      +'</tr>';
+  }).join('');
+  var tbody = document.getElementById('drAllTbody');
+  if(tbody) tbody.innerHTML = html || '<tr><td colspan="7" style="text-align:center;color:#a0aec0;padding:20px">No results</td></tr>';
+}
+
+function renderDrDeptTable(){
+  var html = DR_DEPT_FY26.map(function(dept){
+    var docs = DOCTORS.filter(function(d){ return d.dept === dept.name; });
+    var deptTgt = docs.reduce(function(s,d){ return s + drGetTarget(d); }, 0);
+    var ann = dept.total * 1.2;
+    var grPct = ann > 0 ? ((deptTgt - ann) / ann * 100).toFixed(1) : '—';
+    return '<tr>'
+      +'<td style="text-align:left;font-weight:600">' + dept.name + '</td>'
+      +'<td>' + dept.ip.toFixed(2) + '</td>'
+      +'<td>' + dept.op.toFixed(2) + '</td>'
+      +'<td style="font-weight:700;color:#1a3a5c">' + dept.total.toFixed(2) + '</td>'
+      +'<td style="text-align:center">' + docs.length + '</td>'
+      +'<td style="font-weight:700;color:#27ae60">' + deptTgt.toFixed(2) + '</td>'
+      +'<td style="color:'+drGrowthColor(parseFloat(grPct))+'">'+grPct+'%</td>'
+      +'</tr>';
+  }).join('');
+  var tbody = document.getElementById('drDeptTbody');
+  if(tbody) tbody.innerHTML = html;
+}
+
+function renderDrTargetsTable(){
+  var sorted = DOCTORS.slice().sort(function(a,b){ return b.fy26-a.fy26; });
+  var html = sorted.map(function(d){
+    var defTgt = drDefaultTarget(d);
+    var curTgt = drGetTarget(d);
+    var inputId = 'drTgt_' + d.name.replace(/\s+/g,'_');
+    return '<tr>'
+      +'<td style="text-align:left">' + d.name + '</td>'
+      +'<td style="text-align:left;font-size:0.63rem;color:#718096">' + d.dept + '</td>'
+      +'<td>' + d.fy26.toFixed(2) + '</td>'
+      +'<td>' + defTgt.toFixed(2) + '</td>'
+      +'<td style="font-weight:700;color:#27ae60">' + curTgt.toFixed(2) + '</td>'
+      +'<td><input type="number" id="'+inputId+'" step="0.01" value="'+curTgt.toFixed(2)+'"'
+      +' style="width:80px;padding:4px 6px;border:1px solid #e2e8f0;border-radius:4px;font-size:0.68rem;text-align:right">'
+      +' <button onclick="drSaveTarget(\''+d.name.replace(/'/g,"\\'")+'\',\''+inputId+'\')" '
+      +' style="padding:3px 8px;background:#1a3a5c;color:white;border:none;border-radius:4px;font-size:0.6rem;cursor:pointer">Save</button>'
+      +'</td>'
+      +'</tr>';
+  }).join('');
+  var tbody = document.getElementById('drTargetTbody');
+  if(tbody) tbody.innerHTML = html;
+}
+
+function drSaveTarget(name, inputId){
+  var val = parseFloat(document.getElementById(inputId).value);
+  if(isNaN(val)||val<0){ alert('Invalid target value'); return; }
+  DR_TARGETS[name] = val;
+  drSaveState();
+  renderDrTargetsTable();
+}
+
+function buildDrSelect(){
+  var sel = document.getElementById('drActDoctor');
+  if(!sel) return;
+  var sorted = DOCTORS.slice().sort(function(a,b){ return a.name.localeCompare(b.name); });
+  sel.innerHTML = '<option value="">— select doctor —</option>'
+    + sorted.map(function(d){ return '<option value="'+d.name+'">'+d.name+' ('+d.dept+')</option>'; }).join('');
+}
+
+function saveDrActual(){
+  var doc = document.getElementById('drActDoctor').value;
+  var mon = document.getElementById('drActMonth').value;
+  var ip  = parseFloat(document.getElementById('drActIP').value)||0;
+  var op  = parseFloat(document.getElementById('drActOP').value)||0;
+  if(!doc){ alert('Please select a doctor'); return; }
+  var key = doc + '|' + mon;
+  DR_ACTUALS[key] = {doctor:doc, month:mon, ip:ip, op:op, total:ip+op};
+  drSaveState();
+  document.getElementById('drActMsg').textContent = '✅ Saved for '+doc+' — '+mon;
+  setTimeout(function(){ document.getElementById('drActMsg').textContent=''; }, 3000);
+  renderDrActualsSummary();
+}
+
+function renderDrActualsSummary(){
+  var entries = Object.values(DR_ACTUALS).sort(function(a,b){ return a.doctor.localeCompare(b.doctor)||a.month.localeCompare(b.month); });
+  if(!entries.length){
+    document.getElementById('drActSummary').innerHTML = '<div style="color:#a0aec0;font-size:0.72rem;padding:12px">No actuals entered yet.</div>';
+    return;
+  }
+  var rows = entries.map(function(e){
+    var key = e.doctor+'|'+e.month;
+    return '<tr>'
+      +'<td style="text-align:left">'+e.doctor+'</td>'
+      +'<td>'+e.month+'</td>'
+      +'<td>'+e.ip.toFixed(2)+'</td>'
+      +'<td>'+e.op.toFixed(2)+'</td>'
+      +'<td style="font-weight:700">'+e.total.toFixed(2)+'</td>'
+      +'<td><button onclick="drDeleteActual(\''+key.replace(/'/g,"\\'")+'\')" style="padding:2px 8px;background:#fee2e2;color:#dc2626;border:1px solid #fca5a5;border-radius:4px;font-size:0.6rem;cursor:pointer">✕ Remove</button></td>'
+      +'</tr>';
+  }).join('');
+  document.getElementById('drActSummary').innerHTML = '<table class="fin-tbl"><thead><tr>'
+    +'<th style="text-align:left">Doctor</th><th>Month</th><th>IP (₹Cr)</th><th>OP (₹Cr)</th><th>Total</th><th>Action</th>'
+    +'</tr></thead><tbody>'+rows+'</tbody></table>';
+}
+
+function drDeleteActual(key){
+  delete DR_ACTUALS[key];
+  drSaveState();
+  renderDrActualsSummary();
+}
+
+// Initialise doctor tracker state on load
+drLoadState();
+</script>
+</body>
+</html>

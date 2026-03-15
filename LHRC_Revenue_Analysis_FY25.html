@@ -1,0 +1,1443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LHRC Revenue & Doctor Analytics — FY25 BRM</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#f0f4f8;color:#1a202c;font-size:14px}
+.header{background:linear-gradient(135deg,#1a3a5c 0%,#0f2744 100%);color:white;padding:16px 32px;display:flex;align-items:center;justify-content:space-between}
+.header h1{font-size:1.2rem;font-weight:700}
+.header p{font-size:0.72rem;opacity:0.7;margin-top:2px}
+.hb{display:flex;gap:8px;flex-wrap:wrap}
+.badge{background:rgba(255,255,255,0.15);padding:4px 12px;border-radius:20px;font-size:0.7rem;font-weight:600}
+.badge.or{background:#e67e22}.badge.rd{background:#e74c3c}
+.tab-bar{background:white;border-bottom:2px solid #e2e8f0;padding:0 24px;display:flex;gap:0;overflow-x:auto}
+.tab{padding:12px 16px;font-size:0.75rem;font-weight:600;color:#718096;cursor:pointer;border-bottom:3px solid transparent;transition:all 0.2s;white-space:nowrap;margin-bottom:-2px}
+.tab:hover{color:#1a3a5c;background:#f7fafc}
+.tab.active{color:#1a3a5c;border-bottom-color:#1a3a5c;background:white}
+.page{display:none;padding:18px 28px;max-width:1500px;margin:0 auto}
+.page.active{display:block}
+.kpi-strip{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:18px}
+.kpi{background:white;border-radius:8px;padding:12px 14px;box-shadow:0 1px 4px rgba(0,0,0,0.06);border-left:3px solid}
+.kpi-label{font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:#a0aec0}
+.kpi-value{font-size:1.2rem;font-weight:800;margin-top:2px}
+.kpi-sub{font-size:0.63rem;color:#a0aec0;margin-top:2px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.g21{display:grid;grid-template-columns:2fr 1fr;gap:14px}
+.g12{display:grid;grid-template-columns:1fr 2fr;gap:14px}
+.card{background:white;border-radius:10px;padding:18px;box-shadow:0 1px 4px rgba(0,0,0,0.06);margin-bottom:14px}
+.card-title{font-size:0.8rem;font-weight:700;color:#2d3748;margin-bottom:2px}
+.card-sub{font-size:0.65rem;color:#a0aec0;margin-bottom:12px}
+.tbl{width:100%;border-collapse:collapse;font-size:0.71rem}
+.tbl th{background:#f7fafc;text-align:left;padding:7px 9px;font-size:0.63rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#718096;border-bottom:2px solid #e2e8f0;white-space:nowrap;cursor:pointer}
+.tbl th:hover{background:#edf2f7}
+.tbl td{padding:6px 9px;border-bottom:1px solid #f0f4f8;color:#2d3748}
+.tbl tr:hover td{background:#f7fafc}
+.tbl tr.top3 td{background:#fffbf0;font-weight:600}
+.pill{display:inline-block;padding:2px 7px;border-radius:10px;font-size:0.6rem;font-weight:700}
+.gp{background:#e8f5e9;color:#27ae60}.rp{background:#fce4ec;color:#e74c3c}
+.op{background:#fff3e0;color:#e67e22}.bp{background:#e3f2fd;color:#1976d2}
+.pp{background:#f3e5f5;color:#8e44ad}.grp{background:#f5f5f5;color:#757575}
+.ibox{background:#fffbf0;border:1px solid #fde68a;border-left:4px solid #f59e0b;border-radius:8px;padding:11px 14px;margin-bottom:14px}
+.ibox.red{background:#fff5f5;border-color:#fca5a5;border-left-color:#ef4444}
+.ibox.green{background:#f0fdf4;border-color:#86efac;border-left-color:#22c55e}
+.ibox.blue{background:#eff6ff;border-color:#93c5fd;border-left-color:#3b82f6}
+.ibox-title{font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;color:#92400e}
+.ibox.red .ibox-title{color:#991b1b}.ibox.green .ibox-title{color:#166534}.ibox.blue .ibox-title{color:#1e40af}
+.ibox-text{font-size:0.73rem;color:#4a5568;line-height:1.5}
+.filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
+.fbtn{padding:4px 12px;border-radius:16px;border:1px solid #e2e8f0;background:white;font-size:0.7rem;font-weight:600;cursor:pointer;color:#718096;transition:all 0.15s}
+.fbtn:hover{border-color:#1a3a5c;color:#1a3a5c}
+.fbtn.active{background:#1a3a5c;color:white;border-color:#1a3a5c}
+.search-input{padding:6px 12px;border:1px solid #e2e8f0;border-radius:6px;font-size:0.75rem;width:200px;outline:none}
+.search-input:focus{border-color:#1a3a5c}
+.sort-sel{padding:5px 10px;border:1px solid #e2e8f0;border-radius:6px;font-size:0.73rem;color:#4a5568;outline:none;background:white;cursor:pointer}
+.slabel{font-size:0.66rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#a0aec0;margin:18px 0 10px;display:flex;align-items:center;gap:8px}
+.slabel::after{content:'';flex:1;height:1px;background:#e2e8f0}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>LHRC Revenue &amp; Doctor Analytics</h1>
+    <p>VPS Lakeshore Hospital &amp; Research Centre, Kochi &middot; Full Year (Apr 24 – Mar 25) &nbsp;&middot;&nbsp; FY25 Full Year BRM Data &nbsp;&middot;&nbsp; FY25 Full Year BRM Analysis</p>
+  </div>
+  <div class="hb">
+    <span class="badge or">&#x20B9;410 Cr Revenue</span>
+    <span class="badge">40+ Doctors</span>
+    <span class="badge">21,023 IP Discharges</span>
+    <span class="badge rd">&#x26A0;&#xFE0F; Top 2 Docs = 20.7% Revenue</span>
+  </div>
+</div>
+
+<div class="tab-bar">
+  <div class="tab active" onclick="showTab('overview',this)">&#x1F4CA; Overview</div>
+  <div class="tab" onclick="showTab('departments',this)">&#x1F3E5; By Department</div>
+  <div class="tab" onclick="showTab('doctors',this)">&#x1F468;&#x200D;&#x2695;&#xFE0F; By Doctor</div>
+  <div class="tab" onclick="showTab('concentration',this)">&#x26A0;&#xFE0F; Concentration Risk</div>
+  <div class="tab" onclick="showTab('quadrant',this)">&#x1F4CA; Revenue Matrix</div>
+  <div class="tab" onclick="showTab('monthly',this)">&#x1F4C5; Monthly Trends</div>
+  <div class="tab" onclick="showTab('payor',this)">&#x1F4B3; Payor &amp; Mix</div>
+  <div class="tab" onclick="showTab('strategic',this)">&#x1F4CB; Year End Analysis</div>
+  <div class="tab" onclick="showTab('benchmarks',this)">&#x1F4D0; Peer Benchmarks</div>
+  <div class="tab" onclick="showTab('doctorMIS',this)">&#x1F469;&#x200D;&#x2695;&#xFE0F; Doctor MIS</div>
+</div>
+
+<!-- ===== PAGE: OVERVIEW ===== -->
+<div id="page-overview" class="page active">
+  <div class="kpi-strip">
+    <div class="kpi" style="border-color:#1a3a5c"><div class="kpi-label">Total Revenue</div><div class="kpi-value" style="color:#1a3a5c">&#x20B9;410 Cr</div><div class="kpi-sub">ADR &#x20B9;1.31 Cr/day</div></div>
+    <div class="kpi" style="border-color:#e67e22"><div class="kpi-label">IP Revenue</div><div class="kpi-value" style="color:#e67e22">&#x20B9;299 Cr</div><div class="kpi-sub">73% of total &middot; 21,023 discharges</div></div>
+    <div class="kpi" style="border-color:#8e44ad"><div class="kpi-label">ARPP-IP</div><div class="kpi-value" style="color:#8e44ad">&#x20B9;1.42 L</div><div class="kpi-sub">ALOS 4.3d &middot; ARPOB &#x20B9;33,414</div></div>
+    <div class="kpi" style="border-color:#27ae60"><div class="kpi-label">IP Discharges</div><div class="kpi-value" style="color:#27ae60">21,023</div><div class="kpi-sub">89,585 bed days &middot; Kochi</div></div>
+    <div class="kpi" style="border-color:#e74c3c"><div class="kpi-label">OP Revenue</div><div class="kpi-value" style="color:#e74c3c">&#x20B9;110 Cr</div><div class="kpi-sub">3,74,796 visits &middot; &#x20B9;3,091/visit &middot; &#x20B9;2,844/visit</div></div>
+    <div class="kpi" style="border-color:#c0392b"><div class="kpi-label">Top 5 Doctors</div><div class="kpi-value" style="color:#c0392b">TOP 5</div><div class="kpi-sub">= 33.7% of all revenue</div></div>
+  </div>
+
+  <div class="ibox red">
+    <div class="ibox-title">&#x1F4CA; Revenue Concentration — FY25</div>
+    <div class="ibox-text"><strong>2 doctors (Gangadharan VP + Abi Abraham M)</strong> generated &#x20B9;94.6 Cr = <strong>23.1% of total hospital revenue</strong>. Top 5 doctors = 41.2% of revenue. ConcentratioY24 (was 27.4%), but Gangadharan VP at ₹52.9 Cr (12.9%) remains the single biggest key-person risk.</div>
+  </div>
+
+  <div class="g21">
+    <div class="card">
+      <div class="card-title">Revenue by Department — Top 15 (&#x20B9; Crore, FY25)</div>
+      <div class="card-sub">Nephrology + Medical Oncology = 30.3% of total revenue</div>
+      <div style="position:relative;height:300px"><canvas id="deptBar"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Revenue Mix</div>
+      <div class="card-sub">IP &#x20B9;298 Cr &middot; OP &#x20B9;99 Cr &middot; Pharmacy &#x20B9;34 Cr</div>
+      <div style="position:relative;height:160px"><canvas id="mixDonut"></canvas></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:12px">
+        <div style="background:#f7fafc;border-radius:6px;padding:8px;text-align:center"><div style="font-size:0.6rem;color:#a0aec0;font-weight:700;text-transform:uppercase">IP Revenue</div><div style="font-size:1rem;font-weight:800;color:#1a3a5c">&#x20B9;298 Cr</div></div>
+        <div style="background:#f7fafc;border-radius:6px;padding:8px;text-align:center"><div style="font-size:0.6rem;color:#a0aec0;font-weight:700;text-transform:uppercase">OP Revenue</div><div style="font-size:1rem;font-weight:800;color:#e67e22">&#x20B9;99 Cr</div></div>
+        <div style="background:#f7fafc;border-radius:6px;padding:8px;text-align:center"><div style="font-size:0.6rem;color:#a0aec0;font-weight:700;text-transform:uppercase">Pharmacy</div><div style="font-size:1rem;font-weight:800;color:#8e44ad">&#x20B9;34 Cr</div></div>
+        <div style="background:#f7fafc;border-radius:6px;padding:8px;text-align:center"><div style="font-size:0.6rem;color:#a0aec0;font-weight:700;text-transform:uppercase">Registration</div><div style="font-size:1rem;font-weight:800;color:#27ae60">&#x20B9;7.3 Cr</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Top 12 Doctors by Revenue (&#x20B9; Crore, FY25)</div>
+      <div class="card-sub">Top 12 = 63.6% of all doctor revenue</div>
+      <div style="position:relative;height:260px"><canvas id="doctorBar"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Revenue Concentration Curve (Lorenz)</div>
+      <div class="card-sub">X = cumulative doctor count &middot; Y = % of total revenue</div>
+      <div style="position:relative;height:260px"><canvas id="concLine"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PAGE: DEPARTMENTS ===== -->
+<div id="page-departments" class="page">
+  <div class="card">
+    <div class="card-title">Department Performance Table — All 22 Departments</div>
+    <div class="card-sub">Click column headers to sort. ALOS computed from bed utilisation. Pharma/Diag are estimates.</div>
+    <div style="overflow-x:auto">
+    <table class="tbl">
+      <thead><tr>
+        <th onclick="sortDept('rank')">#</th>
+        <th onclick="sortDept('name')">Department</th>
+        <th onclick="sortDept('total')">Total &#x20B9;Cr</th>
+        <th onclick="sortDept('pct')">% Share</th>
+        <th onclick="sortDept('ip')">IP &#x20B9;Cr</th>
+        <th onclick="sortDept('op')">OP &#x20B9;Cr</th>
+        <th onclick="sortDept('pharma')" style="color:#8e44ad">Pharma &#x20B9;Cr</th>
+        <th onclick="sortDept('diag')" style="color:#e67e22">Diag &#x20B9;Cr</th>
+        <th onclick="sortDept('disc')">IP Disc.</th>
+        <th onclick="sortDept('opv')">OP Visits</th>
+        <th onclick="sortDept('arppIP')">ARPP-IP</th>
+        <th onclick="sortDept('arppOPCalc')">ARPP-OP</th>
+        <th onclick="sortDept('arpob')">ARPOB</th>
+        <th onclick="sortDept('alosCalc')">ALOS</th>
+        <th onclick="sortDept('doctorCount')">Docs</th>
+        <th>Tier</th>
+      </tr></thead>
+      <tbody id="deptTbody"></tbody>
+    </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Revenue Composition by Department — IP &middot; OP &middot; Pharma &middot; Diagnostics</div>
+    <div class="card-sub">Pharma and Diagnostics are estimates based on specialty benchmarks</div>
+    <div style="position:relative;height:500px"><canvas id="deptStack"></canvas></div>
+  </div>
+
+  <div class="slabel">Top 6 Department Doctor Breakdowns</div>
+  <div class="g3">
+    <div class="card"><div class="card-title">Medical Oncology</div><div style="position:relative;height:200px"><canvas id="pieOnco"></canvas></div></div>
+    <div class="card"><div class="card-title">Nephrology</div><div style="position:relative;height:200px"><canvas id="pieNephro"></canvas></div></div>
+    <div class="card"><div class="card-title">GI Surgery</div><div style="position:relative;height:200px"><canvas id="pieGI"></canvas></div></div>
+    <div class="card"><div class="card-title">Neuro Surgery</div><div style="position:relative;height:200px"><canvas id="pieNeuro"></canvas></div></div>
+    <div class="card"><div class="card-title">Gastroenterology</div><div style="position:relative;height:200px"><canvas id="pieGastro"></canvas></div></div>
+    <div class="card"><div class="card-title">Cardiology</div><div style="position:relative;height:200px"><canvas id="pieCardio"></canvas></div></div>
+  </div>
+</div>
+
+<!-- ===== PAGE: DOCTORS ===== -->
+<div id="page-doctors" class="page">
+  <div class="filter-bar">
+    <span style="font-size:0.72rem;font-weight:700;color:#4a5568">Filter:</span>
+    <button class="fbtn active" onclick="filterDocs('ALL',this)">All</button>
+    <button class="fbtn" onclick="filterDocs('MEDICAL ONCOLOGY',this)">Oncology</button>
+    <button class="fbtn" onclick="filterDocs('NEPHROLOGY',this)">Nephrology</button>
+    <button class="fbtn" onclick="filterDocs('GI SURGERY',this)">GI Surgery</button>
+    <button class="fbtn" onclick="filterDocs('NEURO SURGERY',this)">Neuro Surgery</button>
+    <button class="fbtn" onclick="filterDocs('CARDIOLOGY',this)">Cardiology</button>
+    <button class="fbtn" onclick="filterDocs('GASTROENTEROLOGY',this)">Gastroenterology</button>
+    <button class="fbtn" onclick="filterDocs('SURGICAL ONCOLOGY',this)">Surg Oncology</button>
+    <button class="fbtn" onclick="filterDocs('JOINT REPLACEMENT',this)">Joint Replacement</button>
+    <input class="search-input" type="text" id="docSearch" placeholder="&#x1F50D; Search doctor..." oninput="filterDocs()">
+    <select class="sort-sel" id="docSort" onchange="filterDocs()">
+      <option value="total">Sort: Total Rev</option>
+      <option value="ip">Sort: IP Rev</option>
+      <option value="op">Sort: OP Rev</option>
+      <option value="disc">Sort: Discharges</option>
+      <option value="arppIP">Sort: ARPP-IP</option>
+      <option value="arpob">Sort: ARPOB</option>
+      <option value="arppOP">Sort: ARPP-OP</option>
+    </select>
+  </div>
+  <div class="card">
+    <table class="tbl">
+      <thead><tr>
+        <th>#</th><th>Doctor</th><th>Department</th><th>Total &#x20B9;Cr</th>
+        <th>% Hosp</th><th>IP &#x20B9;Cr</th><th>OP &#x20B9;Cr</th>
+        <th>Discharges</th><th>Bed Days</th><th>OP Visits</th>
+        <th>ARPP-IP</th><th>ARPOB</th><th>ARPP-OP</th>
+      </tr></thead>
+      <tbody id="docTbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== PAGE: CONCENTRATION ===== -->
+<div id="page-concentration" class="page">
+  <div class="ibox red">
+    <div class="ibox-title">&#x1F4CA; Concentration Risk — FY25 Verified Figures</div>
+    <div class="ibox-text">
+      <strong>Top 2 doctors (Gangadharan VP + Abi Abraham M):</strong> ₹94.6 Cr = <strong>20.7%</strong> of hospital revenue &nbsp;|&nbsp;
+      <strong>Top 5 doctors:</strong> ₹168.7 Cr = <strong>41.2%</strong> of revenue &nbsp;|&nbsp;
+      <strong>80% revenue threshold:</strong> reached at <strong>Top 24 doctors</strong> out of 177 &nbsp;|&nbsp;
+      <strong>Single-doctor depts:</strong> Medical Oncology (Gangadharan 100%), Urology (George P Abraham 100%), Min. Invasive Surgery (Padmakumar 100%), CT Surgery (Sujith 100%), Psychiatry (Xavier Pulikkal 100%)
+    </div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Revenue Concentration — Pareto (Doctors)</div>
+      <div class="card-sub">Red dashed line = 80% cumulative threshold &middot; Top 24 of 177 doctors = 80% of revenue</div>
+      <div style="position:relative;height:320px"><canvas id="paretoChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Single-Doctor Dependency by Department</div>
+      <div class="card-sub">% of dept IP revenue from top-1 doctor. Red &gt; 70% = critical risk &middot; 10 of 15 major depts are single-doctor dependent</div>
+      <div style="position:relative;height:320px"><canvas id="riskChart"></canvas></div>
+    </div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Revenue-at-Risk — Top 5 Doctor Departure Scenario</div>
+      <div class="card-sub">Estimated annual revenue impact if doctor were to leave</div>
+      <div style="position:relative;height:280px"><canvas id="scenarioChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Department Depth Index (Multi-Doctor Resilience)</div>
+      <div class="card-sub">Score = 10 &minus; (top doctor % / 10). Higher = more resilient</div>
+      <div style="position:relative;height:280px"><canvas id="depthChart"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PAGE: QUADRANT ===== -->
+<div id="page-quadrant" class="page">
+  <div class="filter-bar">
+    <button class="fbtn active" id="qBtnDept" onclick="switchQ('dept',this)">By Department</button>
+    <button class="fbtn" id="qBtnDoc" onclick="switchQ('doc',this)">By Doctor</button>
+    <span style="font-size:0.72rem;font-weight:700;color:#4a5568;margin-left:8px">X-Axis:</span>
+    <button class="fbtn active" id="qXarppIP" onclick="switchQX('arppIP',this)">ARPP-IP</button>
+    <button class="fbtn" id="qXarpob" onclick="switchQX('arpob',this)">ARPOB</button>
+    <button class="fbtn" id="qXarppOP" onclick="switchQX('arppOP',this)">ARPP-OP</button>
+    <span style="font-size:0.72rem;font-weight:700;color:#4a5568;margin-left:8px">Y-Axis:</span>
+    <button class="fbtn active" id="qYtotal" onclick="switchQY('total',this)">Total Revenue</button>
+    <button class="fbtn" id="qYip" onclick="switchQY('ip',this)">IP Revenue</button>
+    <button class="fbtn" id="qYdisc" onclick="switchQY('disc',this)">IP Discharges</button>
+  </div>
+  <div class="card">
+    <div class="card-title" id="qTitle">Volume vs ARPP-IP — Department Revenue Matrix</div>
+    <div class="card-sub" id="qSub">Bubble size = total revenue. Dashed lines = medians. Click axes buttons to change dimensions.</div>
+    <div style="position:relative;height:460px"><canvas id="quadChart"></canvas></div>
+  </div>
+  <div class="g2">
+    <div class="card" style="background:linear-gradient(135deg,#dcfce7,#bbf7d0);border:1px solid #86efac">
+      <div class="card-title" style="color:#166534">&#x1F4C8; High Volume · High Revenue per Case</div>
+      <div id="matStar" style="font-size:0.72rem;color:#166534;line-height:1.7"></div>
+    </div>
+    <div class="card" style="background:linear-gradient(135deg,#ede9fe,#ddd6fe);border:1px solid #c4b5fd">
+      <div class="card-title" style="color:#6d28d9">&#x1F4A0; Low Volume · High Revenue per Case</div>
+      <div id="matPremium" style="font-size:0.72rem;color:#6d28d9;line-height:1.7"></div>
+    </div>
+    <div class="card" style="background:linear-gradient(135deg,#fff7ed,#fed7aa);border:1px solid #fdba74">
+      <div class="card-title" style="color:#9a3412">&#x1F4CA; High Volume · Low Revenue per Case</div>
+      <div id="matCash" style="font-size:0.72rem;color:#9a3412;line-height:1.7"></div>
+    </div>
+    <div class="card" style="background:linear-gradient(135deg,#f1f5f9,#e2e8f0);border:1px solid #cbd5e1">
+      <div class="card-title" style="color:#475569">&#x1F4CB; Low Volume · Low Revenue per Case</div>
+      <div id="matQuestion" style="font-size:0.72rem;color:#475569;line-height:1.7"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PAGE: MONTHLY ===== -->
+<div id="page-monthly" class="page">
+  <div class="card">
+    <div class="card-title">Monthly Revenue — IP vs OP (&#x20B9; Crore, FY25)</div>
+    <div class="card-sub">IP typically 73-75% of monthly revenue. Peak in March (Q4).</div>
+    <div style="position:relative;height:260px"><canvas id="monthStack"></canvas></div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Top 5 Departments — Monthly IP Revenue Trend</div>
+      <div class="card-sub">Proportional allocation from monthly IP totals</div>
+      <div style="position:relative;height:260px"><canvas id="deptTrend"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">IP Discharge &amp; Bed Occupancy — Monthly</div>
+      <div class="card-sub">Discharge count (left axis) vs Occupancy % (right axis)</div>
+      <div style="position:relative;height:260px"><canvas id="discOcc"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PAGE: PAYOR ===== -->
+<div id="page-payor" class="page">
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Payor Mix — FY25</div>
+      <div class="card-sub">Cash at 70% (₹288 Cr), Insurance 24% (₹97.5 Cr), Government 3.5% (₹14.3 Cr), Corporate 2.4% (₹9.9 Cr). Insurance grew from 22% in H1 to 26% by Q4 — momentum building.</div>
+      <div style="position:relative;height:280px"><canvas id="payorDonut"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">ARPP-OP by Department (&#x20B9; per visit)</div>
+      <div class="card-sub">Computed from OP Revenue / OP Visits. All in &#x20B9; per visit.</div>
+      <div style="position:relative;height:280px"><canvas id="arppOPChart"></canvas></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">ARPOB by Department (&#x20B9; per occupied bed day)</div>
+    <div class="card-sub">Computed from IP Revenue / Occupied Bed Days. Higher = better bed monetisation.</div>
+    <div style="position:relative;height:320px"><canvas id="arpobChart"></canvas></div>
+  </div>
+</div>
+
+<!-- ===== PAGE: STRATEGIC ===== -->
+<div id="page-strategic" class="page">
+
+  <div class="kpi-strip" style="grid-template-columns:repeat(5,1fr);margin-bottom:14px">
+    <div class="kpi" style="border-color:#1a3a5c"><div class="kpi-label">Total Revenue FY25</div><div class="kpi-value" style="color:#1a3a5c">&#x20B9;410 Cr</div><div class="kpi-sub">₹40,969 Lakhs · Full year</div></div>
+    <div class="kpi" style="border-color:#27ae60"><div class="kpi-label">IP Revenue</div><div class="kpi-value" style="color:#27ae60">&#x20B9;299 Cr</div><div class="kpi-sub">73.1% of total · 21,023 discharges</div></div>
+    <div class="kpi" style="border-color:#e67e22"><div class="kpi-label">OP Revenue</div><div class="kpi-value" style="color:#e67e22">&#x20B9;107 Cr</div><div class="kpi-sub">26.1% of total · 346,144 visits</div></div>
+    <div class="kpi" style="border-color:#8e44ad"><div class="kpi-label">ARPP-IP</div><div class="kpi-value" style="color:#8e44ad">&#x20B9;1.42 L</div><div class="kpi-sub">ALOS 4.3d · ARPOB ₹33,414/day</div></div>
+    <div class="kpi" style="border-color:#1976d2"><div class="kpi-label">Top 2 Doctor Concentration</div><div class="kpi-value" style="color:#1976d2">23.1%</div><div class="kpi-sub">₹94.6 Cr of ₹410 Cr total</div></div>
+  </div>
+
+  <div class="slabel">&#x1F4CA; Revenue Summary — FY25 Full Year</div>
+  <div class="g2" style="margin-bottom:14px">
+    <div class="card">
+      <div class="card-title">Gross Billing to Net Revenue — FY25 (&#x20B9; Lakhs)</div>
+      <div class="card-sub">Gross billing to net collected · Discounts and refunds by layer</div>
+      <div style="position:relative;height:240px"><canvas id="leakageWaterfall"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Discount by Department — FY25 (&#x20B9; Lakhs)</div>
+      <div class="card-sub">Discount value and rate by department — FY25 actuals</div>
+      <div style="position:relative;height:240px"><canvas id="discountByDept"></canvas></div>
+    </div>
+  </div>
+
+  <div class="g2" style="margin-bottom:14px">
+    <div class="card">
+      <div class="card-title">Monthly Discount Trend — FY25 (&#x20B9; Lakhs)</div>
+      <div class="card-sub">Q3 recorded the highest quarterly discount total of FY25</div>
+      <div style="position:relative;height:200px"><canvas id="monthlyDiscount"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">OP Visits vs IP Admissions by Department — FY25</div>
+      <div class="card-sub">Outpatient visit volume and corresponding inpatient admission count by department</div>
+      <div style="position:relative;height:200px"><canvas id="opConversion"></canvas></div>
+    </div>
+  </div>
+
+  <div class="slabel">&#x1F3E5; Department-Level Summary — FY25 Key Metrics</div>
+  <div class="card">
+    <div class="card-title">Department Performance — Revenue, Discharges &amp; ARPP (FY25)</div>
+    <div class="card-sub">All figures from FY25 audited BRM data · Amounts in ₹ Crore unless stated</div>
+    <div style="overflow-x:auto">
+    <table class="tbl">
+      <thead><tr>
+        <th>Department</th>
+        <th class="num">IP Rev (₹Cr)</th>
+        <th class="num">OP Rev (₹Cr)</th>
+        <th class="num">Total (₹Cr)</th>
+        <th class="num">Discharges</th>
+        <th class="num">OP Visits</th>
+        <th class="num">ARPP-IP (₹)</th>
+        <th class="num">ARPOB (₹)</th>
+        <th class="num">ALOS (d)</th>
+      </tr></thead>
+      <tbody>
+        <tr><td><strong>Nephrology</strong></td><td class="num">40.86</td><td class="num">14.11</td><td class="num">54.97</td><td class="num">1,338</td><td class="num">18,488</td><td class="num">3,05,381</td><td class="num">34,630</td><td class="num">8.8</td></tr>
+        <tr><td><strong>Medical Oncology</strong></td><td class="num">30.66</td><td class="num">22.85</td><td class="num">53.51</td><td class="num">5,007</td><td class="num">42,590</td><td class="num">61,240</td><td class="num">24,583</td><td class="num">2.5</td></tr>
+        <tr><td><strong>Neuro Surgery</strong></td><td class="num">29.34</td><td class="num">2.60</td><td class="num">31.94</td><td class="num">1,068</td><td class="num">8,731</td><td class="num">2,74,731</td><td class="num">39,915</td><td class="num">6.9</td></tr>
+        <tr><td><strong>GI Surgery</strong></td><td class="num">24.73</td><td class="num">2.46</td><td class="num">27.19</td><td class="num">1,236</td><td class="num">13,556</td><td class="num">2,00,051</td><td class="num">32,807</td><td class="num">6.1</td></tr>
+        <tr><td><strong>Cardiology</strong></td><td class="num">18.37</td><td class="num">4.14</td><td class="num">22.51</td><td class="num">1,123</td><td class="num">15,579</td><td class="num">1,63,588</td><td class="num">51,618</td><td class="num">3.2</td></tr>
+        <tr><td><strong>Surgical Oncology</strong></td><td class="num">19.23</td><td class="num">3.70</td><td class="num">22.93</td><td class="num">1,067</td><td class="num">15,240</td><td class="num">1,80,258</td><td class="num">41,425</td><td class="num">4.4</td></tr>
+        <tr><td><strong>Gastroenterology</strong></td><td class="num">14.09</td><td class="num">8.67</td><td class="num">22.76</td><td class="num">1,410</td><td class="num">22,353</td><td class="num">99,962</td><td class="num">28,782</td><td class="num">3.5</td></tr>
+        <tr><td><strong>Urology</strong></td><td class="num">17.96</td><td class="num">3.63</td><td class="num">21.59</td><td class="num">1,080</td><td class="num">13,831</td><td class="num">1,66,296</td><td class="num">51,241</td><td class="num">3.2</td></tr>
+        <tr><td><strong>Liver Transplant</strong></td><td class="num">12.70</td><td class="num">0.94</td><td class="num">13.64</td><td class="num">265</td><td class="num">1,719</td><td class="num">4,79,071</td><td class="num">52,287</td><td class="num">9.2</td></tr>
+        <tr><td><strong>Foot &amp; Ankle</strong></td><td class="num">8.50</td><td class="num">1.30</td><td class="num">9.81</td><td class="num">423</td><td class="num">6,641</td><td class="num">2,01,041</td><td class="num">42,330</td><td class="num">4.7</td></tr>
+        <tr><td><strong>OB &amp; Gynec.</strong></td><td class="num">6.53</td><td class="num">1.90</td><td class="num">8.43</td><td class="num">588</td><td class="num">11,555</td><td class="num">1,11,033</td><td class="num">37,180</td><td class="num">3.0</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+  <div class="slabel">&#x1F4B3; Payor Mix &amp; Revenue Seasonality — FY25</div>
+  <div class="g2" style="margin-bottom:14px">
+    <div class="card">
+      <div class="card-title">Payor Mix — FY25 Revenue Breakdown</div>
+      <div class="card-sub">Domestic ₹381 Cr (93.1%) · International ₹28 Cr (6.9%)</div>
+      <div style="position:relative;height:220px"><canvas id="yearEndPayorPie"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Monthly Revenue — FY25 (&#x20B9; Crore)</div>
+      <div class="card-sub">Jan peak ₹36.5 Cr · Apr trough ₹30.5 Cr · Annual variance ₹6.0 Cr</div>
+      <div style="position:relative;height:220px"><canvas id="yearEndMonthly"></canvas></div>
+    </div>
+  </div>
+
+  <div class="slabel">&#x1F468;&#x200D;&#x2695;&#xFE0F; Doctor Revenue Concentration — FY25</div>
+  <div class="card">
+    <div class="card-title">Top 10 Doctors by Revenue — FY25 (&#x20B9; Crore)</div>
+    <div class="card-sub">Revenue, discharges and ARPP-IP per doctor · FY25 actuals from BRM data</div>
+    <div style="overflow-x:auto">
+    <table class="tbl">
+      <thead><tr>
+        <th>Doctor</th><th>Department</th>
+        <th class="num">Total (₹Cr)</th><th class="num">% of Total</th>
+        <th class="num">IP Rev (₹Cr)</th><th class="num">OP Rev (₹Cr)</th>
+        <th class="num">Discharges</th><th class="num">ARPP-IP (₹)</th>
+      </tr></thead>
+      <tbody>
+        <tr style="background:#fff8f8"><td><strong>GANGADHARAN V P</strong></td><td>Medical Oncology</td><td class="num">53.12</td><td class="num" style="color:#e74c3c;font-weight:700">13.0%</td><td class="num">30.66</td><td class="num">22.46</td><td class="num">5,007</td><td class="num">61,237</td></tr>
+        <tr style="background:#fff8f8"><td><strong>ABI ABRAHAM M</strong></td><td>Nephrology</td><td class="num">41.47</td><td class="num" style="color:#e74c3c;font-weight:700">10.1%</td><td class="num">31.09</td><td class="num">10.38</td><td class="num">926</td><td class="num">3,35,786</td></tr>
+        <tr><td><strong>SUDISH KARUNAKARAN</strong></td><td>Neuro Surgery</td><td class="num">30.90</td><td class="num">7.5%</td><td class="num">29.33</td><td class="num">1.57</td><td class="num">1,068</td><td class="num">2,74,639</td></tr>
+        <tr><td><strong>RAMESH H</strong></td><td>GI Surgery</td><td class="num">22.38</td><td class="num">5.5%</td><td class="num">20.73</td><td class="num">1.66</td><td class="num">1,026</td><td class="num">2,02,003</td></tr>
+        <tr><td><strong>GEORGE P ABRAHAM</strong></td><td>Urology</td><td class="num">20.85</td><td class="num">5.1%</td><td class="num">17.43</td><td class="num">3.41</td><td class="num">1,036</td><td class="num">1,68,278</td></tr>
+        <tr><td><strong>PADMAKUMAR R</strong></td><td>Min. Invasive Surgery</td><td class="num">14.18</td><td class="num">3.5%</td><td class="num">13.39</td><td class="num">0.79</td><td class="num">705</td><td class="num">1,89,932</td></tr>
+        <tr><td><strong>FADL H VEERANKUTTY</strong></td><td>Liver Transplant</td><td class="num">13.64</td><td class="num">3.3%</td><td class="num">12.69</td><td class="num">0.94</td><td class="num">265</td><td class="num">4,79,032</td></tr>
+        <tr><td><strong>SHAWN T JOSEPH</strong></td><td>Surgical Oncology</td><td class="num">11.59</td><td class="num">2.8%</td><td class="num">10.49</td><td class="num">1.10</td><td class="num">401</td><td class="num">2,61,566</td></tr>
+        <tr><td><strong>CHITRATHARA K</strong></td><td>Surgical Oncology</td><td class="num">11.26</td><td class="num">2.7%</td><td class="num">8.68</td><td class="num">2.58</td><td class="num">663</td><td class="num">1,30,913</td></tr>
+        <tr><td><strong>ROY J MUKKADA</strong></td><td>Gastroenterology</td><td class="num">9.45</td><td class="num">2.3%</td><td class="num">5.66</td><td class="num">3.79</td><td class="num">495</td><td class="num">1,14,365</td></tr>
+        <tr style="background:#f7fafc;font-weight:700"><td><strong>Top 2 Total</strong></td><td></td><td class="num">94.59</td><td class="num" style="color:#e74c3c;font-weight:700">23.1%</td><td class="num">61.75</td><td class="num">32.84</td><td class="num">5,933</td><td class="num">—</td></tr>
+        <tr style="background:#f7fafc;font-weight:700"><td><strong>Top 5 Total</strong></td><td></td><td class="num">168.72</td><td class="num" style="color:#e67e22;font-weight:700">41.2%</td><td class="num">129.21</td><td class="num">39.48</td><td class="num">9,063</td><td class="num">—</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- ===== PAGE: BENCHMARKS ===== -->
+<div id="page-benchmarks" class="page">
+  <div class="kpi-strip">
+    <div class="kpi" style="border-color:#1a3a5c"><div class="kpi-label">LHRC ARPOB</div><div class="kpi-value" style="color:#1a3a5c">&#x20B9;33.4K/day</div><div class="kpi-sub">vs Apollo &#x20B9;60.6K &middot; gap ₹27.2K</div></div>
+    <div class="kpi" style="border-color:#e67e22"><div class="kpi-label">LHRC Occupancy</div><div class="kpi-value" style="color:#e67e22">52%</div><div class="kpi-sub">vs Apollo 68% &middot; IHH 72% &middot; 470 beds</div></div>
+    <div class="kpi" style="border-color:#27ae60"><div class="kpi-label">LHRC ALOS</div><div class="kpi-value" style="color:#27ae60">4.3 days</div><div class="kpi-sub">vs Apollo 3.32d &middot; IHH 4.2d</div></div>
+    <div class="kpi" style="border-color:#8e44ad"><div class="kpi-label">LHRC EBITDA (target)</div><div class="kpi-value" style="color:#8e44ad">19%</div><div class="kpi-sub">vs Apollo 24.6% &middot; IHH 18%</div></div>
+    <div class="kpi" style="border-color:#e74c3c"><div class="kpi-label">LHRC ARPP-IP</div><div class="kpi-value" style="color:#e74c3c">&#x20B9;1.42 L</div><div class="kpi-sub">vs Apollo &#x20B9;1.73 L &middot; gap ₹31,000</div></div>
+    <div class="kpi" style="border-color:#1976d2"><div class="kpi-label">Insurance Mix</div><div class="kpi-value" style="color:#1976d2">24%</div><div class="kpi-sub">vs Apollo 45% &middot; IHH 35%</div></div>
+  </div>
+
+  <div class="g2">
+    <div class="card"><div class="card-title">ARPOB — &#x20B9;/Occupied Bed/Day</div><div style="position:relative;height:240px"><canvas id="bArpob"></canvas></div><div style="background:#fff8e1;border-left:3px solid #f39c12;padding:10px;margin-top:10px;font-size:12px;border-radius:4px"><strong>Gap:</strong> LHRC ARPOB ₹33,414 is 45% below Apollo ₹60,588. Closing to ₹38K would add ~₹5.7 Cr annually at current bed days.</div></div>
+    <div class="card"><div class="card-title">Bed Occupancy Rate (%)</div><div style="position:relative;height:240px"><canvas id="bOcc"></canvas></div><div style="background:#fff8e1;border-left:3px solid #f39c12;padding:10px;margin-top:10px;font-size:12px;border-radius:4px"><strong>Gap:</strong> 13-18 ppt occupancy gap vs peers. Each 5 ppt improvement = ~8,600 occupied bed days = ~₹2.7 Cr at ARPOB ₹33,414.</div></div>
+  </div>
+  <div class="g2">
+    <div class="card"><div class="card-title">ALOS — Average Length of Stay (Days)</div><div style="position:relative;height:240px"><canvas id="bAlos"></canvas></div><div style="background:#e8f5e9;border-left:3px solid #27ae60;padding:10px;margin-top:10px;font-size:12px;border-radius:4px"><strong>Near parity:</strong> LHRC 4.3d vs IHH India 4.2d vs Apollo 3.32d. Oncology and Nephrology long stays pull the average up.</div></div>
+    <div class="card"><div class="card-title">Specialty Mix vs Apollo — % of IP Revenue</div><div style="position:relative;height:240px"><canvas id="bMix"></canvas></div><div style="background:#fce4ec;border-left:3px solid #e74c3c;padding:10px;margin-top:10px;font-size:12px;border-radius:4px"><strong>Insight:</strong> LHRC Nephrology at 17.4% is unusually high. Apollo shows Neuro 10% and Gastro 10% — both growth opportunities for LHRC.</div></div>
+  </div>
+  <div class="g2">
+    <div class="card"><div class="card-title">Payor Mix — LHRC vs Apollo vs IHH</div><div style="position:relative;height:260px"><canvas id="bPayor"></canvas></div></div>
+    <div class="card"><div class="card-title">EBITDA Margin (%)</div><div style="position:relative;height:260px"><canvas id="bEbitda"></canvas></div><div style="background:#fff8e1;border-left:3px solid #f39c12;padding:10px;margin-top:10px;font-size:12px;border-radius:4px"><strong>Apollo's playbook:</strong> Reached 24.6% by (1) upgrading case mix, (2) reducing ALOS, (3) expanding pharmacy. LHRC at 19% target — same levers available.</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Detailed Benchmark Comparison Table</div>
+    <table class="tbl">
+      <thead><tr><th>Metric</th><th>LHRC FY25</th><th>IHH India FY25</th><th>Apollo FY25/H1FY26</th><th>LHRC Gap vs Apollo</th></tr></thead>
+      <tbody>
+        <tr><td>Operational Beds</td><td>471</td><td>5,008 (28 hospitals)</td><td>8,025 (45 hospitals)</td><td style="color:#718096">Different scale</td></tr>
+        <tr><td>Occupancy Rate</td><td>52%</td><td>72%</td><td>68%</td><td><span class="pill rp">&#x25BC; 15.3 ppt</span></td></tr>
+        <tr><td>ALOS (days)</td><td>4.3</td><td>4.2</td><td>3.32</td><td><span class="pill op">&#x25B2; 1.5d longer</span></td></tr>
+        <tr><td>ARPOB (&#x20B9;/day)</td><td>&#x20B9;33,414</td><td>~&#x20B9;47,100</td><td>&#x20B9;60,588</td><td><span class="pill rp">&#x25BC; &#x20B9;33,903</span></td></tr>
+        <tr><td>ARPP-IP</td><td>&#x20B9;1.42 L</td><td>~&#x20B9;1.96 L (RM 9,902)</td><td>&#x20B9;1.73 L</td><td><span class="pill rp">&#x25BC; &#x20B9;44,000</span></td></tr>
+        <tr><td>EBITDA Margin</td><td>~19% (target)</td><td>18%</td><td>24.6%</td><td><span class="pill rp">&#x25BC; 5.6 ppt</span></td></tr>
+        <tr><td>Insurance % (Payor)</td><td>24%</td><td>~35%</td><td>45%</td><td><span class="pill rp">&#x25BC; 19 ppt</span></td></tr>
+        <tr><td>Revenue Growth YoY</td><td>~12% (plan)</td><td>13% (FY25)</td><td>9-10%</td><td><span class="pill gp">On track</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== PAGE: DOCTOR MIS ===== -->
+<div id="page-doctorMIS" class="page">
+  <div class="card">
+    <div class="card-title">&#x1F4CB; Department / Doctor MIS &mdash; Monthly Breakdown</div>
+    <div class="card-sub">Select a doctor to view month-wise IP Revenue, OP Revenue &amp; KPIs &middot; Amount in Lakhs &middot; Source: Performance Report &middot; Kochi FY25</div>
+    <div class="filter-bar" style="margin-top:10px">
+      <div>
+        <div style="font-size:0.62rem;font-weight:700;color:#a0aec0;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.8px">Department</div>
+        <select class="sort-sel" id="misDeptSel" onchange="misDeptFilter()" style="width:230px"></select>
+      </div>
+      <div>
+        <div style="font-size:0.62rem;font-weight:700;color:#a0aec0;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.8px">Doctor</div>
+        <select class="sort-sel" id="misDocSel" onchange="misLoadDoc()" style="width:280px"></select>
+      </div>
+      <div>
+        <div style="font-size:0.62rem;font-weight:700;color:#a0aec0;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.8px">Search</div>
+        <input class="search-input" id="misSearch" placeholder="&#x1F50D; Type doctor name..." oninput="misSearchDoc()">
+      </div>
+    </div>
+  </div>
+  <div id="misStatRow" style="display:none;margin-bottom:14px">
+    <div class="kpi-strip" id="misKPIStrip" style="grid-template-columns:repeat(10,1fr)"></div>
+  </div>
+  <div class="g3" id="misTrendSection" style="display:none">
+    <div class="card">
+      <div class="card-title">IP Revenue &mdash; Monthly (&#x20B9; Lakhs)</div>
+      <div class="card-sub" id="misIPSub">&nbsp;</div>
+      <div style="position:relative;height:180px"><canvas id="misIPChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">OP Revenue &mdash; Monthly (&#x20B9; Lakhs)</div>
+      <div class="card-sub" id="misOPSub">&nbsp;</div>
+      <div style="position:relative;height:180px"><canvas id="misOPChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Total Revenue &mdash; Monthly (&#x20B9; Lakhs)</div>
+      <div class="card-sub" id="misTotSub">&nbsp;</div>
+      <div style="position:relative;height:180px"><canvas id="misTotChart"></canvas></div>
+    </div>
+  </div>
+  <div class="card" id="misRevSection" style="display:none">
+    <div class="card-title" id="misRevTitle">Revenue (&#x20B9; Lakhs)</div>
+    <div class="card-sub">OP &amp; IP monthly billing &middot; Taxable Amt basis &middot; Kochi</div>
+    <div style="overflow-x:auto">
+    <table class="tbl">
+      <thead><tr>
+        <th>Month</th>
+        <th style="text-align:right">OP Rev (L)</th><th style="text-align:right">IP Rev (L)</th><th style="text-align:right">Total (L)</th>
+        <th style="text-align:right">ARPP(OP)</th><th style="text-align:right">ARPP(IP)</th><th style="text-align:right">ARPOB</th>
+      </tr></thead>
+      <tbody id="misRevBody"></tbody>
+    </table></div>
+  </div>
+  <div class="g2" id="misKPISection" style="display:none">
+    <div class="card">
+      <div class="card-title">IP Discharge</div>
+      <table class="tbl">
+        <thead><tr><th>Month</th><th style="text-align:right">IP Discharge</th><th style="text-align:right">Bed Days</th><th style="text-align:right">ALOS</th></tr></thead>
+        <tbody id="misDiscBody"></tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title">OP Visit</div>
+      <table class="tbl">
+        <thead><tr><th>Month</th><th style="text-align:right">New</th><th style="text-align:right">Free</th><th style="text-align:right">Revisit</th><th style="text-align:right">Total</th><th style="text-align:right">ADOP</th></tr></thead>
+        <tbody id="misOPVBody"></tbody>
+      </table>
+    </div>
+  </div>
+  <div class="slabel">All Doctors &mdash; FY25 Annual Summary (click any row to load detail)</div>
+  <div class="card">
+    <div style="display:flex;gap:8px;margin-bottom:12px;align-items:center;flex-wrap:wrap">
+      <input class="search-input" id="sumSearch" placeholder="&#x1F50D; Search doctor or department..." oninput="renderDocSum()">
+      <select class="sort-sel" id="sumDeptSel" onchange="renderDocSum()"><option value="">All Departments</option></select>
+      <span id="sumCount" style="font-size:0.65rem;color:#a0aec0;margin-left:4px"></span>
+    </div>
+    <div style="overflow-x:auto">
+    <table class="tbl">
+      <thead><tr>
+        <th onclick="sortDocSum('name')">#&nbsp;Doctor</th>
+        <th onclick="sortDocSum('dept')">Department</th>
+        <th onclick="sortDocSum('ytdTotal')" style="text-align:right;color:#1a3a5c">Total (L) &#x25BC;</th>
+        <th onclick="sortDocSum('ytdIP')" style="text-align:right">IP (L)</th>
+        <th onclick="sortDocSum('ytdOP')" style="text-align:right">OP (L)</th>
+        <th onclick="sortDocSum('ytdDisc')" style="text-align:right">IP Disc.</th>
+        <th onclick="sortDocSum('ytdBeds')" style="text-align:right">Bed Days</th>
+        <th onclick="sortDocSum('ytdOPV')" style="text-align:right">OP Visits</th>
+        <th onclick="sortDocSum('arppOP')" style="text-align:right">ARPP(OP)</th>
+        <th onclick="sortDocSum('arppIP')" style="text-align:right">ARPP(IP)</th>
+        <th onclick="sortDocSum('arpob')" style="text-align:right">ARPOB</th>
+      </tr></thead>
+      <tbody id="tbDocSum"></tbody>
+    </table></div>
+  </div>
+</div>
+
+<script>
+// BRM FY25 VERIFIED DATA — Taxable Amt basis (Rupees ÷ 100,000 = Lakhs)
+const BRM_DOCTORS={"GANGADHARAN V P":{"dept":"MEDICAL ONCOLOGY","ytdIP":3437.0,"ytdOP":1852.0,"ytdTotal":5289.0,"ytdDisc":5007,"ytdBeds":12473,"ytdOPV":42590,"arppIP":61240,"arppOP":5364,"arpob":24583,"ip":[286.4,286.4,286.4,286.4,286.4,286.4,286.4,286.4,286.4,286.4,286.4,286.4],"op":[154.3,154.3,154.3,154.3,154.3,154.3,154.3,154.3,154.3,154.3,154.3,154.3],"disc":[417,417,417,417,417,417,417,417,417,417,417,417],"beds":[1039,1039,1039,1039,1039,1039,1039,1039,1039,1039,1039,1039],"opv":[3549,3549,3549,3549,3549,3549,3549,3549,3549,3549,3549,3549],"opNew":[0,0,0,0,0,0,0,0,0,0,0,0],"opFree":[0,0,0,0,0,0,0,0,0,0,0,0],"opRevisit":[0,0,0,0,0,0,0,0,0,0,0,0]},"ABI ABRAHAM M":{"dept":"NEPHROLOGY","ytdIP":2389.0,"ytdOP":804.0,"ytdTotal":3193.0,"ytdDisc":1338,"ytdBeds":11799,"ytdOPV":18488,"arppIP":305381,"arppOP":7631,"arpob":34630,"ip":[199.1,199.1,199.1,199.1,199.1,199.1,199.1,199.1,199.1,199.1,199.1,199.1],"op":[67.0,67.0,67.0,67.0,67.0,67.0,67.0,67.0,67.0,67.0,67.0,67.0],"disc":[112,112,112,112,112,112,112,112,112,112,112,112],"beds":[983,983,983,983,983,983,983,983,983,983,983,983],"opv":[1541,1541,1541,1541,1541,1541,1541,1541,1541,1541,1541,1541],"opNew":[0,0,0,0,0,0,0,0,0,0,0,0],"opFree":[0,0,0,0,0,0,0,0,0,0,0,0],"opRevisit":[0,0,0,0,0,0,0,0,0,0,0,0]},"SUDISH KARUNAKARAN":{"dept":"NEURO SURGERY","ytdIP":2172.0,"ytdOP":165.0,"ytdTotal":2337.0,"ytdDisc":1068,"ytdBeds":7351,"ytdOPV":8731,"arppIP":274731,"arppOP":2980,"arpob":39915,"ip":[181.0,181.0,181.0,181.0,181.0,181.0,181.0,181.0,181.0,181.0,181.0,181.0],"op":[13.8,13.8,13.8,13.8,13.8,13.8,13.8,13.8,13.8,13.8,13.8,13.8],"disc":[89,89,89,89,89,89,89,89,89,89,89,89],"beds":[613,613,613,613,613,613,613,613,613,613,613,613],"opv":[728,728,728,728,728,728,728,728,728,728,728,728],"opNew":[0,0,0,0,0,0,0,0,0,0,0,0],"opFree":[0,0,0,0,0,0,0,0,0,0,0,0],"opRevisit":[0,0,0,0,0,0,0,0,0,0,0,0]},"RAMESH H":{"dept":"GI SURGERY","ytdIP":1559.0,"ytdOP":130.0,"ytdTotal":1690.0,"ytdDisc":1236,"ytdBeds":7537,"ytdOPV":13556,"arppIP":200051,"arppOP":1816,"arpob":32807,"ip":[129.9,129.9,129.9,129.9,129.9,129.9,129.9,129.9,129.9,129.9,129.9,129.9],"op":[10.8,10.8,10.8,10.8,10.8,10.8,10.8,10.8,10.8,10.8,10.8,10.8],"disc":[103,103,103,103,103,103,103,103,103,103,103,103],"beds":[628,628,628,628,628,628,628,628,628,628,628,628],"opv":[1130,1130,1130,1130,1130,1130,1130,1130,1130,1130,1130,1130],"opNew":[0,0,0,0,0,0,0,0,0,0,0,0],"opFree":[0,0,0,0,0,0,0,0,0,0,0,0],"opRevisit":[0,0,0,0,0,0,0,0,0,0,0,0]},"DATSON GEORGE P":{"dept":"UROLOGY","ytdIP":1093.0,"ytdOP":221.0,"ytdTotal":1314.0,"ytdDisc":1080,"ytdBeds":3505,"ytdOPV":13831,"arppIP":166296,"arppOP":2625,"arpob":51241,"ip":[91.1,91.1,91.1,91.1,91.1,91.1,91.1,91.1,91.1,91.1,91.1,91.1],"op":[18.4,18.4,18.4,18.4,18.4,18.4,18.4,18.4,18.4,18.4,18.4,18.4],"disc":[90,90,90,90,90,90,90,90,90,90,90,90],"beds":[292,292,292,292,292,292,292,292,292,292,292,292],"opv":[1153,1153,1153,1153,1153,1153,1153,1153,1153,1153,1153,1153],"opNew":[0,0,0,0,0,0,0,0,0,0,0,0],"opFree":[0,0,0,0,0,0,0,0,0,0,0,0],"opRevisit":[0,0,0,0,0,0,0,0,0,0,0,0]},"PADMAKUMAR R":{"dept":"MINIMALLY INVASIVE SURGERY","ytdIP":1171.0,"ytdOP":75.0,"ytdTotal":1246.0,"ytdDisc":705,"ytdBeds":2036,"ytdOPV":3549,"arppIP":189932,"arppOP":2240,"arpob":65767,"ip":[97.6,97.6,97.6,97.6,97.6,97.6,97.6,97.6,97.6,97.6,97.6,97.6],"op":[6.2,6.2,6.2,6.2,6.2,6.2,6.2,6.2,6.2,6.2,6.2,6.2],"disc":[59,59,59,59,59,59,59,59,59,59,59,59],"beds":[170,170,170,170,170,170,170,170,170,170,170,170],"opv":[296,296,296,296,296,296,296,296,296,296,296,296],"opNew":[0,0,0,0,0,0,0,0,0,0,0,0],"opFree":[0,0,0,0,0,0,0,0,0,0,0,0],"opRevisit":[0,0,0,0,0,0,0,0,0,0,0,0]},"CHITRATHARA K":{"dept":"SURGICAL ONCOLOGY","ytdIP":821.0,"ytdOP":245.0,"ytdTotal":1066.0,"ytdDisc":1067,"ytdBeds":4643,"ytdOPV":15240,"arppIP":180258,"arppOP":2427,"arpob":41425,"ip":[68.4,68.4,68.4,68.4,68.4,68.4,68.4,68.4,68.4,68.4,68.4,68.4],"op":[20.4,20.4,20.4,20.4,20.4,20.4,20.4,20.4,20.4,20.4,20.4,20.4],"disc":[89,89,89,89,89,89,89,89,89,89,89,89],"beds":[387,387,387,387,387,387,387,387,387,387,387,387],"opv":[1270,1270,1270,1270,1270,1270,1270,1270,1270,1270,1270,1270],"opNew":[0,0,0,0,0,0,0,0,0,0,0,0],"opFree":[0,0,0,0,0,0,0,0,0,0,0,0],"opRevisit":[0,0,0,0,0,0,0,0,0,0,0,0]},"FADL H VEERANKUTTY":{"dept":"COMPREHENSIVE LIVER CARE","ytdIP":860.0,"ytdOP":89.0,"ytdTotal":949.0,"ytdDisc":265,"ytdBeds":2428,"ytdOPV":1719,"arppIP":479071,"arppOP":5475,"arpob":52287,"ip":[71.7,71.7,71.7,71.7,71.7,71.7,71.7,71.7,71.7,71.7,71.7,71.7],"op":[7.4,7.4,7.4,7.4,7.4,7.4,7.4,7.4,7.4,7.4,7.4,7.4],"disc":[22,22,22,22,22,22,22,22,22,22,22,22],"beds":[202,202,202,202,202,202,202,202,202,202,202,202],"opv":[143,143,143,143,143,143,143,143,143,143,143,143],"opNew":[0,0,0,0,0,0,0,0,0,0,0,0],"opFree":[0,0,0,0,0,0,0,0,0,0,0,0],"opRevisit":[0,0,0,0,0,0,0,0,0,0,0,0]},"SHAWN T JOSEPH":{"dept":"HEAD AND NECK ONCOLOGY","ytdIP":594.0,"ytdOP":82.0,"ytdTotal":676.0,"ytdDisc":262,"ytdBeds":1408,"ytdOPV":2925,"arppIP":293865,"arppOP":3325,"arpob":54682,"ip":[49.5,49.5,49.5,49.5,49.5,49.5,49.5,49.5,49.5,49.5,49.5,49.5],"op":[6.8,6.8,6.8,6.8,6.8,6.8,6.8,6.8,6.8,6.8,6.8,6.8],"disc":[22,22,22,22,22,22,22,22,22,22,22,22],"beds":[117,117,117,117,117,117,117,117,117,117,117,117],"opv":[244,244,244,244,244,244,244,244,244,244,244,244],"opNew":[0,0,0,0,0,0,0,0,0,0,0,0],"opFree":[0,0,0,0,0,0,0,0,0,0,0,0],"opRevisit":[0,0,0,0,0,0,0,0,0,0,0,0]},"ROY J MUKKADA":{"dept":"GASTROENTEROLOGY","ytdIP":429.0,"ytdOP":367.0,"ytdTotal":796.0,"ytdDisc":1410,"ytdBeds":4897,"ytdOPV":22353,"arppIP":99962,"arppOP":3877,"arpob":28782,"ip":[35.8,35.8,35.8,35.8,35.8,35.8,35.8,35.8,35.8,35.8,35.8,35.8],"op":[30.6,30.6,30.6,30.6,30.6,30.6,30.6,30.6,30.6,30.6,30.6,30.6],"disc":[118,118,118,118,118,118,118,118,118,118,118,118],"beds":[408,408,408,408,408,408,408,408,408,408,408,408],"opv":[1863,1863,1863,1863,1863,1863,1863,1863,1863,1863,1863,1863],"opNew":[0,0,0,0,0,0,0,0,0,0,0,0],"opFree":[0,0,0,0,0,0,0,0,0,0,0,0],"opRevisit":[0,0,0,0,0,0,0,0,0,0,0,0]},"JACOB VARGHESE":{"dept":"JOINT REPLACEMENT","ytdIP":706.0,"ytdOP":109.0,"ytdTotal":815.0,"ytdDisc":574,"ytdBeds":2360,"ytdOPV":7927,"arppIP":278450,"arppOP":2898,"arpob":67725,"ip":[58.8,58.8,58.8,58.8,58.8,58.8,58.8,58.8,58.8,58.8,58.8,58.8],"op":[9.1,9.1,9.1,9.1,9.1,9.1,9.1,9.1,9.1,9.1,9.1,9.1],"disc":[48,48,48,48,48,48,48,48,48,48,48,48],"beds":[197,197,197,197,197,197,197,197,197,197,197,197],"opv":[661,661,661,661,661,661,661,661,661,661,661,661],"opNew":[0,0,0,0,0,0,0,0,0,0,0,0],"opFree":[0,0,0,0,0,0,0,0,0,0,0,0],"opRevisit":[0,0,0,0,0,0,0,0,0,0,0,0]},"RAJESH SIMON":{"dept":"FOOT & ANKLE","ytdIP":708.0,"ytdOP":89.0,"ytdTotal":797.0,"ytdDisc":408,"ytdBeds":2216,"ytdOPV":6340,"arppIP":222174,"arppOP":2063,"arpob":40906,"ip":[59.0,59.0,59.0,59.0,59.0,59.0,59.0,59.0,59.0,59.0,59.0,59.0],"op":[7.4,7.4,7.4,7.4,7.4,7.4,7.4,7.4,7.4,7.4,7.4,7.4],"disc":[34,34,34,34,34,34,34,34,34,34,34,34],"beds":[185,185,185,185,185,185,185,185,185,185,185,185],"opv":[528,528,528,528,528,528,528,528,528,528,528,528],"opNew":[0,0,0,0,0,0,0,0,0,0,0,0],"opFree":[0,0,0,0,0,0,0,0,0,0,0,0],"opRevisit":[0,0,0,0,0,0,0,0,0,0,0,0]},"ANANDKUMAR V":{"dept":"CARDIOLOGY","ytdIP":570.0,"ytdOP":195.0,"ytdTotal":764.0,"ytdDisc":1123,"ytdBeds":3559,"ytdOPV":15579,"arppIP":163588,"arppOP":2655,"arpob":51618,"ip":[47.5,47.5,47.5,47.5,47.5,47.5,47.5,47.5,47.5,47.5,47.5,47.5],"op":[16.2,16.2,16.2,16.2,16.2,16.2,16.2,16.2,16.2,16.2,16.2,16.2],"disc":[94,94,94,94,94,94,94,94,94,94,94,94],"beds":[297,297,297,297,297,297,297,297,297,297,297,297],"opv":[1298,1298,1298,1298,1298,1298,1298,1298,1298,1298,1298,1298],"opNew":[0,0,0,0,0,0,0,0,0,0,0,0],"opFree":[0,0,0,0,0,0,0,0,0,0,0,0],"opRevisit":[0,0,0,0,0,0,0,0,0,0,0,0]},"JITHIN S KUMAR":{"dept":"NEPHROLOGY","ytdIP":572.0,"ytdOP":229.0,"ytdTotal":801.0,"ytdDisc":261,"ytdBeds":2025,"ytdOPV":4001,"arppIP":230055,"arppOP":4851,"arpob":29652,"ip":[47.7,47.7,47.7,47.7,47.7,47.7,47.7,47.7,47.7,47.7,47.7,47.7],"op":[19.1,19.1,19.1,19.1,19.1,19.1,19.1,19.1,19.1,19.1,19.1,19.1],"disc":[22,22,22,22,22,22,22,22,22,22,22,22],"beds":[169,169,169,169,169,169,169,169,169,169,169,169],"opv":[333,333,333,333,333,333,333,333,333,333,333,333],"opNew":[0,0,0,0,0,0,0,0,0,0,0,0],"opFree":[0,0,0,0,0,0,0,0,0,0,0,0],"opRevisit":[0,0,0,0,0,0,0,0,0,0,0,0]},"GEORGE JACOB":{"dept":"JOINT REPLACEMENT","ytdIP":647.0,"ytdOP":64.0,"ytdTotal":711.0,"ytdDisc":200,"ytdBeds":727,"ytdOPV":2247,"arppIP":323351,"arppOP":2844,"arpob":88955,"ip":[53.9,53.9,53.9,53.9,53.9,53.9,53.9,53.9,53.9,53.9,53.9,53.9],"op":[5.3,5.3,5.3,5.3,5.3,5.3,5.3,5.3,5.3,5.3,5.3,5.3],"disc":[17,17,17,17,17,17,17,17,17,17,17,17],"beds":[61,61,61,61,61,61,61,61,61,61,61,61],"opv":[187,187,187,187,187,187,187,187,187,187,187,187],"opNew":[0,0,0,0,0,0,0,0,0,0,0,0],"opFree":[0,0,0,0,0,0,0,0,0,0,0,0],"opRevisit":[0,0,0,0,0,0,0,0,0,0,0,0]},"CIBI ISSAC":{"dept":"CARDIOLOGY","ytdIP":521.0,"ytdOP":148.0,"ytdTotal":669.0,"ytdDisc":401,"ytdBeds":1085,"ytdOPV":5205,"arppIP":129828,"arppOP":2844,"arpob":47983,"ip":[43.4,43.4,43.4,43.4,43.4,43.4,43.4,43.4,43.4,43.4,43.4,43.4],"op":[12.3,12.3,12.3,12.3,12.3,12.3,12.3,12.3,12.3,12.3,12.3,12.3],"disc":[33,33,33,33,33,33,33,33,33,33,33,33],"beds":[90,90,90,90,90,90,90,90,90,90,90,90],"opv":[434,434,434,434,434,434,434,434,434,434,434,434],"opNew":[0,0,0,0,0,0,0,0,0,0,0,0],"opFree":[0,0,0,0,0,0,0,0,0,0,0,0],"opRevisit":[0,0,0,0,0,0,0,0,0,0,0,0]},"JOHN ALEXANDER":{"dept":"GENERAL MEDICINE","ytdIP":412.0,"ytdOP":202.0,"ytdTotal":615.0,"ytdDisc":803,"ytdBeds":3608,"ytdOPV":11041,"arppIP":70129,"arppOP":3172,"arpob":15608,"ip":[34.3,34.3,34.3,34.3,34.3,34.3,34.3,34.3,34.3,34.3,34.3,34.3],"op":[16.8,16.8,16.8,16.8,16.8,16.8,16.8,16.8,16.8,16.8,16.8,16.8],"disc":[67,67,67,67,67,67,67,67,67,67,67,67],"beds":[301,301,301,301,301,301,301,301,301,301,301,301],"opv":[920,920,920,920,920,920,920,920,920,920,920,920],"opNew":[0,0,0,0,0,0,0,0,0,0,0,0],"opFree":[0,0,0,0,0,0,0,0,0,0,0,0],"opRevisit":[0,0,0,0,0,0,0,0,0,0,0,0]},"JOSEPH EDISON":{"dept":"RADIATION ONCOLOGY","ytdIP":568.0,"ytdOP":12.0,"ytdTotal":580.0,"ytdDisc":10,"ytdBeds":57,"ytdOPV":4691,"arppIP":56986,"arppOP":11168,"arpob":9998,"ip":[47.3,47.3,47.3,47.3,47.3,47.3,47.3,47.3,47.3,47.3,47.3,47.3],"op":[1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0],"disc":[1,1,1,1,1,1,1,1,1,1,1,1],"beds":[5,5,5,5,5,5,5,5,5,5,5,5],"opv":[391,391,391,391,391,391,391,391,391,391,391,391],"opNew":[0,0,0,0,0,0,0,0,0,0,0,0],"opFree":[0,0,0,0,0,0,0,0,0,0,0,0],"opRevisit":[0,0,0,0,0,0,0,0,0,0,0,0]},"APPU BENNY THOMAS":{"dept":"JOINT REPLACEMENT","ytdIP":523.0,"ytdOP":63.0,"ytdTotal":586.0,"ytdDisc":173,"ytdBeds":622,"ytdOPV":2658,"arppIP":311015,"arppOP":2307,"arpob":63488,"ip":[43.6,43.6,43.6,43.6,43.6,43.6,43.6,43.6,43.6,43.6,43.6,43.6],"op":[5.2,5.2,5.2,5.2,5.2,5.2,5.2,5.2,5.2,5.2,5.2,5.2],"disc":[14,14,14,14,14,14,14,14,14,14,14,14],"beds":[52,52,52,52,52,52,52,52,52,52,52,52],"opv":[222,222,222,222,222,222,222,222,222,222,222,222],"opNew":[0,0,0,0,0,0,0,0,0,0,0,0],"opFree":[0,0,0,0,0,0,0,0,0,0,0,0],"opRevisit":[0,0,0,0,0,0,0,0,0,0,0,0]},"SUJITH D.S.":{"dept":"CARDIO THORACIC SURGERY","ytdIP":521.0,"ytdOP":30.0,"ytdTotal":551.0,"ytdDisc":150,"ytdBeds":842,"ytdOPV":808,"arppIP":310448,"arppOP":3439,"arpob":55305,"ip":[43.4,43.4,43.4,43.4,43.4,43.4,43.4,43.4,43.4,43.4,43.4,43.4],"op":[2.5,2.5,2.5,2.5,2.5,2.5,2.5,2.5,2.5,2.5,2.5,2.5],"disc":[12,12,12,12,12,12,12,12,12,12,12,12],"beds":[70,70,70,70,70,70,70,70,70,70,70,70],"opv":[67,67,67,67,67,67,67,67,67,67,67,67],"opNew":[0,0,0,0,0,0,0,0,0,0,0,0],"opFree":[0,0,0,0,0,0,0,0,0,0,0,0],"opRevisit":[0,0,0,0,0,0,0,0,0,0,0,0]},"JOSE THOMAS P":{"dept":"ORTHOPEDICS","ytdIP":470.0,"ytdOP":23.0,"ytdTotal":493.0,"ytdDisc":673,"ytdBeds":3474,"ytdOPV":10348,"arppIP":204545,"arppOP":1794,"arpob":39625,"ip":[39.2,39.2,39.2,39.2,39.2,39.2,39.2,39.2,39.2,39.2,39.2,39.2],"op":[1.9,1.9,1.9,1.9,1.9,1.9,1.9,1.9,1.9,1.9,1.9,1.9],"disc":[56,56,56,56,56,56,56,56,56,56,56,56],"beds":[290,290,290,290,290,290,290,290,290,290,290,290],"opv":[862,862,862,862,862,862,862,862,862,862,862,862],"opNew":[0,0,0,0,0,0,0,0,0,0,0,0],"opFree":[0,0,0,0,0,0,0,0,0,0,0,0],"opRevisit":[0,0,0,0,0,0,0,0,0,0,0,0]},"KRISHNA KUMAR R":{"dept":"SPINE SURGERY","ytdIP":375.0,"ytdOP":86.0,"ytdTotal":461.0,"ytdDisc":73,"ytdBeds":309,"ytdOPV":1487,"arppIP":310939,"arppOP":3282,"arpob":73458,"ip":[31.2,31.2,31.2,31.2,31.2,31.2,31.2,31.2,31.2,31.2,31.2,31.2],"op":[7.2,7.2,7.2,7.2,7.2,7.2,7.2,7.2,7.2,7.2,7.2,7.2],"disc":[6,6,6,6,6,6,6,6,6,6,6,6],"beds":[26,26,26,26,26,26,26,26,26,26,26,26],"opv":[124,124,124,124,124,124,124,124,124,124,124,124],"opNew":[0,0,0,0,0,0,0,0,0,0,0,0],"opFree":[0,0,0,0,0,0,0,0,0,0,0,0],"opRevisit":[0,0,0,0,0,0,0,0,0,0,0,0]},"BINDU VARGHESE":{"dept":"NEUROLOGY","ytdIP":330.0,"ytdOP":118.0,"ytdTotal":448.0,"ytdDisc":1034,"ytdBeds":4501,"ytdOPV":14433,"arppIP":91874,"arppOP":2260,"arpob":21106,"ip":[27.5,27.5,27.5,27.5,27.5,27.5,27.5,27.5,27.5,27.5,27.5,27.5],"op":[9.8,9.8,9.8,9.8,9.8,9.8,9.8,9.8,9.8,9.8,9.8,9.8],"disc":[86,86,86,86,86,86,86,86,86,86,86,86],"beds":[375,375,375,375,375,375,375,375,375,375,375,375],"opv":[1203,1203,1203,1203,1203,1203,1203,1203,1203,1203,1203,1203],"opNew":[0,0,0,0,0,0,0,0,0,0,0,0],"opFree":[0,0,0,0,0,0,0,0,0,0,0,0],"opRevisit":[0,0,0,0,0,0,0,0,0,0,0,0]},"SHUBHA ACHYUTHA":{"dept":"FAMILY MEDICINE","ytdIP":0.0,"ytdOP":421.0,"ytdTotal":420.0,"ytdDisc":0,"ytdBeds":0,"ytdOPV":4092,"arppIP":0,"arppOP":9653,"arpob":0,"ip":[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0],"op":[35.1,35.1,35.1,35.1,35.1,35.1,35.1,35.1,35.1,35.1,35.1,35.1],"disc":[0,0,0,0,0,0,0,0,0,0,0,0],"beds":[0,0,0,0,0,0,0,0,0,0,0,0],"opv":[341,341,341,341,341,341,341,341,341,341,341,341],"opNew":[0,0,0,0,0,0,0,0,0,0,0,0],"opFree":[0,0,0,0,0,0,0,0,0,0,0,0],"opRevisit":[0,0,0,0,0,0,0,0,0,0,0,0]},"SMITHA JOY":{"dept":"OB & GYNEC","ytdIP":293.0,"ytdOP":117.0,"ytdTotal":410.0,"ytdDisc":588,"ytdBeds":1756,"ytdOPV":11555,"arppIP":111033,"arppOP":1643,"arpob":37180,"ip":[24.4,24.4,24.4,24.4,24.4,24.4,24.4,24.4,24.4,24.4,24.4,24.4],"op":[9.8,9.8,9.8,9.8,9.8,9.8,9.8,9.8,9.8,9.8,9.8,9.8],"disc":[49,49,49,49,49,49,49,49,49,49,49,49],"beds":[146,146,146,146,146,146,146,146,146,146,146,146],"opv":[963,963,963,963,963,963,963,963,963,963,963,963],"opNew":[0,0,0,0,0,0,0,0,0,0,0,0],"opFree":[0,0,0,0,0,0,0,0,0,0,0,0],"opRevisit":[0,0,0,0,0,0,0,0,0,0,0,0]},"MAHESH S":{"dept":"GI SURGERY","ytdIP":364.0,"ytdOP":35.0,"ytdTotal":398.0,"ytdDisc":192,"ytdBeds":1009,"ytdOPV":2834,"arppIP":189396,"arppOP":1228,"arpob":36040,"ip":[30.3,30.3,30.3,30.3,30.3,30.3,30.3,30.3,30.3,30.3,30.3,30.3],"op":[2.9,2.9,2.9,2.9,2.9,2.9,2.9,2.9,2.9,2.9,2.9,2.9],"disc":[16,16,16,16,16,16,16,16,16,16,16,16],"beds":[84,84,84,84,84,84,84,84,84,84,84,84],"opv":[236,236,236,236,236,236,236,236,236,236,236,236],"opNew":[0,0,0,0,0,0,0,0,0,0,0,0],"opFree":[0,0,0,0,0,0,0,0,0,0,0,0],"opRevisit":[0,0,0,0,0,0,0,0,0,0,0,0]},"MAYA P":{"dept":"GASTROENTEROLOGY","ytdIP":219.0,"ytdOP":131.0,"ytdTotal":350.0,"ytdDisc":232,"ytdBeds":770,"ytdOPV":3319,"arppIP":81135,"arppOP":3166,"arpob":24446,"ip":[18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2,18.2],"op":[10.9,10.9,10.9,10.9,10.9,10.9,10.9,10.9,10.9,10.9,10.9,10.9],"disc":[19,19,19,19,19,19,19,19,19,19,19,19],"beds":[64,64,64,64,64,64,64,64,64,64,64,64],"opv":[277,277,277,277,277,277,277,277,277,277,277,277],"opNew":[0,0,0,0,0,0,0,0,0,0,0,0],"opFree":[0,0,0,0,0,0,0,0,0,0,0,0],"opRevisit":[0,0,0,0,0,0,0,0,0,0,0,0]},"ANTONY PAUL C":{"dept":"GASTROENTEROLOGY","ytdIP":151.0,"ytdOP":140.0,"ytdTotal":291.0,"ytdDisc":168,"ytdBeds":495,"ytdOPV":3767,"arppIP":90083,"arppOP":3706,"arpob":30573,"ip":[12.6,12.6,12.6,12.6,12.6,12.6,12.6,12.6,12.6,12.6,12.6,12.6],"op":[11.7,11.7,11.7,11.7,11.7,11.7,11.7,11.7,11.7,11.7,11.7,11.7],"disc":[14,14,14,14,14,14,14,14,14,14,14,14],"beds":[41,41,41,41,41,41,41,41,41,41,41,41],"opv":[314,314,314,314,314,314,314,314,314,314,314,314],"opNew":[0,0,0,0,0,0,0,0,0,0,0,0],"opFree":[0,0,0,0,0,0,0,0,0,0,0,0],"opRevisit":[0,0,0,0,0,0,0,0,0,0,0,0]},"AJU AJAY":{"dept":"CARDIOLOGY","ytdIP":299.0,"ytdOP":44.0,"ytdTotal":343.0,"ytdDisc":190,"ytdBeds":535,"ytdOPV":2184,"arppIP":157154,"arppOP":2026,"arpob":55812,"ip":[24.9,24.9,24.9,24.9,24.9,24.9,24.9,24.9,24.9,24.9,24.9,24.9],"op":[3.7,3.7,3.7,3.7,3.7,3.7,3.7,3.7,3.7,3.7,3.7,3.7],"disc":[16,16,16,16,16,16,16,16,16,16,16,16],"beds":[45,45,45,45,45,45,45,45,45,45,45,45],"opv":[182,182,182,182,182,182,182,182,182,182,182,182],"opNew":[0,0,0,0,0,0,0,0,0,0,0,0],"opFree":[0,0,0,0,0,0,0,0,0,0,0,0],"opRevisit":[0,0,0,0,0,0,0,0,0,0,0,0]},"ARUN A":{"dept":"PEDIATRICS","ytdIP":202.0,"ytdOP":122.0,"ytdTotal":324.0,"ytdDisc":1237,"ytdBeds":4498,"ytdOPV":25996,"arppIP":34074,"arppOP":822,"arpob":9371,"ip":[16.8,16.8,16.8,16.8,16.8,16.8,16.8,16.8,16.8,16.8,16.8,16.8],"op":[10.2,10.2,10.2,10.2,10.2,10.2,10.2,10.2,10.2,10.2,10.2,10.2],"disc":[103,103,103,103,103,103,103,103,103,103,103,103],"beds":[375,375,375,375,375,375,375,375,375,375,375,375],"opv":[2166,2166,2166,2166,2166,2166,2166,2166,2166,2166,2166,2166],"opNew":[0,0,0,0,0,0,0,0,0,0,0,0],"opFree":[0,0,0,0,0,0,0,0,0,0,0,0],"opRevisit":[0,0,0,0,0,0,0,0,0,0,0,0]},"MURALI KRISHNA MENON":{"dept":"NEUROLOGY","ytdIP":213.0,"ytdOP":94.0,"ytdTotal":307.0,"ytdDisc":395,"ytdBeds":1492,"ytdOPV":5448,"arppIP":77421,"arppOP":1944,"arpob":20497,"ip":[17.8,17.8,17.8,17.8,17.8,17.8,17.8,17.8,17.8,17.8,17.8,17.8],"op":[7.8,7.8,7.8,7.8,7.8,7.8,7.8,7.8,7.8,7.8,7.8,7.8],"disc":[33,33,33,33,33,33,33,33,33,33,33,33],"beds":[124,124,124,124,124,124,124,124,124,124,124,124],"opv":[454,454,454,454,454,454,454,454,454,454,454,454],"opNew":[0,0,0,0,0,0,0,0,0,0,0,0],"opFree":[0,0,0,0,0,0,0,0,0,0,0,0],"opRevisit":[0,0,0,0,0,0,0,0,0,0,0,0]},"KARTIK GANESH":{"dept":"NEPHROLOGY","ytdIP":251.0,"ytdOP":94.0,"ytdTotal":346.0,"ytdDisc":47,"ytdBeds":281,"ytdOPV":1072,"arppIP":189572,"arppOP":4444,"arpob":31708,"ip":[20.9,20.9,20.9,20.9,20.9,20.9,20.9,20.9,20.9,20.9,20.9,20.9],"op":[7.8,7.8,7.8,7.8,7.8,7.8,7.8,7.8,7.8,7.8,7.8,7.8],"disc":[4,4,4,4,4,4,4,4,4,4,4,4],"beds":[23,23,23,23,23,23,23,23,23,23,23,23],"opv":[89,89,89,89,89,89,89,89,89,89,89,89],"opNew":[0,0,0,0,0,0,0,0,0,0,0,0],"opFree":[0,0,0,0,0,0,0,0,0,0,0,0],"opRevisit":[0,0,0,0,0,0,0,0,0,0,0,0]},"VIDYA M.V":{"dept":"NEUROLOGY","ytdIP":254.0,"ytdOP":77.0,"ytdTotal":331.0,"ytdDisc":312,"ytdBeds":1530,"ytdOPV":3591,"arppIP":113414,"arppOP":2174,"arpob":23128,"ip":[21.2,21.2,21.2,21.2,21.2,21.2,21.2,21.2,21.2,21.2,21.2,21.2],"op":[6.4,6.4,6.4,6.4,6.4,6.4,6.4,6.4,6.4,6.4,6.4,6.4],"disc":[26,26,26,26,26,26,26,26,26,26,26,26],"beds":[128,128,128,128,128,128,128,128,128,128,128,128],"opv":[299,299,299,299,299,299,299,299,299,299,299,299],"opNew":[0,0,0,0,0,0,0,0,0,0,0,0],"opFree":[0,0,0,0,0,0,0,0,0,0,0,0],"opRevisit":[0,0,0,0,0,0,0,0,0,0,0,0]},"PRADEEP GEORGE M":{"dept":"GASTROENTEROLOGY","ytdIP":193.0,"ytdOP":73.0,"ytdTotal":267.0,"ytdDisc":106,"ytdBeds":371,"ytdOPV":1217,"arppIP":94161,"arppOP":4958,"arpob":26903,"ip":[16.1,16.1,16.1,16.1,16.1,16.1,16.1,16.1,16.1,16.1,16.1,16.1],"op":[6.1,6.1,6.1,6.1,6.1,6.1,6.1,6.1,6.1,6.1,6.1,6.1],"disc":[9,9,9,9,9,9,9,9,9,9,9,9],"beds":[31,31,31,31,31,31,31,31,31,31,31,31],"opv":[101,101,101,101,101,101,101,101,101,101,101,101],"opNew":[0,0,0,0,0,0,0,0,0,0,0,0],"opFree":[0,0,0,0,0,0,0,0,0,0,0,0],"opRevisit":[0,0,0,0,0,0,0,0,0,0,0,0]},"IDICULA MATHEWS":{"dept":"ENT","ytdIP":204.0,"ytdOP":60.0,"ytdTotal":264.0,"ytdDisc":322,"ytdBeds":838,"ytdOPV":8116,"arppIP":93708,"arppOP":1079,"arpob":36007,"ip":[17.0,17.0,17.0,17.0,17.0,17.0,17.0,17.0,17.0,17.0,17.0,17.0],"op":[5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0],"disc":[27,27,27,27,27,27,27,27,27,27,27,27],"beds":[70,70,70,70,70,70,70,70,70,70,70,70],"opv":[676,676,676,676,676,676,676,676,676,676,676,676],"opNew":[0,0,0,0,0,0,0,0,0,0,0,0],"opFree":[0,0,0,0,0,0,0,0,0,0,0,0],"opRevisit":[0,0,0,0,0,0,0,0,0,0,0,0]},"MUJEEB RAHMAN K.K":{"dept":"PULM CRITICAL CARE","ytdIP":221.0,"ytdOP":60.0,"ytdTotal":281.0,"ytdDisc":152,"ytdBeds":784,"ytdOPV":2331,"arppIP":116682,"arppOP":2373,"arpob":22622,"ip":[18.4,18.4,18.4,18.4,18.4,18.4,18.4,18.4,18.4,18.4,18.4,18.4],"op":[5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0,5.0],"disc":[13,13,13,13,13,13,13,13,13,13,13,13],"beds":[65,65,65,65,65,65,65,65,65,65,65,65],"opv":[194,194,194,194,194,194,194,194,194,194,194,194],"opNew":[0,0,0,0,0,0,0,0,0,0,0,0],"opFree":[0,0,0,0,0,0,0,0,0,0,0,0],"opRevisit":[0,0,0,0,0,0,0,0,0,0,0,0]},"HARI LAKSHMANAN P":{"dept":"PULMONOLOGY","ytdIP":228.0,"ytdOP":46.0,"ytdTotal":275.0,"ytdDisc":232,"ytdBeds":995,"ytdOPV":3564,"arppIP":88012,"arppOP":1440,"arpob":20522,"ip":[19.0,19.0,19.0,19.0,19.0,19.0,19.0,19.0,19.0,19.0,19.0,19.0],"op":[3.8,3.8,3.8,3.8,3.8,3.8,3.8,3.8,3.8,3.8,3.8,3.8],"disc":[19,19,19,19,19,19,19,19,19,19,19,19],"beds":[83,83,83,83,83,83,83,83,83,83,83,83],"opv":[297,297,297,297,297,297,297,297,297,297,297,297],"opNew":[0,0,0,0,0,0,0,0,0,0,0,0],"opFree":[0,0,0,0,0,0,0,0,0,0,0,0],"opRevisit":[0,0,0,0,0,0,0,0,0,0,0,0]},"HARIKRISHNA K":{"dept":"CARDIOLOGY","ytdIP":211.0,"ytdOP":32.0,"ytdTotal":243.0,"ytdDisc":143,"ytdBeds":490,"ytdOPV":1339,"arppIP":147497,"arppOP":2381,"arpob":43045,"ip":[17.6,17.6,17.6,17.6,17.6,17.6,17.6,17.6,17.6,17.6,17.6,17.6],"op":[2.7,2.7,2.7,2.7,2.7,2.7,2.7,2.7,2.7,2.7,2.7,2.7],"disc":[12,12,12,12,12,12,12,12,12,12,12,12],"beds":[41,41,41,41,41,41,41,41,41,41,41,41],"opv":[112,112,112,112,112,112,112,112,112,112,112,112],"opNew":[0,0,0,0,0,0,0,0,0,0,0,0],"opFree":[0,0,0,0,0,0,0,0,0,0,0,0],"opRevisit":[0,0,0,0,0,0,0,0,0,0,0,0]},"DENNIS P JOSE":{"dept":"FOOT & ANKLE","ytdIP":198.0,"ytdOP":42.0,"ytdTotal":241.0,"ytdDisc":106,"ytdBeds":738,"ytdOPV":2637,"arppIP":187223,"arppOP":1603,"arpob":26891,"ip":[16.5,16.5,16.5,16.5,16.5,16.5,16.5,16.5,16.5,16.5,16.5,16.5],"op":[3.5,3.5,3.5,3.5,3.5,3.5,3.5,3.5,3.5,3.5,3.5,3.5],"disc":[9,9,9,9,9,9,9,9,9,9,9,9],"beds":[62,62,62,62,62,62,62,62,62,62,62,62],"opv":[220,220,220,220,220,220,220,220,220,220,220,220],"opNew":[0,0,0,0,0,0,0,0,0,0,0,0],"opFree":[0,0,0,0,0,0,0,0,0,0,0,0],"opRevisit":[0,0,0,0,0,0,0,0,0,0,0,0]},"ARUN OOMMEN":{"dept":"NEURO SURGERY","ytdIP":223.0,"ytdOP":76.0,"ytdTotal":298.0,"ytdDisc":103,"ytdBeds":489,"ytdOPV":1764,"arppIP":216118,"arppOP":4291,"arpob":45522,"ip":[18.6,18.6,18.6,18.6,18.6,18.6,18.6,18.6,18.6,18.6,18.6,18.6],"op":[6.3,6.3,6.3,6.3,6.3,6.3,6.3,6.3,6.3,6.3,6.3,6.3],"disc":[9,9,9,9,9,9,9,9,9,9,9,9],"beds":[41,41,41,41,41,41,41,41,41,41,41,41],"opv":[147,147,147,147,147,147,147,147,147,147,147,147],"opNew":[0,0,0,0,0,0,0,0,0,0,0,0],"opFree":[0,0,0,0,0,0,0,0,0,0,0,0],"opRevisit":[0,0,0,0,0,0,0,0,0,0,0,0]}};
+
+const BRM_DEPTS=[{"name":"NEPHROLOGY","ip":4086.0,"op":1411.0,"total":5497.0,"pct":13.5,"opv":18488,"disc":1338,"beds":11799,"arppOP":7631,"arppIP":305381,"arpob":34630},{"name":"MEDICAL ONCOLOGY","ip":3066.0,"op":2285.0,"total":5351.0,"pct":13.2,"opv":42590,"disc":5007,"beds":12473,"arppOP":5364,"arppIP":61240,"arpob":24583},{"name":"NEURO SURGERY","ip":2934.0,"op":260.0,"total":3194.0,"pct":7.9,"opv":8731,"disc":1068,"beds":7351,"arppOP":2980,"arppIP":274731,"arpob":39915},{"name":"GI SURGERY","ip":2473.0,"op":246.0,"total":2719.0,"pct":6.7,"opv":13556,"disc":1236,"beds":7537,"arppOP":1816,"arppIP":200051,"arpob":32807},{"name":"SURGICAL ONCOLOGY","ip":1923.0,"op":370.0,"total":2293.0,"pct":5.6,"opv":15240,"disc":1067,"beds":4643,"arppOP":2427,"arppIP":180258,"arpob":41425},{"name":"GASTROENTEROLOGY","ip":1409.0,"op":867.0,"total":2276.0,"pct":5.6,"opv":22353,"disc":1410,"beds":4897,"arppOP":3877,"arppIP":99962,"arpob":28782},{"name":"CARDIOLOGY","ip":1837.0,"op":414.0,"total":2251.0,"pct":5.5,"opv":15579,"disc":1123,"beds":3559,"arppOP":2655,"arppIP":163588,"arpob":51618},{"name":"UROLOGY","ip":1796.0,"op":363.0,"total":2159.0,"pct":5.3,"opv":13831,"disc":1080,"beds":3505,"arppOP":2625,"arppIP":166296,"arpob":51241},{"name":"JOINT REPLACEMENT","ip":1598.0,"op":230.0,"total":1828.0,"pct":4.5,"opv":7927,"disc":574,"beds":2360,"arppOP":2898,"arppIP":278450,"arpob":67725},{"name":"ORTHOPEDICS","ip":1377.0,"op":186.0,"total":1562.0,"pct":3.8,"opv":10348,"disc":673,"beds":3474,"arppOP":1794,"arppIP":204545,"arpob":39625},{"name":"MIN INVASIVE SURG","ip":1339.0,"op":79.0,"total":1419.0,"pct":3.5,"opv":3549,"disc":705,"beds":2036,"arppOP":2240,"arppIP":189932,"arpob":65767},{"name":"LIVER CARE","ip":1270.0,"op":94.0,"total":1364.0,"pct":3.4,"opv":1719,"disc":265,"beds":2428,"arppOP":5475,"arppIP":479071,"arpob":52287},{"name":"NEUROLOGY","ip":950.0,"op":326.0,"total":1276.0,"pct":3.1,"opv":14433,"disc":1034,"beds":4501,"arppOP":2260,"arppIP":91874,"arpob":21106},{"name":"GENERAL MEDICINE","ip":563.0,"op":350.0,"total":913.0,"pct":2.2,"opv":11041,"disc":803,"beds":3608,"arppOP":3172,"arppIP":70129,"arpob":15608},{"name":"OB & GYNEC","ip":653.0,"op":190.0,"total":843.0,"pct":2.1,"opv":11555,"disc":588,"beds":1756,"arppOP":1643,"arppIP":111033,"arpob":37180},{"name":"PEDIATRICS","ip":421.0,"op":214.0,"total":635.0,"pct":1.6,"opv":25996,"disc":1237,"beds":4498,"arppOP":822,"arppIP":34074,"arpob":9371},{"name":"RADIATION ONCOLOGY","ip":6.0,"op":524.0,"total":530.0,"pct":1.3,"opv":4691,"disc":10,"beds":57,"arppOP":11168,"arppIP":56986,"arpob":9998},{"name":"CT SURGERY","ip":466.0,"op":28.0,"total":493.0,"pct":1.2,"opv":808,"disc":150,"beds":842,"arppOP":3439,"arppIP":310448,"arpob":55305},{"name":"ENT","ip":302.0,"op":88.0,"total":389.0,"pct":1.0,"opv":8116,"disc":322,"beds":838,"arppOP":1079,"arppIP":93708,"arpob":36007},{"name":"PLASTIC SURGERY","ip":324.0,"op":54.0,"total":378.0,"pct":0.9,"opv":3351,"disc":226,"beds":907,"arppOP":1610,"arppIP":143258,"arpob":35696},{"name":"SPINE SURGERY","ip":227.0,"op":49.0,"total":276.0,"pct":0.7,"opv":1487,"disc":73,"beds":309,"arppOP":3282,"arppIP":310939,"arpob":73458},{"name":"PULMONOLOGY","ip":204.0,"op":51.0,"total":256.0,"pct":0.6,"opv":3564,"disc":232,"beds":995,"arppOP":1440,"arppIP":88012,"arpob":20522},{"name":"ENDOCRINOLOGY","ip":19.0,"op":235.0,"total":255.0,"pct":0.6,"opv":12105,"disc":41,"beds":87,"arppOP":1944,"arppIP":46806,"arpob":22058}];
+
+const BRM_HOSP_IP=[22.51, 26.12, 23.03, 25.54, 26.36, 23.13, 25.79, 26.62, 26.82, 26.45, 22.68, 24.28];
+const BRM_HOSP_OP=[8.23, 9.15, 8.16, 9.86, 9.95, 8.69, 9.59, 9.53, 9.02, 10.33, 9.17, 8.66];
+const BRM_DISCHARGE=[1576, 1733, 1520, 1935, 1961, 1768, 1818, 1798, 1719, 1847, 1642, 1706];
+const BRM_BEDDAYS=[6443, 7556, 6643, 8196, 8437, 7455, 8180, 7774, 7666, 7307, 6861, 7067];
+
+Chart.defaults.responsive = true;
+Chart.defaults.maintainAspectRatio = false;
+
+// =============================================
+// DATA
+// =============================================
+const deptData = [{"name":"Nephrology","ip":40.86,"op":14.11,"total":54.97,"pct":13.5,"opv":18488,"disc":1338,"beds":11799,"arppOP":7631,"arppIP":305381,"arpob":34630,"alos":8.8,"doctorCount":0,"pharma":0,"diag":0},{"name":"Medical Oncology","ip":30.66,"op":22.85,"total":53.51,"pct":13.2,"opv":42590,"disc":5007,"beds":12473,"arppOP":5364,"arppIP":61240,"arpob":24583,"alos":2.5,"doctorCount":0,"pharma":0,"diag":0},{"name":"Neuro Surgery","ip":29.34,"op":2.6,"total":31.94,"pct":7.9,"opv":8731,"disc":1068,"beds":7351,"arppOP":2980,"arppIP":274731,"arpob":39915,"alos":6.9,"doctorCount":0,"pharma":0,"diag":0},{"name":"GI Surgery","ip":24.73,"op":2.46,"total":27.19,"pct":6.7,"opv":13556,"disc":1236,"beds":7537,"arppOP":1816,"arppIP":200051,"arpob":32807,"alos":6.1,"doctorCount":0,"pharma":0,"diag":0},{"name":"Surgical Oncology","ip":19.23,"op":3.7,"total":22.93,"pct":5.6,"opv":15240,"disc":1067,"beds":4643,"arppOP":2427,"arppIP":180258,"arpob":41425,"alos":4.4,"doctorCount":0,"pharma":0,"diag":0},{"name":"Gastroenterology","ip":14.09,"op":8.67,"total":22.76,"pct":5.6,"opv":22353,"disc":1410,"beds":4897,"arppOP":3877,"arppIP":99962,"arpob":28782,"alos":3.5,"doctorCount":0,"pharma":0,"diag":0},{"name":"Cardiology","ip":18.37,"op":4.14,"total":22.51,"pct":5.5,"opv":15579,"disc":1123,"beds":3559,"arppOP":2655,"arppIP":163588,"arpob":51618,"alos":3.2,"doctorCount":0,"pharma":0,"diag":0},{"name":"Urology","ip":17.96,"op":3.63,"total":21.59,"pct":5.3,"opv":13831,"disc":1080,"beds":3505,"arppOP":2625,"arppIP":166296,"arpob":51241,"alos":3.2,"doctorCount":0,"pharma":0,"diag":0},{"name":"Joint Replacement","ip":15.98,"op":2.3,"total":18.28,"pct":4.5,"opv":7927,"disc":574,"beds":2360,"arppOP":2898,"arppIP":278450,"arpob":67725,"alos":4.1,"doctorCount":0,"pharma":0,"diag":0},{"name":"Orthopedics","ip":13.77,"op":1.86,"total":15.62,"pct":3.8,"opv":10348,"disc":673,"beds":3474,"arppOP":1794,"arppIP":204545,"arpob":39625,"alos":5.2,"doctorCount":0,"pharma":0,"diag":0},{"name":"Min Invasive Surg","ip":13.39,"op":0.79,"total":14.19,"pct":3.5,"opv":3549,"disc":705,"beds":2036,"arppOP":2240,"arppIP":189932,"arpob":65767,"alos":2.9,"doctorCount":0,"pharma":0,"diag":0},{"name":"Liver Care","ip":12.7,"op":0.94,"total":13.64,"pct":3.4,"opv":1719,"disc":265,"beds":2428,"arppOP":5475,"arppIP":479071,"arpob":52287,"alos":9.2,"doctorCount":0,"pharma":0,"diag":0},{"name":"Neurology","ip":9.5,"op":3.26,"total":12.76,"pct":3.1,"opv":14433,"disc":1034,"beds":4501,"arppOP":2260,"arppIP":91874,"arpob":21106,"alos":4.4,"doctorCount":0,"pharma":0,"diag":0},{"name":"General Medicine","ip":5.63,"op":3.5,"total":9.13,"pct":2.2,"opv":11041,"disc":803,"beds":3608,"arppOP":3172,"arppIP":70129,"arpob":15608,"alos":4.5,"doctorCount":0,"pharma":0,"diag":0},{"name":"OB & Gynec","ip":6.53,"op":1.9,"total":8.43,"pct":2.1,"opv":11555,"disc":588,"beds":1756,"arppOP":1643,"arppIP":111033,"arpob":37180,"alos":3.0,"doctorCount":0,"pharma":0,"diag":0},{"name":"Pediatrics","ip":4.21,"op":2.14,"total":6.35,"pct":1.6,"opv":25996,"disc":1237,"beds":4498,"arppOP":822,"arppIP":34074,"arpob":9371,"alos":3.6,"doctorCount":0,"pharma":0,"diag":0},{"name":"Radiation Oncology","ip":0.06,"op":5.24,"total":5.3,"pct":1.3,"opv":4691,"disc":10,"beds":57,"arppOP":11168,"arppIP":56986,"arpob":9998,"alos":5.7,"doctorCount":0,"pharma":0,"diag":0},{"name":"CT Surgery","ip":4.66,"op":0.28,"total":4.93,"pct":1.2,"opv":808,"disc":150,"beds":842,"arppOP":3439,"arppIP":310448,"arpob":55305,"alos":5.6,"doctorCount":0,"pharma":0,"diag":0},{"name":"ENT","ip":3.02,"op":0.88,"total":3.89,"pct":1.0,"opv":8116,"disc":322,"beds":838,"arppOP":1079,"arppIP":93708,"arpob":36007,"alos":2.6,"doctorCount":0,"pharma":0,"diag":0},{"name":"Plastic Surgery","ip":3.24,"op":0.54,"total":3.78,"pct":0.9,"opv":3351,"disc":226,"beds":907,"arppOP":1610,"arppIP":143258,"arpob":35696,"alos":4.0,"doctorCount":0,"pharma":0,"diag":0},{"name":"Spine Surgery","ip":2.27,"op":0.49,"total":2.76,"pct":0.7,"opv":1487,"disc":73,"beds":309,"arppOP":3282,"arppIP":310939,"arpob":73458,"alos":4.2,"doctorCount":0,"pharma":0,"diag":0},{"name":"Pulmonology","ip":2.04,"op":0.51,"total":2.56,"pct":0.6,"opv":3564,"disc":232,"beds":995,"arppOP":1440,"arppIP":88012,"arpob":20522,"alos":4.3,"doctorCount":0,"pharma":0,"diag":0},{"name":"Endocrinology","ip":0.19,"op":2.35,"total":2.55,"pct":0.6,"opv":12105,"disc":41,"beds":87,"arppOP":1944,"arppIP":46806,"arpob":22058,"alos":2.1,"doctorCount":0,"pharma":0,"diag":0}];
+
+
+const doctorData = [{"name":"GANGADHARAN V P","dept":"MEDICAL ONCOLOGY","total":52.89,"ip":34.37,"op":18.52,"disc":5007,"beds":12473,"opv":42590,"arppOP":5364,"arppIP":61240,"arpob":24583,"bcg":"High Volume","deptPct":0},{"name":"ABI ABRAHAM M","dept":"NEPHROLOGY","total":31.93,"ip":23.89,"op":8.04,"disc":1338,"beds":11799,"opv":18488,"arppOP":7631,"arppIP":305381,"arpob":34630,"bcg":"High ARPP","deptPct":0},{"name":"SUDISH KARUNAKARAN","dept":"NEURO SURGERY","total":23.37,"ip":21.72,"op":1.65,"disc":1068,"beds":7351,"opv":8731,"arppOP":2980,"arppIP":274731,"arpob":39915,"bcg":"High ARPP","deptPct":0},{"name":"RAMESH H","dept":"GI SURGERY","total":16.9,"ip":15.59,"op":1.3,"disc":1236,"beds":7537,"opv":13556,"arppOP":1816,"arppIP":200051,"arpob":32807,"bcg":"High ARPP","deptPct":0},{"name":"DATSON GEORGE P","dept":"UROLOGY","total":13.14,"ip":10.93,"op":2.21,"disc":1080,"beds":3505,"opv":13831,"arppOP":2625,"arppIP":166296,"arpob":51241,"bcg":"High ARPP","deptPct":0},{"name":"PADMAKUMAR R","dept":"MINIMALLY INVASIVE SURGERY","total":12.46,"ip":11.71,"op":0.75,"disc":705,"beds":2036,"opv":3549,"arppOP":2240,"arppIP":189932,"arpob":65767,"bcg":"High ARPP","deptPct":0},{"name":"CHITRATHARA K","dept":"SURGICAL ONCOLOGY","total":10.66,"ip":8.21,"op":2.45,"disc":1067,"beds":4643,"opv":15240,"arppOP":2427,"arppIP":180258,"arpob":41425,"bcg":"High ARPP","deptPct":0},{"name":"FADL H VEERANKUTTY","dept":"COMPREHENSIVE LIVER CARE","total":9.49,"ip":8.6,"op":0.89,"disc":265,"beds":2428,"opv":1719,"arppOP":5475,"arppIP":479071,"arpob":52287,"bcg":"High ARPP","deptPct":0},{"name":"SHAWN T JOSEPH","dept":"HEAD AND NECK ONCOLOGY","total":6.76,"ip":5.94,"op":0.82,"disc":262,"beds":1408,"opv":2925,"arppOP":3325,"arppIP":293865,"arpob":54682,"bcg":"High Volume","deptPct":0},{"name":"ROY J MUKKADA","dept":"GASTROENTEROLOGY","total":7.96,"ip":4.29,"op":3.67,"disc":1410,"beds":4897,"opv":22353,"arppOP":3877,"arppIP":99962,"arpob":28782,"bcg":"High Volume","deptPct":0},{"name":"JACOB VARGHESE","dept":"JOINT REPLACEMENT","total":8.15,"ip":7.06,"op":1.09,"disc":574,"beds":2360,"opv":7927,"arppOP":2898,"arppIP":278450,"arpob":67725,"bcg":"High ARPP","deptPct":0},{"name":"RAJESH SIMON","dept":"FOOT & ANKLE","total":7.97,"ip":7.08,"op":0.89,"disc":408,"beds":2216,"opv":6340,"arppOP":2063,"arppIP":222174,"arpob":40906,"bcg":"High Volume","deptPct":0},{"name":"ANANDKUMAR V","dept":"CARDIOLOGY","total":7.64,"ip":5.7,"op":1.95,"disc":1123,"beds":3559,"opv":15579,"arppOP":2655,"arppIP":163588,"arpob":51618,"bcg":"High Volume","deptPct":0},{"name":"JITHIN S KUMAR","dept":"NEPHROLOGY","total":8.01,"ip":5.72,"op":2.29,"disc":261,"beds":2025,"opv":4001,"arppOP":4851,"arppIP":230055,"arpob":29652,"bcg":"High Volume","deptPct":0},{"name":"GEORGE JACOB","dept":"JOINT REPLACEMENT","total":7.11,"ip":6.47,"op":0.64,"disc":200,"beds":727,"opv":2247,"arppOP":2844,"arppIP":323351,"arpob":88955,"bcg":"High Volume","deptPct":0},{"name":"CIBI ISSAC","dept":"CARDIOLOGY","total":6.69,"ip":5.21,"op":1.48,"disc":401,"beds":1085,"opv":5205,"arppOP":2844,"arppIP":129828,"arpob":47983,"bcg":"High Volume","deptPct":0},{"name":"JOHN ALEXANDER","dept":"GENERAL MEDICINE","total":6.15,"ip":4.12,"op":2.02,"disc":803,"beds":3608,"opv":11041,"arppOP":3172,"arppIP":70129,"arpob":15608,"bcg":"High Volume","deptPct":0},{"name":"JOSEPH EDISON","dept":"RADIATION ONCOLOGY","total":5.8,"ip":5.68,"op":0.12,"disc":10,"beds":57,"opv":4691,"arppOP":11168,"arppIP":56986,"arpob":9998,"bcg":"High Volume","deptPct":0},{"name":"APPU BENNY THOMAS","dept":"JOINT REPLACEMENT","total":5.86,"ip":5.23,"op":0.63,"disc":173,"beds":622,"opv":2658,"arppOP":2307,"arppIP":311015,"arpob":63488,"bcg":"High Volume","deptPct":0},{"name":"SUJITH D.S.","dept":"CARDIO THORACIC SURGERY","total":5.51,"ip":5.21,"op":0.3,"disc":150,"beds":842,"opv":808,"arppOP":3439,"arppIP":310448,"arpob":55305,"bcg":"High Volume","deptPct":0},{"name":"JOSE THOMAS P","dept":"ORTHOPEDICS","total":4.93,"ip":4.7,"op":0.23,"disc":673,"beds":3474,"opv":10348,"arppOP":1794,"arppIP":204545,"arpob":39625,"bcg":"High Volume","deptPct":0},{"name":"KRISHNA KUMAR R","dept":"SPINE SURGERY","total":4.61,"ip":3.75,"op":0.86,"disc":73,"beds":309,"opv":1487,"arppOP":3282,"arppIP":310939,"arpob":73458,"bcg":"High Volume","deptPct":0},{"name":"BINDU VARGHESE","dept":"NEUROLOGY","total":4.48,"ip":3.3,"op":1.18,"disc":1034,"beds":4501,"opv":14433,"arppOP":2260,"arppIP":91874,"arpob":21106,"bcg":"High Volume","deptPct":0},{"name":"SHUBHA ACHYUTHA","dept":"FAMILY MEDICINE","total":4.2,"ip":0.0,"op":4.21,"disc":0,"beds":0,"opv":4092,"arppOP":9653,"arppIP":0,"arpob":0,"bcg":"High Volume","deptPct":0},{"name":"SMITHA JOY","dept":"OB & GYNEC","total":4.1,"ip":2.93,"op":1.17,"disc":588,"beds":1756,"opv":11555,"arppOP":1643,"arppIP":111033,"arpob":37180,"bcg":"High Volume","deptPct":0},{"name":"MAHESH S","dept":"GI SURGERY","total":3.98,"ip":3.64,"op":0.35,"disc":192,"beds":1009,"opv":2834,"arppOP":1228,"arppIP":189396,"arpob":36040,"bcg":"Question","deptPct":0},{"name":"MAYA P","dept":"GASTROENTEROLOGY","total":3.5,"ip":2.19,"op":1.31,"disc":232,"beds":770,"opv":3319,"arppOP":3166,"arppIP":81135,"arpob":24446,"bcg":"Question","deptPct":0},{"name":"ANTONY PAUL C","dept":"GASTROENTEROLOGY","total":2.91,"ip":1.51,"op":1.4,"disc":168,"beds":495,"opv":3767,"arppOP":3706,"arppIP":90083,"arpob":30573,"bcg":"Question","deptPct":0},{"name":"AJU AJAY","dept":"CARDIOLOGY","total":3.43,"ip":2.99,"op":0.44,"disc":190,"beds":535,"opv":2184,"arppOP":2026,"arppIP":157154,"arpob":55812,"bcg":"Question","deptPct":0},{"name":"ARUN A","dept":"PEDIATRICS","total":3.24,"ip":2.02,"op":1.22,"disc":1237,"beds":4498,"opv":25996,"arppOP":822,"arppIP":34074,"arpob":9371,"bcg":"Question","deptPct":0},{"name":"MURALI KRISHNA MENON","dept":"NEUROLOGY","total":3.07,"ip":2.13,"op":0.94,"disc":395,"beds":1492,"opv":5448,"arppOP":1944,"arppIP":77421,"arpob":20497,"bcg":"Question","deptPct":0},{"name":"KARTIK GANESH","dept":"NEPHROLOGY","total":3.46,"ip":2.51,"op":0.94,"disc":47,"beds":281,"opv":1072,"arppOP":4444,"arppIP":189572,"arpob":31708,"bcg":"Question","deptPct":0},{"name":"VIDYA M.V","dept":"NEUROLOGY","total":3.31,"ip":2.54,"op":0.77,"disc":312,"beds":1530,"opv":3591,"arppOP":2174,"arppIP":113414,"arpob":23128,"bcg":"Question","deptPct":0},{"name":"PRADEEP GEORGE M","dept":"GASTROENTEROLOGY","total":2.67,"ip":1.93,"op":0.73,"disc":106,"beds":371,"opv":1217,"arppOP":4958,"arppIP":94161,"arpob":26903,"bcg":"Question","deptPct":0},{"name":"IDICULA MATHEWS","dept":"ENT","total":2.64,"ip":2.04,"op":0.6,"disc":322,"beds":838,"opv":8116,"arppOP":1079,"arppIP":93708,"arpob":36007,"bcg":"Question","deptPct":0},{"name":"MUJEEB RAHMAN K.K","dept":"PULM CRITICAL CARE","total":2.81,"ip":2.21,"op":0.6,"disc":152,"beds":784,"opv":2331,"arppOP":2373,"arppIP":116682,"arpob":22622,"bcg":"Question","deptPct":0},{"name":"HARI LAKSHMANAN P","dept":"PULMONOLOGY","total":2.75,"ip":2.28,"op":0.46,"disc":232,"beds":995,"opv":3564,"arppOP":1440,"arppIP":88012,"arpob":20522,"bcg":"Question","deptPct":0},{"name":"HARIKRISHNA K","dept":"CARDIOLOGY","total":2.43,"ip":2.11,"op":0.32,"disc":143,"beds":490,"opv":1339,"arppOP":2381,"arppIP":147497,"arpob":43045,"bcg":"Question","deptPct":0},{"name":"DENNIS P JOSE","dept":"FOOT & ANKLE","total":2.41,"ip":1.98,"op":0.42,"disc":106,"beds":738,"opv":2637,"arppOP":1603,"arppIP":187223,"arpob":26891,"bcg":"Question","deptPct":0},{"name":"ARUN OOMMEN","dept":"NEURO SURGERY","total":2.98,"ip":2.23,"op":0.76,"disc":103,"beds":489,"opv":1764,"arppOP":4291,"arppIP":216118,"arpob":45522,"bcg":"Question","deptPct":0}];
+
+
+const months = ['Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar'];
+const monthlyIP = [22.51, 26.12, 23.03, 25.54, 26.36, 23.13, 25.79, 26.62, 26.82, 26.45, 22.68, 24.28];
+const monthlyOP = [8.23, 9.15, 8.16, 9.86, 9.95, 8.69, 9.59, 9.53, 9.02, 10.33, 9.17, 8.66];
+const discharge = [1576, 1733, 1520, 1935, 1961, 1768, 1818, 1798, 1719, 1847, 1642, 1706];
+const occupancy = [46.0, 52.0, 47.0, 56.0, 58.0, 53.0, 56.0, 55.0, 53.0, 50.0, 52.0, 49.0]; // 470 beds, dashboard-verified 52% annual
+
+// =============================================
+// HELPERS
+// =============================================
+const TOTAL_REV = doctorData.reduce((s,d)=>s+d.total,0);
+const C = ['#1a3a5c','#e67e22','#27ae60','#8e44ad','#e74c3c','#1976d2','#c0392b','#16a085'];
+const fmt = (v,d=2) => v == null ? '-' : v.toFixed(d);
+const fmtK = v => v >= 1e5 ? '₹'+(v/1e5).toFixed(2)+' L' : '₹'+Math.round(v/1000)+'K';
+const alosOf = d => d.disc > 0 ? (d.ip*1e7/d.arpob)/d.disc : 0;
+const arppOPOf = d => d.opv > 0 ? d.op*1e7/d.opv : 0;
+const tierOf = d => d.total >= 20 ? '<span class="pill gp">Pillar</span>' : d.total >= 10 ? '<span class="pill op">Growth</span>' : '<span class="pill grp">Support</span>';
+const bcgPill = b => '';
+
+// =============================================
+// TAB / FILTER
+// =============================================
+let chartsInited = new Set();
+function showTab(name, el) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  el.classList.add('active');
+  if (!chartsInited.has(name)) { chartsInited.add(name); initChartsFor(name); }
+  if (name==='doctorMIS') initDocMIS();
+}
+function initChartsFor(name) {
+  if (name === 'departments')   { buildDeptStack(); buildDeptPies(); }
+  if (name === 'concentration') { buildConcentration(); }
+  if (name === 'quadrant')      { buildQuadrant(); }
+  if (name === 'monthly')       { buildMonthly(); }
+  if (name === 'payor')         { buildPayor(); }
+  if (name === 'benchmarks')    { buildBenchmarks(); }
+  if (name === 'strategic')     { buildStrategic(); }
+}
+
+// =============================================
+// STRATEGIC CHARTS
+// =============================================
+function buildStrategic() {
+  // 1. Leakage waterfall - FY25 actuals
+  const _lw = document.getElementById('leakageWaterfall');
+  if (_lw) new Chart(_lw, {
+    type: 'bar',
+    data: {
+      labels: ['Gross Billing\n~₹415Cr', 'After Discounts\n~₹409.7Cr', 'Net Revenue\n₹409.7Cr'],
+      datasets: [{ label: 'Revenue (₹ Cr)', data: [415, 409.7, 409.7],
+        backgroundColor: ['#1a3a5c','#e67e22','#27ae60'], borderRadius: 4 }]
+    },
+    options: { plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => `₹${ctx.raw.toFixed(1)} Cr` } } },
+      scales: { y: { min: 400, ticks: { callback: v => '₹'+v+'Cr', font:{size:9} } }, x: { ticks: { font:{size:9} } } }
+    }
+  });
+
+  // 2. Discount by dept - FY25
+  const discDepts = [
+    { name: 'Emergency Dept', pct: 18.4, amt: 48.8 },
+    { name: 'OB & Gynec.',    pct: 3.2,  amt: 20.9 },
+    { name: 'Family Medicine',pct: 2.8,  amt: 11.1 },
+    { name: 'Dental',         pct: 2.6,  amt: 4.3  },
+    { name: 'Cardiology',     pct: 1.5,  amt: 27.6 },
+    { name: 'Neurology',      pct: 1.3,  amt: 16.6 },
+    { name: 'GI Surgery',     pct: 1.2,  amt: 29.7 },
+    { name: 'Nephrology',     pct: 0.9,  amt: 36.8 },
+  ];
+  const _dd = document.getElementById('discountByDept');
+  if (_dd) new Chart(_dd, {
+    type: 'bar',
+    data: { labels: discDepts.map(d => d.name),
+      datasets: [{ label: 'Discount %', data: discDepts.map(d => d.pct),
+        backgroundColor: discDepts.map(d => d.pct > 10 ? '#e74c3c' : d.pct > 3 ? '#e67e22' : '#1976d2'), borderRadius: 3 }]
+    },
+    options: { indexAxis: 'y', plugins: { legend: { display: false },
+        tooltip: { callbacks: { label: ctx => `${ctx.raw}% = ₹${discDepts[ctx.dataIndex].amt}L` } } },
+      scales: { x: { ticks: { callback: v => v+'%', font:{size:9} } }, y: { ticks: { font:{size:8} } } }
+    }
+  });
+
+  // 3. Monthly discount trend - FY25
+  const discMonths = ['Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar'];
+  const discAmts   = [38.2, 41.5, 37.8, 40.1, 42.3, 39.6, 44.8, 47.2, 51.3, 48.9, 43.1, 40.7];
+  const _md = document.getElementById('monthlyDiscount');
+  if (_md) new Chart(_md, {
+    type: 'bar',
+    data: { labels: discMonths,
+      datasets: [{ label: 'Discounts (₹L)', data: discAmts,
+        backgroundColor: discAmts.map(v => v > 50 ? '#e74c3c' : v > 44 ? '#e67e22' : '#1976d2'), borderRadius: 3 }]
+    },
+    options: { plugins: { legend: { display: false } },
+      scales: { y: { ticks: { callback: v=>'₹'+v+'L', font:{size:8} } }, x: { ticks: { font:{size:9} } } }
+    }
+  });
+
+  // 4. OP visits vs IP admissions - FY25 actual data
+  const opConvDepts = [
+    { name: 'Endocrinology', opv: 12105, disc: 41  },
+    { name: 'Dermatology',   opv: 13187, disc: 59  },
+    { name: 'ENT',           opv: 8116,  disc: 322 },
+    { name: 'Psychiatry',    opv: 6222,  disc: 257 },
+    { name: 'Pediatrics',    opv: 25996, disc: 1237},
+    { name: 'Neurology',     opv: 14433, disc: 1034},
+  ];
+  const _oc = document.getElementById('opConversion');
+  if (_oc) new Chart(_oc, {
+    type: 'bar',
+    data: { labels: opConvDepts.map(d => d.name),
+      datasets: [
+        { label: 'OP Visits (00s)', data: opConvDepts.map(d => Math.round(d.opv/100)), backgroundColor: 'rgba(26,58,92,0.5)', borderRadius: 3, yAxisID:'y' },
+        { label: 'IP Admissions', data: opConvDepts.map(d => d.disc), type:'line', borderColor:'#27ae60', pointRadius:4, fill:false, yAxisID:'y1' }
+      ]
+    },
+    options: { plugins: { legend: { position:'top', labels:{ font:{size:9}, boxWidth:8 } } },
+      scales: { y: { title:{ display:true, text:'OP Visits (00s)', font:{size:9} }, ticks:{ font:{size:8} } },
+        y1: { position:'right', title:{ display:true, text:'IP Admissions', font:{size:9} }, ticks:{ font:{size:8} } },
+        x: { ticks:{ font:{size:8} } }
+      }
+    }
+  });
+
+  // 5. yearEndPayorPie - FY25 domestic vs international
+  const _ypp = document.getElementById('yearEndPayorPie');
+  if (_ypp) new Chart(_ypp, {
+    type: 'doughnut',
+    data: { labels: ['Domestic', 'International'],
+      datasets: [{ data: [38147, 2822], backgroundColor: ['#1a3a5c','#27ae60'], borderWidth: 2, borderColor: '#fff' }]
+    },
+    options: { plugins: { legend: { position: 'right', labels: { font: { size: 11 } } } } }
+  });
+
+  // 6. yearEndMonthly - FY25 actual monthly revenue
+  const _ym = document.getElementById('yearEndMonthly');
+  if (_ym) new Chart(_ym, {
+    type: 'bar',
+    data: { labels: ['Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar'],
+      datasets: [{ label: 'Revenue ₹Cr', data: [30.74,35.27,31.19,35.41,36.31,31.82,35.38,36.15,35.84,36.78,31.85,32.94],
+        backgroundColor: 'rgba(26,58,92,0.65)', borderRadius: 4 }]
+    },
+    options: { plugins: { legend: { display: false } },
+      scales: { y: { ticks: { callback: v => '₹'+v+'Cr' }, grid: { color: '#f0f4f8' } }, x: { grid: { display: false } } }
+    }
+  });
+}
+
+
+// =============================================
+// DEPT TABLE
+// =============================================
+let dSortKey = 'total', dSortAsc = false;
+function sortDept(key) {
+  if (dSortKey === key) dSortAsc = !dSortAsc;
+  else { dSortKey = key; dSortAsc = false; }
+  renderDeptTable();
+}
+function renderDeptTable() {
+  const sorted = [...deptData].sort((a, b) => {
+    if (dSortKey === 'name') return dSortAsc ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name);
+    if (dSortKey === 'rank') return dSortAsc ? a.total - b.total : b.total - a.total;
+    if (dSortKey === 'alosCalc') { const av=alosOf(a), bv=alosOf(b); return dSortAsc ? av-bv : bv-av; }
+    if (dSortKey === 'arppOPCalc') { const av=arppOPOf(a), bv=arppOPOf(b); return dSortAsc ? av-bv : bv-av; }
+    const av = a[dSortKey] ?? 0, bv = b[dSortKey] ?? 0;
+    return dSortAsc ? av - bv : bv - av;
+  });
+  const tbody = document.getElementById('deptTbody');
+  tbody.innerHTML = '';
+  sorted.forEach((d, i) => {
+    const tr = document.createElement('tr');
+    if (i < 3) tr.classList.add('top3');
+    const alos = alosOf(d);
+    const arppOPv = arppOPOf(d);
+    tr.innerHTML = `
+      <td style="color:#a0aec0;font-weight:700">${i+1}</td>
+      <td style="font-weight:700">${d.name}</td>
+      <td style="font-weight:800">&#x20B9;${fmt(d.total)}</td>
+      <td><div style="display:flex;align-items:center;gap:4px"><div style="width:${Math.round(d.pct*4)}px;height:4px;background:#1a3a5c;border-radius:2px;min-width:2px"></div>${fmt(d.pct,1)}%</div></td>
+      <td>&#x20B9;${fmt(d.ip)}</td>
+      <td>&#x20B9;${fmt(d.op)}</td>
+      <td style="color:#8e44ad;font-weight:600">&#x20B9;${fmt(d.pharma)}</td>
+      <td style="color:#e67e22;font-weight:600">&#x20B9;${fmt(d.diag)}</td>
+      <td>${d.disc.toLocaleString('en-IN')}</td>
+      <td>${d.opv.toLocaleString('en-IN')}</td>
+      <td>${fmtK(d.arppIP)}</td>
+      <td>&#x20B9;${Math.round(arppOPv).toLocaleString('en-IN')}</td>
+      <td>&#x20B9;${Math.round(d.arpob/1000)}K</td>
+      <td>${alos > 0 ? alos.toFixed(1)+'d' : '-'}</td>
+      <td style="text-align:center"><span class="pill bp">${d.doctorCount}</span></td>
+      <td>${tierOf(d)}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+renderDeptTable();
+
+// =============================================
+// DOCTOR TABLE
+// =============================================
+let docFilter = 'ALL';
+function filterDocs(dept, el) {
+  if (el) {
+    document.querySelectorAll('.fbtn').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+    if (dept) docFilter = dept;
+  }
+  const search = (document.getElementById('docSearch')?.value || '').toLowerCase();
+  const sortKey = document.getElementById('docSort')?.value || 'total';
+  let filtered = [...doctorData];
+  if (docFilter !== 'ALL') filtered = filtered.filter(d => d.dept === docFilter);
+  if (search) filtered = filtered.filter(d => d.name.toLowerCase().includes(search) || d.dept.toLowerCase().includes(search));
+  filtered.sort((a, b) => b[sortKey] - a[sortKey]);
+  const tbody = document.getElementById('docTbody');
+  tbody.innerHTML = '';
+  filtered.forEach((d, i) => {
+    const tr = document.createElement('tr');
+    if (i < 3 && docFilter === 'ALL') tr.classList.add('top3');
+    tr.innerHTML = `
+      <td style="color:#a0aec0;font-weight:700">${i+1}</td>
+      <td style="font-weight:700;font-size:0.72rem">${d.name}</td>
+      <td style="font-size:0.65rem;color:#718096">${d.dept}</td>
+      <td style="font-weight:800">&#x20B9;${fmt(d.total)}</td>
+      <td><div style="display:flex;align-items:center;gap:3px"><div style="width:${Math.round(d.total/54.5*50)}px;height:4px;background:#1a3a5c;border-radius:2px;min-width:1px"></div>${fmt(d.total/TOTAL_REV*100,1)}%</div></td>
+      <td>&#x20B9;${fmt(d.ip)}</td>
+      <td>&#x20B9;${fmt(d.op)}</td>
+      <td>${d.disc.toLocaleString('en-IN')}</td>
+      <td>${(d.beds||0).toLocaleString('en-IN')}</td>
+      <td>${d.opv.toLocaleString('en-IN')}</td>
+      <td>${fmtK(d.arppIP)}</td>
+      <td style="color:#1976d2">&#x20B9;${d.arpob ? Math.round(d.arpob).toLocaleString('en-IN') : '—'}</td>
+      <td>&#x20B9;${Math.round(d.arppOP||0).toLocaleString('en-IN')}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+filterDocs('ALL', null);
+
+// =============================================
+// OVERVIEW CHARTS (eager — page is visible on load)
+// =============================================
+(function buildOverview() {
+  const top15 = [...deptData].sort((a,b)=>b.total-a.total).slice(0,15);
+  new Chart(document.getElementById('deptBar'), {
+    type:'bar',
+    data:{ labels:top15.map(d=>d.name.length>20?d.name.slice(0,20)+'…':d.name),
+      datasets:[
+        {label:'IP Revenue', data:top15.map(d=>d.ip), backgroundColor:'#1a3a5c', borderRadius:2},
+        {label:'OP Revenue', data:top15.map(d=>d.op), backgroundColor:'#e67e22', borderRadius:2},
+      ]},
+    options:{ indexAxis:'y', plugins:{legend:{position:'top',labels:{font:{size:10},boxWidth:10}}},
+      scales:{x:{stacked:true,ticks:{font:{size:9},callback:v=>'₹'+v+'Cr'}}, y:{stacked:true,ticks:{font:{size:8}}}} }
+  });
+
+  const totalIP = deptData.reduce((s,d)=>s+d.ip,0);
+  const totalOP = deptData.reduce((s,d)=>s+d.op,0);
+  new Chart(document.getElementById('mixDonut'), {
+    type:'doughnut',
+    data:{ labels:['IP Revenue','OP Revenue','Pharmacy (actual)','Registration (OP fees)'],
+      datasets:[{data:[parseFloat(totalIP.toFixed(2)),parseFloat(totalOP.toFixed(2)),34.15,7.31], backgroundColor:['#1a3a5c','#e67e22','#8e44ad','#27ae60'], borderWidth:0, hoverOffset:4}] },
+    options:{ cutout:'60%', plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10,padding:6}}} }
+  });
+
+  const top12d = [...doctorData].sort((a,b)=>b.total-a.total).slice(0,12);
+  new Chart(document.getElementById('doctorBar'), {
+    type:'bar',
+    data:{ labels:top12d.map(d=>d.name.length>18?d.name.slice(0,18)+'…':d.name),
+      datasets:[
+        {label:'IP Rev', data:top12d.map(d=>d.ip), backgroundColor:'#1a3a5c', borderRadius:2},
+        {label:'OP Rev', data:top12d.map(d=>d.op), backgroundColor:'#e67e22', borderRadius:2},
+      ]},
+    options:{ indexAxis:'y', plugins:{legend:{position:'top',labels:{font:{size:10},boxWidth:10}}},
+      scales:{x:{stacked:true,ticks:{font:{size:9},callback:v=>'₹'+v+'Cr'}}, y:{stacked:true,ticks:{font:{size:8}}}} }
+  });
+
+  const docSorted = [...doctorData].sort((a,b)=>b.total-a.total);
+  let cum = 0;
+  const cumPct = docSorted.map(d => { cum += d.total; return parseFloat((cum/TOTAL_REV*100).toFixed(1)); });
+  new Chart(document.getElementById('concLine'), {
+    type:'line',
+    data:{ labels:docSorted.map((_,i)=>i+1),
+      datasets:[
+        {label:'Cumulative Rev %', data:cumPct, borderColor:'#e74c3c', backgroundColor:'rgba(231,76,60,0.08)', fill:true, borderWidth:2.5, pointRadius:0, tension:0.4},
+        {label:'Equal Distribution', data:docSorted.map((_,i)=>(i+1)/docSorted.length*100), borderColor:'#a0aec0', borderDash:[5,5], borderWidth:1.5, pointRadius:0, fill:false}
+      ]},
+    options:{ plugins:{legend:{position:'top',labels:{font:{size:10},boxWidth:10}}},
+      scales:{ x:{title:{display:true,text:'Doctors (ranked)',font:{size:10}}, ticks:{font:{size:8}}},
+               y:{title:{display:true,text:'Cumulative %',font:{size:10}}, max:100, ticks:{callback:v=>v+'%',font:{size:9}}} } }
+  });
+})();
+
+// =============================================
+// DEPT STACK + PIE CHARTS
+// =============================================
+function buildDeptStack() {
+  const sorted = [...deptData].sort((a,b)=>b.total-a.total);
+  new Chart(document.getElementById('deptStack'), {
+    type:'bar',
+    data:{ labels:sorted.map(d=>d.name.length>18?d.name.slice(0,18)+'…':d.name),
+      datasets:[
+        {label:'IP Revenue',  data:sorted.map(d=>d.ip),     backgroundColor:'#1a3a5c'},
+        {label:'OP Revenue',  data:sorted.map(d=>d.op),     backgroundColor:'#e67e22'},
+        {label:'Pharma (est)',data:sorted.map(d=>d.pharma), backgroundColor:'rgba(142,68,173,0.75)'},
+        {label:'Diag (est)',  data:sorted.map(d=>d.diag),   backgroundColor:'rgba(39,174,96,0.75)'},
+      ]},
+    options:{ plugins:{legend:{position:'top',labels:{font:{size:10},boxWidth:10}}},
+      scales:{x:{stacked:true,ticks:{font:{size:8}}}, y:{stacked:true,ticks:{callback:v=>'₹'+v,font:{size:9}}}} }
+  });
+}
+function buildDeptPies() {
+  const pieDepts = [
+    {id:'pieOnco',   dept:'MEDICAL ONCOLOGY'},
+    {id:'pieNephro', dept:'NEPHROLOGY'},
+    {id:'pieGI',     dept:'GI SURGERY'},
+    {id:'pieNeuro',  dept:'NEURO SURGERY'},
+    {id:'pieGastro', dept:'GASTROENTEROLOGY'},
+    {id:'pieCardio', dept:'CARDIOLOGY'},
+  ];
+  pieDepts.forEach(({id, dept}) => {
+    const docs = doctorData.filter(d => d.dept === dept).sort((a,b) => b.ip - a.ip);
+    const deptObj = deptData.find(d => d.name === dept);
+    const otherIP = deptObj ? Math.max(0, deptObj.ip - docs.reduce((s,d)=>s+d.ip,0)) : 0;
+    const labels = docs.map(d=>d.name.split(' ')[0]);
+    const data   = docs.map(d=>d.ip);
+    if (otherIP > 0.01) { labels.push('Others'); data.push(otherIP); }
+    new Chart(document.getElementById(id), {
+      type:'doughnut',
+      data:{ labels, datasets:[{data, backgroundColor:C.slice(0,data.length), borderWidth:2}] },
+      options:{ cutout:'50%', plugins:{legend:{position:'bottom',labels:{font:{size:9},boxWidth:8,padding:4}}} }
+    });
+  });
+}
+
+// =============================================
+// CONCENTRATION
+// =============================================
+function buildConcentration() {
+  const docSorted = [...doctorData].sort((a,b)=>b.total-a.total);
+  let cum = 0;
+  const cumPct = docSorted.map(d => { cum += d.total; return parseFloat((cum/TOTAL_REV*100).toFixed(1)); });
+  const idx80 = cumPct.findIndex(v=>v>=80);
+
+  new Chart(document.getElementById('paretoChart'), {
+    type:'bar',
+    data:{ labels:docSorted.map(d=>d.name.split(' ')[0]),
+      datasets:[
+        {label:'Revenue (₹Cr)', data:docSorted.map(d=>d.total), backgroundColor:docSorted.map((_,i)=>i<5?'#e74c3c':i<10?'#e67e22':'#1a3a5c'), yAxisID:'y', order:2},
+        {label:'Cumulative %',  data:cumPct, type:'line', borderColor:'#1a3a5c', borderWidth:2, pointRadius:0, fill:false, yAxisID:'y1', order:1},
+        {label:'80% threshold', data:docSorted.map(()=>80), type:'line', borderColor:'#e74c3c', borderWidth:1.5, borderDash:[6,4], pointRadius:0, fill:false, yAxisID:'y1', order:0},
+      ]},
+    options:{ plugins:{legend:{position:'top',labels:{font:{size:10},boxWidth:10}},
+      tooltip:{callbacks:{label:ctx=>{
+        if(ctx.datasetIndex===2) return '80% revenue threshold';
+        if(ctx.datasetIndex===1) return `Cumulative: ${ctx.raw}%`;
+        return `Rev: ₹${ctx.raw.toFixed(2)}Cr`;
+      }}}},
+      scales:{ y:{title:{display:true,text:'Revenue (₹Cr)',font:{size:9}},ticks:{font:{size:8},callback:v=>'₹'+v}},
+               y1:{position:'right', title:{display:true,text:'Cumulative %',font:{size:9}}, min:0, max:100, ticks:{callback:v=>v+'%',font:{size:8}}} } }
+  });
+
+  const riskDepts = deptData.map(d => {
+    const docs = doctorData.filter(dc=>dc.dept===d.name).sort((a,b)=>b.ip-a.ip);
+    const top1pct = docs.length > 0 && d.ip > 0 ? docs[0].ip/d.ip*100 : 0;
+    return {name:d.name, risk:top1pct, topDoc:docs[0]?.name||'N/A'};
+  }).sort((a,b)=>b.risk-a.risk).slice(0,15);
+
+  new Chart(document.getElementById('riskChart'), {
+    type:'bar',
+    data:{ labels:riskDepts.map(d=>d.name.length>18?d.name.slice(0,18)+'…':d.name),
+      datasets:[{label:'Top-doctor IP %', data:riskDepts.map(d=>d.risk),
+        backgroundColor:riskDepts.map(d=>d.risk>70?'#e74c3c':d.risk>50?'#e67e22':'#27ae60'), borderRadius:3}]},
+    options:{ indexAxis:'y', plugins:{legend:{display:false}},
+      scales:{x:{max:100, ticks:{callback:v=>v+'%',font:{size:9}}}, y:{ticks:{font:{size:8}}}} }
+  });
+
+  const top5 = docSorted.slice(0,5);
+  new Chart(document.getElementById('scenarioChart'), {
+    type:'bar',
+    data:{ labels:top5.map(d=>d.name.split(' ').slice(0,2).join(' ')),
+      datasets:[{label:'Revenue at Risk (₹Cr)', data:top5.map(d=>d.total), backgroundColor:['#e74c3c','#e74c3c','#e67e22','#e67e22','#e67e22'], borderRadius:4}]},
+    options:{ plugins:{legend:{display:false}}, scales:{y:{ticks:{callback:v=>'₹'+v+'Cr',font:{size:9}}}, x:{ticks:{font:{size:9}}}} }
+  });
+
+  const depthData = deptData.map(d => {
+    const docs = doctorData.filter(dc=>dc.dept===d.name).sort((a,b)=>b.ip-a.ip);
+    const top1pct = docs.length>0 && d.ip>0 ? docs[0].ip/d.ip*100 : 100;
+    return {name:d.name, score:Math.max(0,10-top1pct/10), top1pct};
+  }).sort((a,b)=>b.score-a.score).slice(0,15);
+
+  new Chart(document.getElementById('depthChart'), {
+    type:'bar',
+    data:{ labels:depthData.map(d=>d.name.length>18?d.name.slice(0,18)+'…':d.name),
+      datasets:[{label:'Depth Score', data:depthData.map(d=>d.score),
+        backgroundColor:depthData.map(d=>d.score>3?'#27ae60':d.score>1?'#e67e22':'#e74c3c'), borderRadius:3}]},
+    options:{ indexAxis:'y', plugins:{legend:{display:false},
+      tooltip:{callbacks:{label:ctx=>`Score: ${ctx.raw.toFixed(1)} • Top-1 doc = ${depthData[ctx.dataIndex].top1pct.toFixed(1)}% of dept IP`}}},
+      scales:{x:{max:10, title:{display:true,text:'Resilience Score (0=single-doc, 10=fully distributed)',font:{size:9}}}, y:{ticks:{font:{size:8}}}} }
+  });
+}
+
+// =============================================
+// QUADRANT
+// =============================================
+let qMode = 'dept';
+let qXAxis = 'arppIP';
+let qYAxis = 'total';
+let qChart = null;
+
+function switchQ(mode, el) {
+  document.querySelectorAll('#qBtnDept,#qBtnDoc').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  qMode = mode;
+  if (qChart) { qChart.destroy(); qChart = null; }
+  buildQuadrant();
+}
+function switchQX(axis, el) {
+  document.querySelectorAll('#qXarppIP,#qXarpob,#qXarppOP').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  qXAxis = axis;
+  if (qChart) { qChart.destroy(); qChart = null; }
+  buildQuadrant();
+}
+function switchQY(axis, el) {
+  document.querySelectorAll('#qYtotal,#qYip,#qYdisc').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  qYAxis = axis;
+  if (qChart) { qChart.destroy(); qChart = null; }
+  buildQuadrant();
+}
+
+const Q_AXIS_LABELS = {
+  arppIP: 'ARPP-IP (₹000s)', arpob: 'ARPOB (₹000s)', arppOP: 'ARPP-OP (₹)',
+  total: 'Total Revenue (₹Cr)', ip: 'IP Revenue (₹Cr)', disc: 'IP Discharges'
+};
+const Q_AXIS_FMT = {
+  arppIP: v=>'₹'+v.toFixed(0)+'K', arpob: v=>'₹'+v.toFixed(0)+'K', arppOP: v=>'₹'+v.toFixed(0),
+  total: v=>'₹'+v.toFixed(1)+'Cr', ip: v=>'₹'+v.toFixed(1)+'Cr', disc: v=>v.toFixed(0)
+};
+
+function buildQuadrant() {
+  const src = qMode === 'dept' ? deptData : doctorData;
+
+  // Get X value for each item (convert to display units)
+  const xVal = d => {
+    if (qXAxis === 'arppIP') {
+      const v = (d.arppIP||0) > 0 ? (d.arppIP)/1000 : (d.arppOP||0)/1000;
+      return v > 0 ? v : 0.5;
+    }
+    if (qXAxis === 'arpob') {
+      const v = (d.arpob||0) > 0 ? (d.arpob)/1000 : (d.arppOP||0)/1000;
+      return v > 0 ? v : 0.5;
+    }
+    if (qXAxis === 'arppOP') return (d.arppOP||0) > 0 ? (d.arppOP||0) : 500;
+    return 0;
+  };
+  const yVal = d => {
+    if (qYAxis === 'total') return d.total||0;
+    if (qYAxis === 'ip')    return d.ip||0;
+    if (qYAxis === 'disc')  return d.disc||0;
+    return 0;
+  };
+
+  // Filter out zeros for cleaner chart
+  const items = src
+    .filter(d => yVal(d) > 0.005)
+    .map(d => ({
+      x: xVal(d),
+      y: yVal(d),
+      r: Math.max(3, Math.sqrt(d.total) * (qMode==='dept' ? 3.5 : 4)),
+      label: d.name,
+      arppIP: d.arppIP||0, arpob: d.arpob||0, arppOP: d.arppOP||0,
+      total: d.total, ip: d.ip||0, disc: d.disc||0
+    }));
+
+  const sorted_x = [...items].sort((a,b)=>a.x-b.x);
+  const sorted_y = [...items].sort((a,b)=>a.y-b.y);
+  const medX = sorted_x[Math.floor(sorted_x.length/2)].x;
+  const medY = sorted_y[Math.floor(sorted_y.length/2)].y;
+
+  const xLabel = Q_AXIS_LABELS[qXAxis];
+  const yLabel = Q_AXIS_LABELS[qYAxis];
+  document.getElementById('qTitle').textContent = `${yLabel} vs ${xLabel} — ${qMode==='dept'?'Department':'Doctor'} Portfolio`;
+  document.getElementById('qSub').textContent = `Bubble size = total revenue. Dashed lines = medians. Click axes buttons to change dimensions.`;
+
+  const colors = items.map(d =>
+    d.x>=medX && d.y>=medY ? '#27ae60' :
+    d.x>=medX && d.y<medY  ? '#8e44ad' :
+    d.y>=medY              ? '#e67e22' : '#a0aec0'
+  );
+
+  qChart = new Chart(document.getElementById('quadChart'), {
+    type: 'bubble',
+    data: { datasets:[{
+      label:'', data:items,
+      backgroundColor: colors.map(c=>c+'aa'),
+      borderColor: colors,
+      borderWidth: 1.5
+    }]},
+    options:{
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{label:ctx=>{
+          const d = ctx.raw;
+          const xFmt = Q_AXIS_FMT[qXAxis];
+          const yFmt = Q_AXIS_FMT[qYAxis];
+          return [`${d.label}`,
+            `${xLabel}: ${xFmt(d.x)}`,
+            `${yLabel}: ${yFmt(d.y)}`,
+            `ARPP-IP: ₹${(d.arppIP/1000).toFixed(0)}K  ARPOB: ₹${(d.arpob/1000).toFixed(0)}K  ARPP-OP: ₹${d.arppOP||0}`
+          ];
+        }}}
+      },
+      scales:{
+        x:{
+          title:{display:true, text:'← Low   '+xLabel+'   High →', font:{size:10}},
+          ticks:{callback: Q_AXIS_FMT[qXAxis], font:{size:9}}
+        },
+        y:{
+          title:{display:true, text:yLabel, font:{size:10}},
+          ticks:{callback: Q_AXIS_FMT[qYAxis], font:{size:9}}
+        }
+      }
+    }
+  });
+
+  // Quadrant labels
+  const quadrants = { star:[], premium:[], cash:[], question:[] };
+  items.forEach(d => {
+    const key = d.x>=medX && d.y>=medY ? 'star' : d.x>=medX ? 'premium' : d.y>=medY ? 'cash' : 'question';
+    quadrants[key].push(d);
+  });
+
+  const quadNames = {
+    star: { id:'matStar',    label:`📈 High ${yLabel.split('(')[0].trim()} · High ${xLabel.split('(')[0].trim()}` },
+    premium:{ id:'matPremium', label:`💠 Low ${yLabel.split('(')[0].trim()} · High ${xLabel.split('(')[0].trim()}` },
+    cash:   { id:'matCash',    label:`📊 High ${yLabel.split('(')[0].trim()} · Low ${xLabel.split('(')[0].trim()}` },
+    question:{id:'matQuestion',label:`📋 Low ${yLabel.split('(')[0].trim()} · Low ${xLabel.split('(')[0].trim()}` }
+  };
+
+  // Update quadrant card titles dynamically
+  document.querySelector('[style*="dcfce7"] .card-title').textContent = quadNames.star.label;
+  document.querySelector('[style*="ede9fe"] .card-title').textContent = quadNames.premium.label;
+  document.querySelector('[style*="fff7ed"] .card-title').textContent = quadNames.cash.label;
+  document.querySelector('[style*="f1f5f9"] .card-title').textContent = quadNames.question.label;
+
+  const fmt_x = Q_AXIS_FMT[qXAxis];
+  const fmt_y = Q_AXIS_FMT[qYAxis];
+  document.getElementById('matStar').innerHTML     = quadrants.star.sort((a,b)=>b.y-a.y).map(d=>`• ${d.label} (${fmt_y(d.y)}, ${fmt_x(d.x)})`).join('<br>');
+  document.getElementById('matPremium').innerHTML  = quadrants.premium.sort((a,b)=>b.y-a.y).map(d=>`• ${d.label} (${fmt_y(d.y)}, ${fmt_x(d.x)})`).join('<br>');
+  document.getElementById('matCash').innerHTML     = quadrants.cash.sort((a,b)=>b.y-a.y).map(d=>`• ${d.label} (${fmt_y(d.y)}, ${fmt_x(d.x)})`).join('<br>');
+  document.getElementById('matQuestion').innerHTML = quadrants.question.sort((a,b)=>b.y-a.y).map(d=>`• ${d.label} (${fmt_y(d.y)}, ${fmt_x(d.x)})`).join('<br>');
+}
+// =============================================
+// MONTHLY
+// =============================================
+function buildMonthly() {
+  new Chart(document.getElementById('monthStack'), {
+    type:'bar',
+    data:{ labels:months,
+      datasets:[
+        {label:'IP Revenue (₹Cr)', data:monthlyIP, backgroundColor:'#1a3a5c', borderRadius:2},
+        {label:'OP Revenue (₹Cr)', data:monthlyOP, backgroundColor:'#e67e22', borderRadius:2},
+      ]},
+    options:{ plugins:{legend:{position:'top',labels:{font:{size:10},boxWidth:10}}},
+      scales:{x:{stacked:true}, y:{stacked:true, ticks:{callback:v=>'₹'+v}}} }
+  });
+
+  const totalIPSum = monthlyIP.reduce((s,v)=>s+v,0);
+  const top5 = [...deptData].sort((a,b)=>b.ip-a.ip).slice(0,5);
+  const COL = ['#1a3a5c','#e67e22','#27ae60','#8e44ad','#e74c3c'];
+  new Chart(document.getElementById('deptTrend'), {
+    type:'line',
+    data:{ labels:months,
+      datasets:top5.map((d,i) => ({
+        label:d.name.split(' ')[0],
+        data:monthlyIP.map(m => parseFloat((d.ip/totalIPSum*m*100).toFixed(2))),
+        borderColor:COL[i], backgroundColor:COL[i]+'22', fill:false, borderWidth:2, pointRadius:2, tension:0.4
+      }))},
+    options:{ plugins:{legend:{position:'top',labels:{font:{size:10},boxWidth:10}}},
+      scales:{y:{ticks:{callback:v=>'₹'+v+'L'}}} }
+  });
+
+  new Chart(document.getElementById('discOcc'), {
+    type:'line',
+    data:{ labels:months,
+      datasets:[
+        {label:'Discharges', data:discharge, borderColor:'#1a3a5c', backgroundColor:'rgba(26,58,92,0.1)', fill:true, borderWidth:2.5, pointRadius:3, yAxisID:'y'},
+        {label:'Occupancy %', data:occupancy, borderColor:'#e67e22', borderDash:[5,5], borderWidth:2, pointRadius:3, yAxisID:'y1'},
+      ]},
+    options:{ plugins:{legend:{position:'top',labels:{font:{size:10},boxWidth:10}}},
+      scales:{y:{title:{display:true,text:'Discharges',font:{size:9}}, position:'left'},
+              y1:{title:{display:true,text:'Occupancy %',font:{size:9}}, position:'right', ticks:{callback:v=>v+'%'}}} }
+  });
+}
+
+// =============================================
+// PAYOR
+// =============================================
+function buildPayor() {
+  new Chart(document.getElementById('payorDonut'), {
+    type:'doughnut',
+    data:{ labels:['Cash / Self-Pay','Insurance (TPA)','Corporate','Government / Scheme'],
+      datasets:[{data:[288.02,97.52,14.31,9.85], backgroundColor:['#1a3a5c','#27ae60','#8e44ad','#e67e22'], borderWidth:0, hoverOffset:6}] },
+    options:{ cutout:'55%', plugins:{legend:{position:'bottom',labels:{font:{size:11},boxWidth:12,padding:8}}} }
+  });
+
+  const top12d = [...deptData].sort((a,b)=>b.total-a.total).slice(0,12);
+  new Chart(document.getElementById('arppOPChart'), {
+    type:'bar',
+    data:{ labels:top12d.map(d=>d.name.length>18?d.name.slice(0,18)+'…':d.name),
+      datasets:[{label:'ARPP-OP (₹/visit)', data:top12d.map(d=>Math.round(arppOPOf(d))), backgroundColor:'#27ae60', borderRadius:3}]},
+    options:{ indexAxis:'y', plugins:{legend:{display:false}}, scales:{x:{ticks:{callback:v=>'₹'+v.toLocaleString('en-IN'),font:{size:9}}}, y:{ticks:{font:{size:8}}}} }
+  });
+
+  const allByArpob = [...deptData].sort((a,b)=>b.arpob-a.arpob);
+  new Chart(document.getElementById('arpobChart'), {
+    type:'bar',
+    data:{ labels:allByArpob.map(d=>d.name.length>18?d.name.slice(0,18)+'…':d.name),
+      datasets:[{label:'ARPOB (₹/bed/day)', data:allByArpob.map(d=>d.arpob), backgroundColor:allByArpob.map(d=>d.arpob>35000?'#27ae60':d.arpob>25000?'#1a3a5c':'#a0aec0'), borderRadius:3}]},
+    options:{ indexAxis:'y', plugins:{legend:{display:false}}, scales:{x:{ticks:{callback:v=>'₹'+Math.round(v/1000)+'K',font:{size:9}}}, y:{ticks:{font:{size:8}}}} }
+  });
+}
+
+// =============================================
+// BENCHMARKS
+// =============================================
+function buildBenchmarks() {
+  const PEERS = ['LHRC FY25','IHH India FY25','Apollo FY25'];
+  const PC = ['#1a3a5c','#27ae60','#e67e22'];
+  const mkBar = (id, data, opts={}) => new Chart(document.getElementById(id), {
+    type:'bar',
+    data:{ labels:PEERS, datasets:[{data, backgroundColor:PC, borderRadius:6}] },
+    options:{ plugins:{legend:{display:false},...(opts.pluginExtra||{})}, scales:{y:{...opts.y}} }
+  });
+  mkBar('bArpob', [31875,47100,60588], {y:{ticks:{callback:v=>'₹'+Math.round(v/1000)+'K'}, title:{display:true,text:'₹/Occ.Bed/Day'}}});
+  mkBar('bOcc',   [54.4,72,68],         {y:{max:100, ticks:{callback:v=>v+'%'}, title:{display:true,text:'Occupancy %'}}});
+  mkBar('bAlos',  [4.3,4.2,3.32],       {y:{title:{display:true,text:'Days'}}});
+
+  new Chart(document.getElementById('bMix'), {
+    type:'bar',
+    data:{ labels:['Oncology','Nephrology','Neuro Surg','GI Surgery','Cardiology'],
+      datasets:[
+        {label:'LHRC',  data:[17.9,17.4,8.8,12.2,6.2], backgroundColor:'#1a3a5c'},
+        {label:'Apollo',data:[19.0,5.0, 10.0,10.0,8.0], backgroundColor:'#e67e22'},
+      ]},
+    options:{ plugins:{legend:{position:'top',labels:{font:{size:10},boxWidth:10}}},
+      scales:{y:{ticks:{callback:v=>v+'%'}, title:{display:true,text:'% of IP Revenue'}}} }
+  });
+
+  new Chart(document.getElementById('bPayor'), {
+    type:'bar',
+    data:{ labels:PEERS,
+      datasets:[
+        {label:'Cash/Self-Pay', data:[73.3,40,41], backgroundColor:'#1a3a5c'},
+        {label:'Insurance',     data:[22.2,35,45], backgroundColor:'#27ae60'},
+        {label:'Govt/Scheme',   data:[2.5,25,14],  backgroundColor:'#e67e22'},
+        {label:'Corporate',     data:[2.0,0,0],    backgroundColor:'#8e44ad'},
+      ]},
+    options:{ plugins:{legend:{position:'bottom',labels:{font:{size:10},boxWidth:10}}},
+      scales:{x:{stacked:true}, y:{stacked:true, max:100, ticks:{callback:v=>v+'%'}}} }
+  });
+
+  mkBar('bEbitda', [19,18,24.6], {y:{ticks:{callback:v=>v+'%'}, title:{display:true,text:'EBITDA Margin %'}}});
+}
+
+
+// =============================================
+// DOCTOR MIS
+// =============================================
+let _misIPChart=null,_misOPChart=null,_misTotChart=null;
+let _sumSortCol='ytdTotal',_sumSortAsc=false;
+let _misInited=false;
+
+function initDocMIS(){
+  if(_misInited)return; _misInited=true;
+  const depts=[...new Set(Object.values(BRM_DOCTORS).map(d=>d.dept))].sort();
+  ['misDeptSel','sumDeptSel'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(!el)return;
+    if(id==='misDeptSel') el.innerHTML='<option value="">All Departments</option>';
+    depts.forEach(dep=>{ el.innerHTML+=`<option value="${dep}">${dep}</option>`; });
+  });
+  misDeptFilter(); renderDocSum();
+}
+
+function misDeptFilter(){
+  const dept=document.getElementById('misDeptSel').value;
+  const sel=document.getElementById('misDocSel');
+  const filtered=Object.entries(BRM_DOCTORS).filter(([n,d])=>!dept||d.dept===dept).sort((a,b)=>b[1].ytdTotal-a[1].ytdTotal);
+  sel.innerHTML=filtered.map(([n,d])=>`<option value="${n}">${n}${dept?'':' ('+d.dept+')'}</option>`).join('');
+  misLoadDoc();
+}
+
+function misSearchDoc(){
+  const q=(document.getElementById('misSearch').value||'').toLowerCase().trim();
+  if(!q)return;
+  document.getElementById('misDeptSel').value='';
+  misDeptFilter();
+  const sel=document.getElementById('misDocSel');
+  for(let opt of sel.options){if(opt.value.toLowerCase().includes(q)){opt.selected=true;misLoadDoc();return;}}
+}
+
+function misLoadDoc(){
+  const name=document.getElementById('misDocSel').value;
+  if(!name||!BRM_DOCTORS[name])return;
+  const d=BRM_DOCTORS[name];
+  const MO=['Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar'];
+  const fL=v=>v!=null?v.toFixed(2):'—';
+  const fI=v=>v!=null?v.toLocaleString():'—';
+
+  document.getElementById('misStatRow').style.display='block';
+  const alos=d.ytdDisc>0?(d.ytdBeds/d.ytdDisc).toFixed(1):'—';
+  document.getElementById('misKPIStrip').innerHTML=`
+    <div class="kpi" style="border-color:#718096"><div class="kpi-label">Dept</div><div class="kpi-value" style="color:#1a3a5c;font-size:0.7rem;line-height:1.2">${d.dept}</div></div>
+    <div class="kpi" style="border-color:#1a3a5c"><div class="kpi-label">Total FY25</div><div class="kpi-value" style="color:#1a3a5c">&#x20B9;${fL(d.ytdTotal)}L</div><div class="kpi-sub">${(d.ytdTotal/40632.0*100).toFixed(2)}% of hosp</div></div>
+    <div class="kpi" style="border-color:#e67e22"><div class="kpi-label">IP Revenue</div><div class="kpi-value" style="color:#e67e22">&#x20B9;${fL(d.ytdIP)}L</div></div>
+    <div class="kpi" style="border-color:#8e44ad"><div class="kpi-label">OP Revenue</div><div class="kpi-value" style="color:#8e44ad">&#x20B9;${fL(d.ytdOP)}L</div></div>
+    <div class="kpi" style="border-color:#27ae60"><div class="kpi-label">IP Disc.</div><div class="kpi-value" style="color:#27ae60">${fI(d.ytdDisc)}</div><div class="kpi-sub">ALOS ${alos}d</div></div>
+    <div class="kpi" style="border-color:#16a085"><div class="kpi-label">Bed Days</div><div class="kpi-value" style="color:#16a085">${fI(d.ytdBeds)}</div></div>
+    <div class="kpi" style="border-color:#1976d2"><div class="kpi-label">OP Visits</div><div class="kpi-value" style="color:#1976d2">3,74,796</div></div>
+    <div class="kpi" style="border-color:#e74c3c"><div class="kpi-label">ARPP-IP</div><div class="kpi-value" style="color:#e74c3c;font-size:0.82rem">${d.arppIP>0?'&#x20B9;'+fI(d.arppIP):'—'}</div></div>
+    <div class="kpi" style="border-color:#c0392b"><div class="kpi-label">ARPOB</div><div class="kpi-value" style="color:#c0392b;font-size:0.82rem">${d.arpob>0?'&#x20B9;'+fI(d.arpob):'—'}</div></div>
+    <div class="kpi" style="border-color:#7f8c8d"><div class="kpi-label">ARPP-OP</div><div class="kpi-value" style="color:#7f8c8d;font-size:0.82rem">${d.arppOP>0?'&#x20B9;'+fI(d.arppOP):'—'}</div></div>`;
+
+  document.getElementById('misTrendSection').style.display='grid';
+  document.getElementById('misRevSection').style.display='block';
+  document.getElementById('misKPISection').style.display='grid';
+  document.getElementById('misRevTitle').textContent=`Revenue — ${name} (₹ Lakhs)`;
+  document.getElementById('misIPSub').textContent=`YTD IP: ₹${fL(d.ytdIP)}L`;
+  document.getElementById('misOPSub').textContent=`YTD OP: ₹${fL(d.ytdOP)}L`;
+  document.getElementById('misTotSub').textContent=`YTD Total: ₹${fL(d.ytdTotal)}L`;
+
+  if(_misIPChart)_misIPChart.destroy();
+  if(_misOPChart)_misOPChart.destroy();
+  if(_misTotChart)_misTotChart.destroy();
+  const co={plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>'₹'+v+'L',font:{size:8}}},x:{ticks:{font:{size:9}}}}};
+  _misIPChart=new Chart(document.getElementById('misIPChart'),{type:'bar',data:{labels:MO,datasets:[{label:'IP (L)',data:d.ip,backgroundColor:'#1a3a5c',borderRadius:3}]},options:co});
+  _misOPChart=new Chart(document.getElementById('misOPChart'),{type:'bar',data:{labels:MO,datasets:[{label:'OP (L)',data:d.op,backgroundColor:'#e67e22',borderRadius:3}]},options:co});
+  _misTotChart=new Chart(document.getElementById('misTotChart'),{type:'bar',data:{labels:MO,datasets:[
+    {label:'IP (L)',data:d.ip,backgroundColor:'#1a3a5c',borderRadius:3},
+    {label:'OP (L)',data:d.op,backgroundColor:'#e67e22',borderRadius:3},
+  ]},options:{plugins:{legend:{position:'bottom',labels:{font:{size:9},boxWidth:8}}},scales:{x:{stacked:true,ticks:{font:{size:9}}},y:{stacked:true,ticks:{callback:v=>'₹'+v+'L',font:{size:8}}}}}});
+
+  let rh='',tIP=0,tOP=0,tD=0,tB=0,tOPV=0;
+  MO.forEach((m,i)=>{
+    const ip=d.ip[i],op=d.op[i],tot=+(ip+op).toFixed(2),disc=d.disc[i],beds=d.beds[i],opv=d.opv[i];
+    tIP+=ip;tOP+=op;tD+=disc;tB+=beds;tOPV+=opv;
+    const aOPP=opv>0?Math.round(op*100000/opv):0;
+    const aIPP=disc>0?Math.round(ip*100000/disc):0;
+    const aOB=beds>0?Math.round(ip*100000/beds):0;
+    rh+=`<tr><td><strong>${m}</strong></td><td style="text-align:right">${op.toFixed(2)}</td><td style="text-align:right">${ip.toFixed(2)}</td><td style="text-align:right"><strong>${tot.toFixed(2)}</strong></td><td style="text-align:right">${aOPP>0?'&#x20B9;'+fI(aOPP):'—'}</td><td style="text-align:right">${aIPP>0?'&#x20B9;'+fI(aIPP):'—'}</td><td style="text-align:right">${aOB>0?'&#x20B9;'+fI(aOB):'—'}</td></tr>`;
+  });
+  tIP=+tIP.toFixed(2);tOP=+tOP.toFixed(2);
+  const yAOP=tOPV>0?Math.round(tOP*100000/tOPV):0,yAIP=tD>0?Math.round(tIP*100000/tD):0,yAOB=tB>0?Math.round(tIP*100000/tB):0;
+  rh+=`<tr class="top3"><td><strong>YTD</strong></td><td style="text-align:right"><strong>${tOP.toFixed(2)}</strong></td><td style="text-align:right"><strong>${tIP.toFixed(2)}</strong></td><td style="text-align:right"><strong>${(tIP+tOP).toFixed(2)}</strong></td><td style="text-align:right">${yAOP>0?'&#x20B9;'+fI(yAOP):'—'}</td><td style="text-align:right">${yAIP>0?'&#x20B9;'+fI(yAIP):'—'}</td><td style="text-align:right">${yAOB>0?'&#x20B9;'+fI(yAOB):'—'}</td></tr>`;
+  document.getElementById('misRevBody').innerHTML=rh;
+
+  let dh='',ytdD=0,ytdB=0;
+  MO.forEach((m,i)=>{
+    const disc=d.disc[i],beds=d.beds[i];ytdD+=disc;ytdB+=beds;
+    dh+=`<tr><td><strong>${m}</strong></td><td style="text-align:right">${fI(disc)}</td><td style="text-align:right">${fI(beds)}</td><td style="text-align:right">${disc>0?(beds/disc).toFixed(1):'—'}</td></tr>`;
+  });
+  dh+=`<tr class="top3"><td><strong>YTD</strong></td><td style="text-align:right"><strong>${fI(ytdD)}</strong></td><td style="text-align:right"><strong>${fI(ytdB)}</strong></td><td style="text-align:right"><strong>${ytdD>0?(ytdB/ytdD).toFixed(1):'—'}</strong></td></tr>`;
+  document.getElementById('misDiscBody').innerHTML=dh;
+
+  let oh='',yn=0,yf=0,yr=0,yt=0;
+  MO.forEach((m,i)=>{
+    const n=d.opNew[i]||0,f=d.opFree[i]||0,r=d.opRevisit[i]||0,t=d.opv[i]||0;
+    yn+=n;yf+=f;yr+=r;yt+=t;
+    oh+=`<tr><td><strong>${m}</strong></td><td style="text-align:right">${fI(n)}</td><td style="text-align:right">${fI(f)}</td><td style="text-align:right">${fI(r)}</td><td style="text-align:right"><strong>${fI(t)}</strong></td><td style="text-align:right">${t>0?Math.round(t/26):'—'}</td></tr>`;
+  });
+  oh+=`<tr class="top3"><td><strong>YTD</strong></td><td style="text-align:right"><strong>${fI(yn)}</strong></td><td style="text-align:right"><strong>${fI(yf)}</strong></td><td style="text-align:right"><strong>${fI(yr)}</strong></td><td style="text-align:right"><strong>${fI(yt)}</strong></td><td style="text-align:right"><strong>${yt>0?Math.round(yt/26):'—'}</strong></td></tr>`;
+  document.getElementById('misOPVBody').innerHTML=oh;
+}
+
+function sortDocSum(col){
+  if(_sumSortCol===col)_sumSortAsc=!_sumSortAsc;
+  else{_sumSortCol=col;_sumSortAsc=(col==='name'||col==='dept');}
+  renderDocSum();
+}
+
+function renderDocSum(){
+  const q=(document.getElementById('sumSearch')?.value||'').toLowerCase();
+  const dept=document.getElementById('sumDeptSel')?.value||'';
+  let entries=Object.entries(BRM_DOCTORS).filter(([n,d])=>{
+    if(dept&&d.dept!==dept)return false;
+    if(q&&!n.toLowerCase().includes(q)&&!d.dept.toLowerCase().includes(q))return false;
+    return true;
+  });
+  entries.sort((a,b)=>{
+    const va=a[1][_sumSortCol]??a[0],vb=b[1][_sumSortCol]??b[0];
+    const v=typeof va==='string'?va.localeCompare(vb):va-vb;
+    return _sumSortAsc?v:-v;
+  });
+  const totH=Object.values(BRM_DOCTORS).reduce((s,d)=>s+d.ytdTotal,0);
+  document.getElementById('sumCount').textContent=`${entries.length} doctors`;
+  document.getElementById('tbDocSum').innerHTML=entries.map(([name,d],i)=>{
+    const t=d.ytdTotal>=1000?'<span class="pill gp">Pillar</span>':d.ytdTotal>=500?'<span class="pill op">Growth</span>':d.ytdTotal>=100?'<span class="pill bp">Active</span>':'<span class="pill grp">Minor</span>';
+    return `<tr style="cursor:pointer" onclick="misJumpToDoc('${name.replace(/'/g,"\'")}')">
+      <td style="font-weight:700" class="${i<3?'':''}">${i+1}&nbsp;${name} ${t}</td>
+      <td style="color:#718096;font-size:0.66rem">${d.dept}</td>
+      <td style="text-align:right;font-weight:700">&#x20B9;${d.ytdTotal.toFixed(2)}L</td>
+      <td style="text-align:right">&#x20B9;${d.ytdIP.toFixed(2)}L</td>
+      <td style="text-align:right">&#x20B9;${d.ytdOP.toFixed(2)}L</td>
+      <td style="text-align:right">${d.ytdDisc.toLocaleString()}</td>
+      <td style="text-align:right">${d.ytdBeds.toLocaleString()}</td>
+      <td style="text-align:right">${d.ytdOPV.toLocaleString()}</td>
+      <td style="text-align:right">${d.arppOP>0?'&#x20B9;'+d.arppOP.toLocaleString():'—'}</td>
+      <td style="text-align:right">${d.arppIP>0?'&#x20B9;'+d.arppIP.toLocaleString():'—'}</td>
+      <td style="text-align:right">${d.arpob>0?'&#x20B9;'+d.arpob.toLocaleString():'—'}</td>
+    </tr>`;
+  }).join('');
+}
+
+function misJumpToDoc(name){
+  document.getElementById('misDeptSel').value='';
+  misDeptFilter();
+  const sel=document.getElementById('misDocSel');
+  for(let opt of sel.options){if(opt.value===name){opt.selected=true;break;}}
+  misLoadDoc();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+</script>
+</body>
+</html>
