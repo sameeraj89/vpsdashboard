@@ -131,6 +131,49 @@ body.edit-mode [data-edit-id]:empty::before{content:attr(data-placeholder);color
 .mf-error{display:none;font-size:0.68rem;color:#c0392b;padding:7px 10px;background:#fdf2f2;border-radius:4px;border-left:3px solid #c0392b;margin-bottom:12px}
 .mf-btn{width:100%;background:#0d2137;color:white;padding:11px;border:none;border-radius:5px;font-size:0.78rem;font-weight:700;cursor:pointer;font-family:'IBM Plex Sans',sans-serif;letter-spacing:0.4px}
 
+/* ── CLEAN DOCUMENT (TAB 1) ── */
+.doc-wrap{background:white;border-radius:8px;border:1px solid #e2e8f0;overflow:hidden;margin-bottom:20px}
+.doc-dateline{background:#0d2137;padding:14px 28px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.doc-dateline-eyebrow{font-size:0.54rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:rgba(201,168,76,0.6);margin-bottom:3px;font-family:'IBM Plex Mono',monospace}
+.doc-dateline-week{font-size:0.86rem;font-weight:700;color:#fff}
+.doc-dateline-ref{font-size:0.59rem;color:rgba(255,255,255,0.3);font-family:'IBM Plex Mono',monospace;text-align:right;line-height:1.8}
+.doc-body{padding:26px 28px}
+.doc-summary{background:#f8fafc;border-left:3px solid #0d2137;border-radius:0 6px 6px 0;padding:14px 18px;margin-bottom:22px}
+.doc-summary-label{font-size:0.55rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#a0aec0;margin-bottom:6px;font-family:'IBM Plex Mono',monospace}
+.doc-sections{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-bottom:22px}
+.doc-section{border:1px solid #e8edf4;border-radius:7px;padding:16px 17px;border-top:3px solid var(--sc,#0d2137)}
+.doc-sec-header{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px}
+.doc-sec-title{font-size:0.63rem;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;color:var(--sc,#0d2137);display:flex;align-items:center;gap:5px;line-height:1.3}
+.doc-sec-num{text-align:right;flex-shrink:0}
+.doc-sec-big{font-size:1.05rem;font-weight:700;font-family:'IBM Plex Mono',monospace;color:#0d2137;line-height:1}
+.doc-sec-sublabel{font-size:0.52rem;font-weight:600;text-transform:uppercase;letter-spacing:0.4px;color:#a0aec0;margin-top:2px}
+.doc-sec-status{margin-bottom:8px}
+.doc-sec-body{font-size:0.69rem;color:#4a5568;line-height:1.8;border-top:1px solid #f0f4f8;padding-top:8px;margin-top:4px;min-height:2em}
+.doc-comp{background:#fff8f0;border:1px solid rgba(230,126,34,0.3);border-left:3px solid #e67e22;border-radius:7px;padding:16px 18px}
+.doc-comp-head{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px}
+.doc-comp-title{font-size:0.63rem;font-weight:800;text-transform:uppercase;letter-spacing:0.7px;color:#b45309}
+.doc-comp-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:12px}
+.dcs{background:white;border-radius:5px;padding:8px 10px;border:1px solid #e2e8f0;text-align:center}
+.dcs-v{font-size:1.1rem;font-weight:800;font-family:'IBM Plex Mono',monospace}
+.dcs-l{font-size:0.52rem;font-weight:600;text-transform:uppercase;letter-spacing:0.4px;color:#a0aec0;margin-top:1px}
+.doc-comp-links{display:flex;gap:8px;flex-wrap:wrap}
+
+/* ── BAIN ARTICLE (TAB 2) ── */
+.art-wrap{background:white;border-radius:8px;border:1px solid #e2e8f0;overflow:hidden;margin-bottom:20px}
+.art-top{padding:34px 42px 26px}
+.art-pub{font-size:0.55rem;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;color:#c9a84c;margin-bottom:16px;font-family:'IBM Plex Mono',monospace;display:flex;align-items:center;gap:14px}
+.art-pub::after{content:'';flex:1;height:1px;background:#e8edf4}
+.art-hed{font-family:'Lora',Georgia,serif;font-size:1.6rem;font-weight:700;color:#0d2137;line-height:1.22;letter-spacing:-0.3px;max-width:820px;margin-bottom:13px}
+.art-deck{font-size:0.8rem;color:#4a5568;line-height:1.8;max-width:720px;font-style:italic}
+.art-byline{margin-top:16px;padding-top:14px;border-top:1px solid #f0f4f8;font-size:0.59rem;color:#a0aec0;font-family:'IBM Plex Mono',monospace;display:flex;gap:18px;flex-wrap:wrap}
+.art-body{padding:26px 42px 32px;border-top:2px solid #f0f4f8}
+.art-section{margin-bottom:28px}
+.art-section-label{font-size:0.55rem;font-weight:700;text-transform:uppercase;letter-spacing:2.2px;color:#1a3a5c;padding-bottom:8px;border-bottom:2px solid #0d2137;margin-bottom:14px}
+.art-para{font-size:0.78rem;color:#2d3748;line-height:2.05;min-height:3.5em}
+.art-pull{border-left:3px solid #c9a84c;padding:14px 20px;margin:6px 0 24px;font-family:'Lora',serif;font-size:0.9rem;font-style:italic;color:#0d2137;line-height:1.7;background:#fefaf2;border-radius:0 5px 5px 0}
+.art-footer{background:#f7f9fb;border-top:1px solid #e2e8f0;padding:13px 42px;font-size:0.57rem;color:#a0aec0;font-family:'IBM Plex Mono',monospace;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+@media(max-width:860px){.doc-sections{grid-template-columns:1fr}.art-top,.art-body,.art-footer{padding-left:22px;padding-right:22px}}
+
 /* ── BACK NAV ── */
 .back-nav{display:inline-flex;align-items:center;gap:6px;font-size:0.68rem;color:#718096;text-decoration:none;padding:10px 0 4px;transition:color .18s}
 .back-nav:hover{color:#1a3a5c}
@@ -173,8 +216,8 @@ body.edit-mode [data-edit-id]:empty::before{content:attr(data-placeholder);color
 
   <!-- Inner Tab Bar -->
   <div class="inner-tabs">
-    <div class="itab active" onclick="switchInnerTab('status',this)" id="itab-status">📋 Programme Status</div>
-    <div class="itab" onclick="switchInnerTab('brief',this)" id="itab-brief">📝 Partner Brief</div>
+    <div class="itab active" onclick="switchInnerTab('status',this)" id="itab-status">📋 Weekly Update</div>
+    <div class="itab" onclick="switchInnerTab('brief',this)" id="itab-brief">✍️ Commentary</div>
   </div>
 
   <div class="page-wrap">
@@ -184,166 +227,150 @@ body.edit-mode [data-edit-id]:empty::before{content:attr(data-placeholder);color
 
     <!-- ══ TAB 1: PROGRAMME STATUS ══ -->
     <div class="itab-pane active" id="pane-status">
+      <div class="doc-wrap">
 
-      <!-- Compliance Alert Banner -->
-      <div class="compliance-alert">
-        <div class="ca-head">
+        <!-- Date / header strip -->
+        <div class="doc-dateline">
           <div>
-            <div class="ca-title" data-edit-id="comp-alert-title">⚠ Compliance Diagnostic — 16 March 2026</div>
-            <div style="font-size:0.65rem;color:#78350f;margin-top:3px" data-edit-id="comp-alert-sub">62 items reviewed &nbsp;·&nbsp; 27 confirmed non-compliances &nbsp;·&nbsp; 6 require action within days &nbsp;·&nbsp; 16 internal contradictions need reconciliation</div>
+            <div class="doc-dateline-eyebrow">VPS Lakeshore Hospital &amp; Research Centre · Lakeshore 2.0 Transformation Programme</div>
+            <div class="doc-dateline-week" data-edit-id="doc-week">Week of 16 March 2026</div>
           </div>
-          <div class="ca-links">
-            <a class="ca-link ca-link-xl" href="Weekly%20update/16th%20March/Complicance%20Tracker/Hospital_Compliance_Tracker_%2013%2003%2026%20final%20%282%29.xlsx" download>📥 Full Compliance Tracker (.xlsx)</a>
-            <a class="ca-link ca-link-doc" href="Weekly%20update/16th%20March/Complicance%20Tracker/Lakeshore_Compliance_Gap_Report_13Mar2026%20%281%29.docx" download>📄 Gap Report (.docx)</a>
-          </div>
-        </div>
-        <div class="ca-stats">
-          <div class="cas"><div class="cas-v" style="color:#c0392b" data-edit-id="comp-s1">27</div><div class="cas-l">Past Due</div></div>
-          <div class="cas"><div class="cas-v" style="color:#e67e22" data-edit-id="comp-s2">6</div><div class="cas-l">Due Within Days</div></div>
-          <div class="cas"><div class="cas-v" style="color:#f39c12" data-edit-id="comp-s3">16</div><div class="cas-l">Contradictions</div></div>
-          <div class="cas"><div class="cas-v" style="color:#2980b9" data-edit-id="comp-s4">62</div><div class="cas-l">Total Items</div></div>
-        </div>
-      </div>
-
-      <!-- Capex + Cost Summary Cards -->
-      <div class="summary-grid">
-        <div class="sum-card">
-          <div class="sum-card-head">
-            <div class="sum-card-icon">🏗️</div>
-            <div class="sum-card-title" data-edit-id="capex-card-title">Capex Rationalisation — FY27 Budget</div>
-          </div>
-          <div class="sum-rows">
-            <div class="sum-row"><span data-edit-id="capex-r1l">Total FY27 Budget</span><span data-edit-id="capex-r1v">₹82.2 Cr</span></div>
-            <div class="sum-row"><span data-edit-id="capex-r2l">Biomedical Equipment</span><span data-edit-id="capex-r2v">₹49.2 Cr</span></div>
-            <div class="sum-row"><span data-edit-id="capex-r3l">Civil / Buildings</span><span data-edit-id="capex-r3v">₹18.3 Cr</span></div>
-            <div class="sum-row"><span data-edit-id="capex-r4l">IT &amp; Systems</span><span data-edit-id="capex-r4v">₹4.3 Cr</span></div>
-            <div class="sum-row highlight" style="border-top:1px solid #f0f4f8;padding-top:5px;margin-top:2px"><span data-edit-id="capex-r5l">Deferred (3 items)</span><span data-edit-id="capex-r5v">−₹7.0 Cr</span></div>
-          </div>
-          <div class="sum-note" data-edit-id="capex-note">Deferred: Digital Pathology ₹3 Cr · Digital Slide Scanner ₹2.5 Cr · LASER Equipment ₹1.5 Cr. Quantity reductions approved on 4 biomedical items. Key active projects: Casualty ₹3.8 Cr (Jul–Nov), MLP ₹4.4 Cr (Jan–Jun), Renal Transplant Centre ₹1.5 Cr (Jul–Oct).</div>
-        </div>
-        <div class="sum-card">
-          <div class="sum-card-head">
-            <div class="sum-card-icon">✂️</div>
-            <div class="sum-card-title" data-edit-id="cost-card-title">Cost Rationalisation — Status</div>
-          </div>
-          <div class="sum-rows">
-            <div class="sum-row highlight"><span data-edit-id="cost-r1l">Consumables — Immediate Opportunity</span><span data-edit-id="cost-r1v">₹40L</span></div>
-            <div class="sum-row highlight"><span data-edit-id="cost-r2l">Consumables — Structural (Top 20)</span><span data-edit-id="cost-r2v">₹5 Cr</span></div>
-            <div class="sum-row"><span data-edit-id="cost-r3l">Manpower Review</span><span data-edit-id="cost-r3v">In Progress</span></div>
-            <div class="sum-row"><span data-edit-id="cost-r4l">Rate Contract Negotiations</span><span data-edit-id="cost-r4v">Calendared</span></div>
-            <div class="sum-row"><span data-edit-id="cost-r5l">Vendor Renegotiations (Capex)</span><span data-edit-id="cost-r5v">Initiated</span></div>
-          </div>
-          <div class="sum-note" data-edit-id="cost-note">Cost rationalisation file is under review. Nurse-to-bed ratio benchmarking complete; Phase 1 recommendations expected 21 Mar. Rate contract calendar compiled — first vendor negotiations commencing week of 20 Mar. No contractable savings quantum yet finalised.</div>
-        </div>
-      </div>
-
-      <!-- Programme Status Heading -->
-      <div style="margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid #0d2137">
-        <div style="font-size:0.58rem;font-weight:700;text-transform:uppercase;letter-spacing:1.4px;color:#a0aec0;margin-bottom:4px;font-family:'IBM Plex Mono',monospace">VPS Lakeshore Hospital &amp; Research Centre &nbsp;·&nbsp; Confidential</div>
-        <div style="font-size:1.15rem;font-weight:800;color:#0d2137;letter-spacing:-0.2px" data-edit-id="ps-headline">Chairman's Board Update</div>
-        <div style="font-size:0.68rem;color:#718096;margin-top:3px" data-edit-id="ps-sub">Lakeshore 2.0 Transformation Programme &nbsp;·&nbsp; Weekly Cadence</div>
-      </div>
-
-      <div id="chmUpdatesContainer"></div>
-      <div id="chmEmpty" style="display:none;padding:48px;text-align:center;color:#a0aec0;background:white;border-radius:6px;border:1px solid #e2e8f0">
-        <div style="font-size:0.85rem;font-weight:600;color:#718096;margin-bottom:6px">No updates yet</div>
-        <div style="font-size:0.72rem">Admin users can add the first weekly update above</div>
-      </div>
-    </div>
-
-    <!-- ══ TAB 2: PARTNER BRIEF ══ -->
-    <div class="itab-pane" id="pane-brief">
-
-      <div class="brief-wrap">
-        <!-- Article Header -->
-        <div class="brief-header">
-          <div class="brief-meta" data-edit-id="br-meta">VPS Lakeshore · Lakeshore 2.0 Transformation · Week of 16 March 2026</div>
-          <div class="brief-headline" data-edit-id="br-headline">Structural momentum is building — but revenue activation and compliance cannot wait.</div>
-          <div class="brief-deck" data-edit-id="br-deck">Three weeks into the programme, capex discipline is showing and cost identification is progressing. The harder work — activating revenue levers and resolving a governance backlog — now defines the programme's credibility.</div>
+          <div class="doc-dateline-ref" data-edit-id="doc-ref">LHRC/BU/2026/002<br>Chairman's Office · Strictly Confidential</div>
         </div>
 
-        <!-- Article Body -->
-        <div class="brief-body">
+        <div class="doc-body">
 
-          <!-- In Brief -->
-          <div class="brief-section">
-            <div class="brief-section-title" data-edit-id="br-s0-title">The Situation</div>
-            <div class="brief-p" data-edit-id="br-s0-body">The Lakeshore 2.0 agenda is three weeks in. The programme has correctly identified its highest-value near-term levers — consumables rationalisation (₹40L immediate, ₹5 Cr structural), selective capex deferral, and a revenue enhancement programme anchored by tariff revision and new specialty launches. The FY27 capex budget has been set at a disciplined ₹82.2 Cr with ₹7 Cr of non-critical spend deferred. <strong>What is now critical is execution velocity.</strong> Two areas — revenue activation and compliance — are running materially below the pace required to deliver FY27 impact.</div>
+          <!-- Chairman's Note / Exec Summary -->
+          <div class="doc-summary">
+            <div class="doc-summary-label">Chairman's Note</div>
+            <div style="font-size:0.74rem;color:#2d3748;line-height:1.85;font-style:italic" data-edit-id="doc-summary" data-placeholder="Write executive summary here…">FY27 capex budget crystallised at ₹82.2 Cr with ₹7 Cr of non-critical spend deferred. Consumables rationalisation has moved to vendor engagement — the ₹40L immediate opportunity must be contracted within the fortnight. Compliance diagnostic is complete: 62 items reviewed, 27 confirmed non-compliances, 6 requiring immediate action. Revenue levers remain in early design; pace must accelerate to avoid slipping to FY28.</div>
           </div>
 
-          <!-- Capex -->
-          <div class="brief-section">
-            <div class="brief-section-title" data-edit-id="br-s1-title">Capex</div>
-            <div class="brief-section-head" data-edit-id="br-s1-head">Budget set, deferral signals are right.</div>
-            <div class="brief-stat-row">
-              <div class="brief-stat"><div class="brief-stat-v" data-edit-id="br-st1v">₹82.2 Cr</div><div class="brief-stat-l">FY27 Total Budget</div></div>
-              <div class="brief-stat"><div class="brief-stat-v" data-edit-id="br-st2v">₹7.0 Cr</div><div class="brief-stat-l">Deferred (3 Items)</div></div>
-              <div class="brief-stat"><div class="brief-stat-v" data-edit-id="br-st3v">₹49.2 Cr</div><div class="brief-stat-l">Biomedical Equipment</div></div>
+          <!-- 4 Programme Sections -->
+          <div class="doc-sections">
+
+            <div class="doc-section" style="--sc:#c0392b">
+              <div class="doc-sec-header">
+                <div class="doc-sec-title">✂️ Cost Rationalisation</div>
+                <div class="doc-sec-num">
+                  <div class="doc-sec-big" data-edit-id="doc-s1-metric">₹40L</div>
+                  <div class="doc-sec-sublabel" data-edit-id="doc-s1-sublabel">Immediate</div>
+                </div>
+              </div>
+              <div class="doc-sec-status"><span class="chm-status-badge csb-amber" data-edit-id="doc-s1-badge">In Progress</span></div>
+              <div class="doc-sec-body" data-edit-id="doc-s1-body">Top 20 consumables identified; vendor meetings under way. ₹5 Cr structural opportunity from renegotiating top 20 items requires sustained Q1 focus. Manpower benchmarking complete — Phase 1 number expected 21 Mar. Rate contract negotiations calendared from week of 20 Mar.</div>
             </div>
-            <div class="brief-p" data-edit-id="br-s1-body1">The FY27 capex programme is anchored by biomedical equipment (₹49.2 Cr) and civil works (₹18.3 Cr), with three non-critical items — <strong>Digital Pathology (₹3 Cr), Digital Slide Scanner (₹2.5 Cr), and LASER Equipment (₹1.5 Cr)</strong> — deferred in the current cycle. This is the right call. Capital must flow to revenue-enabling and capacity-unlocking projects, not to capability aspirations.</div>
-            <div class="brief-p" data-edit-id="br-s1-body2">The active portfolio is well-structured. The <strong>Casualty redesign (₹3.8 Cr, July–November)</strong>, <strong>Multi-Level Parking (₹4.4 Cr, January–June)</strong>, <strong>Ultrasound &amp; Ortho Renovation (₹1.6 Cr, January–May)</strong>, and the <strong>Renal Transplant Centre (₹1.5 Cr, July–October)</strong> are on defined timelines. Quantity reductions have been approved across four biomedical procurement items, signalling that budget discipline extends below the headline number.</div>
-          </div>
 
-          <!-- Cost -->
-          <div class="brief-section">
-            <div class="brief-section-title" data-edit-id="br-s2-title">Cost Rationalisation</div>
-            <div class="brief-section-head" data-edit-id="br-s2-head">On the right path — but the number must be fixed.</div>
-            <div class="brief-p" data-edit-id="br-s2-body1">The programme has identified the right targets — consumables, manpower efficiency, and vendor rate contracts — but has not yet arrived at a <em>contractable savings quantum</em>. The ₹40L immediate consumables opportunity must translate into signed vendor commitments <strong>within the next fortnight.</strong> Manpower benchmarking has been initiated but a Phase 1 number is needed before the next board update. Rate contract negotiations are being calendared but not yet underway.</div>
-            <div class="brief-callout" data-edit-id="br-s2-callout"><strong>The risk:</strong> cost initiatives that remain in the "identification" phase through end of Q1 will not deliver FY27 P&amp;L impact. The programme needs a firm number — contracted or credibly pipeline — by 31 March.</div>
-          </div>
+            <div class="doc-section" style="--sc:#1a3a5c">
+              <div class="doc-sec-header">
+                <div class="doc-sec-title">🏗️ Capex Management</div>
+                <div class="doc-sec-num">
+                  <div class="doc-sec-big" data-edit-id="doc-s2-metric">₹82.2 Cr</div>
+                  <div class="doc-sec-sublabel" data-edit-id="doc-s2-sublabel">FY27 Budget</div>
+                </div>
+              </div>
+              <div class="doc-sec-status"><span class="chm-status-badge csb-green" data-edit-id="doc-s2-badge">Approved</span></div>
+              <div class="doc-sec-body" data-edit-id="doc-s2-body">₹7 Cr deferred: Digital Pathology ₹3 Cr, Digital Slide Scanner ₹2.5 Cr, LASER Equipment ₹1.5 Cr. Quantity reductions approved on 4 biomedical items. Active projects on timeline: Casualty ₹3.8 Cr (Jul–Nov), MLP ₹4.4 Cr (Jan–Jun), Renal Transplant Centre ₹1.5 Cr (Jul–Oct).</div>
+            </div>
+
+            <div class="doc-section" style="--sc:#1e7e34">
+              <div class="doc-sec-header">
+                <div class="doc-sec-title">📈 Revenue Enhancement</div>
+                <div class="doc-sec-num">
+                  <div class="doc-sec-big" data-edit-id="doc-s3-metric">3 Levers</div>
+                  <div class="doc-sec-sublabel" data-edit-id="doc-s3-sublabel">In Design</div>
+                </div>
+              </div>
+              <div class="doc-sec-status"><span class="chm-status-badge csb-blue" data-edit-id="doc-s3-badge">Planning</span></div>
+              <div class="doc-sec-body" data-edit-id="doc-s3-body">Rate revision in draft; sign-off targeted 31 Mar. New specialties (IR-DSA, Cosmetology, Geriatric Care) at business case stage. Care packages remain conceptual. All three must activate in Q1 — slippage to April makes them FY28 items.</div>
+            </div>
+
+            <div class="doc-section" style="--sc:#6a1b9a">
+              <div class="doc-sec-header">
+                <div class="doc-sec-title">🏛️ Lakeshore 2.0</div>
+                <div class="doc-sec-num">
+                  <div class="doc-sec-big" data-edit-id="doc-s4-metric">3 Tracks</div>
+                  <div class="doc-sec-sublabel" data-edit-id="doc-s4-sublabel">Active</div>
+                </div>
+              </div>
+              <div class="doc-sec-status"><span class="chm-status-badge csb-amber" data-edit-id="doc-s4-badge">In Progress</span></div>
+              <div class="doc-sec-body" data-edit-id="doc-s4-body">New org chart drafted; final version expected 20 Mar. Website RFP issued to 3 agencies — shortlist by 25 Mar. HR/Finance/Ops process mapping complete; quick-win implementation commencing 17 Mar.</div>
+            </div>
+
+          </div><!-- /doc-sections -->
 
           <!-- Compliance -->
-          <div class="brief-section">
-            <div class="brief-section-title" data-edit-id="br-s3-title">Compliance</div>
-            <div class="brief-section-head" data-edit-id="br-s3-head">A governance emergency, not a tracking problem.</div>
-            <div class="brief-p" data-edit-id="br-s3-body1">The compliance diagnostic covering 62 items has surfaced a pattern that cannot be managed through a spreadsheet alone. <strong>27 items are already past due.</strong> The most material: the FY25 corporate income tax return is four months overdue (penalty risk under Sec 271B: up to ₹1.5 Cr); the GSTR-9 annual return is 72 days past deadline with daily penalties accruing; board meeting minutes for three meetings (July, November 2025) remain unsigned — blocking DIR-12 and MGT-14 filings for the CFO and Group CEO appointments, which fall due in 22 days. The Advance Tax 4th instalment was due today, 15 March.</div>
-            <div class="brief-p" data-edit-id="br-s3-body2">Additionally, <strong>16 internal contradictions exist between tracking sheets</strong> — meaning no one can be certain of the true renewal status of key hospital licences (AERB, Fire NOC, Pharmacy, BMW). This is not a compliance gap. It is a governance gap. The solution requires a dedicated compliance champion — not the CEO, who already carries a full portfolio — with a formal 60-day closure mandate and weekly board-level review.</div>
-            <div class="brief-stat-row">
-              <div class="brief-stat"><div class="brief-stat-v" style="color:#c0392b" data-edit-id="br-cs1v">27</div><div class="brief-stat-l">Items Past Due</div></div>
-              <div class="brief-stat"><div class="brief-stat-v" style="color:#e67e22" data-edit-id="br-cs2v">6</div><div class="brief-stat-l">Due Within Days</div></div>
-              <div class="brief-stat"><div class="brief-stat-v" style="color:#1a3a5c" data-edit-id="br-cs3v">62</div><div class="brief-stat-l">Total Items</div></div>
+          <div class="doc-comp">
+            <div class="doc-comp-head">
+              <div>
+                <div class="doc-comp-title" data-edit-id="doc-comp-title">⚠ Compliance Diagnostic — 16 March 2026</div>
+                <div style="font-size:0.63rem;color:#78350f;margin-top:3px" data-edit-id="doc-comp-sub">62 items reviewed · 27 confirmed non-compliances · 6 require action within days · 16 internal contradictions identified</div>
+              </div>
+              <div class="doc-comp-links">
+                <a class="ca-link ca-link-xl" href="Weekly%20update/16th%20March/Complicance%20Tracker/Hospital_Compliance_Tracker_%2013%2003%2026%20final%20%282%29.xlsx" download>📥 Compliance Tracker</a>
+                <a class="ca-link ca-link-doc" href="Weekly%20update/16th%20March/Complicance%20Tracker/Lakeshore_Compliance_Gap_Report_13Mar2026%20%281%29.docx" download>📄 Gap Report</a>
+              </div>
             </div>
-          </div>
-
-          <!-- Revenue -->
-          <div class="brief-section">
-            <div class="brief-section-title" data-edit-id="br-s4-title">Revenue Levers</div>
-            <div class="brief-section-head" data-edit-id="br-s4-head">The clock is running. Q1 is the window.</div>
-            <div class="brief-p" data-edit-id="br-s4-body">Rate revision is in draft. New specialties (IR-DSA, Cosmetology, Geriatric Care) are in the planning stage. Care packages are conceptual. This is three of the four revenue levers sitting below the activation line. If these initiatives do not reach sign-off and operational activation in Q1, they become <strong>FY28 levers</strong> — and the revenue half of the FY27 UC case (₹575 Cr / 25.8% EBITDA) becomes structurally unachievable. <strong>The Chairman must set a hard deadline of 31 March for tariff revision sign-off.</strong></div>
-          </div>
-
-          <!-- Bottom Line -->
-          <div class="brief-section">
-            <div class="brief-section-title" data-edit-id="br-s5-title">The Bottom Line</div>
-            <div class="brief-section-head" data-edit-id="br-s5-head">Three decisions the Chairman should make this week.</div>
-            <ul class="brief-number-list">
-              <li><span class="n">1</span><div data-edit-id="br-bl1"><strong>Commission a dedicated compliance task force</strong> with a 60-day closure mandate covering all 27 past-due items. Assign accountability — not shared ownership — to a single named officer. Review progress weekly at Chairman level.</div></li>
-              <li><span class="n">2</span><div data-edit-id="br-bl2"><strong>Set 31 March as a non-negotiable deadline for tariff revision sign-off.</strong> Revenue levers that slip to April become FY28 levers. The upside case (₹575 Cr, 25.8% EBITDA margin) depends on Q1 activation.</div></li>
-              <li><span class="n">3</span><div data-edit-id="br-bl3"><strong>Require a firm, contractable cost savings number</strong> from the rationalisation team before the next board update. The ₹40L consumables opportunity must be contracted; manpower Phase 1 must have a number. Without this, the cost lever of the programme remains aspirational.</div></li>
-            </ul>
-          </div>
-
-          <!-- Compliance Downloads -->
-          <div class="brief-section" style="margin-bottom:0">
-            <div class="brief-section-title" data-edit-id="br-s6-title">Compliance Tracker</div>
-            <div class="brief-p" data-edit-id="br-s6-body" style="margin-bottom:10px">Full compliance diagnostic conducted 13 March 2026. Source documents available for download below.</div>
-            <div style="display:flex;gap:10px;flex-wrap:wrap">
-              <a class="ca-link ca-link-xl" href="Weekly%20update/16th%20March/Complicance%20Tracker/Hospital_Compliance_Tracker_%2013%2003%2026%20final%20%282%29.xlsx" download>📥 Full Compliance Tracker (.xlsx)</a>
-              <a class="ca-link ca-link-doc" href="Weekly%20update/16th%20March/Complicance%20Tracker/Lakeshore_Compliance_Gap_Report_13Mar2026%20%281%29.docx" download>📄 Gap Analysis Report (.docx)</a>
+            <div class="doc-comp-stats">
+              <div class="dcs"><div class="dcs-v" style="color:#c0392b" data-edit-id="doc-cs1">27</div><div class="dcs-l">Past Due</div></div>
+              <div class="dcs"><div class="dcs-v" style="color:#e67e22" data-edit-id="doc-cs2">6</div><div class="dcs-l">Due Within Days</div></div>
+              <div class="dcs"><div class="dcs-v" style="color:#f39c12" data-edit-id="doc-cs3">16</div><div class="dcs-l">Contradictions</div></div>
+              <div class="dcs"><div class="dcs-v" style="color:#2980b9" data-edit-id="doc-cs4">62</div><div class="dcs-l">Total Items</div></div>
             </div>
+          </div><!-- /doc-comp -->
+
+        </div><!-- /doc-body -->
+      </div><!-- /doc-wrap -->
+    </div>
+
+    <!-- ══ TAB 2: PARTNER COMMENTARY ══ -->
+    <div class="itab-pane" id="pane-brief">
+
+      <div class="art-wrap">
+
+        <!-- Article header -->
+        <div class="art-top">
+          <div class="art-pub" data-edit-id="art-pub">VPS Lakeshore · Partner Commentary · Week of 16 March 2026</div>
+          <div class="art-hed" data-edit-id="art-hed">Structural momentum is building — but revenue activation and compliance cannot wait.</div>
+          <div class="art-deck" data-edit-id="art-deck">Three weeks into the programme, capex discipline is showing and cost identification is progressing. The harder work — activating revenue levers and resolving a governance backlog — now defines the programme's credibility.</div>
+          <div class="art-byline">
+            <span data-edit-id="art-author">Chairman's Office, VPS Lakeshore</span>
+            <span data-edit-id="art-date">16 March 2026</span>
+            <span data-edit-id="art-ref-short">LHRC/BU/2026/002 · Strictly Confidential</span>
+          </div>
+        </div>
+
+        <!-- Article body -->
+        <div class="art-body">
+
+          <div class="art-section">
+            <div class="art-section-label" data-edit-id="art-s1-label">The Programme</div>
+            <div class="art-para" data-edit-id="art-s1-para" data-placeholder="Write your programme overview here…">The Lakeshore 2.0 agenda is three weeks in. The programme has correctly identified its highest-value near-term levers — consumables rationalisation (₹40L immediate, ₹5 Cr structural), selective capex deferral, and a revenue enhancement programme anchored by tariff revision and new specialty launches. The FY27 capex budget has been set at a disciplined ₹82.2 Cr with ₹7 Cr of non-critical spend deferred. Capital is flowing to revenue-enabling projects, not capability aspirations — and that is the right instinct.</div>
           </div>
 
-        </div><!-- /brief-body -->
+          <div class="art-pull" data-edit-id="art-pull">What is now critical is execution velocity. Two areas — revenue activation and compliance — are running materially below the pace required to deliver FY27 impact.</div>
 
-        <!-- Article Footer -->
-        <div class="brief-footer">
-          <div class="brief-footer-note" data-edit-id="br-foot">LHRC/BU/2026/002 &nbsp;·&nbsp; Chairman's Office, VPS Lakeshore &nbsp;·&nbsp; Strictly Confidential &nbsp;·&nbsp; 16 March 2026</div>
-          <div class="brief-dl-links">
+          <div class="art-section">
+            <div class="art-section-label" data-edit-id="art-s2-label">Where We Are</div>
+            <div class="art-para" data-edit-id="art-s2-para" data-placeholder="Write your progress commentary here…">Cost rationalisation has identified the right targets but has not yet arrived at a contractable savings quantum. The ₹40L consumables opportunity must translate into signed vendor commitments within the fortnight. Compliance is a more serious concern: 27 of 62 items are already past due, including the FY25 income tax return, the GSTR-9 annual filing, and board minutes blocking two pending director filings. These cannot be managed through a tracker — they require a dedicated champion with a 60-day mandate and weekly board-level review.</div>
+          </div>
+
+          <div class="art-section">
+            <div class="art-section-label" data-edit-id="art-s3-label">The Call to Action</div>
+            <div class="art-para" data-edit-id="art-s3-para" data-placeholder="Write your recommendations and decisions needed here…">Three decisions this week will determine whether this programme delivers FY27 impact or defers it: commission a dedicated compliance task force with a single named officer and 60-day closure mandate; set 31 March as a non-negotiable deadline for tariff revision sign-off — revenue levers that slip to April become FY28 levers; and require a firm, contractable cost savings number from the rationalisation team before the next board update. The upside case of ₹575 Cr revenue and 25.8% EBITDA margin is still achievable — but only if Q1 is used, not observed.</div>
+          </div>
+
+        </div><!-- /art-body -->
+
+        <div class="art-footer">
+          <span data-edit-id="art-foot">LHRC/BU/2026/002 · Chairman's Office, VPS Lakeshore · Strictly Confidential · 16 March 2026</span>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
             <a class="ca-link ca-link-xl" href="Weekly%20update/16th%20March/Complicance%20Tracker/Hospital_Compliance_Tracker_%2013%2003%2026%20final%20%282%29.xlsx" download style="font-size:0.6rem">📥 Compliance Tracker</a>
             <a class="ca-link ca-link-doc" href="Weekly%20update/16th%20March/Complicance%20Tracker/Lakeshore_Compliance_Gap_Report_13Mar2026%20%281%29.docx" download style="font-size:0.6rem">📄 Gap Report</a>
           </div>
         </div>
-      </div>
+
+      </div><!-- /art-wrap -->
 
     </div><!-- /pane-brief -->
 
@@ -599,7 +626,6 @@ const CHM_SEED = [
 ];
 
 function chmInit() {
-  chmRenderUpdates();
   loadEditorial();
 }
 
