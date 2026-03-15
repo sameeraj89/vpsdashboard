@@ -244,45 +244,6 @@ body {
 }
 .card:hover .cta-arrow { transform: translateX(2px); }
 
-/* ─── CHAIRMAN SLIM CARD ──────────────────────────── */
-.card-slim-chairman {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: linear-gradient(135deg, #0d1e30 0%, #162d47 100%);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-left: 3px solid #c9a84c;
-  border-radius: 8px;
-  padding: 13px 20px 13px 18px;
-  text-decoration: none;
-  margin-bottom: 12px;
-  transition: box-shadow 0.18s, transform 0.18s;
-}
-.card-slim-chairman:hover {
-  box-shadow: 0 4px 22px rgba(0,15,40,0.38);
-  transform: translateY(-1px);
-}
-.csc-left  { display: flex; align-items: center; gap: 13px; }
-.csc-icon  { font-size: 1.15rem; line-height: 1; }
-.csc-title { font-size: 0.82rem; font-weight: 700; color: #fff; letter-spacing: -0.1px; line-height: 1.3; }
-.csc-sub   { font-size: 0.6rem; color: rgba(255,255,255,0.42); font-weight: 500; margin-top: 2px; letter-spacing: 0.4px; text-transform: uppercase; }
-.csc-right { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
-.csc-badge {
-  font-size: 0.53rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.9px;
-  padding: 3px 9px; border-radius: 3px;
-  background: rgba(201,168,76,0.12); border: 1px solid rgba(201,168,76,0.35); color: #c9a84c;
-}
-.csc-arrow {
-  display: inline-flex; align-items: center; justify-content: center;
-  width: 22px; height: 22px; border: 1.5px solid rgba(255,255,255,0.2);
-  border-radius: 50%; font-size: 0.65rem; color: rgba(255,255,255,0.45);
-  transition: transform 0.18s, border-color 0.18s, color 0.18s;
-}
-.card-slim-chairman:hover .csc-arrow {
-  transform: translateX(2px);
-  border-color: rgba(201,168,76,0.6);
-  color: #c9a84c;
-}
 
 /* ─── PASSWORD GATE ───────────────────────────────── */
 #gate {
@@ -470,24 +431,6 @@ body {
     <div style="font-size:0.82rem;color:#0d2535;line-height:1.75;">To transform Lakeshore into Kerala's leading centre of excellence for advanced and complex care, delivering superior patient outcomes, expanding access through strong referral networks, and driving clinical and operational excellence.</div>
   </div>
 
-  <!-- EXECUTIVE OFFICE -->
-  <div class="section-label">
-    <span class="sl-text">Executive Office</span>
-    <div class="sl-line"></div>
-  </div>
-  <!-- CHAIRMAN'S UPDATE SLIM CARD -->
-  <a class="card-slim-chairman" href="LHRC_Chairman_Update.html">
-    <div class="csc-left">
-      <div>
-        <div class="csc-title">Chairman's Weekly Transformation Update</div>
-        <div class="csc-sub">Weekly Programme Status &nbsp;·&nbsp; Confidential &nbsp;·&nbsp; Password Protected</div>
-      </div>
-    </div>
-    <div class="csc-right">
-      <span class="csc-arrow">→</span>
-    </div>
-  </a>
-
   <div class="card-grid">
     <a class="card c-navy card-full featured" href="LHRC_Executive_Dashboard.html">
       <div class="card-header">
@@ -658,8 +601,7 @@ body {
 <!-- ══════════  GATE LOGIC  ══════════ -->
 <script>
 (function(){
-  var PASSWORD          = 'Lakeshore2026';
-  var PASSWORD_CHAIRMAN = 'vpslakeshoreupdate';
+  var PASSWORD = 'Lakeshore2026';
   var KEY  = 'vps_si_auth';
   var gate = document.getElementById('gate');
   var pw   = document.getElementById('gpw');
@@ -675,15 +617,7 @@ body {
     setTimeout(function(){ gate.remove(); }, 460);
   }
   function attempt() {
-    if (pw.value === PASSWORD_CHAIRMAN) {
-      err.classList.remove('show');
-      btn.disabled = true;
-      btn.textContent = '✓ Access Granted';
-      sessionStorage.setItem(KEY, 'ok');
-      gate.classList.add('out');
-      document.body.style.overflow = '';
-      setTimeout(function(){ window.location.href = 'LHRC_Chairman_Update.html'; }, 460);
-    } else if (pw.value === PASSWORD) {
+    if (pw.value === PASSWORD) {
       err.classList.remove('show');
       btn.disabled = true;
       btn.textContent = '✓ Access Granted';
