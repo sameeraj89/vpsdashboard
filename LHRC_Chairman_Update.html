@@ -168,36 +168,8 @@ body.edit-mode [data-edit-id]:empty::before{content:attr(data-placeholder);color
 </div>
 
 <!-- ══════════ LOCK SCREEN ══════════ -->
-<div id="chmLock" style="position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#001228 0%,#0d2137 50%,#001228 100%);z-index:999;display:flex;align-items:center;justify-content:center;padding:24px">
-  <div style="background:rgba(255,255,255,.05);border:1px solid rgba(201,168,76,0.3);border-radius:14px;padding:42px 44px 36px;max-width:420px;width:100%;box-shadow:0 0 0 1px rgba(255,255,255,.04) inset,0 24px 80px rgba(0,0,0,.7),0 0 60px rgba(201,168,76,.08);backdrop-filter:blur(20px)">
-    <div style="border-bottom:2px solid rgba(201,168,76,0.25);padding-bottom:18px;margin-bottom:24px">
-      <div style="font-size:0.58rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:rgba(201,168,76,0.7);margin-bottom:6px;font-family:'IBM Plex Mono',monospace">VPS Lakeshore Hospital &amp; Research Centre</div>
-      <div style="font-size:1.1rem;font-weight:800;color:#fff">Chairman's Board Update</div>
-      <div style="font-size:0.65rem;color:rgba(255,255,255,0.35);margin-top:4px">Lakeshore 2.0 Transformation Programme &nbsp;·&nbsp; Restricted access</div>
-    </div>
-    <div style="margin-bottom:12px">
-      <label style="display:block;font-size:0.61rem;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:rgba(255,255,255,0.4);margin-bottom:6px">Username <span style="font-weight:400;color:rgba(255,255,255,0.22);text-transform:none">(leave blank for view-only)</span></label>
-      <input id="chmUser" type="text" placeholder="Admin username" autocomplete="off"
-        style="width:100%;padding:10px 13px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:7px;font-size:0.82rem;font-family:'IBM Plex Sans',sans-serif;outline:none;color:#fff"
-        onfocus="this.style.borderColor='rgba(201,168,76,0.5)'" onblur="this.style.borderColor='rgba(255,255,255,.15)'">
-    </div>
-    <div style="margin-bottom:18px">
-      <label style="display:block;font-size:0.61rem;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:rgba(255,255,255,0.4);margin-bottom:6px">Password</label>
-      <input id="chmPass" type="password" placeholder="Enter password"
-        style="width:100%;padding:10px 13px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:7px;font-size:0.82rem;font-family:'IBM Plex Sans',sans-serif;outline:none;color:#fff;letter-spacing:2px"
-        onfocus="this.style.borderColor='rgba(201,168,76,0.5)'" onblur="this.style.borderColor='rgba(255,255,255,.15)'"
-        onkeydown="if(event.key==='Enter')chmAttemptLogin()">
-    </div>
-    <div id="chmError" style="display:none;font-size:0.68rem;color:#ff6b86;margin-bottom:14px;padding:7px 10px;background:rgba(200,16,62,0.12);border-radius:5px;border-left:3px solid rgba(200,16,62,0.5)">Incorrect credentials — please try again.</div>
-    <button onclick="chmAttemptLogin()" style="width:100%;background:linear-gradient(135deg,#0d2137,#1a3a5c);color:white;padding:12px;border:1px solid rgba(201,168,76,0.25);border-radius:7px;font-size:0.8rem;font-weight:700;cursor:pointer;font-family:'IBM Plex Sans',sans-serif;letter-spacing:0.5px">
-      Continue →
-    </button>
-    <div style="margin-top:18px;font-size:0.59rem;color:rgba(255,255,255,0.2);text-align:center;line-height:1.8">View access: password only &nbsp;·&nbsp; Edit access: authorised admins<br>Contact the Chairman's office for access</div>
-  </div>
-</div>
-
-<!-- ══════════ AUTHENTICATED CONTENT ══════════ -->
-<div id="chmContent" style="display:none">
+<!-- ══════════ CONTENT ══════════ -->
+<div id="chmContent">
 
   <!-- Inner Tab Bar -->
   <div class="inner-tabs">
@@ -209,13 +181,6 @@ body.edit-mode [data-edit-id]:empty::before{content:attr(data-placeholder);color
 
     <!-- Back nav + toolbar -->
     <a href="index.html" class="back-nav">← Back to Dashboard</a>
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;margin-top:4px;padding:7px 0;border-bottom:1px solid #e2e8f0">
-      <div style="font-size:0.65rem;color:#718096">
-        <span id="chmViewOnlyNote" style="display:none">View-only access &nbsp;·&nbsp; <a href="#" onclick="chmLogout();return false" style="color:#0d2137;text-decoration:none;font-weight:600">Sign out</a></span>
-        <span id="chmAdminNote" style="display:none">Editing as <strong id="chmAdminUserDisplay" style="color:#0d2137"></strong> &nbsp;·&nbsp; <a href="#" onclick="chmLogout();return false" style="color:#718096;text-decoration:none">Sign out</a></span>
-      </div>
-      <button id="chmAddBtn" onclick="chmShowAddForm()" style="display:none;background:#0d2137;color:white;border:none;padding:7px 16px;border-radius:5px;font-size:0.68rem;font-weight:700;cursor:pointer;font-family:'IBM Plex Sans',sans-serif">+ New Weekly Update</button>
-    </div>
 
     <!-- ══ TAB 1: PROGRAMME STATUS ══ -->
     <div class="itab-pane active" id="pane-status">
@@ -633,53 +598,9 @@ const CHM_SEED = [
   }
 ];
 
-let chmAuthLevel = null;
-let chmAdminUsername = '';
-
-function chmAttemptLogin() {
-  const user = (document.getElementById('chmUser').value || '').trim().toLowerCase();
-  const pass = document.getElementById('chmPass').value || '';
-  const errEl = document.getElementById('chmError');
-  errEl.style.display = 'none';
-  if (!user && pass === CHM_VIEW_PASS) {
-    chmAuthLevel = 'view'; chmAdminUsername = ''; chmShowContent();
-  } else if (user && CHM_ADMINS[user] && CHM_ADMINS[user] === pass) {
-    chmAuthLevel = 'admin'; chmAdminUsername = user; chmShowContent();
-  } else {
-    errEl.style.display = 'block';
-    const p = document.getElementById('chmPass');
-    p.style.borderColor = 'rgba(200,16,62,0.6)';
-    setTimeout(() => { p.style.borderColor = 'rgba(255,255,255,.15)'; }, 2000);
-  }
-}
-
-function chmShowContent() {
-  document.getElementById('chmLock').style.display = 'none';
-  document.getElementById('chmContent').style.display = 'block';
-  if (chmAuthLevel === 'admin') {
-    document.getElementById('chmAdminNote').style.display = 'inline';
-    document.getElementById('chmViewOnlyNote').style.display = 'none';
-    document.getElementById('chmAddBtn').style.display = 'inline-block';
-    document.getElementById('chmAdminUserDisplay').textContent =
-      chmAdminUsername.charAt(0).toUpperCase() + chmAdminUsername.slice(1);
-  } else {
-    document.getElementById('chmViewOnlyNote').style.display = 'inline';
-    document.getElementById('chmAdminNote').style.display = 'none';
-    document.getElementById('chmAddBtn').style.display = 'none';
-  }
+function chmInit() {
   chmRenderUpdates();
   loadEditorial();
-}
-
-function chmLogout() {
-  chmAuthLevel = null; chmAdminUsername = '';
-  ['chmAdminNote','chmViewOnlyNote'].forEach(id => { const e = document.getElementById(id); if (e) e.style.display = 'none'; });
-  const ab = document.getElementById('chmAddBtn'); if (ab) ab.style.display = 'none';
-  document.getElementById('chmContent').style.display = 'none';
-  document.getElementById('chmLock').style.display = 'flex';
-  ['chmUser','chmPass'].forEach(id => { const e = document.getElementById(id); if (e) e.value = ''; });
-  document.getElementById('chmError').style.display = 'none';
-  if (editActive) lockEditing();
 }
 
 function chmGetUpdates() {
@@ -963,6 +884,8 @@ function chmCloseModal() {
   document.getElementById('chmModal').style.display = 'none';
   document.body.style.overflow = '';
 }
+
+window.addEventListener('DOMContentLoaded', chmInit);
 
 </script>
 </body>
