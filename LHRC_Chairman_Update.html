@@ -100,6 +100,15 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
 .sub-section { margin-top: 20px; padding-top: 18px; border-top: 1px solid #f0f2f5; }
 .sub-sec-title { font-size: 0.72rem; font-weight: 700; color: #0d2137; margin-bottom: 7px; letter-spacing: -0.1px; }
 
+/* ── SECTION BULLET POINTS ── */
+.sec-pts { list-style: none; padding: 0; margin: 0; font-size: 0.74rem; color: #4a5568; line-height: 1.75; }
+.sec-pts li { padding: 5px 0 5px 14px; position: relative; }
+.sec-pts li::before { content: '–'; position: absolute; left: 0; color: #a0aec0; }
+.sec-pts li + li { border-top: 1px dashed #edf0f3; }
+
+/* ── NOTE SUMMARY DIVIDERS ── */
+.note-div { border: none; border-top: 1px dashed #d4dae2; margin: 8px 0; }
+
 /* ── SUPPLIER MODAL ── */
 .supp-modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 8000; align-items: center; justify-content: center; padding: 20px; }
 .supp-modal-bg.open { display: flex; }
@@ -168,10 +177,13 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
     <!-- Note Summary -->
     <div class="note-label">Note Summary</div>
     <div class="note-body">
-      <div data-edit-id="hl-cost" data-placeholder="Cost highlight…">Cost — Manufacturer negotiations (₹2.4 Cr immediate), distributor renegotiations (₹20 L), and payroll reduction (₹7.6 Cr target, ₹4.7 Cr identified) are the primary levers. Suppliers and distributors are the next major focus area.</div>
-      <div style="margin-top:10px;" data-edit-id="hl-revenue" data-placeholder="Revenue highlight…">Revenue — Rate revision in draft, sign-off targeted 31 March. Drug substitution (brand to generic) tracking here as a ₹4.6 Cr margin lever. New specialties at business case stage; all levers must activate in Q1 to protect the ₹575 Cr target.</div>
-      <div style="margin-top:10px;" data-edit-id="hl-compliance" data-placeholder="Compliance highlight…">Compliance — 27 of 62 items past due; 6 require action within days. IT return, GSTR-9, and board minute filings are the most urgent items.</div>
-      <div style="margin-top:10px;" data-edit-id="hl-brand" data-placeholder="Brand highlight…">Brand Uplift — Org chart final version expected 20 March. Website RFP with 3 agencies; shortlist by 25 March. Process mapping complete across HR, Finance and Ops.</div>
+      <div data-edit-id="hl-cost" data-placeholder="Cost highlight…"><strong>Cost</strong> — ₹2.4 Cr from manufacturer negotiations and ₹20 L distributor savings confirmed immediate. Payroll target ₹7.6 Cr; ₹4.7 Cr identified. Supplier and distributor renegotiation is the next major lever.</div>
+      <hr class="note-div">
+      <div data-edit-id="hl-revenue" data-placeholder="Revenue highlight…"><strong>Revenue</strong> — Rate revision sign-off due 31 March. Drug substitution (₹4.6 Cr projected margin) and three new specialties at business case stage. All levers must close in Q1.</div>
+      <hr class="note-div">
+      <div data-edit-id="hl-compliance" data-placeholder="Compliance highlight…"><strong>Compliance</strong> — 27 of 62 items past due; IT return, GSTR-9 and board minute filings require immediate action.</div>
+      <hr class="note-div">
+      <div data-edit-id="hl-brand" data-placeholder="Brand highlight…"><strong>Brand Uplift</strong> — Org chart due 20 March. Website RFP shortlist by 25 March. Process mapping complete; implementation from 17 March.</div>
     </div>
 
     <hr class="rule-heavy">
@@ -215,7 +227,11 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
       <!-- Sub: Capex Management & Reduction -->
       <div class="sub-section">
         <div class="sub-sec-title" data-edit-id="s2-title">Capex Management &amp; Reduction</div>
-        <div class="sec-body" data-edit-id="s2-body" data-placeholder="Write update here…">FY27 budget set at ₹82.2 Cr. Three items deferred: Digital Pathology ₹3 Cr, Digital Slide Scanner ₹2.5 Cr, LASER Equipment ₹1.5 Cr. Quantity reductions approved on four biomedical items. Active projects on defined timelines: Casualty Redesign ₹3.8 Cr (July–November), Multi-Level Parking ₹4.4 Cr (January–June), Renal Transplant Centre ₹1.5 Cr (July–October).</div>
+        <ul class="sec-pts" data-edit-id="s2-body">
+          <li>FY27 budget set at ₹82.2 Cr; three items deferred — Digital Pathology ₹3 Cr, Slide Scanner ₹2.5 Cr, LASER Equipment ₹1.5 Cr.</li>
+          <li>Quantity reductions approved on four biomedical items; rate contracts being reviewed against peer benchmarks.</li>
+          <li>Active projects on timeline: Casualty Redesign ₹3.8 Cr (Jul–Nov), Multi-Level Parking ₹4.4 Cr (Jan–Jun), Renal Transplant Centre ₹1.5 Cr (Jul–Oct).</li>
+        </ul>
         <div class="dl-links">
           <a class="dl-link" href="Weekly%20update/16th%20March/Capex%20Budget%20FY%202026-27%20V2.1.xlsx" download>↓ Capex Budget FY27 V2.1 (.xlsx)</a>
         </div>
@@ -224,13 +240,21 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
       <!-- Sub: Revenue Enhancement -->
       <div class="sub-section">
         <div class="sub-sec-title" data-edit-id="s3-title">Revenue Enhancement</div>
-        <div class="sec-body" data-edit-id="s3-body" data-placeholder="Write update here…">Rate revision is in draft; sign-off targeted by 31 March. Three new specialties are planned for FY27: IR-DSA (Interventional Radiology), Cosmetology, and Geriatric Care — each at business case stage with revenue modelling under way. Bundled care packages are in concept; clinical sign-off is the next gate. All three levers must activate in Q1 to avoid becoming FY28 items, which would make the ₹575 Cr revenue target and 25.8% EBITDA margin structurally unachievable. Drug substitution (brand to generic) is also treated as a revenue lever: with ₹4.6 Cr projected additional margin from the pharmacy formulary shift, this is one of the highest-return initiatives in the plan and is being tracked within the revenue workstream.</div>
+        <ul class="sec-pts" data-edit-id="s3-body">
+          <li>Rate revision in draft; sign-off targeted 31 March — must close in Q1 to protect the ₹575 Cr target and 25.8% EBITDA margin.</li>
+          <li>Three new specialties in pipeline — IR-DSA, Cosmetology, Geriatric Care — each at business case stage with revenue modelling under way.</li>
+          <li>Drug substitution (brand to generic): ₹4.6 Cr projected additional margin from pharmacy formulary shift; tracked as a revenue lever.</li>
+        </ul>
       </div>
 
       <!-- Sub: Lakeshore 2.0 Brand Uplift -->
       <div class="sub-section">
         <div class="sub-sec-title" data-edit-id="s4-title">Lakeshore 2.0 — Brand Uplift</div>
-        <div class="sec-body" data-edit-id="s4-body" data-placeholder="Write update here…">Three workstreams are active. Organisation restructure: a new org chart is drafted with revised reporting lines and accountability mapping — final version expected by 20 March. Digital and web: RFP issued to three agencies for a full website and patient digital experience overhaul; shortlist by 25 March. See current platform: <a href="https://github.com/sameeraj89" target="_blank" class="dl-link">github.com/sameeraj89</a>. HR, Finance and Operations streamlining: process mapping workshops are complete across all three functions; quick-win implementation commencing 17 March with a focus on reducing cycle times and standardising procedures.</div>
+        <ul class="sec-pts" data-edit-id="s4-body">
+          <li>Organisation restructure: new org chart drafted with revised reporting lines — final version expected 20 March.</li>
+          <li>Digital and web: RFP issued to 3 agencies for website and patient experience overhaul; shortlist by 25 March. Current platform: <a href="https://github.com/sameeraj89" target="_blank" class="dl-link">github.com/sameeraj89</a>.</li>
+          <li>HR, Finance and Ops process mapping complete; quick-win implementation commencing 17 March.</li>
+        </ul>
       </div>
     </div>
 
@@ -249,7 +273,10 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
     <!-- Other Notes -->
     <div class="commentary-label" data-edit-id="comm-label">Other Notes</div>
     <div class="commentary-hed" data-edit-id="comm-hed" data-placeholder="Write a headline here…">UNA Strike — Situation and Response</div>
-    <div class="commentary-para" data-edit-id="comm-p1" data-placeholder="Write your first paragraph here…">The United Nurses Association (UNA) strike has affected private hospitals across Kerala, including Lakeshore — see coverage: <a href="https://www.thenewsminute.com/kerala/emergency-services-in-keralas-private-hospitals-hit-by-nurses-strike" target="_blank" style="color:#0d2137;border-bottom:1px solid rgba(13,33,55,0.3);">The News Minute</a>. Emergency and critical services at Lakeshore have remained fully operational throughout. At this point, we are not planning to take any significant further action — the situation is being monitored and management will respond if conditions materially change.</div>
+    <div class="commentary-para" data-edit-id="comm-p1" data-placeholder="Write your first paragraph here…">The United Nurses Association (UNA) strike has affected private hospitals across Kerala, including Lakeshore. Emergency and critical services at Lakeshore have remained fully operational throughout. At this point, we are not planning to take any significant further action — the situation is being monitored and management will respond if conditions materially change.</div>
+    <div class="dl-links" style="margin-top:10px;">
+      <a class="dl-link" href="https://www.thenewsminute.com/kerala/emergency-services-in-keralas-private-hospitals-hit-by-nurses-strike" target="_blank">↗ The News Minute — UNA Strike Coverage</a>
+    </div>
     <div class="commentary-hed" data-edit-id="comm-hed2" style="margin-top:28px;" data-placeholder="Write a headline here…">Key Personnel Transitions</div>
     <div class="commentary-para" data-edit-id="comm-p2" data-placeholder="Write your second paragraph here…">A number of key personnel changes are currently underway. On the clinical side, several doctor transitions are in progress as part of the broader department restructuring. In finance, a new appointment is being finalised to strengthen the team's capacity ahead of the FY27 planning cycle. Separately, an external HR consultant has been engaged to lead the payroll rationalisation work — providing independent oversight of the ₹7.6 Cr reduction target and supporting management on the identification and implementation of the remaining savings.</div>
 
