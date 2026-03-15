@@ -333,61 +333,93 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
 
 <!-- PAYROLL MODAL -->
 <div class="supp-modal-bg" id="payrollModal" onclick="if(event.target===this)this.classList.remove('open')">
-  <div class="supp-modal" style="max-width:700px;">
+  <div class="supp-modal" style="max-width:740px;">
     <div class="supp-modal-hd">
       <span class="supp-modal-title">Payroll Rationalisation — Department Summary</span>
       <button class="supp-modal-close" onclick="document.getElementById('payrollModal').classList.remove('open')">✕</button>
     </div>
     <div class="supp-modal-body">
-      <div class="supp-modal-note">Current headcount vs. NABH-benchmarked target. Savings opportunity = delta between current and target annual cost. ₹4.7 Cr of the ₹7.6 Cr target has been identified; remaining ₹2.9 Cr under active review. Consultant/visiting doctor fees excluded.</div>
+      <div class="supp-modal-note">All amounts in ₹ Lakhs. Total staff: 1,624 | Total annual payroll: ₹63.08 Cr. Identified savings: ₹470.88 L (₹4.71 Cr). Remaining ₹2.89 Cr to ₹7.6 Cr target under active review. Consultant / visiting doctor fees excluded.</div>
+
+      <!-- SAVINGS IDENTIFIED -->
+      <div style="font-size:0.59rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#0d2137;font-family:'IBM Plex Mono',monospace;margin:14px 0 8px;">Savings Identified</div>
       <table class="supp-tbl">
         <thead>
           <tr>
-            <th>#</th>
             <th>Department</th>
-            <th style="text-align:center;">Current HC</th>
+            <th style="text-align:center;">HC</th>
             <th style="text-align:center;">Target HC</th>
             <th style="text-align:center;">Variance</th>
-            <th style="text-align:right;">Annual Cost (₹ Cr)</th>
-            <th style="text-align:right;">Target (₹ Cr)</th>
-            <th style="text-align:right;">Saving (₹ Cr)</th>
-            <th style="text-align:center;">Status</th>
+            <th style="text-align:right;">Annual Cost (₹ L)</th>
+            <th style="text-align:right;">Target (₹ L)</th>
+            <th style="text-align:right;">Saving (₹ L)</th>
+            <th style="text-align:center;">Timeline</th>
           </tr>
         </thead>
         <tbody>
-          <tr><td>1</td><td class="supp-name">Administration &amp; Management</td><td style="text-align:center;">42</td><td style="text-align:center;">35</td><td style="text-align:center;color:#c0392b;font-weight:700;">−7</td><td style="text-align:right;" class="supp-amt">2.27</td><td style="text-align:right;" class="supp-amt">1.89</td><td style="text-align:right;color:#2d6a4f;font-weight:700;">0.38</td><td style="text-align:center;">In Review</td></tr>
-          <tr><td>2</td><td class="supp-name">Nursing — Ward</td><td style="text-align:center;">210</td><td style="text-align:center;">190</td><td style="text-align:center;color:#c0392b;font-weight:700;">−20</td><td style="text-align:right;" class="supp-amt">7.56</td><td style="text-align:right;" class="supp-amt">6.84</td><td style="text-align:right;color:#2d6a4f;font-weight:700;">0.72</td><td style="text-align:center;">Active</td></tr>
-          <tr><td>3</td><td class="supp-name">Nursing — ICU / CCU / NICU</td><td style="text-align:center;">58</td><td style="text-align:center;">55</td><td style="text-align:center;color:#c0392b;font-weight:700;">−3</td><td style="text-align:right;" class="supp-amt">2.44</td><td style="text-align:right;" class="supp-amt">2.31</td><td style="text-align:right;color:#2d6a4f;font-weight:700;">0.13</td><td style="text-align:center;">Monitoring</td></tr>
-          <tr><td>4</td><td class="supp-name">Doctors — Resident / Junior</td><td style="text-align:center;">48</td><td style="text-align:center;">44</td><td style="text-align:center;color:#c0392b;font-weight:700;">−4</td><td style="text-align:right;" class="supp-amt">3.46</td><td style="text-align:right;" class="supp-amt">3.17</td><td style="text-align:right;color:#2d6a4f;font-weight:700;">0.29</td><td style="text-align:center;">Active</td></tr>
-          <tr><td>5</td><td class="supp-name">Doctors — Senior / Consultant</td><td style="text-align:center;">34</td><td style="text-align:center;">34</td><td style="text-align:center;color:#718096;">0</td><td style="text-align:right;" class="supp-amt">—</td><td style="text-align:right;" class="supp-amt">—</td><td style="text-align:right;color:#718096;">—</td><td style="text-align:center;">No Change</td></tr>
-          <tr><td>6</td><td class="supp-name">Paramedical &amp; Allied Health</td><td style="text-align:center;">76</td><td style="text-align:center;">68</td><td style="text-align:center;color:#c0392b;font-weight:700;">−8</td><td style="text-align:right;" class="supp-amt">2.28</td><td style="text-align:right;" class="supp-amt">2.04</td><td style="text-align:right;color:#2d6a4f;font-weight:700;">0.24</td><td style="text-align:center;">In Review</td></tr>
-          <tr><td>7</td><td class="supp-name">Pharmacy</td><td style="text-align:center;">28</td><td style="text-align:center;">24</td><td style="text-align:center;color:#c0392b;font-weight:700;">−4</td><td style="text-align:right;" class="supp-amt">0.81</td><td style="text-align:right;" class="supp-amt">0.69</td><td style="text-align:right;color:#2d6a4f;font-weight:700;">0.12</td><td style="text-align:center;">Active</td></tr>
-          <tr><td>8</td><td class="supp-name">Lab &amp; Diagnostics</td><td style="text-align:center;">34</td><td style="text-align:center;">30</td><td style="text-align:center;color:#c0392b;font-weight:700;">−4</td><td style="text-align:right;" class="supp-amt">0.98</td><td style="text-align:right;" class="supp-amt">0.86</td><td style="text-align:right;color:#2d6a4f;font-weight:700;">0.12</td><td style="text-align:center;">In Review</td></tr>
-          <tr><td>9</td><td class="supp-name">Radiology &amp; Imaging</td><td style="text-align:center;">18</td><td style="text-align:center;">16</td><td style="text-align:center;color:#c0392b;font-weight:700;">−2</td><td style="text-align:right;" class="supp-amt">0.65</td><td style="text-align:right;" class="supp-amt">0.58</td><td style="text-align:right;color:#2d6a4f;font-weight:700;">0.07</td><td style="text-align:center;">Monitoring</td></tr>
-          <tr><td>10</td><td class="supp-name">OT &amp; Sterilisation</td><td style="text-align:center;">24</td><td style="text-align:center;">22</td><td style="text-align:center;color:#c0392b;font-weight:700;">−2</td><td style="text-align:right;" class="supp-amt">0.72</td><td style="text-align:right;" class="supp-amt">0.66</td><td style="text-align:right;color:#2d6a4f;font-weight:700;">0.06</td><td style="text-align:center;">Monitoring</td></tr>
-          <tr><td>11</td><td class="supp-name">Housekeeping &amp; Sanitation</td><td style="text-align:center;">68</td><td style="text-align:center;">55</td><td style="text-align:center;color:#c0392b;font-weight:700;">−13</td><td style="text-align:right;" class="supp-amt">0.98</td><td style="text-align:right;" class="supp-amt">0.79</td><td style="text-align:right;color:#2d6a4f;font-weight:700;">0.19</td><td style="text-align:center;">Active</td></tr>
-          <tr><td>12</td><td class="supp-name">Security</td><td style="text-align:center;">32</td><td style="text-align:center;">28</td><td style="text-align:center;color:#c0392b;font-weight:700;">−4</td><td style="text-align:right;" class="supp-amt">0.46</td><td style="text-align:right;" class="supp-amt">0.40</td><td style="text-align:right;color:#2d6a4f;font-weight:700;">0.06</td><td style="text-align:center;">In Review</td></tr>
-          <tr><td>13</td><td class="supp-name">F&amp;B / Dietary</td><td style="text-align:center;">22</td><td style="text-align:center;">18</td><td style="text-align:center;color:#c0392b;font-weight:700;">−4</td><td style="text-align:right;" class="supp-amt">0.32</td><td style="text-align:right;" class="supp-amt">0.26</td><td style="text-align:right;color:#2d6a4f;font-weight:700;">0.06</td><td style="text-align:center;">Active</td></tr>
-          <tr><td>14</td><td class="supp-name">Engineering &amp; Maintenance</td><td style="text-align:center;">18</td><td style="text-align:center;">16</td><td style="text-align:center;color:#c0392b;font-weight:700;">−2</td><td style="text-align:right;" class="supp-amt">0.52</td><td style="text-align:right;" class="supp-amt">0.46</td><td style="text-align:right;color:#2d6a4f;font-weight:700;">0.06</td><td style="text-align:center;">Monitoring</td></tr>
-          <tr><td>15</td><td class="supp-name">IT &amp; Systems</td><td style="text-align:center;">12</td><td style="text-align:center;">10</td><td style="text-align:center;color:#c0392b;font-weight:700;">−2</td><td style="text-align:right;" class="supp-amt">0.43</td><td style="text-align:right;" class="supp-amt">0.36</td><td style="text-align:right;color:#2d6a4f;font-weight:700;">0.07</td><td style="text-align:center;">In Review</td></tr>
-          <tr><td>16</td><td class="supp-name">HR &amp; Payroll</td><td style="text-align:center;">8</td><td style="text-align:center;">6</td><td style="text-align:center;color:#c0392b;font-weight:700;">−2</td><td style="text-align:right;" class="supp-amt">0.24</td><td style="text-align:right;" class="supp-amt">0.18</td><td style="text-align:right;color:#2d6a4f;font-weight:700;">0.06</td><td style="text-align:center;">Active</td></tr>
-          <tr><td>17</td><td class="supp-name">Finance &amp; Accounts</td><td style="text-align:center;">14</td><td style="text-align:center;">11</td><td style="text-align:center;color:#c0392b;font-weight:700;">−3</td><td style="text-align:right;" class="supp-amt">0.42</td><td style="text-align:right;" class="supp-amt">0.33</td><td style="text-align:right;color:#2d6a4f;font-weight:700;">0.09</td><td style="text-align:center;">Active</td></tr>
-          <tr><td>18</td><td class="supp-name">Marketing &amp; Communications</td><td style="text-align:center;">6</td><td style="text-align:center;">5</td><td style="text-align:center;color:#c0392b;font-weight:700;">−1</td><td style="text-align:right;" class="supp-amt">0.22</td><td style="text-align:right;" class="supp-amt">0.18</td><td style="text-align:right;color:#2d6a4f;font-weight:700;">0.04</td><td style="text-align:center;">In Review</td></tr>
-          <tr><td>19</td><td class="supp-name">CSSD / Bio-Medical</td><td style="text-align:center;">10</td><td style="text-align:center;">9</td><td style="text-align:center;color:#c0392b;font-weight:700;">−1</td><td style="text-align:right;" class="supp-amt">0.30</td><td style="text-align:right;" class="supp-amt">0.27</td><td style="text-align:right;color:#2d6a4f;font-weight:700;">0.03</td><td style="text-align:center;">Monitoring</td></tr>
-          <tr><td>20</td><td class="supp-name">Other / Contractual</td><td style="text-align:center;">38</td><td style="text-align:center;">30</td><td style="text-align:center;color:#c0392b;font-weight:700;">−8</td><td style="text-align:right;" class="supp-amt">0.68</td><td style="text-align:right;" class="supp-amt">0.54</td><td style="text-align:right;color:#2d6a4f;font-weight:700;">0.14</td><td style="text-align:center;">Active</td></tr>
+          <tr><td class="supp-name">Nursing (all grades)</td><td style="text-align:center;">630</td><td style="text-align:center;">569</td><td style="text-align:center;color:#c0392b;font-weight:700;">−61</td><td style="text-align:right;" class="supp-amt">2,329.50</td><td style="text-align:right;" class="supp-amt">2,103.94</td><td style="text-align:right;color:#2d6a4f;font-weight:700;">225.55</td><td style="text-align:center;">Intermediate</td></tr>
+          <tr><td class="supp-name">Pharmacy</td><td style="text-align:center;">93</td><td style="text-align:center;">50</td><td style="text-align:center;color:#c0392b;font-weight:700;">−43</td><td style="text-align:right;" class="supp-amt">306.23</td><td style="text-align:right;" class="supp-amt">164.64</td><td style="text-align:right;color:#2d6a4f;font-weight:700;">141.59</td><td style="text-align:center;">Mixed</td></tr>
+          <tr><td class="supp-name">Patient Care Services</td><td style="text-align:center;">97</td><td style="text-align:center;">80</td><td style="text-align:center;color:#c0392b;font-weight:700;">−17</td><td style="text-align:right;" class="supp-amt">339.56</td><td style="text-align:right;" class="supp-amt">280.05</td><td style="text-align:right;color:#2d6a4f;font-weight:700;">59.51</td><td style="text-align:center;">Intermediate</td></tr>
+          <tr><td class="supp-name">Accounts &amp; Finance</td><td style="text-align:center;">16</td><td style="text-align:center;">14</td><td style="text-align:center;color:#c0392b;font-weight:700;">−2</td><td style="text-align:right;" class="supp-amt">93.39</td><td style="text-align:right;" class="supp-amt">81.91</td><td style="text-align:right;color:#2d6a4f;font-weight:700;">11.48</td><td style="text-align:center;">TBC</td></tr>
+          <tr><td class="supp-name">Purchase &amp; Stores</td><td style="text-align:center;">19</td><td style="text-align:center;">17</td><td style="text-align:center;color:#c0392b;font-weight:700;">−2</td><td style="text-align:right;" class="supp-amt">86.77</td><td style="text-align:right;" class="supp-amt">77.69</td><td style="text-align:right;color:#2d6a4f;font-weight:700;">9.08</td><td style="text-align:center;">TBC</td></tr>
+          <tr><td class="supp-name">Biomedical Engineering</td><td style="text-align:center;">9</td><td style="text-align:center;">7</td><td style="text-align:center;color:#c0392b;font-weight:700;">−2</td><td style="text-align:right;" class="supp-amt">41.22</td><td style="text-align:right;" class="supp-amt">32.06</td><td style="text-align:right;color:#2d6a4f;font-weight:700;">9.16</td><td style="text-align:center;">TBC</td></tr>
+          <tr><td class="supp-name">Radiology</td><td style="text-align:center;">46</td><td style="text-align:center;">44</td><td style="text-align:center;color:#c0392b;font-weight:700;">−2</td><td style="text-align:right;" class="supp-amt">174.82</td><td style="text-align:right;" class="supp-amt">167.22</td><td style="text-align:right;color:#2d6a4f;font-weight:700;">7.60</td><td style="text-align:center;">TBC</td></tr>
         </tbody>
         <tfoot>
           <tr style="background:#0d2137;">
-            <td colspan="2" style="padding:8px 10px 8px 0;font-weight:700;color:white;font-size:0.69rem;">TOTAL</td>
-            <td style="text-align:center;font-weight:700;color:white;font-size:0.69rem;font-family:'IBM Plex Mono',monospace;">802</td>
-            <td style="text-align:center;font-weight:700;color:white;font-size:0.69rem;font-family:'IBM Plex Mono',monospace;">706</td>
-            <td style="text-align:center;font-weight:700;color:#f8a5a5;font-size:0.69rem;font-family:'IBM Plex Mono',monospace;">−96</td>
-            <td style="text-align:right;font-weight:700;color:white;font-size:0.69rem;font-family:'IBM Plex Mono',monospace;">26.76</td>
-            <td style="text-align:right;font-weight:700;color:white;font-size:0.69rem;font-family:'IBM Plex Mono',monospace;">23.21</td>
-            <td style="text-align:right;font-weight:700;color:#a8d5b5;font-size:0.69rem;font-family:'IBM Plex Mono',monospace;">3.54</td>
+            <td colspan="3" style="padding:7px 0;font-weight:700;color:white;font-size:0.69rem;">IDENTIFIED TOTAL</td>
+            <td style="text-align:center;font-weight:700;color:#f8a5a5;font-size:0.69rem;font-family:'IBM Plex Mono',monospace;">−129</td>
+            <td style="text-align:right;font-weight:700;color:white;font-size:0.69rem;font-family:'IBM Plex Mono',monospace;">3,371.49</td>
+            <td style="text-align:right;font-weight:700;color:white;font-size:0.69rem;font-family:'IBM Plex Mono',monospace;">2,907.51</td>
+            <td style="text-align:right;font-weight:700;color:#a8d5b5;font-size:0.69rem;font-family:'IBM Plex Mono',monospace;">463.97</td>
             <td></td>
           </tr>
         </tfoot>
+      </table>
+
+      <!-- UNDER REVIEW -->
+      <div style="font-size:0.59rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#718096;font-family:'IBM Plex Mono',monospace;margin:18px 0 8px;">Under Review — Target Not Yet Set</div>
+      <table class="supp-tbl">
+        <thead>
+          <tr>
+            <th>Department</th>
+            <th style="text-align:center;">HC</th>
+            <th style="text-align:right;">Annual Cost (₹ L)</th>
+            <th style="text-align:right;">Cost / Head (₹ L)</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="supp-name">Paramedical</td><td style="text-align:center;">122</td><td style="text-align:right;" class="supp-amt">428.69</td><td style="text-align:right;" class="supp-amt">3.51</td><td></td></tr>
+          <tr><td class="supp-name">Food &amp; Beverages</td><td style="text-align:center;">84</td><td style="text-align:right;" class="supp-amt">238.19</td><td style="text-align:right;" class="supp-amt">2.84</td><td style="color:#a0aec0;font-size:0.65rem;">No scope identified</td></tr>
+          <tr><td class="supp-name">Administration</td><td style="text-align:center;">27</td><td style="text-align:right;" class="supp-amt">178.74</td><td style="text-align:right;" class="supp-amt">6.62</td><td style="color:#a0aec0;font-size:0.65rem;">No scope right now</td></tr>
+          <tr><td class="supp-name">Radiotherapy</td><td style="text-align:center;">13</td><td style="text-align:right;" class="supp-amt">143.74</td><td style="text-align:right;" class="supp-amt">11.06</td><td></td></tr>
+          <tr><td class="supp-name">Billing</td><td style="text-align:center;">37</td><td style="text-align:right;" class="supp-amt">133.82</td><td style="text-align:right;" class="supp-amt">3.62</td><td></td></tr>
+          <tr><td class="supp-name">Biochemistry</td><td style="text-align:center;">28</td><td style="text-align:right;" class="supp-amt">123.42</td><td style="text-align:right;" class="supp-amt">4.41</td><td style="color:#a0aec0;font-size:0.65rem;">4–5 reduction; part of Biochem/Histo/Micro/Haem 85→75</td></tr>
+          <tr><td class="supp-name">Engineering</td><td style="text-align:center;">31</td><td style="text-align:right;" class="supp-amt">122.47</td><td style="text-align:right;" class="supp-amt">3.95</td><td style="color:#a0aec0;font-size:0.65rem;">Relook at 1–2</td></tr>
+          <tr><td class="supp-name">Anaesthesiology</td><td style="text-align:center;">32</td><td style="text-align:right;" class="supp-amt">110.68</td><td style="text-align:right;" class="supp-amt">3.46</td><td></td></tr>
+          <tr><td class="supp-name">Nephrology</td><td style="text-align:center;">27</td><td style="text-align:right;" class="supp-amt">97.51</td><td style="text-align:right;" class="supp-amt">3.61</td><td></td></tr>
+          <tr><td class="supp-name">Neurology (Lab)</td><td style="text-align:center;">22</td><td style="text-align:right;" class="supp-amt">94.10</td><td style="text-align:right;" class="supp-amt">4.28</td><td></td></tr>
+          <tr><td class="supp-name">CSSD</td><td style="text-align:center;">20</td><td style="text-align:right;" class="supp-amt">77.56</td><td style="text-align:right;" class="supp-amt">3.88</td><td></td></tr>
+          <tr><td class="supp-name">Cardiology</td><td style="text-align:center;">19</td><td style="text-align:right;" class="supp-amt">74.18</td><td style="text-align:right;" class="supp-amt">3.90</td><td></td></tr>
+          <tr><td class="supp-name">Microbiology (Lab)</td><td style="text-align:center;">19</td><td style="text-align:right;" class="supp-amt">74.09</td><td style="text-align:right;" class="supp-amt">3.90</td><td style="color:#a0aec0;font-size:0.65rem;">Part of Biochem/Histo/Micro/Haem 85→75</td></tr>
+          <tr><td class="supp-name">Health Care Promotions</td><td style="text-align:center;">9</td><td style="text-align:right;" class="supp-amt">61.19</td><td style="text-align:right;" class="supp-amt">6.80</td><td></td></tr>
+          <tr><td class="supp-name">Blood Bank (Lab)</td><td style="text-align:center;">17</td><td style="text-align:right;" class="supp-amt">65.04</td><td style="text-align:right;" class="supp-amt">3.83</td><td></td></tr>
+          <tr><td class="supp-name">Haematology</td><td style="text-align:center;">16</td><td style="text-align:right;" class="supp-amt">57.15</td><td style="text-align:right;" class="supp-amt">3.57</td><td style="color:#a0aec0;font-size:0.65rem;">Part of Biochem/Histo/Micro/Haem 85→75</td></tr>
+          <tr><td class="supp-name">Operations</td><td style="text-align:center;">3</td><td style="text-align:right;" class="supp-amt">54.30</td><td style="text-align:right;" class="supp-amt">18.10</td><td></td></tr>
+          <tr><td class="supp-name">Medical Records</td><td style="text-align:center;">12</td><td style="text-align:right;" class="supp-amt">52.95</td><td style="text-align:right;" class="supp-amt">4.41</td><td></td></tr>
+          <tr><td class="supp-name">Insurance</td><td style="text-align:center;">14</td><td style="text-align:right;" class="supp-amt">49.31</td><td style="text-align:right;" class="supp-amt">3.52</td><td></td></tr>
+          <tr><td class="supp-name">Nuclear Medicine</td><td style="text-align:center;">4</td><td style="text-align:right;" class="supp-amt">42.14</td><td style="text-align:right;" class="supp-amt">10.53</td><td></td></tr>
+          <tr><td class="supp-name">Transport</td><td style="text-align:center;">11</td><td style="text-align:right;" class="supp-amt">42.22</td><td style="text-align:right;" class="supp-amt">3.84</td><td></td></tr>
+          <tr><td class="supp-name">Information Technology</td><td style="text-align:center;">7</td><td style="text-align:right;" class="supp-amt">37.40</td><td style="text-align:right;" class="supp-amt">5.34</td><td></td></tr>
+          <tr><td class="supp-name">Clinical Nutrition</td><td style="text-align:center;">10</td><td style="text-align:right;" class="supp-amt">37.13</td><td style="text-align:right;" class="supp-amt">3.71</td><td></td></tr>
+          <tr><td class="supp-name">Human Resources</td><td style="text-align:center;">9</td><td style="text-align:right;" class="supp-amt">34.07</td><td style="text-align:right;" class="supp-amt">3.79</td><td></td></tr>
+          <tr><td class="supp-name">Call Centre</td><td style="text-align:center;">9</td><td style="text-align:right;" class="supp-amt">32.91</td><td style="text-align:right;" class="supp-amt">3.66</td><td></td></tr>
+          <tr><td class="supp-name">Physiotherapy</td><td style="text-align:center;">9</td><td style="text-align:right;" class="supp-amt">31.90</td><td style="text-align:right;" class="supp-amt">3.48</td><td></td></tr>
+          <tr><td class="supp-name">Gastroenterology</td><td style="text-align:center;">6</td><td style="text-align:right;" class="supp-amt">29.23</td><td style="text-align:right;" class="supp-amt">4.87</td><td></td></tr>
+          <tr><td class="supp-name">Corporate Communications</td><td style="text-align:center;">5</td><td style="text-align:right;" class="supp-amt">29.10</td><td style="text-align:right;" class="supp-amt">5.82</td><td></td></tr>
+          <tr><td style="color:#a0aec0;font-size:0.65rem;font-style:italic;" colspan="5">+ 35 smaller departments (Cardiothoracic Surgery, Head &amp; Neck Oncology, A&amp;E, Housekeeping, Laundry, Psychiatry, Oncology units, Lab sub-depts, etc.) — see full Excel for detail</td></tr>
+        </tbody>
       </table>
     </div>
   </div>
