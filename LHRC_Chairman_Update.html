@@ -227,7 +227,12 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
     <!-- Note Summary -->
     <div class="note-label">Note Summary</div>
     <div class="note-body">
-      <div data-edit-id="hl-cost" data-placeholder="Cost highlight…"><strong>Cost</strong> — <strong>~₹24.3 Cr total savings identified</strong> across three initiatives: payroll ₹4.7 Cr (~130 staff), vendor renegotiation ₹4.9 Cr, and Capex deferrals ₹14.7 Cr (top 6 departments reviewed).</div>
+      <div data-edit-id="hl-motherhood" style="font-style:normal; line-height:1.75; margin-bottom:4px; padding-bottom:2px;">
+        <div style="font-family:'Lora',Georgia,serif; font-size:0.92rem; font-weight:700; color:#0072BC; letter-spacing:-0.2px; margin-bottom:5px;">VPS Lakeshore is executing a structured transformation to restore financial discipline and build long-term capability — anchored in cost rationalisation, revenue recovery, digital renewal, and regulatory compliance.</div>
+        <div style="font-size:0.76rem; color:#2d3748; line-height:1.85;">This fortnight's update covers <span style="color:#C8103E; font-weight:600;">₹23.2 Cr</span> in identified cost savings, <span style="color:#C8103E; font-weight:600;">₹17.1 Cr</span> in revenue upside, and material progress across Lakeshore 2.0 and compliance workstreams.</div>
+      </div>
+      <hr class="note-div">
+      <div data-edit-id="hl-cost" data-placeholder="Cost highlight…"><strong>Cost</strong> — <strong>~₹23.2 Cr total savings identified</strong> across three initiatives: payroll ₹4.7 Cr (~130 staff), vendor renegotiation ₹3.8 Cr, and Capex deferrals ₹14.7 Cr (top 6 departments reviewed).</div>
       <hr class="note-div">
       <div data-edit-id="hl-revenue" data-placeholder="Revenue highlight…"><strong>Revenue</strong> — <strong>~₹17.1 Cr revenue upside identified</strong>: drug substitution ₹4.6 Cr, cash patient rate revision ₹12.5 Cr (1% IP rate increase, nursing charge pass-through, top-50 procedure correction). BD hire and doctor performance review in progress.</div>
       <hr class="note-div">
@@ -263,8 +268,8 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
           </tr>
           <tr>
             <td data-edit-id="ct4-name">Vendor Management</td>
-            <td class="amt" data-edit-id="ct4-amt">₹4.9 Cr identified</td>
-            <td data-edit-id="ct4-note">Drug cos ₹2.3 Cr + distributors ₹2.0 Cr + consumables ₹0.6 Cr; rate contracts being finalised</td>
+            <td class="amt" data-edit-id="ct4-amt">₹3.8 Cr identified</td>
+            <td data-edit-id="ct4-note">Drug cos ₹1.2 Cr + distributors ₹2.0 Cr + consumables ₹0.6 Cr; rate contracts being finalised</td>
           </tr>
         </tbody>
       </table>
@@ -298,8 +303,8 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
       <div class="sub-section">
         <div class="sub-sec-title" data-edit-id="s4-title">Vendor Management</div>
         <ul class="sec-pts" data-edit-id="s4-body">
-          <li>Drug manufacturer negotiations (21 companies, 10%) — <strong>₹2.3 Cr saving</strong>; distributor renegotiation (10 distributors, 5%) — <strong>₹2.0 Cr saving</strong>. Combined: ₹4.3 Cr.</li>
-          <li>Top 20 consumable suppliers and items (5%) — ₹0.6 Cr further saving. <strong>Total across all four categories: ₹4.9 Cr.</strong></li>
+          <li>Drug manufacturer negotiations (21 companies, 5%) — <strong>₹1.2 Cr saving</strong>; distributor renegotiation (10 distributors, 5%) — <strong>₹2.0 Cr saving</strong>. Combined: ₹3.2 Cr.</li>
+          <li>Top 20 consumable suppliers and items (5%) — ₹0.6 Cr further saving. <strong>Total across all four categories: ₹3.8 Cr.</strong></li>
           <li>Most rate contracts not renegotiated in over two years; structured discount conversations are the next priority. Rate contract calendar being finalised from week of 20 March.</li>
         </ul>
         <div class="dl-links" style="margin-top:10px;">
@@ -348,7 +353,7 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
         <li>Most material exposures: FY25 income tax return four months overdue (Sec 271B penalty risk up to ₹1.5 Cr); GSTR-9 annual return 72 days past deadline with daily penalties accruing; board minutes unsigned for three meetings, blocking DIR-12 and MGT-14 filings due in 22 days.</li>
       </ul>
       <div class="dl-links">
-        <a class="dl-link" href="#" target="_blank">↗ Compliance Tracker (Google Sheets)</a>
+        <a class="dl-link" href="https://docs.google.com/document/d/1gMR5ifTVkaVUMoTcxbUL5qat06f--1mwAe1IFD5A47o/edit?usp=sharing" target="_blank">↗ Compliance Tracker (Google Doc)</a>
         <a class="dl-link" href="Weekly%20update/16th%20March/Complicance%20Tracker/Lakeshore_Compliance_Gap_Report_13Mar2026%20%281%29.docx" download>↓ Gap Analysis Report (.docx)</a>
       </div>
     </div>
@@ -410,7 +415,7 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
 <div class="supp-modal-bg" id="drugCoModal" onclick="if(event.target===this)this.classList.remove('open')">
   <div class="supp-modal" style="max-width:620px;">
     <div class="supp-modal-hd">
-      <span class="supp-modal-title">Drug Company Discounts — 10% Target Applied</span>
+      <span class="supp-modal-title">Drug Company Discounts — 5% Target Applied</span>
       <button class="supp-modal-close" onclick="document.getElementById('drugCoModal').classList.remove('open')">✕</button>
     </div>
     <div class="supp-modal-body">
@@ -419,38 +424,38 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
           <th style="width:22px;">#</th>
           <th style="text-align:left;min-width:150px;">Manufacturer</th>
           <th style="text-align:right;white-space:nowrap;">Apr–Jan Spend (₹ L)</th>
-          <th style="text-align:right;white-space:nowrap;">10% Saving (₹ L)</th>
+          <th style="text-align:right;white-space:nowrap;">5% Saving (₹ L)</th>
         </tr></thead>
         <tbody>
-          <tr><td>1</td><td class="supp-name">Sun Pharma</td><td class="supp-amt" style="text-align:right;">311.3</td><td class="supp-amt" style="text-align:right;color:#2d6a4f;">31.1</td></tr>
-          <tr><td>2</td><td class="supp-name">Fresenius Kabi India</td><td class="supp-amt" style="text-align:right;">205.6</td><td class="supp-amt" style="text-align:right;color:#2d6a4f;">20.6</td></tr>
-          <tr><td>3</td><td class="supp-name">Cipla</td><td class="supp-amt" style="text-align:right;">166.9</td><td class="supp-amt" style="text-align:right;color:#2d6a4f;">16.7</td></tr>
-          <tr><td>4</td><td class="supp-name">Pfizer</td><td class="supp-amt" style="text-align:right;">165.3</td><td class="supp-amt" style="text-align:right;color:#2d6a4f;">16.5</td></tr>
-          <tr><td>5</td><td class="supp-name">Baxter India</td><td class="supp-amt" style="text-align:right;">141.7</td><td class="supp-amt" style="text-align:right;color:#2d6a4f;">14.2</td></tr>
-          <tr><td>6</td><td class="supp-name">B.Braun</td><td class="supp-amt" style="text-align:right;">131.4</td><td class="supp-amt" style="text-align:right;color:#2d6a4f;">13.1</td></tr>
-          <tr><td>7</td><td class="supp-name">Intas Pharmaceuticals</td><td class="supp-amt" style="text-align:right;">112.5</td><td class="supp-amt" style="text-align:right;color:#2d6a4f;">11.3</td></tr>
-          <tr><td>8</td><td class="supp-name">Reliance Life Sciences</td><td class="supp-amt" style="text-align:right;">103.6</td><td class="supp-amt" style="text-align:right;color:#2d6a4f;">10.4</td></tr>
-          <tr><td>9</td><td class="supp-name">Torrent Pharmaceuticals</td><td class="supp-amt" style="text-align:right;">94.2</td><td class="supp-amt" style="text-align:right;color:#2d6a4f;">9.4</td></tr>
-          <tr><td>10</td><td class="supp-name">AstraZeneca</td><td class="supp-amt" style="text-align:right;">93.1</td><td class="supp-amt" style="text-align:right;color:#2d6a4f;">9.3</td></tr>
-          <tr><td>11</td><td class="supp-name">Abbott Healthcare</td><td class="supp-amt" style="text-align:right;">90.4</td><td class="supp-amt" style="text-align:right;color:#2d6a4f;">9.0</td></tr>
-          <tr><td>12</td><td class="supp-name">Dr. Reddy's Laboratories</td><td class="supp-amt" style="text-align:right;">84.8</td><td class="supp-amt" style="text-align:right;color:#2d6a4f;">8.5</td></tr>
-          <tr><td>13</td><td class="supp-name">Novo Nordisk</td><td class="supp-amt" style="text-align:right;">84.5</td><td class="supp-amt" style="text-align:right;color:#2d6a4f;">8.5</td></tr>
-          <tr><td>14</td><td class="supp-name">Genzyme / Sanofi</td><td class="supp-amt" style="text-align:right;">79.5</td><td class="supp-amt" style="text-align:right;color:#2d6a4f;">7.9</td></tr>
-          <tr><td>15</td><td class="supp-name">Biocon</td><td class="supp-amt" style="text-align:right;">78.3</td><td class="supp-amt" style="text-align:right;color:#2d6a4f;">7.8</td></tr>
-          <tr><td>16</td><td class="supp-name">GlaxoSmithKline</td><td class="supp-amt" style="text-align:right;">72.9</td><td class="supp-amt" style="text-align:right;color:#2d6a4f;">7.3</td></tr>
-          <tr><td>17</td><td class="supp-name">La Renon Health Care</td><td class="supp-amt" style="text-align:right;">70.9</td><td class="supp-amt" style="text-align:right;color:#2d6a4f;">7.1</td></tr>
-          <tr><td>18</td><td class="supp-name">Aventis</td><td class="supp-amt" style="text-align:right;">67.8</td><td class="supp-amt" style="text-align:right;color:#2d6a4f;">6.8</td></tr>
-          <tr><td>19</td><td class="supp-name">Novartis Nephrology</td><td class="supp-amt" style="text-align:right;">65.4</td><td class="supp-amt" style="text-align:right;color:#2d6a4f;">6.5</td></tr>
-          <tr><td>20</td><td class="supp-name">United Biotech</td><td class="supp-amt" style="text-align:right;">63.6</td><td class="supp-amt" style="text-align:right;color:#2d6a4f;">6.4</td></tr>
-          <tr><td>21</td><td class="supp-name">Lupin Laboratories</td><td class="supp-amt" style="text-align:right;">62.9</td><td class="supp-amt" style="text-align:right;color:#2d6a4f;">6.3</td></tr>
+          <tr><td>1</td><td class="supp-name">Sun Pharma</td><td class="supp-amt" style="text-align:right;">311.3</td><td class="supp-amt" style="text-align:right;color:#2d6a4f;">15.6</td></tr>
+          <tr><td>2</td><td class="supp-name">Fresenius Kabi India</td><td class="supp-amt" style="text-align:right;">205.6</td><td class="supp-amt" style="text-align:right;color:#2d6a4f;">10.3</td></tr>
+          <tr><td>3</td><td class="supp-name">Cipla</td><td class="supp-amt" style="text-align:right;">166.9</td><td class="supp-amt" style="text-align:right;color:#2d6a4f;">8.3</td></tr>
+          <tr><td>4</td><td class="supp-name">Pfizer</td><td class="supp-amt" style="text-align:right;">165.3</td><td class="supp-amt" style="text-align:right;color:#2d6a4f;">8.3</td></tr>
+          <tr><td>5</td><td class="supp-name">Baxter India</td><td class="supp-amt" style="text-align:right;">141.7</td><td class="supp-amt" style="text-align:right;color:#2d6a4f;">7.1</td></tr>
+          <tr><td>6</td><td class="supp-name">B.Braun</td><td class="supp-amt" style="text-align:right;">131.4</td><td class="supp-amt" style="text-align:right;color:#2d6a4f;">6.6</td></tr>
+          <tr><td>7</td><td class="supp-name">Intas Pharmaceuticals</td><td class="supp-amt" style="text-align:right;">112.5</td><td class="supp-amt" style="text-align:right;color:#2d6a4f;">5.6</td></tr>
+          <tr><td>8</td><td class="supp-name">Reliance Life Sciences</td><td class="supp-amt" style="text-align:right;">103.6</td><td class="supp-amt" style="text-align:right;color:#2d6a4f;">5.2</td></tr>
+          <tr><td>9</td><td class="supp-name">Torrent Pharmaceuticals</td><td class="supp-amt" style="text-align:right;">94.2</td><td class="supp-amt" style="text-align:right;color:#2d6a4f;">4.7</td></tr>
+          <tr><td>10</td><td class="supp-name">AstraZeneca</td><td class="supp-amt" style="text-align:right;">93.1</td><td class="supp-amt" style="text-align:right;color:#2d6a4f;">4.7</td></tr>
+          <tr><td>11</td><td class="supp-name">Abbott Healthcare</td><td class="supp-amt" style="text-align:right;">90.4</td><td class="supp-amt" style="text-align:right;color:#2d6a4f;">4.5</td></tr>
+          <tr><td>12</td><td class="supp-name">Dr. Reddy's Laboratories</td><td class="supp-amt" style="text-align:right;">84.8</td><td class="supp-amt" style="text-align:right;color:#2d6a4f;">4.2</td></tr>
+          <tr><td>13</td><td class="supp-name">Novo Nordisk</td><td class="supp-amt" style="text-align:right;">84.5</td><td class="supp-amt" style="text-align:right;color:#2d6a4f;">4.2</td></tr>
+          <tr><td>14</td><td class="supp-name">Genzyme / Sanofi</td><td class="supp-amt" style="text-align:right;">79.5</td><td class="supp-amt" style="text-align:right;color:#2d6a4f;">4.0</td></tr>
+          <tr><td>15</td><td class="supp-name">Biocon</td><td class="supp-amt" style="text-align:right;">78.3</td><td class="supp-amt" style="text-align:right;color:#2d6a4f;">3.9</td></tr>
+          <tr><td>16</td><td class="supp-name">GlaxoSmithKline</td><td class="supp-amt" style="text-align:right;">72.9</td><td class="supp-amt" style="text-align:right;color:#2d6a4f;">3.6</td></tr>
+          <tr><td>17</td><td class="supp-name">La Renon Health Care</td><td class="supp-amt" style="text-align:right;">70.9</td><td class="supp-amt" style="text-align:right;color:#2d6a4f;">3.5</td></tr>
+          <tr><td>18</td><td class="supp-name">Aventis</td><td class="supp-amt" style="text-align:right;">67.8</td><td class="supp-amt" style="text-align:right;color:#2d6a4f;">3.4</td></tr>
+          <tr><td>19</td><td class="supp-name">Novartis Nephrology</td><td class="supp-amt" style="text-align:right;">65.4</td><td class="supp-amt" style="text-align:right;color:#2d6a4f;">3.3</td></tr>
+          <tr><td>20</td><td class="supp-name">United Biotech</td><td class="supp-amt" style="text-align:right;">63.6</td><td class="supp-amt" style="text-align:right;color:#2d6a4f;">3.2</td></tr>
+          <tr><td>21</td><td class="supp-name">Lupin Laboratories</td><td class="supp-amt" style="text-align:right;">62.9</td><td class="supp-amt" style="text-align:right;color:#2d6a4f;">3.1</td></tr>
           <tr class="pr-subtotal">
             <td colspan="2" style="text-align:left;padding-left:0;">TOTAL</td>
             <td style="text-align:right;font-family:'IBM Plex Mono',monospace;">2,346.8</td>
-            <td style="text-align:right;color:#a8d5b5;font-family:'IBM Plex Mono',monospace;">234.7</td>
+            <td style="text-align:right;color:#a8d5b5;font-family:'IBM Plex Mono',monospace;">117.3</td>
           </tr>
         </tbody>
       </table>
-      <div class="pr-footer"><p>Source: Medical Store purchase data, April–January FY26. 10% discount target as per procurement negotiation schedule.</p></div>
+      <div class="pr-footer"><p>Source: Medical Store purchase data, April–January FY26. 5% discount target as per procurement negotiation schedule.</p></div>
     </div>
   </div>
 </div>
