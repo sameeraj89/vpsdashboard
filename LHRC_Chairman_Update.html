@@ -61,16 +61,16 @@ body { font-family: 'IBM Plex Sans', system-ui, sans-serif; background: #f0f2f5;
 /* ── SECTIONS ── */
 .section { padding-bottom: 24px; margin-bottom: 24px; border-bottom: 1px solid #f0f2f5; }
 .section:last-of-type { border-bottom: none; padding-bottom: 0; margin-bottom: 0; }
-.sec-title { font-family: 'Lora', Georgia, serif; font-size: 0.88rem; font-weight: 600; color: #0d2137; margin-bottom: 9px; }
+.sec-title { font-family: 'Lora', Georgia, serif; font-size: 0.88rem; font-weight: 600; color: #0072BC; margin-bottom: 9px; }
 .sec-body { font-size: 0.74rem; color: #4a5568; line-height: 1.95; min-height: 1em; }
 
 /* ── DIVIDER ── */
 .rule { border: none; border-top: 1px solid #e2e8f0; margin: 36px 0; }
-.rule-heavy { border: none; border-top: 2px solid #0d2137; margin: 36px 0; }
+.rule-heavy { border: none; border-top: 2px solid #0072BC; margin: 36px 0; }
 
 /* ── COMPLIANCE LINKS ── */
 .dl-links { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 10px; }
-.dl-link { font-size: 0.68rem; font-weight: 600; color: #0d2137; text-decoration: none; border-bottom: 1px solid rgba(13,33,55,0.25); padding-bottom: 1px; transition: opacity .15s; }
+.dl-link { font-size: 0.68rem; font-weight: 600; color: #0072BC; text-decoration: none; border-bottom: 1px solid rgba(0,114,188,0.3); padding-bottom: 1px; transition: opacity .15s; }
 .dl-link:hover { opacity: 0.6; }
 
 /* ── COMMENTARY LABEL ── */
@@ -109,12 +109,12 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
 
 /* ── SUB-SECTIONS ── */
 .sub-section { margin-top: 20px; padding-top: 18px; border-top: 1px solid #f0f2f5; }
-.sub-sec-title { font-size: 0.72rem; font-weight: 700; color: #0d2137; margin-bottom: 7px; letter-spacing: -0.1px; }
+.sub-sec-title { font-size: 0.72rem; font-weight: 700; color: #0072BC; margin-bottom: 7px; letter-spacing: -0.1px; }
 
 /* ── SECTION BULLET POINTS ── */
 .sec-pts { list-style: none; padding: 0; margin: 0; font-size: 0.74rem; color: #4a5568; line-height: 1.75; }
 .sec-pts li { padding: 5px 0 5px 14px; position: relative; }
-.sec-pts li::before { content: '–'; position: absolute; left: 0; color: #a0aec0; }
+.sec-pts li::before { content: '–'; position: absolute; left: 0; color: #0072BC; }
 .sec-pts li + li { border-top: 1px dashed #edf0f3; }
 
 /* ── NOTE SUMMARY DIVIDERS ── */
@@ -154,7 +154,7 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
 .pr-footer .pf-key { font-weight: 600; color: #4a5568; }
 .pr-footer .pf-hl { color: #0d2137; font-weight: 600; }
 .supp-tbl td.supp-amt { font-family: 'IBM Plex Mono', monospace; color: #0d2137; white-space: nowrap; }
-.popup-link { font-size: 0.68rem; font-weight: 600; color: #0d2137; text-decoration: none; border-bottom: 1px solid rgba(13,33,55,0.25); padding-bottom: 1px; cursor: pointer; background: none; border-left: none; border-right: none; border-top: none; font-family: 'IBM Plex Sans', sans-serif; transition: opacity .15s; }
+.popup-link { font-size: 0.68rem; font-weight: 600; color: #0072BC; text-decoration: none; border-bottom: 1px solid rgba(13,33,55,0.25); padding-bottom: 1px; cursor: pointer; background: none; border-left: none; border-right: none; border-top: none; font-family: 'IBM Plex Sans', sans-serif; transition: opacity .15s; }
 .popup-link:hover { opacity: 0.6; }
 
 /* ── PLAIN TABLE ── */
@@ -227,18 +227,17 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
     <!-- Note Summary -->
     <div class="note-label">Note Summary</div>
     <div class="note-body">
-      <div data-edit-id="hl-motherhood" style="font-style:normal; line-height:1.75; margin-bottom:4px; padding-bottom:2px;">
-        <div style="font-family:'Lora',Georgia,serif; font-size:0.92rem; font-weight:700; color:#0072BC; letter-spacing:-0.2px; margin-bottom:5px;">VPS Lakeshore is executing a structured transformation to restore financial discipline and build long-term capability — anchored in cost rationalisation, revenue recovery, digital renewal, and regulatory compliance.</div>
-        <div style="font-size:0.76rem; color:#2d3748; line-height:1.85;">This fortnight's update covers <span style="color:#C8103E; font-weight:600;">₹23.2 Cr</span> in identified cost savings, <span style="color:#C8103E; font-weight:600;">₹17.1 Cr</span> in revenue upside, and material progress across Lakeshore 2.0 and compliance workstreams.</div>
+      <div data-edit-id="hl-motherhood" style="font-style:normal; line-height:1.8; margin-bottom:4px; padding-bottom:2px; font-size:0.78rem; color:#2d3748;">
+        <strong style="font-family:'Lora',Georgia,serif; color:#0072BC;">Cost</strong> — <span style="color:#C8103E; font-weight:600;">₹23.2 Cr</span> savings identified across payroll, vendor renegotiation, and Capex deferrals.&ensp;<strong style="font-family:'Lora',Georgia,serif; color:#0072BC;">Revenue</strong> — <span style="color:#C8103E; font-weight:600;">₹17.1 Cr</span> upside from drug substitution and cash rate revision.&ensp;<strong style="font-family:'Lora',Georgia,serif; color:#0072BC;">Compliance</strong> — 27 of 62 items past due; IT return, GSTR-9 and board minutes require immediate action.
       </div>
       <hr class="note-div">
-      <div data-edit-id="hl-cost" data-placeholder="Cost highlight…"><strong>Cost</strong> — <strong>~₹23.2 Cr total savings identified</strong> across three initiatives: payroll ₹4.7 Cr (~130 staff), vendor renegotiation ₹3.8 Cr, and Capex deferrals ₹14.7 Cr (top 6 departments reviewed).</div>
+      <div data-edit-id="hl-cost" data-placeholder="Cost highlight…"><strong style="font-family:'Lora',Georgia,serif;color:#0072BC;">Cost</strong> — <strong style="color:#C8103E;">~₹23.2 Cr total savings identified</strong> across three initiatives: payroll ₹4.7 Cr (~130 staff), vendor renegotiation ₹3.8 Cr, and Capex deferrals ₹14.7 Cr (top 6 departments reviewed).</div>
       <hr class="note-div">
-      <div data-edit-id="hl-revenue" data-placeholder="Revenue highlight…"><strong>Revenue</strong> — <strong>~₹17.1 Cr revenue upside identified</strong>: drug substitution ₹4.6 Cr, cash patient rate revision ₹12.5 Cr (1% IP rate increase, nursing charge pass-through, top-50 procedure correction). BD hire and doctor performance review in progress.</div>
+      <div data-edit-id="hl-revenue" data-placeholder="Revenue highlight…"><strong style="font-family:'Lora',Georgia,serif;color:#0072BC;">Revenue</strong> — <strong style="color:#C8103E;">~₹17.1 Cr revenue upside identified</strong>: drug substitution ₹4.6 Cr, cash patient rate revision ₹12.5 Cr (1% IP rate increase, nursing charge pass-through, top-50 procedure correction). BD hire and doctor performance review in progress.</div>
       <hr class="note-div">
-      <div data-edit-id="hl-brand" data-placeholder="Brand highlight…"><strong>Lakeshore 2.0</strong> — Reworked org structure ready end of month. Website go-live end of April; app under consideration. Process and platform mapping underway.</div>
+      <div data-edit-id="hl-brand" data-placeholder="Brand highlight…"><strong style="font-family:'Lora',Georgia,serif;color:#0072BC;">Lakeshore 2.0</strong> — Reworked org structure ready end of month. Website go-live end of April; app under consideration. Process and platform mapping underway.</div>
       <hr class="note-div">
-      <div data-edit-id="hl-compliance" data-placeholder="Compliance highlight…"><strong>Compliance</strong> — 27 of 62 items past due; IT return, GSTR-9 and board minute filings require immediate action. Compliance champion with 60-day mandate required.</div>
+      <div data-edit-id="hl-compliance" data-placeholder="Compliance highlight…"><strong style="font-family:'Lora',Georgia,serif;color:#0072BC;">Compliance</strong> — 27 of 62 items past due; IT return, GSTR-9 and board minute filings require immediate action. Compliance champion with 60-day mandate required.</div>
     </div>
 
     <hr class="rule-heavy">
@@ -279,7 +278,8 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
         <div class="sub-sec-title" data-edit-id="s2-title">Payroll</div>
         <ul class="sec-pts" data-edit-id="s2-body">
           <li>₹4.7 Cr identified to date covering ~130 staff across 7 departments — Nursing, Pharmacy and Patient Care Services account for the majority.</li>
-          <li>Benchmarking of various metrics including staff/bed and Dispensing time per drug against comparable hospital systems used. Individual department targets being set through March with implementation from April 2026 — this represents a short and intermediate timeline for action.</li>
+          <li>Benchmarking of various metrics including staff/bed and Dispensing time per drug against comparable hospital systems used.</li>
+          <li>Individual department targets being set through March with implementation from April 2026 — this represents a short and intermediate timeline for action.</li>
         </ul>
         <div class="dl-links" style="margin-top:10px;">
           <button class="popup-link" onclick="document.getElementById('payrollModal').classList.add('open')">↗ Payroll — Department Summary</button>
