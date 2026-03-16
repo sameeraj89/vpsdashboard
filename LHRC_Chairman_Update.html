@@ -202,8 +202,8 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
 }
 
 /* ── DRAFT BANNER ── */
-.draft-banner { background: #fffbeb; border: 1px solid #f0d070; border-left: 3px solid #c9a84c; border-radius: 3px; font-size: 0.68rem; color: #7a5f00; padding: 8px 14px; margin-bottom: 24px; line-height: 1.65; }
-.draft-banner strong { font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.8px; font-size: 0.62rem; }
+.draft-banner { font-size: 0.68rem; color: #8a9aaa; font-style: italic; padding: 4px 0 18px 0; margin-bottom: 0; line-height: 1.65; border: none; background: none; }
+.draft-banner strong { font-style: normal; font-weight: 600; color: #718096; letter-spacing: 0.5px; }
 
 </style>
 </head>
@@ -213,15 +213,24 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
 <div class="hdr">
   <div class="hdr-inner">
     <div class="hdr-logo">
-      <svg width="168" height="56" viewBox="0 0 168 56" xmlns="http://www.w3.org/2000/svg" style="display:block;">
-        <!-- VPS badge -->
-        <rect x="0" y="4" width="48" height="48" rx="6" fill="#0072BC"/>
-        <text x="24" y="33" text-anchor="middle" fill="white" font-family="Arial,sans-serif" font-weight="700" font-size="19" letter-spacing="1">VPS</text>
-        <!-- Wordmark -->
-        <text x="58" y="26" fill="#0072BC" font-family="Arial,sans-serif" font-weight="700" font-size="15.5" letter-spacing="0.8">LAKESHORE</text>
-        <text x="58" y="40" fill="#5a7a8a" font-family="Arial,sans-serif" font-weight="400" font-size="9" letter-spacing="0.4">Hospital &amp; Research Centre</text>
-        <!-- Crimson accent -->
-        <rect x="58" y="46" width="108" height="2.5" rx="1.2" fill="#C8103E"/>
+      <svg width="230" height="56" viewBox="0 0 230 56" xmlns="http://www.w3.org/2000/svg" style="display:block;">
+        <!-- Cross mark (top-right) -->
+        <g transform="translate(192,2)">
+          <!-- vertical arm blue -->
+          <rect x="10" y="0" width="10" height="26" rx="5" fill="#0072BC"/>
+          <!-- horizontal arm crimson -->
+          <rect x="0" y="10" width="26" height="10" rx="5" fill="#C8103E" opacity="0.88"/>
+          <!-- overlap centre square in blue -->
+          <rect x="10" y="10" width="10" height="10" fill="#0072BC"/>
+        </g>
+        <!-- vps wordmark -->
+        <text x="0" y="36" fill="#0072BC" font-family="Arial,Helvetica,sans-serif" font-weight="700" font-size="28" letter-spacing="-1">vps</text>
+        <!-- crimson vertical separator -->
+        <rect x="62" y="10" width="2" height="38" fill="#C8103E"/>
+        <!-- lakeshore wordmark -->
+        <text x="72" y="36" fill="#0072BC" font-family="Arial,Helvetica,sans-serif" font-weight="700" font-size="24" letter-spacing="-0.5">lakeshore</text>
+        <!-- subtitle -->
+        <text x="72" y="50" fill="#5a7a8a" font-family="Arial,Helvetica,sans-serif" font-weight="400" font-size="9.5" letter-spacing="0.2">Hospital &amp; Research Centre</text>
       </svg>
     </div>
     <div class="hdr-text">
@@ -231,7 +240,7 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
         <span class="hdr-badge hdr-badge-blue">Chairman Access</span>
         <span class="hdr-badge hdr-badge-slate">Internal Use Only</span>
       </div>
-      <button class="print-btn" onclick="window.print()">🖨 Print-friendly</button>
+      <button class="print-btn" onclick="window.print()">🖨 Print</button>
     </div>
   </div>
 </div>
