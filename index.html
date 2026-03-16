@@ -665,12 +665,13 @@ body {
         btn.disabled = true;
         btn.textContent = '✓ Access Granted';
         sessionStorage.setItem(KEY, 'ok');
-        gate.classList.add('out');
         document.body.style.overflow = '';
-        setTimeout(function(){
-          if (isChairman) { window.location.href = 'LHRC_Chairman_Update.html'; }
-          else { gate.remove(); }
-        }, 460);
+        if (isChairman) {
+          setTimeout(function(){ window.location.href = 'LHRC_Chairman_Update.html'; }, 400);
+        } else {
+          gate.classList.add('out');
+          setTimeout(function(){ gate.remove(); }, 460);
+        }
       } else {
         err.classList.add('show');
         pw.classList.add('err');
