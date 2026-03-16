@@ -202,8 +202,8 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
 }
 
 /* ── DRAFT BANNER ── */
-.draft-banner { font-size: 0.68rem; color: #8a9aaa; font-style: italic; padding: 4px 0 18px 0; margin-bottom: 0; line-height: 1.65; border: none; background: none; }
-.draft-banner strong { font-style: normal; font-weight: 600; color: #718096; letter-spacing: 0.5px; }
+.draft-banner { font-size: 0.62rem; color: #a0aec0; font-style: italic; padding: 4px 0 16px 0; margin-bottom: 0; line-height: 1.6; border: none; background: none; }
+.draft-banner strong { font-style: normal; font-weight: 600; color: #8a9aaa; letter-spacing: 0.5px; font-size: 0.62rem; }
 
 </style>
 </head>
@@ -213,24 +213,28 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
 <div class="hdr">
   <div class="hdr-inner">
     <div class="hdr-logo">
-      <svg width="230" height="56" viewBox="0 0 230 56" xmlns="http://www.w3.org/2000/svg" style="display:block;">
-        <!-- Cross mark (top-right) -->
-        <g transform="translate(192,2)">
-          <!-- vertical arm blue -->
-          <rect x="10" y="0" width="10" height="26" rx="5" fill="#0072BC"/>
-          <!-- horizontal arm crimson -->
-          <rect x="0" y="10" width="26" height="10" rx="5" fill="#C8103E" opacity="0.88"/>
-          <!-- overlap centre square in blue -->
-          <rect x="10" y="10" width="10" height="10" fill="#0072BC"/>
+      <svg width="248" height="58" viewBox="0 0 248 58" xmlns="http://www.w3.org/2000/svg" style="display:block;">
+        <!-- Cross mark — top right, 4-arm rotated cross in blue/crimson -->
+        <g transform="translate(212,0)">
+          <!-- NE blue arm (rotated pill) -->
+          <rect x="11" y="-2" width="10" height="22" rx="5" fill="#0072BC" transform="rotate(15,16,9)"/>
+          <!-- SE sky-blue arm -->
+          <rect x="11" y="14" width="22" height="10" rx="5" fill="#5BB8E8"/>
+          <!-- W crimson arm -->
+          <rect x="-4" y="14" width="20" height="10" rx="5" fill="#C8103E"/>
+          <!-- SW crimson lower -->
+          <rect x="4" y="14" width="10" height="20" rx="5" fill="#C8103E" opacity="0.85"/>
+          <!-- centre cap blue -->
+          <rect x="11" y="14" width="10" height="10" rx="2" fill="#0072BC"/>
         </g>
-        <!-- vps wordmark -->
-        <text x="0" y="36" fill="#0072BC" font-family="Arial,Helvetica,sans-serif" font-weight="700" font-size="28" letter-spacing="-1">vps</text>
-        <!-- crimson vertical separator -->
-        <rect x="62" y="10" width="2" height="38" fill="#C8103E"/>
-        <!-- lakeshore wordmark -->
-        <text x="72" y="36" fill="#0072BC" font-family="Arial,Helvetica,sans-serif" font-weight="700" font-size="24" letter-spacing="-0.5">lakeshore</text>
-        <!-- subtitle -->
-        <text x="72" y="50" fill="#5a7a8a" font-family="Arial,Helvetica,sans-serif" font-weight="400" font-size="9.5" letter-spacing="0.2">Hospital &amp; Research Centre</text>
+        <!-- vps text -->
+        <text x="0" y="38" fill="#0072BC" font-family="Arial,Helvetica,sans-serif" font-weight="800" font-size="30" letter-spacing="-1.5">vps</text>
+        <!-- thin grey vertical separator -->
+        <line x1="67" y1="8" x2="67" y2="46" stroke="#b0bec5" stroke-width="1.5"/>
+        <!-- lakeshore text -->
+        <text x="76" y="38" fill="#0072BC" font-family="Arial,Helvetica,sans-serif" font-weight="700" font-size="26" letter-spacing="-1">lakeshore</text>
+        <!-- Medical Centre subtitle -->
+        <text x="76" y="52" fill="#5a7a8a" font-family="Arial,Helvetica,sans-serif" font-weight="400" font-size="9" letter-spacing="0.8">Medical Centre</text>
       </svg>
     </div>
     <div class="hdr-text">
