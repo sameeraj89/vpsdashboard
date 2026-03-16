@@ -185,6 +185,26 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
   .hdr-text { text-align: left; }
   .hdr-badges { justify-content: flex-start; }
 }
+/* ── PRINT ── */
+.print-btn { display: inline-flex; align-items: center; gap: 5px; font-size: 0.58rem; font-weight: 600; color: #718096; background: none; border: 1px solid #cddeed; border-radius: 3px; padding: 4px 10px; cursor: pointer; font-family: 'IBM Plex Sans', sans-serif; letter-spacing: 0.3px; transition: all .15s; margin-top: 6px; }
+.print-btn:hover { color: #0072BC; border-color: #0072BC; }
+@media print {
+  body { background: white !important; }
+  .hdr { box-shadow: none !important; }
+  .hdr-rule { display: none; }
+  .page { padding: 0 !important; }
+  .doc { padding: 24px !important; box-shadow: none !important; }
+  .back, .edit-bar, .print-btn, .dl-links, .popup-link, .hdr-badges { display: none !important; }
+  .supp-modal-bg { display: none !important; }
+  .section { break-inside: avoid; }
+  .plain-table { break-inside: avoid; }
+  a[href]::after { content: none !important; }
+}
+
+/* ── DRAFT BANNER ── */
+.draft-banner { background: #fffbeb; border: 1px solid #f0d070; border-left: 3px solid #c9a84c; border-radius: 3px; font-size: 0.68rem; color: #7a5f00; padding: 8px 14px; margin-bottom: 24px; line-height: 1.65; }
+.draft-banner strong { font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.8px; font-size: 0.62rem; }
+
 </style>
 </head>
 <body>
@@ -193,8 +213,16 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
 <div class="hdr">
   <div class="hdr-inner">
     <div class="hdr-logo">
-      <img src="data:image/jpeg;base64,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0KxTZ2qzEWchCTKyuHBzeUtPMP7SCNj09FbjZLTS+O5XgYkmm/nsZczjm5bFWKT3cvit0Hf4kdQfzCp1LFcY4qAU6klY12E8pJaQOvpsbVubnKPwEVyWYRQvcGc0gLQHa7dR+q9TZmjXrwzSTeScc0YDHFzh33ygb0qQnOC21fqi84Qm910/sz1iWXo8dE3JyMktjfO5nY9enoPRbqxwTx2YGTQvbJFIA5rmnYIWRcW7Z3XJBERQSEREAREQBERAEREAREQBERAEREBBZTETX8hPI3lax1PwmO31EgfzN6e3QdV4x+Jt171CxOI3PbHO6w5p6eJI5p6e46a+gVgRX4jqjnw43ZVquGsxXRHYisSwMtOnY9tkCMbcXAlnfY2vuRxuRczLVq9Zksd6RsjZjKG8vRoIIPX+3orQitxXdkcFVRGOpSuzzrWgIXU/B3vrzc2+34LDg4r9ShFQsVWx/DxcjZxIHNeR0B13HuplFTc6otsV2VfHY/KNylCzdikc6Fj2TSPsh4cXAeZrfQbHbv1+Sl8PUmpwWGzAAyWZZG6O/K5xIUiimU3IiONRIaeC7TzM12rWFqOxExj2CQMcxzSdHr0IIP6LFlqV23PQuQxyB8THtkiinDHjm12ceh1pTyIptOw8aaqyBbipW0cZFDE6PwLYnkbJKHOA8xJ36nZXt+LsSV87H5R8aT4R5veMN6+3UKbRN7HDiQctW5do4xslYRSV7Mb5GOkDvK0EEgjuvmZx9uXI1rlUTPDInRPbDMI3jZBB2ehHTt+CnURTadh401Rp4qqKeNggbG6IMb9xz+cjZ31PqtxEVW7dl0qVBERQSEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQH//Z" alt="VPS Lakeshore" onerror="this.style.display='none'; this.parentElement.querySelector('.hdr-logo-fallback').style.display='block';">
-      <div class="hdr-logo-fallback">VPS Lakeshore<span>Hospital &amp; Research Centre</span></div>
+      <svg width="168" height="56" viewBox="0 0 168 56" xmlns="http://www.w3.org/2000/svg" style="display:block;">
+        <!-- VPS badge -->
+        <rect x="0" y="4" width="48" height="48" rx="6" fill="#0072BC"/>
+        <text x="24" y="33" text-anchor="middle" fill="white" font-family="Arial,sans-serif" font-weight="700" font-size="19" letter-spacing="1">VPS</text>
+        <!-- Wordmark -->
+        <text x="58" y="26" fill="#0072BC" font-family="Arial,sans-serif" font-weight="700" font-size="15.5" letter-spacing="0.8">LAKESHORE</text>
+        <text x="58" y="40" fill="#5a7a8a" font-family="Arial,sans-serif" font-weight="400" font-size="9" letter-spacing="0.4">Hospital &amp; Research Centre</text>
+        <!-- Crimson accent -->
+        <rect x="58" y="46" width="108" height="2.5" rx="1.2" fill="#C8103E"/>
+      </svg>
     </div>
     <div class="hdr-text">
       <div class="hdr-title">Fortnightly Transformation Update<em>VPS Lakeshore Hospital &amp; Research Centre &middot; Chairman&rsquo;s Brief</em></div>
@@ -203,6 +231,7 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
         <span class="hdr-badge hdr-badge-blue">Chairman Access</span>
         <span class="hdr-badge hdr-badge-slate">Internal Use Only</span>
       </div>
+      <button class="print-btn" onclick="window.print()">🖨 Print-friendly</button>
     </div>
   </div>
 </div>
@@ -223,6 +252,9 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
       </div>
       <div class="dateline-right" data-edit-id="doc-ref">LHRC/BU/2026/001</div>
     </div>
+
+    <!-- Draft notice -->
+    <div class="draft-banner"><strong>DRAFT</strong> — Figures represent identified potential across all workstreams and are subject to revision. This update will be updated with actuals as implementation progresses.</div>
 
     <!-- Note Summary -->
     <div class="note-label">Note Summary</div>
