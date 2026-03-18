@@ -354,7 +354,7 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
         <li>67 total pending items across statutory, tax, labour and licence categories in compliance tracker to be actioned.</li>
       </ul>
       <div class="dl-links">
-        <a class="dl-link" href="Hospital_Compliance_Tracker_Mar2026.xlsx" download>↓ Compliance Tracker (.xlsx)</a>
+        <button class="popup-link" onclick="document.getElementById('complianceModal').classList.add('open')">↗ Compliance Gap Report — v4 (13 Mar 2026)</button>
       </div>
     </div>
 
@@ -916,6 +916,21 @@ window.addEventListener('DOMContentLoaded', loadEdits);
         </tbody>
       </table>
       <div class="pr-footer">Revenue figures: April–March FY26 (annualised). ARPP = Average Revenue Per Patient. Actions (Replace / Incentivise) to be confirmed following individual performance reviews scheduled March 17–28. <em>Internal use only.</em></div>
+    </div>
+  </div>
+</div>
+
+<div class="supp-modal-bg" id="complianceModal" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="supp-modal" style="max-width:660px;">
+    <div class="supp-modal-hd">
+      <span class="supp-modal-title">Statutory Compliance — Gap Analysis Report (v4, 13 Mar 2026)</span>
+      <button class="supp-modal-close" onclick="document.getElementById('complianceModal').classList.remove('open')">✕</button>
+    </div>
+    <div class="supp-modal-body">
+      <p class="supp-modal-note">Version 4 — Updated 13 March 2026. Source: Hospital Compliance Tracker + Licenses Register + Management clarifications. 67 total items requiring action across statutory, tax, labour and licence categories.</p>
+      <div style="text-align:center; padding: 24px 0;">
+        <a href="Lakeshore_Compliance_Gap_Report_v4_13Mar2026.docx" download style="display:inline-flex; align-items:center; gap:8px; background:#0d2137; color:white; text-decoration:none; padding:10px 20px; font-size:0.75rem; font-weight:600; font-family:'IBM Plex Sans',sans-serif; letter-spacing:0.3px; border-radius:3px;">↓ Download Compliance Gap Report (.docx)</a>
+      </div>
     </div>
   </div>
 </div>
