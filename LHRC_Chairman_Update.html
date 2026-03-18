@@ -190,7 +190,7 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
 .print-btn:hover { color: #0072BC; border-color: #0072BC; }
 @media print {
   @page { size: A4; margin: 12mm 15mm; }
-  html, body { background: white !important; font-size: 12pt !important; }
+  html, body { background: white !important; font-size: 14pt !important; }
   .hdr { box-shadow: none !important; position: relative !important; }
   .hdr-inner { padding: 10px 16px !important; }
   .hdr-title { font-size: 0.9rem !important; }
@@ -212,7 +212,8 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
 
   .note-label { margin-bottom: 4px !important; }
   .note-body { font-size: 0.72rem !important; line-height: 1.65 !important;
-    margin-bottom: 0 !important; padding-left: 12px !important; }
+    margin-bottom: 0 !important; padding-left: 12px !important;
+    break-after: page !important; page-break-after: always !important; }
   .note-body hr { margin: 4px 0 !important; }
 
   .section { padding-bottom: 10px !important; margin-bottom: 10px !important; }
