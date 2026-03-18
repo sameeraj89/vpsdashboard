@@ -189,20 +189,36 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
 .print-btn { display: inline-flex; align-items: center; gap: 5px; font-size: 0.58rem; font-weight: 600; color: #718096; background: none; border: 1px solid #cddeed; border-radius: 3px; padding: 4px 10px; cursor: pointer; font-family: 'IBM Plex Sans', sans-serif; letter-spacing: 0.3px; transition: all .15s; margin-top: 6px; }
 .print-btn:hover { color: #0072BC; border-color: #0072BC; }
 @media print {
-  body { background: white !important; }
-  .hdr { box-shadow: none !important; }
+  @page { size: A4; margin: 14mm 16mm; }
+  html, body { background: white !important; }
+  .hdr { box-shadow: none !important; position: relative !important; }
   .hdr-rule { display: none; }
   .page { padding: 0 !important; }
-  .doc { padding: 24px !important; box-shadow: none !important; }
+  .doc { padding: 12px 0 !important; box-shadow: none !important; }
   .back, .edit-bar, .print-btn, .dl-links, .popup-link, .hdr-badges { display: none !important; }
   .supp-modal-bg { display: none !important; }
+  a[href]::after { content: none !important; }
+
+  /* PAGE 1: Header + Note Summary — break after note-body */
+  .note-body { break-inside: avoid; break-after: page; }
+
+  /* PAGE 2: Sections 1–4 — no breaks within, break after compliance */
   .section { break-inside: avoid; }
   .sub-section { break-inside: avoid; }
   .sec-pts { break-inside: avoid; }
-  .sec-pts li { break-inside: avoid; break-after: avoid; }
-  .note-body { break-inside: avoid; break-after: page; }
+  .sec-pts li { break-inside: avoid; }
+  .rule-heavy + * { break-before: avoid; }
+
+  /* PAGE 3: Other Notes — force new page before commentary, hide orphan rule */
+  .commentary-label { break-before: page; }
+  hr.rule-heavy { display: none; }
+  .commentary-hed { break-inside: avoid; break-after: avoid; }
+  .commentary-para { break-inside: avoid; }
+
+  /* Prevent orphan breaks */
   .plain-table { break-inside: avoid; }
-  a[href]::after { content: none !important; }
+  .dateline { break-inside: avoid; break-after: avoid; }
+  .note-label { break-after: avoid; }
 }
 
 /* ── DRAFT BANNER ── */
