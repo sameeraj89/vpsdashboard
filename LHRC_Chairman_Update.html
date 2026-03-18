@@ -205,10 +205,9 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
   /* Compress dateline */
   .dateline { padding-bottom: 10px !important; margin-bottom: 14px !important; }
 
-  /* PAGE 1: Note Summary — compress and break after */
-  .note-label { break-after: avoid; margin-bottom: 4px !important; }
-  .note-body { break-inside: avoid; break-after: page;
-    font-size: 0.72rem !important; line-height: 1.65 !important;
+  /* No forced page breaks — let browser flow naturally */
+  .note-label { margin-bottom: 4px !important; }
+  .note-body { font-size: 0.72rem !important; line-height: 1.65 !important;
     margin-bottom: 0 !important; padding-left: 12px !important; }
   .note-body hr { margin: 4px 0 !important; }
 
@@ -216,19 +215,19 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
   .section { padding-bottom: 10px !important; margin-bottom: 10px !important; }
   .sec-title { font-size: 0.82rem !important; margin-bottom: 4px !important; }
   .sec-body { font-size: 0.69rem !important; line-height: 1.6 !important; margin-bottom: 4px !important; }
-  .sub-section { break-inside: avoid;
+  .sub-section {
     margin-top: 8px !important; padding-top: 8px !important; }
   .sub-sec-title { font-size: 0.68rem !important; margin-bottom: 3px !important; }
-  .sec-pts { break-inside: avoid; font-size: 0.69rem !important; line-height: 1.55 !important; }
-  .sec-pts li { break-inside: avoid; padding: 2px 0 2px 12px !important; }
-  .commentary-label { break-before: avoid; margin-bottom: 6px !important; }
-  .commentary-hed { break-inside: avoid; break-after: avoid;
+  .sec-pts { font-size: 0.69rem !important; line-height: 1.55 !important; }
+  .sec-pts li { padding: 2px 0 2px 12px !important; }
+  .commentary-label { margin-bottom: 6px !important; }
+  .commentary-hed {
     font-size: 0.95rem !important; margin-bottom: 8px !important; }
-  .commentary-para { break-inside: avoid;
+  .commentary-para {
     font-size: 0.70rem !important; line-height: 1.7 !important;
     margin-bottom: 8px !important; min-height: 0 !important; }
 
-  .plain-table { break-inside: avoid; }
+  .plain-table { }
 }
 
 /* ── DRAFT BANNER ── */
