@@ -197,7 +197,12 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
   .back, .edit-bar, .print-btn, .dl-links, .popup-link, .hdr-badges { display: none !important; }
   .supp-modal-bg { display: none !important; }
   .section { break-inside: avoid; }
+  .sub-section { break-inside: avoid; }
+  .sec-pts { break-inside: avoid; }
+  .sec-pts li { break-inside: avoid; break-after: avoid; }
+  .note-body { break-inside: avoid; }
   .plain-table { break-inside: avoid; }
+  .doc { page-break-inside: avoid; }
   a[href]::after { content: none !important; }
 }
 
@@ -250,7 +255,7 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
     <div class="note-label">Note Summary</div>
     <div class="note-body">
       <div data-edit-id="hl-motherhood" style="font-style:normal; line-height:1.85; margin-bottom:4px; padding-bottom:2px; font-family:'Lora',Georgia,serif; font-size:0.82rem; font-weight:600; color:#0072BC;">
-        Cost savings of <span style="color:#C8103E;">₹23.2 Cr</span> have been targeted — <span style="color:#C8103E;">₹14.7 Cr</span> through capex rationalisation and <span style="color:#C8103E;">₹8.5 Cr</span> through payroll and vendor optimisation — alongside <span style="color:#C8103E;">₹17.1 Cr</span> in revenue upside from drug substitution and procedure rate corrections. The compliance tracker flags 68 open items, with transplant licence renewals under active resolution; the org restructure and website relaunch are on track to close within the month.
+        A total value creation opportunity of ~<span style="color:#C8103E;">₹41 Cr</span> has been identified, comprising ~<span style="color:#C8103E;">₹26 Cr</span> through revenue enhancement and cost optimisation initiatives, and ~<span style="color:#C8103E;">₹15 Cr</span> through capex rationalisation. This is complemented by strengthened compliance oversight, with critical items under active resolution, and key organisational and digital transformation initiatives on track for completion within next month.
       </div>
       <hr class="note-div">
       <div data-edit-id="hl-cost" data-placeholder="Cost highlight…"><strong style="font-family:'Lora',Georgia,serif;color:#0072BC;">Cost</strong> — <strong style="color:#C8103E;">₹14.7 Cr in Capex savings</strong> targeted through deferrals and rejections across top 6 departments; <strong style="color:#C8103E;">₹8.5 Cr in Opex savings</strong> targeted through payroll optimisation ₹4.7 Cr (~130 staff) and vendor renegotiation ₹3.8 Cr.</div>
