@@ -198,27 +198,28 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
   .back, .edit-bar, .print-btn, .dl-links, .popup-link, .hdr-badges { display: none !important; }
   .supp-modal-bg { display: none !important; }
   a[href]::after { content: none !important; }
+  hr.rule-heavy { display: none; }
 
-  /* PAGE 1: Header + Note Summary — break after note-body */
+  /* PAGE 1: Note Summary — break after */
   .note-body { break-inside: avoid; break-after: page; }
+  .note-label { break-after: avoid; }
+  .dateline { break-inside: avoid; break-after: avoid; }
 
-  /* PAGE 2: Sections 1–4 — no breaks within, break after compliance */
-  .section { break-inside: avoid; }
-  .sub-section { break-inside: avoid; }
+  /* PAGE 2: Sections 1–4 — space them out evenly */
+  .section { break-inside: avoid; margin-top: 18pt !important; margin-bottom: 18pt !important; }
+  .sub-section { break-inside: avoid; margin-bottom: 10pt !important; }
+  .sec-body { margin-bottom: 8pt !important; }
   .sec-pts { break-inside: avoid; }
   .sec-pts li { break-inside: avoid; }
-  .rule-heavy + * { break-before: avoid; }
+  .sec-title { margin-bottom: 6pt !important; }
+  .sub-sec-title { margin-bottom: 4pt !important; }
 
-  /* PAGE 3: Other Notes — force new page before commentary, hide orphan rule */
-  .commentary-label { break-before: page; }
-  hr.rule-heavy { display: none; }
-  .commentary-hed { break-inside: avoid; break-after: avoid; }
-  .commentary-para { break-inside: avoid; }
+  /* PAGE 3: Other Notes — force new page, space out */
+  .commentary-label { break-before: page; padding-top: 24pt !important; }
+  .commentary-hed { break-inside: avoid; break-after: avoid; margin-bottom: 16pt !important; }
+  .commentary-para { break-inside: avoid; line-height: 2.2 !important; font-size: 0.85rem !important; }
 
-  /* Prevent orphan breaks */
   .plain-table { break-inside: avoid; }
-  .dateline { break-inside: avoid; break-after: avoid; }
-  .note-label { break-after: avoid; }
 }
 
 /* ── DRAFT BANNER ── */
