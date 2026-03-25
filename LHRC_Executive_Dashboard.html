@@ -1777,46 +1777,12 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f4f6f9;color:#
 ══════════════════════════════════════════════════════════════════ -->
 <div id="page-chairman" class="page active">
 
-  <!-- ─── LOCK SCREEN ────────────────────────────────────────────── -->
-  <div id="chmLock" style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(240,244,248,0.97);z-index:999;display:flex;align-items:center;justify-content:center">
-    <div style="background:white;border-radius:8px;padding:36px 40px;max-width:400px;width:92%;box-shadow:0 4px 24px rgba(0,0,0,0.10);border:1px solid #e2e8f0">
-      <div style="border-bottom:2px solid #0d2137;padding-bottom:16px;margin-bottom:22px">
-        <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:1.4px;color:#a0aec0;margin-bottom:5px;font-family:'IBM Plex Mono',monospace">VPS Lakeshore Hospital &amp; Research Centre</div>
-        <div style="font-size:1rem;font-weight:800;color:#0d2137">Chairman's Board Update</div>
-        <div style="font-size:0.65rem;color:#718096;margin-top:3px">Lakeshore 2.0 Transformation Programme &nbsp;&middot;&nbsp; Restricted access</div>
-      </div>
-      <div style="margin-bottom:12px">
-        <label style="display:block;font-size:0.61rem;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:#718096;margin-bottom:5px">Username <span style="font-weight:400;color:#a0aec0;text-transform:none">(leave blank for view-only)</span></label>
-        <input id="chmUser" type="text" placeholder="Admin username" autocomplete="off"
-          style="width:100%;padding:9px 12px;border:1px solid #e2e8f0;border-radius:5px;font-size:0.8rem;font-family:'IBM Plex Sans',sans-serif;outline:none;color:#1a202c"
-          onfocus="this.style.borderColor='#0d2137'" onblur="this.style.borderColor='#e2e8f0'">
-      </div>
-      <div style="margin-bottom:16px">
-        <label style="display:block;font-size:0.61rem;font-weight:700;text-transform:uppercase;letter-spacing:0.6px;color:#718096;margin-bottom:5px">Password</label>
-        <input id="chmPass" type="password" placeholder="Enter password"
-          style="width:100%;padding:9px 12px;border:1px solid #e2e8f0;border-radius:5px;font-size:0.8rem;font-family:'IBM Plex Sans',sans-serif;outline:none;color:#1a202c"
-          onfocus="this.style.borderColor='#0d2137'" onblur="this.style.borderColor='#e2e8f0'"
-          onkeydown="if(event.key==='Enter')chmAttemptLogin()">
-      </div>
-      <div id="chmError" style="display:none;font-size:0.68rem;color:#c0392b;margin-bottom:12px;padding:7px 10px;background:#fdf2f2;border-radius:4px;border-left:3px solid #c0392b">Incorrect credentials — please try again.</div>
-      <button onclick="chmAttemptLogin()"
-        style="width:100%;background:#0d2137;color:white;padding:11px;border:none;border-radius:5px;font-size:0.78rem;font-weight:700;cursor:pointer;font-family:'IBM Plex Sans',sans-serif;letter-spacing:0.5px">
-        Continue
-      </button>
-      <div style="margin-top:14px;font-size:0.59rem;color:#b0bec5;text-align:center;line-height:1.8">View access: password only &nbsp;&middot;&nbsp; Edit access: authorised admins<br>Contact the Chairman's office for access</div>
-    </div>
-  </div>
-
-  <!-- ─── AUTHENTICATED CONTENT ──────────────────────────────────── -->
-  <div id="chmContent" style="display:none">
+  <!-- ─── BOARD UPDATE CONTENT ──────────────────────────────────── -->
+  <div id="chmContent" style="display:block">
 
     <!-- Toolbar -->
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding:8px 0;border-bottom:1px solid #e2e8f0">
-      <div style="font-size:0.65rem;color:#718096">
-        <span id="chmViewOnlyNote" style="display:none">View-only access &nbsp;&middot;&nbsp; <a href="#" onclick="chmLogout();return false" style="color:#0d2137;text-decoration:none;font-weight:600">Sign out</a></span>
-        <span id="chmAdminNote" style="display:none">Editing as <strong id="chmAdminUserDisplay" style="color:#0d2137"></strong> &nbsp;&middot;&nbsp; <a href="#" onclick="chmLogout();return false" style="color:#718096;text-decoration:none">Sign out</a></span>
-      </div>
-      <button id="chmAddBtn" onclick="chmShowAddForm()" style="display:none;background:#0d2137;color:white;border:none;padding:7px 16px;border-radius:5px;font-size:0.68rem;font-weight:700;cursor:pointer;font-family:'IBM Plex Sans',sans-serif">+ New Weekly Update</button>
+    <div style="display:flex;align-items:center;justify-content:flex-end;margin-bottom:16px;padding:8px 0;border-bottom:1px solid #e2e8f0">
+      <button id="chmAddBtn" onclick="chmShowAddForm()" style="background:#0d2137;color:white;border:none;padding:7px 16px;border-radius:5px;font-size:0.68rem;font-weight:700;cursor:pointer;font-family:'IBM Plex Sans',sans-serif">+ New Weekly Update</button>
     </div>
 
     <!-- Page heading -->
@@ -2386,12 +2352,8 @@ new Chart(document.getElementById('specialtyAOPChart'),{
     var tabs = document.querySelectorAll('.tab');
     if(page) page.classList.add('active');
     if(tabs.length) tabs[0].classList.add('active');
-    if(typeof chmAuthLevel !== 'undefined' && !chmAuthLevel){
-      var lock = document.getElementById('chmLock');
-      var content = document.getElementById('chmContent');
-      if(lock) lock.style.display = 'flex';
-      if(content) content.style.display = 'none';
-    }
+    var content = document.getElementById('chmContent');
+    if(content) content.style.display = 'block';
   }
 })();
 </script>
