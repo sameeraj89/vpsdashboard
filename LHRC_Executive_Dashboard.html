@@ -258,7 +258,8 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f4f6f9;color:#
 
 <!-- ══════════════════════════════ TABS ══════════════════════════════ -->
 <div class="tab-bar">
-  <div class="tab active" onclick="showTab('overview',this)">&#x1F3AF; Overview</div>
+  <div class="tab active" onclick="chairmanTabClick(this)">&#x1F451; Chairman Update</div>
+  <div class="tab" onclick="showTab('overview',this)" style="border-left:2px solid #e2e8f0">&#x1F3AF; Overview</div>
   <div class="tab" onclick="showTab('capex',this)">&#x1F3D7;&#xFE0F; Capex Transformation</div>
   <div class="tab" onclick="showTab('revenue',this)">&#x1F4C8; Revenue Levers</div>
   <div class="tab" onclick="showTab('cost',this)">&#x2702;&#xFE0F; Cost Levers</div>
@@ -269,7 +270,7 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f4f6f9;color:#
 <!-- ══════════════════════════════════════════════════════════════════
      TAB 1: OVERVIEW
 ══════════════════════════════════════════════════════════════════ -->
-<div id="page-overview" class="page active">
+<div id="page-overview" class="page">
 
 <!-- ── Legend row ─────────────────────────────────── -->
   <div style="display:flex;align-items:center;gap:18px;margin-bottom:12px;padding:8px 14px;background:#f7fafc;border-radius:8px;border:1px solid #e2e8f0">
@@ -336,7 +337,7 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f4f6f9;color:#
           <span style="font-size:0.58rem;font-weight:600;color:#718096;background:#f7fafc;padding:1px 5px;border-radius:3px">−140bps BC</span>
         </div>
         <div style="display:flex;justify-content:space-between;align-items:baseline">
-          <span style="font-size:1.0rem;font-weight:800;color:#e67e22;font-family:'IBM Plex Mono',monospace">25.8%</span>
+          <span style="font-size:1.0rem;font-weight:800;color:#e67e22;font-family:'IBM Plex Mono',monospace">25.9%</span>
           <span style="font-size:0.58rem;font-weight:700;color:#e67e22;background:#fff8f0;padding:1px 5px;border-radius:3px">+410bps UC</span>
         </div>
       </div>
@@ -400,14 +401,14 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f4f6f9;color:#
           </tr>
         </thead>
         <tbody>
-          <tr class="bold"><td>Revenue</td><td>41,575</td><td>45,278</td><td>52,573</td><td style="font-weight:800;color:#1a3a5c;background:#f0f4f8">57,500</td></tr>
+          <tr class="bold"><td>Revenue</td><td>41,575</td><td>45,278</td><td>52,573</td><td style="font-weight:800;color:#1a3a5c;background:#f0f4f8">57,521</td></tr>
           <tr><td>&nbsp;&nbsp;[&#x2013;] Consumption / COGS</td><td>12,514</td><td>13,328</td><td>15,259</td><td style="background:#f7fafc;color:#4a5568">15,525</td></tr>
           <tr><td>&nbsp;&nbsp;[&#x2013;] Doctor Cost</td><td>7,547</td><td>8,009</td><td>10,085</td><td style="background:#f7fafc;color:#4a5568">9,908</td></tr>
           <tr class="bold"><td>Contribution</td><td>21,515</td><td>23,941</td><td>27,228</td><td style="font-weight:800;color:#1a3a5c;background:#f0f4f8">32,067</td></tr>
           <tr><td>&nbsp;&nbsp;[&#x2013;] Payroll</td><td>7,401</td><td>7,718</td><td>9,485</td><td style="background:#f7fafc;color:#27ae60;font-weight:700">8,185</td></tr>
           <tr><td>&nbsp;&nbsp;[&#x2013;] Other Cost</td><td>6,212</td><td>6,341</td><td>7,024</td><td style="background:#f7fafc;color:#27ae60;font-weight:700">6,524</td></tr>
-          <tr class="ebitda-row"><td>EBITDA</td><td>7,901</td><td>9,882</td><td>10,719</td><td style="font-weight:800;color:#e67e22;background:#fff8f0;font-size:0.75rem">14,858</td></tr>
-          <tr class="bold"><td>EBITDA %</td><td>19%</td><td class="up">22%</td><td>20.4%</td><td style="font-weight:800;color:#e67e22;background:#fff8f0">25.8%</td></tr>
+          <tr class="ebitda-row"><td>EBITDA</td><td>7,901</td><td>9,882</td><td>10,719</td><td style="font-weight:800;color:#e67e22;background:#fff8f0;font-size:0.75rem">14,879</td></tr>
+          <tr class="bold"><td>EBITDA %</td><td>19%</td><td class="up">22%</td><td>20.4%</td><td style="font-weight:800;color:#e67e22;background:#fff8f0">25.9%</td></tr>
           <tr><td>&nbsp;&nbsp;[&#x2013;] Depreciation</td><td>2,605</td><td>2,500</td><td>3,064</td><td style="background:#f7fafc;color:#4a5568">3,493</td></tr>
           <tr class="bold"><td>EBIT</td><td>5,297</td><td>7,382</td><td>7,655</td><td style="font-weight:800;color:#1a3a5c;background:#f0f4f8">11,365</td></tr>
           <tr><td>&nbsp;&nbsp;[&#x2013;] Finance Cost</td><td>33</td><td>94</td><td>94</td><td style="background:#f7fafc;color:#4a5568">94</td></tr>
@@ -578,8 +579,8 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f4f6f9;color:#
 
       <div style="background:rgba(255,255,255,0.07);border-radius:7px;padding:11px 12px;text-align:center;border-top:2px solid #a78bfa">
         <div style="font-size:0.52rem;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:rgba(255,255,255,0.45);margin-bottom:5px">EBITDA Margin</div>
-        <div style="font-size:1.1rem;font-weight:800;color:#a78bfa;font-family:'IBM Plex Mono',monospace">25.8%</div>
-        <div style="font-size:0.62rem;font-weight:700;color:#a78bfa;margin-top:4px">+400 bps vs FY26E</div>
+        <div style="font-size:1.1rem;font-weight:800;color:#a78bfa;font-family:'IBM Plex Mono',monospace">25.9%</div>
+        <div style="font-size:0.62rem;font-weight:700;color:#a78bfa;margin-top:4px">+410 bps vs FY26E</div>
         <div style="height:1px;background:rgba(255,255,255,0.08);margin:6px 0"></div>
         <div style="font-size:0.58rem;color:rgba(255,255,255,0.35)">FY27 BC: 20.4%</div>
       </div>
@@ -1774,7 +1775,7 @@ body{font-family:'IBM Plex Sans',system-ui,sans-serif;background:#f4f6f9;color:#
 <!-- ══════════════════════════════════════════════════════════════════
      TAB 7: CHAIRMAN'S BOARD UPDATE
 ══════════════════════════════════════════════════════════════════ -->
-<div id="page-chairman" class="page">
+<div id="page-chairman" class="page active">
 
   <!-- ─── LOCK SCREEN ────────────────────────────────────────────── -->
   <div id="chmLock" style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(240,244,248,0.97);z-index:999;display:flex;align-items:center;justify-content:center">
@@ -2124,39 +2125,19 @@ function chmStatusDot(status){
 
 function chmBuildCard(u,isLatest){
   const bodyId='chmBody'+u.id;
-  const isAdmin=chmAuthLevel==='admin';
-  const ROMANS=['I','II','III','IV','V','VI','VII','VIII','IX','X'];
-  const statusOpts=s=>[
-    ['in-progress','◉ In Progress'],['planning','◈ Planning'],['on-track','● On Track'],
-    ['immediate','⚡ Immediate Action'],['at-risk','⚠ At Risk'],['approved','✓ Approved'],
-    ['complete','✔ Complete'],['monitoring','◉ Monitoring'],['draft','○ Draft'],
-    ['concept','○ Concept'],['deferred','⏸ Deferred']
-  ].map(([v,l])=>`<option value="${v}"${s===v?' selected':''}>${l}</option>`).join('');
 
-  const catSections=CHM_TEMPLATE.map((cat,ci)=>{
-    const roman=ROMANS[ci]||String(ci+1);
+  const catSections=CHM_TEMPLATE.map(cat=>{
     const rows=cat.items.map(item=>{
       const d=u.data[item.key]||{status:'draft',impact:'—',notes:'—'};
-      const statusCell=isAdmin
-        ?`<select id="ic_${u.id}_${item.key}_status" style="width:100%;padding:4px 6px;border:1px solid #e2e8f0;border-radius:4px;font-size:0.64rem;font-family:'IBM Plex Sans',sans-serif;color:#1a202c;background:white">${statusOpts(d.status)}</select>`
-        :chmStatusDot(d.status);
-      const impactCell=isAdmin
-        ?`<input id="ic_${u.id}_${item.key}_impact" type="text" value="${(d.impact&&d.impact!=='—')?d.impact.replace(/"/g,'&quot;'):''}" placeholder="Impact / target…" style="width:100%;padding:4px 6px;border:1px solid #e2e8f0;border-radius:4px;font-size:0.66rem;font-family:'IBM Plex Sans',sans-serif">`
-        :`<span style="font-size:0.68rem;color:#4a5568">${d.impact||'—'}</span>`;
-      const notesCell=isAdmin
-        ?`<input id="ic_${u.id}_${item.key}_notes" type="text" value="${(d.notes&&d.notes!=='—')?d.notes.replace(/"/g,'&quot;'):''}" placeholder="Notes / actions…" style="width:100%;padding:4px 6px;border:1px solid #e2e8f0;border-radius:4px;font-size:0.64rem;font-family:'IBM Plex Sans',sans-serif">`
-        :`<span style="font-size:0.65rem;color:#718096;line-height:1.6">${d.notes||'—'}</span>`;
       return `<tr>
-        <td style="padding:7px 10px;border-bottom:1px solid #f0f4f8;vertical-align:middle;width:26%;font-size:0.7rem;font-weight:600;color:#1a202c">${item.name}<div style="font-size:0.57rem;color:#a0aec0;font-weight:400;margin-top:1px">${item.sub}</div></td>
-        <td style="padding:7px 10px;border-bottom:1px solid #f0f4f8;vertical-align:middle;width:16%">${statusCell}</td>
-        <td style="padding:7px 10px;border-bottom:1px solid #f0f4f8;vertical-align:middle;width:27%">${impactCell}</td>
-        <td style="padding:7px 10px;border-bottom:1px solid #f0f4f8;vertical-align:middle">${notesCell}</td>
+        <td style="padding:7px 10px;border-bottom:1px solid #f0f4f8;vertical-align:top;width:26%;font-size:0.7rem;font-weight:600;color:#1a202c">${item.name}</td>
+        <td style="padding:7px 10px;border-bottom:1px solid #f0f4f8;vertical-align:top;width:14%">${chmStatusDot(d.status)}</td>
+        <td style="padding:7px 10px;border-bottom:1px solid #f0f4f8;vertical-align:top;width:28%;font-size:0.68rem;color:#4a5568">${d.impact||'—'}</td>
+        <td style="padding:7px 10px;border-bottom:1px solid #f0f4f8;vertical-align:top;font-size:0.65rem;color:#718096;line-height:1.6">${d.notes||'—'}</td>
       </tr>`;
     }).join('');
     return `<div style="margin-bottom:18px">
-      <div style="font-size:0.61rem;font-weight:800;text-transform:uppercase;letter-spacing:1.1px;color:#0d2137;padding-bottom:6px;border-bottom:2px solid #0d2137;margin-bottom:1px;display:flex;align-items:baseline;gap:8px">
-        <span style="font-family:'IBM Plex Mono',monospace;font-size:0.68rem;color:#e67e22">${roman}.</span>${cat.icon} ${cat.category}
-      </div>
+      <div style="font-size:0.61rem;font-weight:800;text-transform:uppercase;letter-spacing:1.1px;color:#0d2137;padding-bottom:6px;border-bottom:1px solid #dee3ea;margin-bottom:1px">${cat.category}</div>
       <table style="width:100%;border-collapse:collapse">
         <thead><tr>
           <th style="padding:6px 10px;text-align:left;font-size:0.57rem;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;color:#a0aec0;border-bottom:1px solid #edf0f4">Initiative</th>
@@ -2169,34 +2150,22 @@ function chmBuildCard(u,isLatest){
     </div>`;
   }).join('');
 
-  const summaryField=isAdmin
-    ?`<textarea id="ic_${u.id}_summary" rows="2" style="width:100%;padding:6px 8px;border:1.5px solid #e2e8f0;border-radius:5px;font-size:0.71rem;font-family:'IBM Plex Sans',sans-serif;line-height:1.65;resize:vertical;font-style:italic;color:#2d3748;background:white" onfocus="this.style.borderColor='#1a3a5c'" onblur="this.style.borderColor='#e2e8f0'">${u.execSummary||''}</textarea>`
-    :`<span style="font-size:0.71rem;color:#2d3748;line-height:1.75;font-style:italic">${u.execSummary||'—'}</span>`;
-
-  const weekField=isAdmin
-    ?`<input id="ic_${u.id}_weekof" type="text" value="${u.weekOf}" style="border:1.5px solid #e2e8f0;border-radius:4px;padding:3px 8px;font-size:0.72rem;font-weight:700;color:#0d2137;font-family:'IBM Plex Sans',sans-serif;width:auto" onfocus="this.style.borderColor='#1a3a5c'" onblur="this.style.borderColor='#e2e8f0'">`
-    :`Week of ${u.weekOf}`;
-
   const toggleBtn=!isLatest
     ?`<button onclick="chmToggle('${bodyId}')" id="btn${bodyId}" style="background:none;border:1px solid #d1d9e0;color:#718096;padding:3px 12px;border-radius:4px;font-size:0.62rem;cursor:pointer;font-family:'IBM Plex Sans',sans-serif">▼ Expand</button>`
     :'';
 
-  const adminBtns=isAdmin
-    ?`<button onclick="chmDeleteUpdate(${u.id})" style="background:none;border:1px solid #f5c6c6;color:#c0392b;padding:3px 10px;border-radius:4px;font-size:0.6rem;cursor:pointer;font-family:'IBM Plex Sans',sans-serif;font-weight:600">✕ Delete</button>`
-    :'';
-
-  const saveBtn=isAdmin
-    ?`<button onclick="chmSaveInline(${u.id})" style="background:#0d2137;color:white;border:none;padding:6px 18px;border-radius:5px;font-size:0.66rem;font-weight:700;cursor:pointer;font-family:'IBM Plex Sans',sans-serif;letter-spacing:0.4px">💾 Save Changes</button>`
+  const adminBtns=chmAuthLevel==='admin'
+    ?`<button onclick="chmEditUpdate(${u.id})" style="background:none;border:1px solid #c8d8e8;color:#4a7fa5;padding:3px 10px;border-radius:4px;font-size:0.6rem;cursor:pointer;font-family:'IBM Plex Sans',sans-serif;font-weight:600">✏ Edit</button>
+      <button onclick="chmDeleteUpdate(${u.id})" style="background:none;border:1px solid #f5c6c6;color:#c0392b;padding:3px 10px;border-radius:4px;font-size:0.6rem;cursor:pointer;font-family:'IBM Plex Sans',sans-serif;font-weight:600">✕ Delete</button>`
     :'';
 
   return `<div style="background:white;border-radius:6px;margin-bottom:14px;overflow:hidden;border:1px solid ${isLatest?'#c8d8e8':'#e2e8f0'}">
 
-    <!-- Card header -->
+    <!-- Card header: clean document style -->
     <div style="padding:12px 22px 11px;border-bottom:2px solid #0d2137;display:flex;align-items:center;justify-content:space-between;background:white">
       <div>
-        <div style="font-size:0.75rem;font-weight:800;color:#0d2137;display:flex;align-items:center;gap:8px">
-          ${isLatest?'<span style="font-size:0.56rem;background:#0d2137;color:white;padding:2px 7px;border-radius:2px;font-weight:700;letter-spacing:0.6px;font-family:\'IBM Plex Mono\',monospace">CURRENT</span>':''}
-          Board Update — ${weekField}
+        <div style="font-size:0.75rem;font-weight:800;color:#0d2137">
+          ${isLatest?'<span style="font-size:0.56rem;background:#0d2137;color:white;padding:2px 7px;border-radius:2px;font-weight:700;letter-spacing:0.6px;margin-right:9px;vertical-align:middle;font-family:\'IBM Plex Mono\',monospace">CURRENT</span>':''}Board Update — Week of ${u.weekOf}
         </div>
         <div style="font-size:0.58rem;color:#a0aec0;margin-top:4px;font-family:'IBM Plex Mono',monospace">${u.refNo} &nbsp;&middot;&nbsp; ${u.addedOn} &nbsp;&middot;&nbsp; ${u.addedBy}</div>
       </div>
@@ -2208,17 +2177,16 @@ function chmBuildCard(u,isLatest){
 
       <!-- Chairman's note -->
       <div style="padding:11px 22px 12px;border-bottom:1px solid #f0f3f7;background:#fafbfc">
-        <div style="font-size:0.59rem;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:#a0aec0;margin-bottom:5px">Chairman's Note</div>
-        ${summaryField}
+        <span style="font-size:0.59rem;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:#a0aec0">Chairman's Note &nbsp;— &nbsp;</span><span style="font-size:0.71rem;color:#2d3748;line-height:1.75;font-style:italic">${u.execSummary||'—'}</span>
       </div>
 
       <!-- Initiative tables -->
       <div style="padding:18px 22px 8px">${catSections}</div>
 
-      <!-- Footer / Save -->
-      <div style="border-top:1px solid #f0f3f7;padding:9px 22px;display:flex;justify-content:space-between;align-items:center">
-        <span style="font-size:0.57rem;color:#c8d0da;font-family:'IBM Plex Mono',monospace">${u.refNo} &nbsp;&middot;&nbsp; VPS Lakeshore Hospital &amp; Research Centre &nbsp;&middot;&nbsp; Strictly Confidential</span>
-        ${saveBtn}
+      <!-- Document footer -->
+      <div style="border-top:1px solid #f0f3f7;padding:7px 22px;display:flex;justify-content:space-between">
+        <span style="font-size:0.57rem;color:#c8d0da;font-family:'IBM Plex Mono',monospace">${u.refNo} &nbsp;&middot;&nbsp; VPS Lakeshore Hospital &amp; Research Centre</span>
+        <span style="font-size:0.57rem;color:#c8d0da;font-family:'IBM Plex Mono',monospace">Strictly Confidential</span>
       </div>
     </div>
   </div>`;
@@ -2244,8 +2212,7 @@ function chmShowAddForm(existing){
     ['concept','○ Concept'],['deferred','⏸ Deferred']
   ].map(([v,l])=>`<option value="${v}"${s===v?' selected':''}>${l}</option>`).join('');
 
-  const FORM_ROMANS=['I','II','III','IV','V','VI','VII','VIII','IX','X'];
-  const catForms=CHM_TEMPLATE.map((cat,ci)=>{const roman=FORM_ROMANS[ci]||String(ci+1);
+  const catForms=CHM_TEMPLATE.map(cat=>{
     const rows=cat.items.map(item=>{
       const ex=existing&&existing.data?existing.data[item.key]:{};
       return `<tr>
@@ -2266,7 +2233,6 @@ function chmShowAddForm(existing){
     return `<div style="margin-bottom:16px;border-radius:8px;overflow:hidden;border:1px solid #e2e8f0">
       <div style="background:${cat.bg};border-left:4px solid ${cat.color};padding:8px 14px;display:flex;align-items:center;gap:8px">
         <span style="font-size:0.9rem">${cat.icon}</span>
-        <span style="font-family:'IBM Plex Mono',monospace;font-size:0.68rem;font-weight:700;color:${cat.color};margin-right:2px">${roman}.</span>
         <span style="font-size:0.66rem;font-weight:800;text-transform:uppercase;letter-spacing:0.9px;color:${cat.color}">${cat.category}</span>
       </div>
       <table style="width:100%;border-collapse:collapse;background:white">
@@ -2353,33 +2319,6 @@ function chmEditUpdate(id){
 function chmDeleteUpdate(id){
   if(!confirm('Delete this update? This cannot be undone.')) return;
   const updates=chmGetUpdates().filter(u=>u.id!==id);
-  localStorage.setItem(CHM_STORE_KEY,JSON.stringify(updates));
-  chmRenderUpdates();
-}
-
-function chmSaveInline(updateId){
-  const updates=chmGetUpdates();
-  const idx=updates.findIndex(u=>u.id===updateId);
-  if(idx<0) return;
-  const u={...updates[idx]};
-  const data={};
-  CHM_TEMPLATE.forEach(cat=>{
-    cat.items.forEach(item=>{
-      const sEl=document.getElementById('ic_'+updateId+'_'+item.key+'_status');
-      const iEl=document.getElementById('ic_'+updateId+'_'+item.key+'_impact');
-      const nEl=document.getElementById('ic_'+updateId+'_'+item.key+'_notes');
-      data[item.key]={
-        status:sEl?sEl.value:(u.data[item.key]||{}).status||'draft',
-        impact:iEl?(iEl.value.trim()||'—'):(u.data[item.key]||{}).impact||'—',
-        notes :nEl?(nEl.value.trim()||'—'):(u.data[item.key]||{}).notes||'—'
-      };
-    });
-  });
-  const weekEl=document.getElementById('ic_'+updateId+'_weekof');
-  const sumEl=document.getElementById('ic_'+updateId+'_summary');
-  if(weekEl&&weekEl.value.trim()) u.weekOf=weekEl.value.trim();
-  if(sumEl) u.execSummary=sumEl.value.trim();
-  updates[idx]={...u,data};
   localStorage.setItem(CHM_STORE_KEY,JSON.stringify(updates));
   chmRenderUpdates();
 }
