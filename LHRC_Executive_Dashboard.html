@@ -2004,7 +2004,7 @@ const CHM_SEED = [{
   }
 }];
 
-let chmAuthLevel = null;
+let chmAuthLevel = 'admin';
 let chmAdminUsername = '';
 
 function chairmanTabClick(el){
@@ -2012,54 +2012,25 @@ function chairmanTabClick(el){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('page-chairman').classList.add('active');
   el.classList.add('active');
-  if(!chmAuthLevel){
-    document.getElementById('chmLock').style.display='flex';
-    document.getElementById('chmContent').style.display='none';
-  }
+  var content = document.getElementById('chmContent');
+  if(content) content.style.display = 'block';
 }
 
 function chmAttemptLogin(){
-  const user=(document.getElementById('chmUser').value||'').trim().toLowerCase();
-  const pass=document.getElementById('chmPass').value||'';
-  const errEl=document.getElementById('chmError');
-  errEl.style.display='none';
-  if(!user && pass===CHM_VIEW_PASS){
-    chmAuthLevel='view'; chmAdminUsername=''; chmShowContent();
-  } else if(user && CHM_ADMINS[user] && CHM_ADMINS[user]===pass){
-    chmAuthLevel='admin'; chmAdminUsername=user; chmShowContent();
-  } else {
-    errEl.style.display='block';
-    const p=document.getElementById('chmPass');
-    p.style.borderColor='#dc2626';
-    setTimeout(()=>{p.style.borderColor='#e2e8f0';},2000);
-  }
+  // Gate removed — always authenticated as admin
+  chmAuthLevel='admin'; chmShowContent();
 }
 
 function chmShowContent(){
-  document.getElementById('chmLock').style.display='none';
-  document.getElementById('chmContent').style.display='block';
-  if(chmAuthLevel==='admin'){
-    document.getElementById('chmAdminNote').style.display='inline';
-    document.getElementById('chmViewOnlyNote').style.display='none';
-    document.getElementById('chmAddBtn').style.display='inline-block';
-    document.getElementById('chmAdminUserDisplay').textContent=
-      chmAdminUsername.charAt(0).toUpperCase()+chmAdminUsername.slice(1);
-  } else {
-    document.getElementById('chmViewOnlyNote').style.display='inline';
-    document.getElementById('chmAdminNote').style.display='none';
-    document.getElementById('chmAddBtn').style.display='none';
-  }
+  var content = document.getElementById('chmContent');
+  if(content) content.style.display='block';
+  var addBtn = document.getElementById('chmAddBtn');
+  if(addBtn) addBtn.style.display = (chmAuthLevel==='admin') ? 'inline-block' : 'none';
   chmRenderUpdates();
 }
 
 function chmLogout(){
-  chmAuthLevel=null; chmAdminUsername='';
-  ['chmAdminNote','chmViewOnlyNote'].forEach(id=>{const e=document.getElementById(id);if(e)e.style.display='none';});
-  const addBtn=document.getElementById('chmAddBtn'); if(addBtn)addBtn.style.display='none';
-  document.getElementById('chmContent').style.display='none';
-  document.getElementById('chmLock').style.display='flex';
-  ['chmUser','chmPass'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
-  document.getElementById('chmError').style.display='none';
+  // Gate removed — content always visible; logout is a no-op
 }
 
 function chmGetUpdates(){
