@@ -2314,8 +2314,12 @@ new Chart(document.getElementById('specialtyAOPChart'),{
 </script>
 
 <script>
-// Deep-link: if URL hash is #chairman, activate chairman tab on load
-(function(){
+// Initialise Chairman's Board Update on page load
+document.addEventListener('DOMContentLoaded', function(){
+  // Always render updates (gate removed — content is always visible)
+  if(typeof chmRenderUpdates === 'function') chmRenderUpdates();
+
+  // Deep-link: if URL hash is #chairman, activate that tab
   if(window.location.hash === '#chairman'){
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -2326,7 +2330,7 @@ new Chart(document.getElementById('specialtyAOPChart'),{
     var content = document.getElementById('chmContent');
     if(content) content.style.display = 'block';
   }
-})();
+});
 </script>
 </body>
 </html>
