@@ -206,45 +206,165 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
 .draft-banner strong { font-style: normal; font-weight: 600; color: #8a9aaa; letter-spacing: 0.5px; font-size: 0.62rem; }
 
 
-/* ── SIDEBAR ── */
-.app-shell { display: flex; min-height: 100vh; align-items: flex-start; }
+/* ── APP SHELL ── */
+.app-shell {
+  display: flex;
+  min-height: 100vh;
+  align-items: flex-start;
+  position: relative;
+}
+
+/* ── SIDEBAR DRAWER ── */
 .sidebar {
-  width: 218px; flex-shrink: 0; background: #fff;
+  flex-shrink: 0;
+  width: 224px;
+  background: #fff;
   border-right: 1px solid #e2e8f0;
-  position: sticky; top: 0; height: 100vh; overflow-y: auto;
-  box-shadow: 2px 0 8px rgba(0,0,0,0.03); z-index: 100;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  transition: width 0.24s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.24s ease;
+  box-shadow: 2px 0 12px rgba(0,0,0,0.06);
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
 }
-.sb-header {
-  padding: 16px 14px 12px; border-bottom: 1px solid #e8ecf0;
-  display: flex; align-items: center; justify-content: space-between;
+.sidebar.collapsed {
+  width: 32px;
+  box-shadow: 1px 0 4px rgba(0,0,0,0.04);
 }
-.sb-header-label {
-  font-size: 0.57rem; font-weight: 700; text-transform: uppercase;
-  letter-spacing: 1.4px; color: #a0aec0; font-family: 'IBM Plex Mono', monospace;
+
+/* ── SIDEBAR HEADER (always visible strip) ── */
+.sb-topbar {
+  flex-shrink: 0;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px 0 14px;
+  border-bottom: 1px solid #edf0f4;
+  background: #fff;
+  min-width: 224px;
 }
+.sb-title-text {
+  font-size: 0.57rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #a0aec0;
+  font-family: 'IBM Plex Mono', monospace;
+  white-space: nowrap;
+  opacity: 1;
+  transition: opacity 0.15s;
+}
+.sidebar.collapsed .sb-title-text { opacity: 0; pointer-events: none; }
+
+/* ── TOGGLE BUTTON ── */
+.sb-toggle {
+  flex-shrink: 0;
+  width: 26px; height: 26px;
+  border-radius: 4px;
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.12s, border-color 0.12s;
+  color: #718096;
+  font-size: 0.7rem;
+  user-select: none;
+}
+.sb-toggle:hover { background: #f0f4f8; border-color: #cbd5e0; color: #2d3748; }
+
+/* ── PULL TAB (collapsed state) ── */
+.sb-pull-tab {
+  position: absolute;
+  left: 0; top: 0;
+  width: 32px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s;
+}
+.sidebar.collapsed .sb-pull-tab {
+  opacity: 1;
+  pointer-events: auto;
+}
+.sb-pull-label {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+  font-size: 0.52rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #b0bec5;
+  font-family: 'IBM Plex Mono', monospace;
+  user-select: none;
+}
+.sb-pull-tab:hover .sb-pull-label { color: #0072BC; }
+
+/* ── SIDEBAR CONTENT ── */
+.sb-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-width: 224px;
+  opacity: 1;
+  transition: opacity 0.18s;
+}
+.sidebar.collapsed .sb-content {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ── SIDEBAR ITEMS ── */
 .sb-item {
-  display: flex; align-items: center; gap: 9px;
-  padding: 10px 14px; cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 14px;
+  cursor: pointer;
   border-left: 3px solid transparent;
-  transition: background .12s, border-color .12s;
-  border-bottom: 1px solid #f5f7fa;
+  transition: background 0.12s, border-color 0.12s;
+  border-bottom: 1px solid #f4f6f9;
+  white-space: nowrap;
 }
 .sb-item:hover { background: #f7f9fc; }
 .sb-item.active { background: #eef4fb; border-left-color: #0072BC; }
-.sb-item-icon { font-size: 0.8rem; flex-shrink: 0; opacity: 0.4; }
+.sb-item-icon { font-size: 0.78rem; flex-shrink: 0; opacity: 0.35; }
 .sb-item.active .sb-item-icon { opacity: 1; }
 .sb-item-text { flex: 1; min-width: 0; }
-.sb-item-date { font-size: 0.71rem; font-weight: 500; color: #2d3748; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sb-item-date { font-size: 0.72rem; font-weight: 500; color: #2d3748; }
 .sb-item.active .sb-item-date { color: #0072BC; font-weight: 700; }
-.sb-item-label { font-size: 0.55rem; color: #a0aec0; font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.3px; margin-top: 1px; }
+.sb-item-label { font-size: 0.54rem; color: #a0aec0; font-family: 'IBM Plex Mono', monospace; margin-top: 1px; }
 .sb-item.active .sb-item-label { color: #5a9fd4; }
-.sb-badge { font-size: 0.54rem; font-weight: 700; background: #e2e8f0; color: #718096; border-radius: 10px; padding: 1px 6px; flex-shrink: 0; }
-.sb-item.active .sb-badge { background: #0072BC; color: white; }
+.sb-badge {
+  font-size: 0.53rem; font-weight: 700;
+  background: #e2e8f0; color: #718096;
+  border-radius: 10px; padding: 1px 6px; flex-shrink: 0;
+}
+.sb-item.active .sb-badge { background: #0072BC; color: #fff; }
+
+/* ── MAIN ── */
 .main-content { flex: 1; min-width: 0; }
 .main-content .page { max-width: 800px; }
 .update-panel { display: none; }
 .update-panel.active { display: block; }
-@media (max-width: 700px) { .sidebar { display: none; } }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 680px) {
+  .sidebar { position: fixed; left: 0; }
+  .sidebar.collapsed { width: 28px; }
+  .app-shell { padding-left: 28px; }
+  .app-shell:not(.sb-collapsed-shell) { padding-left: 0; }
+}
 
 </style>
 </head>
@@ -253,24 +373,38 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
 <!-- ══ APP SHELL ══ -->
 <div class="app-shell">
 
-<!-- SIDEBAR -->
+<!-- SIDEBAR DRAWER -->
 <nav class="sidebar" id="sidebar">
-  <div class="sb-header">
-    <span class="sb-header-label">Fortnightly Updates</span>
+
+  <!-- Pull tab (visible only when collapsed) -->
+  <div class="sb-pull-tab" onclick="toggleSidebar()" title="Show updates">
+    <span class="sb-pull-label">Updates</span>
   </div>
-  <div class="sb-item active" onclick="switchPanel('apr1')" id="tab-apr1">
-    <span class="sb-item-icon">📄</span>
-    <div class="sb-item-text">
-      <div class="sb-item-date">1 April 2026</div>
-      <div class="sb-item-label">LHRC/BU/2026/002</div>
+
+  <!-- Top bar with title + toggle button -->
+  <div class="sb-topbar">
+    <span class="sb-title-text">Fortnightly Updates</span>
+    <button class="sb-toggle" id="sb-toggle-btn" onclick="toggleSidebar()" title="Collapse sidebar" aria-label="Toggle sidebar">
+      <span id="sb-chevron">◀</span>
+    </button>
+  </div>
+
+  <!-- Scrollable item list -->
+  <div class="sb-content">
+    <div class="sb-item active" onclick="switchPanel('apr1')" id="tab-apr1">
+      <span class="sb-item-icon">📄</span>
+      <div class="sb-item-text">
+        <div class="sb-item-date">1 April 2026</div>
+        <div class="sb-item-label">LHRC/BU/2026/002</div>
+      </div>
+      <span class="sb-badge">NEW</span>
     </div>
-    <span class="sb-badge">NEW</span>
-  </div>
-  <div class="sb-item" onclick="switchPanel('mar16')" id="tab-mar16">
-    <span class="sb-item-icon">📄</span>
-    <div class="sb-item-text">
-      <div class="sb-item-date">16 March 2026</div>
-      <div class="sb-item-label">LHRC/BU/2026/001</div>
+    <div class="sb-item" onclick="switchPanel('mar16')" id="tab-mar16">
+      <span class="sb-item-icon">📄</span>
+      <div class="sb-item-text">
+        <div class="sb-item-date">16 March 2026</div>
+        <div class="sb-item-label">LHRC/BU/2026/001</div>
+      </div>
     </div>
   </div>
 </nav>
@@ -1016,6 +1150,37 @@ function switchPanel(id) {
   document.getElementById('tab-' + id).classList.add('active');
   window.scrollTo(0, 0);
 }
+
+// ── Sidebar toggle ──
+(function() {
+  var SB_KEY = 'lhrc_sb_collapsed';
+  var collapsed = false;
+  try { collapsed = localStorage.getItem(SB_KEY) === '1'; } catch(e){}
+
+  function applySidebarState() {
+    var sb = document.getElementById('sidebar');
+    var chevron = document.getElementById('sb-chevron');
+    var btn = document.getElementById('sb-toggle-btn');
+    if (!sb) return;
+    if (collapsed) {
+      sb.classList.add('collapsed');
+      if (chevron) chevron.textContent = '▶';
+      if (btn) btn.title = 'Expand updates';
+    } else {
+      sb.classList.remove('collapsed');
+      if (chevron) chevron.textContent = '◀';
+      if (btn) btn.title = 'Collapse updates';
+    }
+    try { localStorage.setItem(SB_KEY, collapsed ? '1' : '0'); } catch(e){}
+  }
+
+  window.toggleSidebar = function() {
+    collapsed = !collapsed;
+    applySidebarState();
+  };
+
+  document.addEventListener('DOMContentLoaded', applySidebarState);
+})();
 
 </script>
 
