@@ -189,53 +189,95 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
 .print-btn { display: inline-flex; align-items: center; gap: 5px; font-size: 0.58rem; font-weight: 600; color: #718096; background: none; border: 1px solid #cddeed; border-radius: 3px; padding: 4px 10px; cursor: pointer; font-family: 'IBM Plex Sans', sans-serif; letter-spacing: 0.3px; transition: all .15s; margin-top: 6px; }
 .print-btn:hover { color: #0072BC; border-color: #0072BC; }
 @media print {
-  @page { size: A4; margin: 12mm 15mm; }
-  html, body { background: white !important; font-size: 14pt !important; }
-  .hdr { box-shadow: none !important; position: relative !important; }
-  .hdr-inner { padding: 10px 16px !important; }
-  .hdr-title { font-size: 0.9rem !important; }
+  body { background: white !important; }
+  .hdr { box-shadow: none !important; }
   .hdr-rule { display: none; }
   .page { padding: 0 !important; }
-  .doc { padding: 8px 0 !important; box-shadow: none !important; }
+  .doc { padding: 24px !important; box-shadow: none !important; }
   .back, .edit-bar, .print-btn, .dl-links, .popup-link, .hdr-badges { display: none !important; }
   .supp-modal-bg { display: none !important; }
+  .section { break-inside: avoid; }
+  .plain-table { break-inside: avoid; }
   a[href]::after { content: none !important; }
-  hr.rule-heavy { display: none; }
-
-  /* Compress dateline */
-  .dateline { padding-bottom: 10px !important; margin-bottom: 14px !important; }
-
-  /* Suppress ALL page breaks — every container explicitly blocked */
-  * { page-break-inside: avoid !important; break-inside: avoid !important;
-      page-break-before: avoid !important; break-before: avoid !important;
-      page-break-after: avoid !important; break-after: avoid !important; }
-
-  .note-label { margin-bottom: 4px !important; }
-  .note-body { font-size: 0.72rem !important; line-height: 1.65 !important;
-    margin-bottom: 0 !important; padding-left: 12px !important;
-    break-after: page !important; page-break-after: always !important; }
-  .note-body hr { margin: 4px 0 !important; }
-
-  .section { padding-bottom: 10px !important; margin-bottom: 10px !important; }
-  .sec-title { font-size: 0.82rem !important; margin-bottom: 4px !important; }
-  .sec-body { font-size: 0.69rem !important; line-height: 1.6 !important; margin-bottom: 4px !important; }
-  .sub-section { margin-top: 8px !important; padding-top: 8px !important; }
-  .sub-sec-title { font-size: 0.68rem !important; margin-bottom: 3px !important; }
-  .sec-pts { font-size: 0.69rem !important; line-height: 1.55 !important; }
-  .sec-pts li { padding: 2px 0 2px 12px !important; }
-  .commentary-label { margin-bottom: 6px !important; }
-  .commentary-hed { font-size: 0.95rem !important; margin-bottom: 8px !important; }
-  .commentary-para { font-size: 0.70rem !important; line-height: 1.7 !important;
-    margin-bottom: 8px !important; min-height: 0 !important; }
 }
 
 /* ── DRAFT BANNER ── */
-.draft-banner { font-size: 0.62rem; color: #64748b; font-style: italic; padding: 4px 0 16px 0; margin-bottom: 0; line-height: 1.6; border: none; background: none; }
-.draft-banner strong { font-style: normal; font-weight: 600; color: #475569; letter-spacing: 0.5px; font-size: 0.62rem; }
+.draft-banner { font-size: 0.62rem; color: #a0aec0; font-style: italic; padding: 4px 0 16px 0; margin-bottom: 0; line-height: 1.6; border: none; background: none; }
+.draft-banner strong { font-style: normal; font-weight: 600; color: #8a9aaa; letter-spacing: 0.5px; font-size: 0.62rem; }
+
+
+/* ── SIDEBAR ── */
+.app-shell { display: flex; min-height: 100vh; align-items: flex-start; }
+.sidebar {
+  width: 218px; flex-shrink: 0; background: #fff;
+  border-right: 1px solid #e2e8f0;
+  position: sticky; top: 0; height: 100vh; overflow-y: auto;
+  box-shadow: 2px 0 8px rgba(0,0,0,0.03); z-index: 100;
+}
+.sb-header {
+  padding: 16px 14px 12px; border-bottom: 1px solid #e8ecf0;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.sb-header-label {
+  font-size: 0.57rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 1.4px; color: #a0aec0; font-family: 'IBM Plex Mono', monospace;
+}
+.sb-item {
+  display: flex; align-items: center; gap: 9px;
+  padding: 10px 14px; cursor: pointer;
+  border-left: 3px solid transparent;
+  transition: background .12s, border-color .12s;
+  border-bottom: 1px solid #f5f7fa;
+}
+.sb-item:hover { background: #f7f9fc; }
+.sb-item.active { background: #eef4fb; border-left-color: #0072BC; }
+.sb-item-icon { font-size: 0.8rem; flex-shrink: 0; opacity: 0.4; }
+.sb-item.active .sb-item-icon { opacity: 1; }
+.sb-item-text { flex: 1; min-width: 0; }
+.sb-item-date { font-size: 0.71rem; font-weight: 500; color: #2d3748; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sb-item.active .sb-item-date { color: #0072BC; font-weight: 700; }
+.sb-item-label { font-size: 0.55rem; color: #a0aec0; font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.3px; margin-top: 1px; }
+.sb-item.active .sb-item-label { color: #5a9fd4; }
+.sb-badge { font-size: 0.54rem; font-weight: 700; background: #e2e8f0; color: #718096; border-radius: 10px; padding: 1px 6px; flex-shrink: 0; }
+.sb-item.active .sb-badge { background: #0072BC; color: white; }
+.main-content { flex: 1; min-width: 0; }
+.main-content .page { max-width: 800px; }
+.update-panel { display: none; }
+.update-panel.active { display: block; }
+@media (max-width: 700px) { .sidebar { display: none; } }
 
 </style>
 </head>
 <body>
+
+<!-- ══ APP SHELL ══ -->
+<div class="app-shell">
+
+<!-- SIDEBAR -->
+<nav class="sidebar" id="sidebar">
+  <div class="sb-header">
+    <span class="sb-header-label">Fortnightly Updates</span>
+  </div>
+  <div class="sb-item active" onclick="switchPanel('apr1')" id="tab-apr1">
+    <span class="sb-item-icon">📄</span>
+    <div class="sb-item-text">
+      <div class="sb-item-date">1 April 2026</div>
+      <div class="sb-item-label">LHRC/BU/2026/002</div>
+    </div>
+    <span class="sb-badge">NEW</span>
+  </div>
+  <div class="sb-item" onclick="switchPanel('mar16')" id="tab-mar16">
+    <span class="sb-item-icon">📄</span>
+    <div class="sb-item-text">
+      <div class="sb-item-date">16 March 2026</div>
+      <div class="sb-item-label">LHRC/BU/2026/001</div>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<div class="main-content">
+
 
 <!-- HEADER -->
 <div class="hdr">
@@ -256,7 +298,119 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
 </div>
 <div class="hdr-rule"></div>
 
-<!-- PAGE -->
+<!-- ══════════════════════════════════ PANEL: 1 APRIL 2026 ══════════════════════════════════ -->
+<div class="update-panel active" id="panel-apr1">
+<div class="page">
+  <a class="back" href="index.html">← Back to Dashboard</a>
+  <div class="doc">
+    <div class="dateline">
+      <div class="dateline-left">
+        <div class="dateline-eyebrow">VPS Lakeshore Hospital &amp; Research Centre</div>
+        <div class="dateline-week">Fortnight of 1 April 2026</div>
+        <div class="draft-banner"><strong>DRAFT</strong> — Figures represent identified potential across all workstreams and are subject to revision. This update will be updated with actuals as implementation progresses.</div>
+      </div>
+      <div class="dateline-right">LHRC/BU/2026/002</div>
+    </div>
+
+    <div class="note-label">Note Summary</div>
+    <div class="note-body">
+      <div style="font-style:normal;line-height:1.85;margin-bottom:4px;padding-bottom:2px;font-family:'Lora',Georgia,serif;font-size:0.82rem;font-weight:600;color:#0072BC;">
+        Manpower rationalisation identifies <span style="color:#C8103E;">₹7.9 Cr+</span> in opportunity with an Execution Committee now constituted. A formal Delegation of Powers to Group CEO takes effect from 31 March. The org restructure enters its interim phase, and migration from Primato to Voyon Folks HRMS is recommended. The Tirupati oncology JV is recommended <span style="color:#C8103E;">not to proceed</span> — IRR of 16–17% falls short of the 20% hurdle.
+      </div>
+      <hr class="note-div">
+      <div><strong style="font-family:'Lora',Georgia,serif;color:#0072BC;">Cost</strong> — Manpower Rationalisation Initiative identifies <strong style="color:#C8103E;">₹7.9 Cr+</strong> in financial opportunity; Execution Committee constituted; weekly review cadence in place. New Wage Code impact assessment underway.</div>
+      <hr class="note-div">
+      <div><strong style="font-family:'Lora',Georgia,serif;color:#0072BC;">Lakeshore 2.0</strong> — Org restructure enters interim phase (Group Office direct control, 6–12 months). HRMS migration to Voyon Folks recommended at <strong style="color:#C8103E;">₹21.5 L</strong> one-time + ₹2.22 L AMC. Group CEO Delegation of Powers formalised, effective 31 March 2026.</div>
+      <hr class="note-div">
+      <div><strong style="font-family:'Lora',Georgia,serif;color:#0072BC;">HR &amp; Compliance</strong> — HR Statutory Audit proposal from GREAT LEAP under review. New Wage Code and Minimum Wage Revision being monitored for regulatory impact.</div>
+      <hr class="note-div">
+      <div><strong style="font-family:'Lora',Georgia,serif;color:#0072BC;">Strategic</strong> — Tirupati oncology JV (G2 Healthcare): <span style="color:#C8103E;">Recommendation — Do Not Proceed.</span> IRR 16–17% vs. 20% hurdle; breakeven post Year 9; market structurally crowded; deal skewed in G2's favour.</div>
+    </div>
+
+    <hr class="rule-heavy">
+
+    <div class="section">
+      <div class="sec-title">1. Cost Rationalisation</div>
+      <div class="sec-body">Manpower rationalisation programme active. Initial workings identify over ₹7.9 Cr in combined financial opportunity across headcount and structural efficiencies.</div>
+
+      <div class="sub-section">
+        <div class="sub-sec-title">Manpower Rationalisation</div>
+        <ul class="sec-pts">
+          <li><strong>₹7.9 Cr+</strong> in combined financial opportunity identified through initial optimisation workings — headcount and structural efficiencies across key functions.</li>
+          <li>Dedicated <strong>Execution Committee constituted</strong> to govern delivery. Weekly review cadence in place to enable timely course correction and escalation.</li>
+          <li>Progressive performance-linked methodology in development to embed accountability and drive measurable outcomes across the programme.</li>
+          <li><strong>New Wage Code (India):</strong> Formal impact assessment initiated — potential adverse financial and structural implications. Assessment completion targeted Q1 FY27; findings to update planning assumptions. Minimum Wage Revision draft also under monitoring.</li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-sec-title">HR Statutory Compliance</div>
+        <ul class="sec-pts">
+          <li>GREAT LEAP HR Statutory Audit proposal under review — scope covers payroll management, labour law compliance, HR audit, HRMS implementation and performance management.</li>
+          <li>Firm currently manages payroll and compliance for 250+ clients covering 25,000+ employees monthly. Decision on engagement expected in next fortnight.</li>
+          <li><a class="dl-link" href="Weekly%20update/31st%20March/VPS%20Lakshore_Business%20Proposal_GREAT%20LEAP%20HR%20Statutory%20Audit_V1.pdf" download>↓ GREAT LEAP Proposal (.pdf)</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="sec-title">2. Revenue Enhancement</div>
+      <ul class="sec-pts">
+        <li>Rate revisions and drug substitution programme from 16 March update continue into Q1 FY27 — implementation on track.</li>
+        <li>BD hire pipeline active; doctor performance review outcomes from the March cycle feed into Q1 action plan.</li>
+        <li>Group CEO DOP formalises authority to revise tariff structures, procedure pricing, room rates and package pricing — enabling faster rate decisions at unit level without MD escalation.</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <div class="sec-title">3. Lakeshore 2.0</div>
+      <ul class="sec-pts">
+        <li><strong>Organisation restructure — interim phase (6–12 months):</strong> Group Office exercises direct operational control while critical capability and hiring gaps are addressed. Phased transition reduces disruption and builds a stable foundation for the future empowered unit CEO structure.</li>
+        <li><strong>HRMS migration to Voyon Folks recommended:</strong> Primato (current system) lacks AI capabilities, integrated L&amp;D, document management and LinkedIn recruitment. Voyon Folks delivers an integrated HCMS with a Kochi-based support team. One-time investment: <strong>₹21.5 L + taxes</strong>; AMC ₹2.22 L p.a. Proposed as capex amortised over 5 years (~₹4.3 L effective annual cost). 3-month transition period planned.</li>
+        <li><strong>Group CEO — Delegation of Powers (effective 31 March 2026):</strong> Board resolution authorises MD S. K. Abdulla to delegate authority to Group CEO Abhishek Poduri covering procurement (up to ₹25 L per order), civil works (up to ₹50 L), staff engagement and separation, tariff revision, payor empanelment, and vendor renegotiation. DOP to be reviewed half-yearly.</li>
+        <li>Website relaunch targeted go-live end of April. <a href="https://sameeraj89.github.io/vpslakeshore_website/index.html" target="_blank" class="dl-link">Preview design →</a> App design under consideration. <a href="https://sameeraj89.github.io/vpslakeshore_app/" target="_blank" class="dl-link">Preview app →</a></li>
+      </ul>
+      <div class="sub-section">
+        <div class="sub-sec-title">Org Structure — Phased Redesign Summary</div>
+        <ul class="sec-pts">
+          <li><strong>Current gaps:</strong> MD absorbs Medical Director function (decision bottleneck); CEO/Medical Superintendent role overlap; DMS mandate undefined; CFO limited to financial reporting; no dedicated NABH/compliance line.</li>
+          <li><strong>Interim state:</strong> Group Office direct control; hiring for critical gaps underway; team equipped and aligned for next phase.</li>
+          <li><strong>Future state:</strong> Empowered unit CEO with clear mandate — strategic agility and sustainable growth across all VPS assets.</li>
+        </ul>
+        <div class="dl-links" style="margin-top:8px;">
+          <a class="dl-link" href="Weekly%20update/31st%20March/VPS%20Lakshore_Org.%20Structure%20Revision_vDraft%20(1).pdf" download>↓ Org Structure Draft (.pdf)</a>
+          <a class="dl-link" href="Weekly%20update/31st%20March/Voyon%20Folks%20Proposal%20-%20VPS%20Lakeshore%20Hospital%20v12.pdf" download>↓ Voyon Folks Proposal (.pdf)</a>
+          <a class="dl-link" href="Weekly%20update/31st%20March/Group%20CEO%20DOP%20(2).PDF" download>↓ Group CEO DOP (.pdf)</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="sec-title">4. Compliance</div>
+      <ul class="sec-pts">
+        <li>Open items from the 16 March tracker remain in progress — FY25 ITR-6, GSTR-9 and transplant licence renewals remain priority closures.</li>
+        <li>HR statutory audit engagement under evaluation as a proactive measure to identify and close labour law and payroll compliance gaps ahead of regulatory changes.</li>
+        <li>New Wage Code and Minimum Wage Revision (draft) being monitored — formal impact to be incorporated into planning on enactment.</li>
+      </ul>
+    </div>
+
+    <hr class="rule-heavy">
+
+    <div class="commentary-label">Strategic Note</div>
+    <div class="commentary-hed">Tirupati Oncology JV — Recommendation: Do Not Proceed</div>
+    <div class="commentary-para">G2 Healthcare (Tirupati, Andhra Pradesh) has proposed a joint venture with VPS for a 30,000 sq. ft oncology block housing two LINAC bunkers. PwC modelled two structures: a revenue-share option (VPS capex ₹111 Cr, IRR 16.6%) and a lease-plus-revenue-share option (IRR 17.2%). Both fall materially short of the 20%+ minimum hurdle, with EBITDA remaining below 25% through Year 10 and breakeven only after Year 9. A 6-month construction delay would further compress IRR to ~13–14%.</div>
+    <div class="commentary-para">The market case is weak. Tirupati already has established oncology capacity through SVICCAR (backed by Tata Trusts, government and TTD on a subsidised model), Helios and Aster Narayanadri — making the market structurally crowded. VPS would enter with a higher cost base, no local referral pipeline, no embedded clinical reputation and a steep learning curve. The current deal terms are also structurally skewed: VPS funds the majority of new capex yet pays a 10% revenue share to G2, with no exit mechanism and no minimum volume guarantees.</div>
+    <div class="commentary-para"><strong>If oncology investment remains a strategic priority,</strong> better options exist: (1) expand clinical services at VPS Lakeshore where brand, patient base and operational platform already exist; (2) evaluate Kerala-market oncology opportunities which align with VPS brand positioning; or (3) return to G2 only with a renegotiated deal — fairer revenue split, volume guarantees and exit rights as minimum conditions.</div>
+    <div class="dl-links" style="margin-top:10px;">
+      <a class="dl-link" href="Weekly%20update/31st%20March/VPS_Tirupati_Note_Mar'26.pdf" download>↓ Tirupati Advisory Note (.pdf)</a>
+    </div>
+
+  </div><!-- /doc -->
+</div><!-- /page -->
+</div><!-- /panel-apr1 -->
+
+<!-- ══════════════════════════════════ PANEL: 16 MARCH 2026 ══════════════════════════════════ -->
+<div class="update-panel" id="panel-mar16">
 <div class="page">
 
   <a class="back" href="index.html">← Back to Dashboard</a>
@@ -278,7 +432,7 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
     <div class="note-label">Note Summary</div>
     <div class="note-body">
       <div data-edit-id="hl-motherhood" style="font-style:normal; line-height:1.85; margin-bottom:4px; padding-bottom:2px; font-family:'Lora',Georgia,serif; font-size:0.82rem; font-weight:600; color:#0072BC;">
-        A total value creation opportunity of ~<span style="color:#C8103E;">₹41 Cr</span> has been identified, comprising ~<span style="color:#C8103E;">₹26 Cr</span> through revenue enhancement and cost optimisation initiatives, and ~<span style="color:#C8103E;">₹15 Cr</span> through capex rationalisation. This is complemented by strengthened compliance oversight, with critical items under active resolution, and key organisational and digital transformation initiatives on track for completion within next month.
+        Cost savings of <span style="color:#C8103E;">₹23.2 Cr</span> have been targeted — <span style="color:#C8103E;">₹14.7 Cr</span> through capex rationalisation and <span style="color:#C8103E;">₹8.5 Cr</span> through payroll and vendor optimisation — alongside <span style="color:#C8103E;">₹17.1 Cr</span> in revenue upside from drug substitution and procedure rate corrections. The compliance tracker flags 68 open items, with transplant licence renewals under active resolution; the org restructure and website relaunch are on track to close within the month.
       </div>
       <hr class="note-div">
       <div data-edit-id="hl-cost" data-placeholder="Cost highlight…"><strong style="font-family:'Lora',Georgia,serif;color:#0072BC;">Cost</strong> — <strong style="color:#C8103E;">₹14.7 Cr in Capex savings</strong> targeted through deferrals and rejections across top 6 departments; <strong style="color:#C8103E;">₹8.5 Cr in Opex savings</strong> targeted through payroll optimisation ₹4.7 Cr (~130 staff) and vendor renegotiation ₹3.8 Cr.</div>
@@ -287,7 +441,7 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
       <hr class="note-div">
       <div data-edit-id="hl-brand" data-placeholder="Brand highlight…"><strong style="font-family:'Lora',Georgia,serif;color:#0072BC;">Lakeshore 2.0</strong> — Reworked org structure ready end of month. <span style="color:#C8103E;">Revamped website go-live end of April;</span> app under consideration. Process and platform mapping underway.</div>
       <hr class="note-div">
-      <div data-edit-id="hl-compliance" data-placeholder="Compliance highlight…"><strong style="font-family:'Lora',Georgia,serif;color:#0072BC;">Compliance</strong> — 67 items requiring action; <span style="color:#C8103E;">liver/pancreas transplant licence expired 15 March</span> — emergency DME renewal pending; spirit licences expire 31 March.</div>
+      <div data-edit-id="hl-compliance" data-placeholder="Compliance highlight…"><strong style="font-family:'Lora',Georgia,serif;color:#0072BC;">Compliance</strong> — 68 items requiring action; <span style="color:#C8103E;">FY25 income tax return overdue since October 2025</span>, and kidney transplant licence expired 12 March with emergency DME renewal pending.</div>
     </div>
 
     <hr class="rule-heavy">
@@ -345,10 +499,10 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
       <ul class="sec-pts" data-edit-id="s5-body">
         <li>Drug substitution (brand → generic) across high-volume pharmacy lines; <strong>₹4.6 Cr projected additional margin</strong> from formulary shift — see detail below.</li>
         <li>Rate revision — cash patients only; three actions identified:
-          <ul style="margin-top:6px; padding-left:1.2em; line-height:1.9; list-style:none; padding-left:1.4em;">
-            <li style="position:relative; padding-left:14px;"><span style="position:absolute;left:0;color:#0072BC;">–</span>Flat 1% increase across all procedure/IP rates, rounded to nearest ₹10 — OP rates unchanged; <strong>+₹2.5 Cr upside</strong> assuming no volume drop.</li>
-            <li style="position:relative; padding-left:14px;"><span style="position:absolute;left:0;color:#0072BC;">–</span>Nursing cost increment of ₹7.5 Cr will be passed on to the patient bill dependent on the result of the court ordered mediation process.</li>
-            <li style="position:relative; padding-left:14px;"><span style="position:absolute;left:0;color:#0072BC;">–</span>Top 50 procedures by value — contribution target of 58% to achieve 26% EBITDA; correction for under-contributing procedures: <strong>+₹2.5 Cr</strong>.</li>
+          <ul style="margin-top:6px; padding-left:1.2em; line-height:1.9;">
+            <li>Flat 1% increase across all procedure/IP rates, rounded to nearest ₹10 — OP rates unchanged; <strong>+₹2.5 Cr upside</strong> assuming no volume drop.</li>
+            <li>Nursing cost increment of ₹7.5 Cr will be passed on to the patient bill dependent on the result of the court ordered mediation process.</li>
+            <li>Top 50 procedures by value — contribution target of 58% to achieve 26% EBITDA; correction for under-contributing procedures: <strong>+₹2.5 Cr</strong>.</li>
           </ul>
         </li>
         <li>New BD hire in progress to build referral networks and institutional tie-ups; under-performing doctors to be replaced or incentivised — review in progress.</li>
@@ -373,12 +527,12 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
     <div class="section">
       <div class="sec-title" data-edit-id="s7-title">4. Compliance</div>
       <ul class="sec-pts" data-edit-id="s7-body">
-        <li>GSTR-9 annual return (FY 2024-25) status unconfirmed — Finance to verify whether filed or whether a GSTN extension was in effect; ₹200/day late fee applies if outstanding.</li>
-        <li>Liver/pancreas transplant licence (No. K3/1282/2020/DME) expired 15 March 2026 — emergency DME Kerala renewal pending. Heart and lung transplant licences expire June 2026 — DME renewal to be initiated by April 2026. Spirit licences (Rectified and Methylated) expire 31 March 2026 — excise renewal to be initiated immediately.</li>
-        <li>67 total pending items across statutory, tax, labour and licence categories in compliance tracker to be actioned.</li>
+        <li>FY25 income tax return (ITR-6) past due since October 2025 and tax audit (Form 3CA/3CD) past due since September 2025 — Sec 271B penalty risk up to ₹1.5 Cr; GSTR-9 annual return 72+ days overdue.</li>
+        <li>Kidney transplant licence expired 12 March 2026; emergency renewal application to DME Kerala required immediately. Liver/pancreas licence expires 15 March.</li>
+        <li>68 total items across statutory, tax, labour and licence categories in compliance tracker.</li>
       </ul>
       <div class="dl-links">
-        <button class="popup-link" onclick="document.getElementById('complianceModal').classList.add('open')">↗ Compliance Gap Report</button>
+        <a class="dl-link" href="Hospital_Compliance_Tracker_Mar2026.xlsx" download>↓ Compliance Tracker (.xlsx)</a>
       </div>
     </div>
 
@@ -396,6 +550,7 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
   </div><!-- /doc -->
 
 </div><!-- /page -->
+</div><!-- /panel-mar16 -->
 
 <!-- MODAL: CAPEX TOP 5 SAVINGS -->
 <div class="supp-modal-bg" id="capexModal" onclick="if(event.target===this)this.classList.remove('open')">
@@ -731,6 +886,138 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
   VPS Lakeshore Hospital &amp; Research Centre &nbsp;·&nbsp; Fortnightly Transformation Update &nbsp;·&nbsp; Confidential
 </div>
 
+<!-- EDIT BAR -->
+<div class="edit-bar" id="editBar">
+  <div class="eb-left">
+    <span id="editIcon">🔏</span>
+    <span id="editMsg">Page editing is locked</span>
+  </div>
+  <div class="eb-right">
+    <div id="editLockedBtns">
+      <button class="eb-btn eb-unlock" onclick="showEditModal()">Unlock Editing</button>
+    </div>
+    <div id="editUnlockedBtns" style="display:none;gap:8px">
+      <button class="eb-btn eb-discard" onclick="discardEdits()">Discard</button>
+      <button class="eb-btn eb-lock" onclick="lockEditing()">🔒 Lock</button>
+      <button class="eb-btn eb-save" onclick="saveEdits()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT MODAL -->
+<div id="editModal" class="modal-bg" style="display:none">
+  <div class="modal">
+    <div class="modal-hd">
+      <div class="modal-hd-title">Unlock Editing</div>
+      <button class="modal-close" onclick="hideEditModal()">✕</button>
+    </div>
+    <div class="modal-bd">
+      <p style="font-size:0.68rem;color:#718096;margin-bottom:14px;line-height:1.65">Enter the editorial password to make all text on this page editable.</p>
+      <label class="modal-label">Password</label>
+      <input class="modal-input" id="editPassInput" type="password" placeholder="Enter editorial password"
+        onkeydown="if(event.key==='Enter')attemptUnlock()">
+      <div class="modal-err" id="editErr">Incorrect password — please try again.</div>
+      <button class="modal-submit" onclick="attemptUnlock()">Unlock →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const EDIT_PASS  = 'LakeshoreBoard26';
+const EDIT_STORE = 'lhrc_editorial_v3';
+let editActive   = false;
+let originals    = {};
+
+// ── Modal ──
+function showEditModal() {
+  document.getElementById('editModal').style.display = 'flex';
+  document.getElementById('editPassInput').value = '';
+  document.getElementById('editErr').style.display = 'none';
+  setTimeout(() => document.getElementById('editPassInput').focus(), 60);
+}
+function hideEditModal() {
+  document.getElementById('editModal').style.display = 'none';
+}
+function attemptUnlock() {
+  if (document.getElementById('editPassInput').value === EDIT_PASS) {
+    hideEditModal();
+    activateEditing();
+  } else {
+    document.getElementById('editErr').style.display = 'block';
+    document.getElementById('editPassInput').value = '';
+    document.getElementById('editPassInput').focus();
+  }
+}
+
+// ── Edit mode ──
+function activateEditing() {
+  editActive = true;
+  originals = {};
+  document.body.classList.add('edit-mode');
+  document.querySelectorAll('[data-edit-id]').forEach(el => {
+    originals[el.dataset.editId] = el.innerHTML;
+    el.contentEditable = 'true';
+  });
+  document.getElementById('editLockedBtns').style.display = 'none';
+  const ub = document.getElementById('editUnlockedBtns');
+  ub.style.display = 'flex';
+  document.getElementById('editMsg').textContent = 'Editing unlocked — click any text to edit';
+  document.getElementById('editIcon').textContent = '✏️';
+}
+
+function lockEditing() {
+  editActive = false;
+  document.body.classList.remove('edit-mode');
+  document.querySelectorAll('[data-edit-id]').forEach(el => { el.contentEditable = 'false'; });
+  document.getElementById('editLockedBtns').style.display = 'block';
+  document.getElementById('editUnlockedBtns').style.display = 'none';
+  document.getElementById('editMsg').textContent = 'Page editing is locked';
+  document.getElementById('editIcon').textContent = '🔏';
+}
+
+function discardEdits() {
+  document.querySelectorAll('[data-edit-id]').forEach(el => {
+    if (originals[el.dataset.editId] !== undefined) el.innerHTML = originals[el.dataset.editId];
+  });
+  lockEditing();
+}
+
+function saveEdits() {
+  const saves = {};
+  document.querySelectorAll('[data-edit-id]').forEach(el => {
+    saves[el.dataset.editId] = el.innerHTML;
+  });
+  try { localStorage.setItem(EDIT_STORE, JSON.stringify(saves)); } catch(e) {}
+  lockEditing();
+  const msg = document.getElementById('editMsg');
+  msg.textContent = '✓ Saved';
+  setTimeout(() => { msg.textContent = 'Page editing is locked'; }, 2500);
+}
+
+function loadEdits() {
+  try {
+    const saved = localStorage.getItem(EDIT_STORE);
+    if (!saved) return;
+    const saves = JSON.parse(saved);
+    Object.keys(saves).forEach(key => {
+      const el = document.querySelector('[data-edit-id="' + key + '"]');
+      if (el) el.innerHTML = saves[key];
+    });
+  } catch(e) {}
+}
+
+window.addEventListener('DOMContentLoaded', loadEdits);
+
+// ── Panel switcher ──
+function switchPanel(id) {
+  document.querySelectorAll('.update-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  document.getElementById('tab-' + id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+</script>
 
 <!-- MODAL: DRUG SUBSTITUTION -->
 <div class="supp-modal-bg" id="drugSubModal" onclick="if(event.target===this)this.classList.remove('open')">
@@ -822,20 +1109,8 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
   </div>
 </div>
 
-<div class="supp-modal-bg" id="complianceModal" onclick="if(event.target===this)this.classList.remove('open')">
-  <div class="supp-modal" style="max-width:660px;">
-    <div class="supp-modal-hd">
-      <span class="supp-modal-title">Statutory Compliance — Gap Analysis Report (v4, 13 Mar 2026)</span>
-      <button class="supp-modal-close" onclick="document.getElementById('complianceModal').classList.remove('open')">✕</button>
-    </div>
-    <div class="supp-modal-body">
-      <p class="supp-modal-note">Version 4 — Updated 13 March 2026. Source: Hospital Compliance Tracker + Licenses Register + Management clarifications. 67 total items requiring action across statutory, tax, labour and licence categories.</p>
-      <div style="text-align:center; padding: 24px 0;">
-        <a href="Lakeshore_Compliance_Gap_Report_v4_13Mar2026.docx" download style="display:inline-flex; align-items:center; gap:8px; background:#0d2137; color:white; text-decoration:none; padding:10px 20px; font-size:0.75rem; font-weight:600; font-family:'IBM Plex Sans',sans-serif; letter-spacing:0.3px; border-radius:3px;">↓ Download Compliance Gap Report (.docx)</a>
-      </div>
-    </div>
-  </div>
-</div>
 
+</div><!-- /main-content -->
+</div><!-- /app-shell -->
 </body>
 </html>
