@@ -115,6 +115,7 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
 .sec-pts { list-style: none; padding: 0; margin: 0; font-size: 0.74rem; color: #4a5568; line-height: 1.75; }
 .sec-pts li { padding: 5px 0 5px 14px; position: relative; }
 .sec-pts li::before { content: '–'; position: absolute; left: 0; color: #0072BC; }
+.sec-pts li ul li::before { content: none; }
 .sec-pts li + li { border-top: 1px dashed #edf0f3; }
 
 /* ── NOTE SUMMARY DIVIDERS ── */
@@ -249,7 +250,7 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
   min-width: 224px;
 }
 .sb-title-text {
-  font-size: 0.57rem;
+  font-size: 0.82rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1.5px;
@@ -300,7 +301,7 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
   writing-mode: vertical-rl;
   text-orientation: mixed;
   transform: rotate(180deg);
-  font-size: 0.52rem;
+  font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 2px;
@@ -379,12 +380,12 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
 
   <!-- Pull tab (visible only when collapsed) -->
   <div class="sb-pull-tab" onclick="toggleSidebar()" title="Show updates">
-    <span class="sb-pull-label">Updates</span>
+    <span class="sb-pull-label">All Updates ›</span>
   </div>
 
   <!-- Top bar with title + toggle button -->
   <div class="sb-topbar">
-    <span class="sb-title-text">Fortnightly Updates</span>
+    <span class="sb-title-text">All Updates ›</span>
     <button class="sb-toggle" id="sb-toggle-btn" onclick="toggleSidebar()" title="Collapse sidebar" aria-label="Toggle sidebar">
       <span id="sb-chevron">◀</span>
     </button>
@@ -450,30 +451,32 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
     <div class="note-label">Note Summary</div>
     <div class="note-body">
       <div style="font-style:normal;line-height:1.9;margin-bottom:4px;padding-bottom:2px;font-family:'Lora',Georgia,serif;font-size:0.82rem;font-weight:600;color:#0072BC;">
-        This fortnight's work spans cost, governance, and strategic decisions. The manpower rationalisation programme is underway, with a dedicated Execution Committee now in place — department-level targets to be confirmed as the analysis progresses. A <span style="color:#C8103E;">₹2 Cr immediate capex saving</span> has been secured by renegotiating the Multi Level Car Park contract from ₹5.5 Cr to ₹3.5 Cr. The Group CEO's Delegation of Powers takes effect from 31 March, and the org restructure enters its interim phase — with the proposal now with the Burjeel Group CFO for feedback. HRMS migration to Voyon Folks and a transition to DocuSign for all signatures are both recommended. On strategy, the Tirupati oncology JV is recommended <span style="color:#C8103E;">not to proceed</span>.
+        This fortnight marks the beginning of structured execution across the transformation programme. On cost, the MLCP capex contract has been reduced from ₹5.5 Cr to <span style="color:#C8103E;">₹3.5 Cr — a ₹2 Cr immediate saving</span> — with manpower optimisation and a performance-linked pay structure in active development. On revenue, a new BD Head has been identified along with Zonal Referral Managers for North and South Kerala, and a four-pillar BD structure is now in place. On governance, the Group CEO DOP has been executed and the org restructure enters its interim phase, with a transition plan presented and Burjeel Group CFO alignment being sought. HRMS migration to Voyon Folks (~₹25 L) and a full paperless shift via DocuSign are recommended. On compliance, 43 internal audit observations have been identified and are actively being resolved. Term life and group cover insurance — a gap that should not have existed — is under immediate review. The Tirupati oncology JV with G2 Healthcare is recommended <span style="color:#C8103E;">not to proceed</span>, with capital better deployed at Lakeshore.
       </div>
       <hr class="note-div">
-      <div><strong style="font-family:'Lora',Georgia,serif;color:#0072BC;">Cost</strong> — Manpower rationalisation underway; Execution Committee in place with weekly review cadence; targets to be confirmed. Multi Level Car Park renegotiated <strong style="color:#C8103E;">₹5.5 Cr → ₹3.5 Cr</strong>, saving ₹2 Cr immediately. Term Life &amp; Group Cover Insurance review initiated.</div>
+      <div><strong style="font-family:'Lora',Georgia,serif;color:#0072BC;">Cost</strong> — MLCP contract <strong style="color:#C8103E;">₹5.5 Cr → ₹3.5 Cr</strong>, saving ₹2 Cr immediately. Manpower optimisation underway; Execution Group in place. Performance-linked variable pay structure in development. Calicut &amp; F&amp;B to be ring-fenced as a separate P&amp;L.</div>
       <hr class="note-div">
-      <div><strong style="font-family:'Lora',Georgia,serif;color:#0072BC;">Revenue</strong> — New Head of BD identified (ex-Apollo, Aster Medcity, Amrita); offer to be confirmed.</div>
+      <div><strong style="font-family:'Lora',Georgia,serif;color:#0072BC;">Revenue</strong> — New BD Head identified (ex-Aster Medcity, Amrita; 18+ years in Kerala healthcare). Zonal Referral Managers for North and South Kerala identified. Four-pillar BD structure established.</div>
       <hr class="note-div">
-      <div><strong style="font-family:'Lora',Georgia,serif;color:#0072BC;">Lakeshore 2.0</strong> — Group CEO DOP effective 31 March. Org restructure in interim phase; awaiting Burjeel Group CFO feedback. HRMS migrating to Voyon Folks (₹21.5 L). DocuSign adopted for all signatures. Calicut &amp; F&amp;B to be hived off as a separate P&amp;L.</div>
+      <div><strong style="font-family:'Lora',Georgia,serif;color:#0072BC;">Lakeshore 2.0</strong> — Group CEO DOP executed 31 March. Org restructure in interim phase; transition plan presented — Burjeel Group CFO alignment pending. HRMS migrating to Voyon Folks (~₹25 L, 3-month parallel run). All signatures moving to DocuSign; printing spend ~₹1.7 Cr p.a. targeted for reduction.</div>
       <hr class="note-div">
-      <div><strong style="font-family:'Lora',Georgia,serif;color:#0072BC;">Strategic</strong> — Tirupati Oncology JV with G2 Healthcare: <span style="color:#C8103E;">Do Not Proceed.</span> IRR 16–17% vs. 20% hurdle; deal structurally skewed. Capital better deployed expanding oncology at Lakeshore.</div>
+      <div><strong style="font-family:'Lora',Georgia,serif;color:#0072BC;">Compliance</strong> — 43 of 58 internal audit observations open; priority items cover GST reconciliation, ITC controls, HMIS access and billing integrity. All assigned with owners and April 2026 timelines. Term life &amp; group cover insurance gap identified — review underway.</div>
+      <hr class="note-div">
+      <div><strong style="font-family:'Lora',Georgia,serif;color:#0072BC;">Strategic</strong> — Tirupati Oncology JV: <span style="color:#C8103E;">Do Not Proceed.</span> <span style="color:#C8103E;">IRR 16.6–17.2%</span> vs. 20% hurdle; VPS funds 73% of capex with no exit rights. Capital better deployed in Lakeshore's own oncology platform.</div>
     </div>
 
     <hr class="rule-heavy">
 
     <div class="section">
       <div class="sec-title">1. Cost Rationalisation</div>
-      <div class="sec-body">Manpower rationalisation programme is underway. Initial workings are being conducted across headcount and structure — targets and savings will be confirmed as the analysis progresses.</div>
+      <div class="sec-body"></div>
 
       <div class="sub-section">
         <div class="sub-sec-title">Manpower Rationalisation</div>
         <ul class="sec-pts">
           <li>Initial optimisation workings underway across headcount and structural efficiencies — early indications point to a meaningful financial opportunity, with department-level targets to be confirmed as analysis progresses.</li>
-          <li>An <strong>Execution Committee has been constituted</strong> to govern the programme, with a weekly review cadence in place to track progress and enable timely escalation.</li>
-          <li>A performance-linked methodology is being developed to embed accountability and tie savings realisation to defined milestones.</li>
+          <li>An Execution Group has been constituted to govern the programme, with a weekly review cadence in place to track progress and enable timely escalation.</li>
+          <li>A performance-linked variable pay structure is being developed and will be rolled out to embed accountability.</li>
           <li><strong>New Wage Code (India):</strong> Impact assessment underway — outcomes will be incorporated into planning assumptions once complete. Minimum Wage Revision draft also being monitored.</li>
         </ul>
       </div>
@@ -481,7 +484,7 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
       <div class="sub-section">
         <div class="sub-sec-title">Capex — Multi Level Car Park</div>
         <ul class="sec-pts">
-          <li><strong>Scope reduced following reassessment</strong> — original vendor contract of <strong>₹5.5 Cr</strong> renegotiated to <strong style="color:#C8103E;">₹3.5 Cr</strong> after a structured review of project specification and required capacity. This delivers an <strong style="color:#C8103E;">immediate ₹2 Cr saving</strong> in capex commitments with no impact on core functionality.</li>
+          <li><strong>Scope reduced following reassessment</strong> — original vendor contract of <strong>₹5.5 Cr</strong> reduced to <strong style="color:#C8103E;">₹3.5 Cr</strong> after a structured review of project specification and required capacity. This delivers an <strong style="color:#C8103E;">immediate ₹2 Cr saving</strong> in capex commitments with no impact on core functionality.</li>
         </ul>
       </div>
 
@@ -495,7 +498,7 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
       <div class="sub-section">
         <div class="sub-sec-title">HR Statutory Compliance</div>
         <ul class="sec-pts">
-          <li>GREAT LEAP HR Statutory Audit proposal under review — scope covers payroll management, labour law compliance, HR audit, HRMS implementation and performance management.</li>
+          <li>External agency HR Statutory Audit proposal under review — scope covers payroll management, labour law compliance, HR audit, HRMS implementation and performance management.</li>
           <li>Firm currently manages payroll and compliance for 250+ clients covering 25,000+ employees monthly. Decision on engagement expected in next fortnight.</li>
           <li><a class="dl-link" href="Weekly%20update/31st%20March/VPS%20Lakshore_Business%20Proposal_GREAT%20LEAP%20HR%20Statutory%20Audit_V1.pdf" download>↓ GREAT LEAP Proposal (.pdf)</a></li>
         </ul>
@@ -510,7 +513,11 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
             <a class="dl-link" href="Weekly%20update/31st%20March/BD_Organisation_Structure.docx" download>↓ BD Org Structure (.docx)</a>
           </div>
         </li>
-        <li><strong>New Head of Business Development identified:</strong> a senior BD professional (currently DGM at a leading Kerala hospital group; ex-Aster Medcity, Amrita) — 18+ years in Kerala healthcare BD, referral networks and institutional tie-ups. Offer/onboarding to be confirmed in the next fortnight.</li>
+        <li><strong>New Head of Business Development identified:</strong> a senior BD professional (currently DGM at a leading Kerala hospital group; ex-Aster Medcity, Amrita) — 18+ years in Kerala healthcare BD, referral networks and institutional tie-ups. Offer/onboarding to be confirmed in the next fortnight.
+          <ul style="margin-top:6px; padding-left:20px; list-style-type:disc;">
+            <li style="margin-left:10px; padding-left:0;">Zonal Referral Managers for North and South Kerala have also been identified.</li>
+          </ul>
+        </li>
         <li>Group CEO DOP formalises authority to revise tariff structures, procedure pricing, room rates and package pricing — enabling faster rate decisions at unit level.</li>
       </ul>
     </div>
@@ -522,10 +529,10 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
       <div class="sub-section" style="margin-top:0; padding-top:0; border-top:none;">
         <div class="sub-sec-title">Org Structure</div>
         <ul class="sec-pts">
-          <li><strong>Restructure — interim phase (6–12 months):</strong> Group Office exercises direct operational control while critical capability and hiring gaps are addressed. Phased transition reduces disruption and builds a stable foundation for the future empowered unit CEO structure.</li>
+          <li><strong>Restructure — interim phase (6–12 months):</strong> Group Office exercises direct operational control while critical capability and hiring gaps are addressed.</li>
           <li><strong>Current gaps identified:</strong> MD absorbs Medical Director function (decision bottleneck); CEO/Medical Superintendent role overlap; DMS mandate undefined; CFO limited to financial reporting; no dedicated NABH/compliance line.</li>
-          <li><strong>Interim → Future state:</strong> Group Office direct control now; hiring for critical gaps underway → Empowered unit CEO with strategic clarity and sustainable growth across all VPS assets.</li>
-          <li><strong>Burjeel Group CFO — next steps pending:</strong> Org structure proposal shared; awaiting feedback and next steps discussion before the restructure is progressed further.</li>
+          <li><strong>Interim → Future state:</strong> A plan for transition from an interim to a future-state structure has been presented.</li>
+          <li><strong>Next steps:</strong> The organisational structure proposal has been shared with the Burjeel Group CFO for review. Feedback and alignment are being sought prior to progressing the restructure.</li>
         </ul>
         <div class="dl-links" style="margin-top:8px;">
           <a class="dl-link" href="Weekly%20update/31st%20March/VPS%20Lakshore_Org.%20Structure%20Revision_vDraft%20(1).pdf" download>↓ Org Structure Draft (.pdf)</a>
@@ -536,7 +543,7 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
       <div class="sub-section">
         <div class="sub-sec-title">Delegation of Powers</div>
         <ul class="sec-pts">
-          <li><strong>Effective 31 March 2026:</strong> Board resolution authorises the Managing Director to delegate authority to the Group CEO covering procurement (up to ₹25 L per order), civil works (up to ₹50 L), staff engagement and separation, tariff revision, payor empanelment, and vendor renegotiation. Reviewed half-yearly.</li>
+          <li><strong>Effective 31 March 2026:</strong> The Group CEO Delegation of Powers has been executed. Salient features: (1) procurement authority up to ₹25 L per order, (2) civil works up to ₹50 L, (3) authority covering staff engagement and separation, tariff revision, payor empanelment, and vendor renegotiation — reviewed half-yearly.</li>
         </ul>
         <div class="dl-links" style="margin-top:8px;">
           <a class="dl-link" href="Weekly%20update/31st%20March/Group%20CEO%20DOP%20(2).PDF" download>↓ Group CEO DOP (.pdf)</a>
@@ -549,7 +556,7 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
         <ul class="sec-pts">
           <li><strong>Why change:</strong> Primato lacks AI capabilities, integrated L&amp;D, document management and LinkedIn recruitment. Multiple disintegrated systems create high manual effort, data silos and poor employee experience.</li>
           <li><strong>Voyon Folks recommended:</strong> Fully integrated cloud HCMS — AI-enabled recruitment, LinkedIn integration, connected L&amp;D, document management and strong configurability. HQ in Kochi ensures faster implementation and hyper-care support.</li>
-          <li><strong>Investment:</strong> ₹21.5 L one-time + taxes; AMC ₹2.22 L p.a. Proposed as capex amortised over 5 years (~₹4.3 L effective annual cost). 3-month transition period planned between systems.</li>
+          <li><strong>Investment:</strong> ~₹25 L one-time (inclusive of taxes). A 3-month parallel transition is planned to ensure continuity between systems.</li>
         </ul>
         <div class="dl-links" style="margin-top:8px;">
           <a class="dl-link" href="Weekly%20update/31st%20March/Voyon%20Folks%20Proposal%20-%20VPS%20Lakeshore%20Hospital%20v12.pdf" download>↓ Voyon Folks Proposal (.pdf)</a>
@@ -570,7 +577,7 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
       <div class="sub-section">
         <div class="sub-sec-title">Term Life &amp; Group Cover Insurance</div>
         <ul class="sec-pts">
-          <li>Review of existing term life and group medical cover policies initiated — evaluating competitiveness of current premiums, coverage levels and provider terms as part of the broader benefits and workforce planning review.</li>
+          <li>Review of existing term life and group medical cover policies initiated — evaluating competitiveness of current premiums, coverage levels and provider terms as part of the broader benefits and workforce planning review. It is noteworthy that adequate term life and group medical cover is a baseline expectation for any professionally managed institution; the absence of a structured review until this point has exposed the organisation to potential financial and reputational risk in the event of employee welfare claims or regulatory scrutiny.</li>
         </ul>
       </div>
     </div>
@@ -578,10 +585,12 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
     <div class="section">
       <div class="sec-title">4. Compliance</div>
       <ul class="sec-pts">
-        <li>Open items from the 16 March tracker remain in progress — FY25 ITR-6, GSTR-9 and transplant licence renewals remain priority closures.</li>
-        <li>HR statutory audit engagement under evaluation as a proactive measure to identify and close labour law and payroll compliance gaps ahead of regulatory changes.</li>
-        <li>New Wage Code and Minimum Wage Revision (draft) being monitored — formal impact to be incorporated into planning on enactment.</li>
+        <li><strong>Internal audit findings reviewed:</strong> Of 58 observations across Sep 2024 – Dec 2025, 43 remain open spanning critical GST reconciliation gaps, HMIS access control weaknesses, billing discrepancies, and vendor master deficiencies. All items have been identified, owners assigned, and resolution is actively underway with April 2026 target timelines.</li>
+        <li><strong>Financial and statutory controls:</strong> Key open items include incorrect GST rate application, ITC reconciliation failures, revenue reconciliation between systems, and outstanding bank reconciliation items — all flagged as priority closures with Finance and IT leads accountable.</li>
       </ul>
+      <div class="dl-links" style="margin-top:10px;">
+        <a class="dl-link" href="Weekly%20update/31st%20March/AUDIT_POINTS_sorted_by_risk.xlsx" download>↓ Full Audit Tracker (.xlsx)</a>
+      </div>
     </div>
 
     <hr class="rule-heavy">
@@ -589,7 +598,7 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
     <div class="commentary-label">Strategic Note</div>
     <div class="commentary-hed">Tirupati Oncology JV with G2 Healthcare — Do Not Proceed</div>
     <ul class="sec-pts" style="margin-bottom:12px;">
-      <li><strong>Returns below hurdle:</strong> PwC-modelled IRR of 16.6–17.2% across both deal structures falls short of the 20% minimum. Breakeven after Year 9; EBITDA below 25% through Year 10. A 6-month construction delay compresses IRR to ~13–14%.</li>
+      <li><strong>Returns below hurdle:</strong> PwC-modelled <strong style="color:#C8103E;">IRR of 16.6–17.2%</strong> across both deal structures falls short of the 20% minimum. Breakeven after Year 9; EBITDA below 25% through Year 10. A 6-month construction delay compresses IRR to ~13–14%.</li>
       <li><strong>Crowded market:</strong> Tirupati already served by SVICCAR (Tata Trusts-backed, subsidised), Helios and Aster Narayanadri. VPS enters with higher cost base, no referral pipeline and no local brand equity.</li>
       <li><strong>Deal skewed in G2's favour:</strong> VPS funds ~73% of new capex (₹111 Cr) yet pays 10% revenue share to G2, with no exit mechanism and no minimum volume guarantees.</li>
       <li><strong>Better alternatives exist:</strong> Deploy capital into Lakeshore's own oncology expansion (established brand, patient base, platform); or return to G2 only with renegotiated terms — fairer revenue split, volume guarantees, exit rights.</li>
