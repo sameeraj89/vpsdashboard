@@ -189,18 +189,26 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
 .print-btn { display: inline-flex; align-items: center; gap: 5px; font-size: 0.58rem; font-weight: 600; color: #0072BC; background: none; border: 1px solid #0072BC; border-radius: 3px; padding: 4px 10px; cursor: pointer; font-family: 'IBM Plex Sans', sans-serif; letter-spacing: 0.3px; transition: all .15s; margin-top: 6px; }
 .print-btn:hover { color: #0d2137; border-color: #0d2137; }
 @media print {
+  @page { margin: 18mm 12mm 12mm 12mm; }
+  @page :first { margin-top: 5mm; }
   body { background: white !important; }
   .hdr { box-shadow: none !important; }
   .hdr-rule { display: none; }
   .page { padding: 0 !important; }
-  .doc { padding: 24px !important; box-shadow: none !important; }
+  .doc { padding: 16px !important; box-shadow: none !important; }
   .back, .edit-bar, .print-btn, .dl-links, .popup-link, .hdr-badges, .sidebar { display: none !important; }
   .supp-modal-bg { display: none !important; }
-  .section { break-inside: avoid; }
+  .section { break-inside: auto; margin-bottom: 8px !important; padding-bottom: 8px !important; }
+  .sub-section { break-inside: avoid; }
   .plain-table { break-inside: avoid; }
   a[href]::after { content: none !important; }
-  .rule-heavy { break-after: auto; }
+  .rule-heavy { break-after: auto; margin: 16px 0 !important; }
   .rule-heavy.page-break-after { break-after: page; }
+  .note-body { font-size: 0.72rem !important; line-height: 1.75 !important; margin-bottom: 16px !important; }
+  .dateline { margin-bottom: 16px !important; }
+  .draft-banner { padding: 2px 0 8px !important; }
+  .sec-title { margin-bottom: 5px !important; }
+  .sub-section { margin-top: 8px !important; padding-top: 8px !important; }
 }
 
 /* ── DRAFT BANNER ── */
