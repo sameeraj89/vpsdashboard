@@ -245,7 +245,7 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
   justify-content: space-between;
   padding: 0 10px 0 14px;
   border-bottom: 1px solid #0d3d5c;
-  background: #164f75;
+  background: #1a5f8a;
   min-width: 224px;
 }
 .sb-title-text {
@@ -284,8 +284,10 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
   width: 32px;
   height: 100%;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  padding-top: 12px;
   cursor: pointer;
   z-index: 1;
   opacity: 0;
@@ -309,6 +311,15 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
   user-select: none;
 }
 .sb-pull-tab:hover .sb-pull-label { color: #0072BC; }
+.sb-pull-arrow {
+  display: block;
+  font-size: 0.65rem;
+  color: #a8d8f0;
+  margin-bottom: 8px;
+  user-select: none;
+  transition: color 0.12s, transform 0.12s;
+}
+.sb-pull-tab:hover .sb-pull-arrow { color: #0072BC; transform: translateX(2px); }
 
 /* ── SIDEBAR CONTENT ── */
 .sb-content {
@@ -379,6 +390,7 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
 
   <!-- Pull tab (visible only when collapsed) -->
   <div class="sb-pull-tab" onclick="toggleSidebar()" title="Show updates">
+    <span class="sb-pull-arrow">▶</span>
     <span class="sb-pull-label">Updates</span>
   </div>
 
@@ -507,7 +519,7 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
             <a class="dl-link" href="Weekly%20update/31st%20March/BD_Organisation_Structure.docx" download>↓ BD Org Structure (.docx)</a>
           </div>
         </li>
-        <li><strong>New Head of Business Development identified:</strong> a senior BD professional (currently DGM at a leading Kerala hospital group; ex-Aster Medcity, Amrita) — 18+ years in Kerala healthcare BD, referral networks and institutional tie-ups. Offer/onboarding to be confirmed in the next fortnight.</li>
+        <li><strong>New Head of Business Development identified:</strong> senior BD leader (ex-Aster Medcity, Amrita), 18+ years in Kerala healthcare referral networks and institutional tie-ups. Offer and onboarding to be confirmed within the fortnight.</li>
         <li>Group CEO DOP formalises authority to revise tariff structures, procedure pricing, room rates and package pricing — enabling faster rate decisions at unit level.</li>
       </ul>
     </div>
@@ -519,9 +531,9 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
       <div class="sub-section" style="margin-top:0; padding-top:0; border-top:none;">
         <div class="sub-sec-title">Org Structure</div>
         <ul class="sec-pts">
-          <li><strong>Restructure — interim phase (6–12 months):</strong> Group Office exercises direct operational control while key gaps are addressed — MD absorbing Medical Director function, CEO/Medical Superintendent overlap, undefined DMS mandate, CFO limited to reporting, and no dedicated NABH/compliance line. Phased transition reduces disruption and builds the foundation for an empowered unit CEO structure.</li>
-          <li><strong>Interim → Future state:</strong> Group Office in direct control now; hiring for critical gaps underway → Empowered unit CEO with strategic clarity and sustainable growth across all VPS assets.</li>
-          <li><strong>Burjeel Group CFO — next steps pending:</strong> Org structure proposal shared; awaiting feedback and next steps discussion before the restructure is progressed further.</li>
+          <li><strong>Restructure — interim phase (6–12 months):</strong> The Group Office is currently overseeing operations directly while current structural gaps are resolved — this includes the MD absorbing the Medical Director function, CEO/Medical Superintendent overlap, an undefined DMS mandate, a CFO remit limited to reporting, and no dedicated NABH or compliance lead. Phased transition reduces disruption and builds the foundation for a future structure.</li>
+          <li><strong>Interim → Future state:</strong> From the current interim structure, a future state is planned where an empowered unit CEO provides strategic clarity and drives sustainable growth across all VPS assets.</li>
+          <li><strong>Awaiting discussion with Burjeel CFO to discuss the next steps:</strong> Org structure proposal shared; awaiting feedback and next steps discussion before the restructure is progressed further.</li>
         </ul>
         <div class="dl-links" style="margin-top:8px;">
           <a class="dl-link" href="Weekly%20update/31st%20March/VPS%20Lakshore_Org.%20Structure%20Revision_vDraft%20(1).pdf" download>↓ Org Structure Draft (.pdf)</a>
@@ -532,7 +544,7 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
       <div class="sub-section">
         <div class="sub-sec-title">Delegation of Powers</div>
         <ul class="sec-pts">
-          <li><strong>Effective 31 March 2026:</strong> Board resolution authorises the Managing Director to delegate authority to the Group CEO covering procurement (up to ₹25 L per order), civil works (up to ₹50 L), staff engagement and separation, tariff revision, payor empanelment, and vendor renegotiation. Reviewed half-yearly.</li>
+          <li><strong>Effective 31 March 2026:</strong> New GCEO delegation of authority executed. This covers procurement (up to ₹25 L per order), civil works (up to ₹50 L), staff engagement and separation, tariff revision, payor empanelment, vendor renegotiation, and digital systems.</li>
         </ul>
         <div class="dl-links" style="margin-top:8px;">
           <a class="dl-link" href="Weekly%20update/31st%20March/Group%20CEO%20DOP%20(2).PDF" download>↓ Group CEO DOP (.pdf)</a>
@@ -548,7 +560,7 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
         </ul>
         <div class="dl-links" style="margin-top:8px;">
           <a class="dl-link" href="Weekly%20update/31st%20March/Voyon%20Folks%20Proposal%20-%20VPS%20Lakeshore%20Hospital%20v12.pdf" download>↓ Voyon Folks Proposal (.pdf)</a>
-          <a class="dl-link" href="Weekly%20update/31st%20March/HRMS_MD_Note.docx" download>↓ HRMS MD Note (.docx)</a>
+          <a class="dl-link" href="Weekly%20update/31st%20March/HRMS_MD_Note.docx" download>↓ HRMS Note (.docx)</a>
         </div>
       </div>
 
