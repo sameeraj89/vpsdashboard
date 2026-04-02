@@ -59,10 +59,10 @@ body { font-family: 'IBM Plex Sans', system-ui, sans-serif; background: #f0f2f5;
 .note-body { font-size: 0.78rem; color: #2d3748; line-height: 1.95; font-style: italic; padding-left: 16px; border-left: 2px solid #0d2137; margin-bottom: 36px; }
 
 /* ── SECTIONS ── */
-.section { padding-bottom: 24px; margin-bottom: 24px; border-bottom: 1px solid #f0f2f5; }
+.section { padding-bottom: 14px; margin-bottom: 14px; border-bottom: 1px solid #f0f2f5; }
 .section:last-of-type { border-bottom: none; padding-bottom: 0; margin-bottom: 0; }
 .sec-title { font-family: 'Lora', Georgia, serif; font-size: 0.88rem; font-weight: 600; color: #0072BC; margin-bottom: 9px; }
-.sec-body { font-size: 0.74rem; color: #4a5568; line-height: 1.95; min-height: 1em; }
+.sec-body { font-size: 0.74rem; color: #4a5568; line-height: 1.95; }
 
 /* ── DIVIDER ── */
 .rule { border: none; border-top: 1px solid #e2e8f0; margin: 36px 0; }
@@ -108,12 +108,12 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
 .modal-submit { width: 100%; background: #0d2137; color: white; padding: 10px; border: none; border-radius: 4px; font-size: 0.74rem; font-weight: 700; cursor: pointer; font-family: 'IBM Plex Sans', sans-serif; }
 
 /* ── SUB-SECTIONS ── */
-.sub-section { margin-top: 20px; padding-top: 18px; border-top: 1px solid #f0f2f5; }
+.sub-section { margin-top: 12px; padding-top: 12px; border-top: 1px solid #f0f2f5; }
 .sub-sec-title { font-size: 0.72rem; font-weight: 700; color: #0072BC; margin-bottom: 7px; letter-spacing: -0.1px; }
 
 /* ── SECTION BULLET POINTS ── */
 .sec-pts { list-style: none; padding: 0; margin: 0; font-size: 0.74rem; color: #4a5568; line-height: 1.75; }
-.sec-pts li { padding: 5px 0 5px 14px; position: relative; }
+.sec-pts li { padding: 3px 0 3px 14px; position: relative; }
 .sec-pts li::before { content: '–'; position: absolute; left: 0; color: #0072BC; }
 .sec-pts li + li { border-top: 1px dashed #edf0f3; }
 
@@ -186,8 +186,8 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
   .hdr-badges { justify-content: flex-start; }
 }
 /* ── PRINT ── */
-.print-btn { display: inline-flex; align-items: center; gap: 5px; font-size: 0.58rem; font-weight: 600; color: #ffffff; background: none; border: 1px solid #cddeed; border-radius: 3px; padding: 4px 10px; cursor: pointer; font-family: 'IBM Plex Sans', sans-serif; letter-spacing: 0.3px; transition: all .15s; margin-top: 6px; }
-.print-btn:hover { color: #0072BC; border-color: #0072BC; }
+.print-btn { display: inline-flex; align-items: center; gap: 5px; font-size: 0.58rem; font-weight: 600; color: #0072BC; background: none; border: 1px solid #0072BC; border-radius: 3px; padding: 4px 10px; cursor: pointer; font-family: 'IBM Plex Sans', sans-serif; letter-spacing: 0.3px; transition: all .15s; margin-top: 6px; }
+.print-btn:hover { color: #0d2137; border-color: #0d2137; }
 @media print {
   body { background: white !important; }
   .hdr { box-shadow: none !important; }
@@ -199,6 +199,8 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
   .section { break-inside: avoid; }
   .plain-table { break-inside: avoid; }
   a[href]::after { content: none !important; }
+  .rule-heavy { break-after: auto; }
+  .rule-heavy.page-break-after { break-after: page; }
 }
 
 /* ── DRAFT BANNER ── */
@@ -462,37 +464,45 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
     <div class="note-label">Note Summary</div>
     <div class="note-body">
       <div style="font-style:normal;line-height:1.9;margin-bottom:4px;padding-bottom:2px;font-family:'Lora',Georgia,serif;font-size:0.82rem;font-weight:600;color:#0072BC;">
-        Three fronts this fortnight — cost, governance, and strategy. On cost: manpower rationalisation is live with an Execution Committee in place; <span style="color:#C8103E;">₹2 Cr secured immediately</span> on the Multi Level Car Park renegotiation; and vendor renegotiations across 18 suppliers have delivered <span style="color:#C8103E;">₹58 L in annualised savings</span>. On governance: Group CEO DOP effective 31 March; org restructure in interim phase with Burjeel Group CFO; HRMS moving to Voyon Folks; DocuSign adopted for all signatures. On strategy: Tirupati Oncology JV — <span style="color:#C8103E;">Do Not Proceed.</span>
+        Manpower rationalisation is underway with an Execution Committee in place; <span style="color: #C8103E;">₹2 Cr saved</span> through Multi Level Car Park rescoping; and vendor renegotiations have delivered <span style="color: #C8103E;">₹58 L in annualised savings</span>. A new BD leadership structure is being established, with a Head of BD and zonal referral managers for North and South Kerala identified. On the governance front, the <span style="color: #C8103E;">Group CEO DOP</span> is effective 31 March with a new org structure proposed; improved HR platforms and e-signatures are being rolled out organisation-wide as part of a move to a <span style="color: #C8103E;">paperless organisation</span>. Compliance items are under active management, and we have taken a considered decision <span style="color: #C8103E;">not to proceed with the Tirupati Oncology JV</span> given the strategic misalignment.
       </div>
       <hr class="note-div">
-      <div><strong style="font-family:'Lora',Georgia,serif;color:#0072BC;">Cost</strong> — Manpower rationalisation underway; Execution Committee in place. Multi Level Car Park renegotiated <strong style="color:#C8103E;">₹5.5 Cr → ₹3.5 Cr</strong>, saving ₹2 Cr immediately. Vendor renegotiations across 18 suppliers: <strong style="color:#C8103E;">₹58 L annualised savings</strong> secured. Term Life &amp; Group Cover Insurance review initiated.</div>
+      <div><strong style="font-family:'Lora',Georgia,serif;color:#0072BC;">Cost</strong> — Manpower rationalisation underway; Execution Committee in place. Multi Level Car Park renegotiated <strong>₹5.5 Cr → ₹3.5 Cr</strong>, saving <strong style="color: #C8103E;">₹2 Cr</strong> immediately. Vendor renegotiations across 18 suppliers: <strong style="color: #C8103E;">₹58 L annualised savings</strong> secured. Term Life &amp; Group Cover Insurance review initiated.</div>
       <hr class="note-div">
-      <div><strong style="font-family:'Lora',Georgia,serif;color:#0072BC;">Revenue</strong> — New Head of BD identified (ex-Apollo, Aster Medcity, Amrita); offer to be confirmed.</div>
+      <div><strong style="font-family:'Lora',Georgia,serif;color:#0072BC;">Revenue</strong> — New Head of BD identified (ex-Apollo, Aster Medcity, Amrita); offer to be confirmed. BD structure being finalised; new zonal referral managers identified for North and South Kerala.</div>
       <hr class="note-div">
-      <div><strong style="font-family:'Lora',Georgia,serif;color:#0072BC;">Lakeshore 2.0</strong> — Group CEO DOP effective 31 March. Org restructure in interim phase; awaiting Burjeel Group CFO feedback. HRMS migrating to Voyon Folks (₹21.5 L). DocuSign adopted for all signatures. Calicut &amp; F&amp;B to be hived off as a separate P&amp;L.</div>
+      <div><strong style="font-family:'Lora',Georgia,serif;color:#0072BC;">Lakeshore 2.0</strong> — Group CEO DOP effective 31 March. Org restructure in interim phase; awaiting Burjeel Group CFO feedback. New HR and e-signature platform implementation underway.</div>
       <hr class="note-div">
-      <div><strong style="font-family:'Lora',Georgia,serif;color:#0072BC;">Strategic</strong> — Tirupati Oncology JV with G2 Healthcare: <span style="color:#C8103E;">Do Not Proceed.</span> IRR 16–17% vs. 20% hurdle; deal structurally skewed. Capital better deployed expanding oncology at Lakeshore.</div>
+      <div><strong style="font-family:'Lora',Georgia,serif;color:#0072BC;">Compliance</strong> — 68 open items under active management; April 2026 deadlines set across audit, GST, and billing gaps. Kidney transplant licence renewal pending; FY25 income tax return overdue; HR statutory audit planned ahead of New Wage Code.</div>
+      <hr class="note-div">
+      <div><strong style="font-family:'Lora',Georgia,serif;color:#0072BC;">Strategic</strong> — Tirupati Oncology JV with G2 Healthcare: <span style="color: #C8103E;">Do Not Proceed.</span> IRR 16–17% vs. 20% hurdle; deal structurally skewed. Capital better deployed expanding oncology at Lakeshore.</div>
     </div>
 
-    <hr class="rule-heavy">
+    <hr class="rule-heavy page-break-after">
 
     <div class="section">
       <div class="sec-title">1. Cost Rationalisation</div>
-      <div class="sec-body">Manpower rationalisation programme is underway. Initial workings are being conducted across headcount and structure — targets and savings will be confirmed as the analysis progresses.</div>
 
       <div class="sub-section">
         <div class="sub-sec-title">Manpower Rationalisation</div>
         <ul class="sec-pts">
           <li>Initial optimisation workings underway across headcount and structural efficiencies — early indications point to a meaningful financial opportunity, with department-level targets to be confirmed as analysis progresses.</li>
           <li>An <strong>Execution Committee has been constituted</strong> to govern the programme, with a weekly review cadence in place to track progress and enable timely escalation.</li>
-          <li>A performance-linked methodology is being developed to embed accountability and tie savings realisation to defined milestones.</li>
+          <li>A performance-linked variable cost structure is being developed to embed accountability and tie savings realisation to defined milestones.</li>
         </ul>
       </div>
 
       <div class="sub-section">
         <div class="sub-sec-title">Capex — Multi Level Car Park</div>
         <ul class="sec-pts">
-          <li><strong>Scope reduced following reassessment</strong> — original vendor contract of <strong>₹5.5 Cr</strong> renegotiated to <strong style="color:#C8103E;">₹3.5 Cr</strong> after a structured review of project specification and required capacity. This delivers an <strong style="color:#C8103E;">immediate ₹2 Cr saving</strong> in capex commitments with no impact on core functionality.</li>
+          <li><strong>Scope reduced following reassessment</strong> — original vendor contract of <strong>₹5.5 Cr</strong> renegotiated to <strong>₹3.5 Cr</strong> after a structured review of project specification and required capacity. This delivers an <strong style="color: #C8103E;">immediate ₹2 Cr saving</strong> in capex commitments with no impact on core functionality.</li>
+        </ul>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-sec-title">Vendor Renegotiation</div>
+        <ul class="sec-pts">
+          <li>Active renegotiations across <strong>18 suppliers</strong> (pharma manufacturers and distributors) have delivered <strong style="color: #C8103E;">₹58 L in annualised savings</strong> — part of the ongoing vendor optimisation programme, with a further 20+ vendors in discussion for the next round.</li>
         </ul>
       </div>
 
@@ -500,13 +510,6 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
         <div class="sub-sec-title">Separate P&amp;L — Calicut &amp; F&amp;B</div>
         <ul class="sec-pts">
           <li>Proposal to hive off the Calicut unit and Food &amp; Beverage operations as a distinct P&amp;L — enabling cleaner performance visibility, focused accountability and independent investment decisions for each entity.</li>
-        </ul>
-      </div>
-
-      <div class="sub-section">
-        <div class="sub-sec-title">Vendor Renegotiation</div>
-        <ul class="sec-pts">
-          <li>Active renegotiations across <strong>18 suppliers</strong> (pharma manufacturers and distributors) have delivered <strong style="color:#C8103E;">₹58 L in annualised savings</strong> — part of the ongoing vendor optimisation programme, with a further 20+ vendors in discussion for the next round.</li>
         </ul>
       </div>
     </div>
@@ -519,7 +522,7 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
             <a class="dl-link" href="Weekly%20update/31st%20March/BD_Organisation_Structure.docx" download>↓ BD Org Structure (.docx)</a>
           </div>
         </li>
-        <li><strong>New Head of Business Development identified:</strong> senior BD leader (ex-Aster Medcity, Amrita), 18+ years in Kerala healthcare referral networks and institutional tie-ups. Offer and onboarding to be confirmed within the fortnight.</li>
+        <li><strong>New Head of Business Development identified:</strong> senior BD leader (ex-Aster Medcity, Amrita), 18+ years in Kerala healthcare referral networks and institutional tie-ups. Offer and onboarding to be confirmed within the fortnight. In addition, new zonal referral managers for North and South Kerala have been identified.</li>
         <li>Group CEO DOP formalises authority to revise tariff structures, procedure pricing, room rates and package pricing — enabling faster rate decisions at unit level.</li>
       </ul>
     </div>
@@ -533,7 +536,7 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
         <ul class="sec-pts">
           <li><strong>Restructure — interim phase (6–12 months):</strong> The Group Office is currently overseeing operations directly while current structural gaps are resolved — this includes the MD absorbing the Medical Director function, CEO/Medical Superintendent overlap, an undefined DMS mandate, a CFO remit limited to reporting, and no dedicated NABH or compliance lead. Phased transition reduces disruption and builds the foundation for a future structure.</li>
           <li><strong>Interim → Future state:</strong> From the current interim structure, a future state is planned where an empowered unit CEO provides strategic clarity and drives sustainable growth across all VPS assets.</li>
-          <li><strong>Awaiting discussion with Burjeel CFO to discuss the next steps:</strong> Org structure proposal shared; awaiting feedback and next steps discussion before the restructure is progressed further.</li>
+          <li><strong>Awaiting discussion with Burjeel CFO on next steps:</strong> Org structure proposal shared; awaiting feedback and next steps discussion before the restructure is progressed further.</li>
         </ul>
         <div class="dl-links" style="margin-top:8px;">
           <a class="dl-link" href="Weekly%20update/31st%20March/VPS%20Lakshore_Org.%20Structure%20Revision_vDraft%20(1).pdf" download>↓ Org Structure Draft (.pdf)</a>
@@ -569,7 +572,7 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
         <div class="sub-sec-title">Paperless Shift</div>
         <ul class="sec-pts">
           <li><strong>Transitioning all signatures to DocuSign:</strong> All contracts, approvals and formal agreements move to DocuSign going forward — eliminating physical routing delays, creating a tamper-evident audit trail, and ensuring every document is timestamped and retrievable.</li>
-          <li><strong>Printing costs:</strong> Total printing spend for the last year was approximately <strong style="color:#C8103E;">₹1.7 Cr</strong>. The paperless shift is expected to reduce this significantly — a target reduction will be set once baseline usage data is reviewed.</li>
+          <li><strong>Printing costs:</strong> Total printing spend for the last year was approximately <strong style="color: #C8103E;">₹1.7 Cr</strong>. The paperless shift is expected to reduce this significantly — a target reduction will be set once baseline usage data is reviewed.</li>
         </ul>
       </div>
 
@@ -587,7 +590,7 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
 
       <ul class="sec-pts">
 
-        <li><strong>Internal audit findings being actioned</strong> — of 58 observations across Sep 2024–Dec 2025, 43 remain open across GST reconciliation, HMIS access controls, billing, and vendor master gaps. Owners assigned; April 2026 deadlines set. Priority closures: GST rate correction, ITC reconciliation, revenue reconciliation between systems, and bank reconciliation — Finance and IT leads accountable.
+        <li><strong>Internal audit findings being actioned</strong> — of 68 observations across Sep 2024–Dec 2025, 43 remain open across GST reconciliation, HMIS access controls, billing, and vendor master gaps. Owners assigned; April 2026 deadlines set. Priority closures: GST rate correction, ITC reconciliation, revenue reconciliation between systems, and bank reconciliation — Finance and IT leads accountable.
           <div class="dl-links" style="margin-top:8px;"><a class="dl-link" href="AUDIT_Points_Actions_Planned.xlsx" download>↓ Audit Points &amp; Actions (.xlsx)</a></div>
         </li>
 
@@ -642,16 +645,16 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
     <div class="note-label">Note Summary</div>
     <div class="note-body">
       <div data-edit-id="hl-motherhood" style="font-style:normal; line-height:1.85; margin-bottom:4px; padding-bottom:2px; font-family:'Lora',Georgia,serif; font-size:0.82rem; font-weight:600; color:#0072BC;">
-        Cost savings of <span style="color:#C8103E;">₹23.2 Cr</span> have been targeted — <span style="color:#C8103E;">₹14.7 Cr</span> through capex rationalisation and <span style="color:#C8103E;">₹8.5 Cr</span> through payroll and vendor optimisation — alongside <span style="color:#C8103E;">₹17.1 Cr</span> in revenue upside from drug substitution and procedure rate corrections. The compliance tracker flags 68 open items, with transplant licence renewals under active resolution; the org restructure and website relaunch are on track to close within the month.
+        Cost savings of <span style="color: #C8103E;">₹23.2 Cr</span> have been targeted — <span style="color: #C8103E;">₹14.7 Cr</span> through capex rationalisation and <span style="color: #C8103E;">₹8.5 Cr</span> through payroll and vendor optimisation — alongside <span style="color: #C8103E;">₹17.1 Cr</span> in revenue upside from drug substitution and procedure rate corrections. The compliance tracker flags 68 open items, with transplant licence renewals under active resolution; the org restructure and website relaunch are on track to close within the month.
       </div>
       <hr class="note-div">
-      <div data-edit-id="hl-cost" data-placeholder="Cost highlight…"><strong style="font-family:'Lora',Georgia,serif;color:#0072BC;">Cost</strong> — <strong style="color:#C8103E;">₹14.7 Cr in Capex savings</strong> targeted through deferrals and rejections across top 6 departments; <strong style="color:#C8103E;">₹8.5 Cr in Opex savings</strong> targeted through payroll optimisation ₹4.7 Cr (~130 staff) and vendor renegotiation ₹3.8 Cr.</div>
+      <div data-edit-id="hl-cost" data-placeholder="Cost highlight…"><strong style="font-family:'Lora',Georgia,serif;color:#0072BC;">Cost</strong> — <strong style="color: #C8103E;">₹14.7 Cr in Capex savings</strong> targeted through deferrals and rejections across top 6 departments; <strong style="color: #C8103E;">₹8.5 Cr in Opex savings</strong> targeted through payroll optimisation ₹4.7 Cr (~130 staff) and vendor renegotiation ₹3.8 Cr.</div>
       <hr class="note-div">
-      <div data-edit-id="hl-revenue" data-placeholder="Revenue highlight…"><strong style="font-family:'Lora',Georgia,serif;color:#0072BC;">Revenue</strong> — <strong style="color:#C8103E;">~₹17.1 Cr revenue upside identified</strong>: drug substitution ₹4.6 Cr, cash patient rate revision ₹12.5 Cr (1% IP rate increase, nursing charge pass-through, top-50 procedure correction). BD hire and doctor performance review in progress.</div>
+      <div data-edit-id="hl-revenue" data-placeholder="Revenue highlight…"><strong style="font-family:'Lora',Georgia,serif;color:#0072BC;">Revenue</strong> — <strong style="color: #C8103E;">~₹17.1 Cr revenue upside identified</strong>: drug substitution ₹4.6 Cr, cash patient rate revision ₹12.5 Cr (1% IP rate increase, nursing charge pass-through, top-50 procedure correction). BD hire and doctor performance review in progress.</div>
       <hr class="note-div">
-      <div data-edit-id="hl-brand" data-placeholder="Brand highlight…"><strong style="font-family:'Lora',Georgia,serif;color:#0072BC;">Lakeshore 2.0</strong> — Reworked org structure ready end of month. <span style="color:#C8103E;">Revamped website go-live end of April;</span> app under consideration. Process and platform mapping underway.</div>
+      <div data-edit-id="hl-brand" data-placeholder="Brand highlight…"><strong style="font-family:'Lora',Georgia,serif;color:#0072BC;">Lakeshore 2.0</strong> — Reworked org structure ready end of month. <span style="color: #C8103E;">Revamped website go-live end of April;</span> app under consideration. Process and platform mapping underway.</div>
       <hr class="note-div">
-      <div data-edit-id="hl-compliance" data-placeholder="Compliance highlight…"><strong style="font-family:'Lora',Georgia,serif;color:#0072BC;">Compliance</strong> — 68 items requiring action; <span style="color:#C8103E;">FY25 income tax return overdue since October 2025</span>, and kidney transplant licence expired 12 March with emergency DME renewal pending.</div>
+      <div data-edit-id="hl-compliance" data-placeholder="Compliance highlight…"><strong style="font-family:'Lora',Georgia,serif;color:#0072BC;">Compliance</strong> — 68 items requiring action; <span style="color: #C8103E;">FY25 income tax return overdue since October 2025</span>, and kidney transplant licence expired 12 March with emergency DME renewal pending.</div>
     </div>
 
     <hr class="rule-heavy">
