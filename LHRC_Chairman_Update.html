@@ -1144,9 +1144,15 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
         <button class="dv-close" onclick="closeDocViewer()">✕</button>
       </div>
     </div>
-    <iframe class="dv-frame" id="dvFrame" src="" allowfullscreen></iframe>
+    <iframe class="dv-frame" id="dvFrame" src="" allowfullscreen style="display:none"></iframe>
+    <div id="dvContent" style="flex:1;overflow:auto;padding:24px 32px;font-family:'IBM Plex Sans',sans-serif;font-size:0.82rem;line-height:1.7;color:#2d3748;background:#fff;display:none;"></div>
+    <div id="dvLoading" style="flex:1;display:flex;align-items:center;justify-content:center;color:#718096;font-family:'IBM Plex Sans',sans-serif;font-size:0.8rem;flex-direction:column;gap:10px;">
+      <div style="width:28px;height:28px;border:3px solid #e2e8f0;border-top-color:#0072BC;border-radius:50%;animation:dvSpin 0.7s linear infinite;"></div>
+      <span id="dvLoadingMsg">Loading…</span>
+    </div>
   </div>
 </div>
+<style>@keyframes dvSpin{to{transform:rotate(360deg)}}</style>
 
 <!-- EDIT MODAL -->
 <div id="editModal" class="modal-bg" style="display:none">
@@ -1254,25 +1260,91 @@ window.addEventListener('DOMContentLoaded', loadEdits);
 
 // ── Document Viewer ──
 var _dvBase = 'https://vpslakeshoretdx.in/';
+
+function _dvShow(mode) {
+  document.getElementById('dvFrame').style.display   = mode === 'frame'   ? 'block' : 'none';
+  document.getElementById('dvContent').style.display = mode === 'content' ? 'block' : 'none';
+  document.getElementById('dvLoading').style.display = mode === 'loading' ? 'flex'  : 'none';
+}
+
 function openDocViewer(relUrl, label) {
   var fullUrl = relUrl.startsWith('http') ? relUrl : _dvBase + relUrl;
   var ext = relUrl.split('.').pop().toLowerCase().split('?')[0];
-  var src;
-  if (ext === 'pdf') {
-    src = fullUrl;
-  } else {
-    // Office Online for docx/xlsx — more reliable rendering than Google Viewer
-    src = 'https://view.officeapps.live.com/op/view.aspx?src=' + encodeURIComponent(fullUrl);
-  }
   document.getElementById('dvTitle').textContent = label;
   document.getElementById('dvDownload').href = fullUrl;
-  document.getElementById('dvFrame').src = src;
   document.getElementById('docViewerModal').classList.add('open');
+
+  if (ext === 'pdf') {
+    // PDFs render natively in the browser — fast
+    _dvShow('loading');
+    document.getElementById('dvLoadingMsg').textContent = 'Loading PDF…';
+    var f = document.getElementById('dvFrame');
+    f.onload = function() { _dvShow('frame'); };
+    f.src = fullUrl;
+    _dvShow('frame'); // show immediately; browser handles it
+
+  } else if (ext === 'docx' || ext === 'doc') {
+    _dvShow('loading');
+    document.getElementById('dvLoadingMsg').textContent = 'Rendering document…';
+    _loadScript('https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js', function() {
+      fetch(fullUrl)
+        .then(function(r) { return r.arrayBuffer(); })
+        .then(function(buf) {
+          return mammoth.convertToHtml({ arrayBuffer: buf });
+        })
+        .then(function(result) {
+          var el = document.getElementById('dvContent');
+          el.innerHTML = '<style>.dv-doc-body img{max-width:100%}.dv-doc-body table{border-collapse:collapse;width:100%}.dv-doc-body td,.dv-doc-body th{border:1px solid #e2e8f0;padding:6px 10px;font-size:0.78rem}</style><div class="dv-doc-body">' + result.value + '</div>';
+          _dvShow('content');
+        })
+        .catch(function(e) {
+          document.getElementById('dvContent').innerHTML = '<p style="color:#c53030;padding:16px">Could not render document: ' + e.message + '</p>';
+          _dvShow('content');
+        });
+    });
+
+  } else if (ext === 'xlsx' || ext === 'xls') {
+    _dvShow('loading');
+    document.getElementById('dvLoadingMsg').textContent = 'Rendering spreadsheet…';
+    _loadScript('https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js', function() {
+      fetch(fullUrl)
+        .then(function(r) { return r.arrayBuffer(); })
+        .then(function(buf) {
+          var wb = XLSX.read(buf, { type: 'array' });
+          var html = '<style>.dv-xl-wrap{overflow-x:auto}.dv-xl-wrap table{border-collapse:collapse;font-size:0.74rem;min-width:100%}.dv-xl-wrap td,.dv-xl-wrap th{border:1px solid #e2e8f0;padding:5px 10px;white-space:nowrap}.dv-xl-wrap th{background:#f7fafc;font-weight:600}.dv-xl-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}.dv-xl-tab{padding:4px 12px;border-radius:4px;font-size:0.72rem;font-weight:600;cursor:pointer;background:#edf2f7;border:none;color:#4a5568}.dv-xl-tab.active{background:#0072BC;color:#fff}</style>';
+          if (wb.SheetNames.length > 1) {
+            html += '<div class="dv-xl-tabs">' + wb.SheetNames.map(function(n, i) {
+              return '<button class="dv-xl-tab' + (i===0?' active':'') + '" onclick="dvShowSheet(this,' + i + ')">' + n + '</button>';
+            }).join('') + '</div>';
+          }
+          html += wb.SheetNames.map(function(name, i) {
+            return '<div class="dv-xl-sheet dv-xl-wrap" style="display:' + (i===0?'block':'none') + '">' + XLSX.utils.sheet_to_html(wb.Sheets[name]) + '</div>';
+          }).join('');
+          var el = document.getElementById('dvContent');
+          el.innerHTML = html;
+          _dvShow('content');
+        })
+        .catch(function(e) {
+          document.getElementById('dvContent').innerHTML = '<p style="color:#c53030;padding:16px">Could not render spreadsheet: ' + e.message + '</p>';
+          _dvShow('content');
+        });
+    });
+  }
   return false;
 }
+
+window.dvShowSheet = function(btn, idx) {
+  var el = document.getElementById('dvContent');
+  el.querySelectorAll('.dv-xl-sheet').forEach(function(s, i) { s.style.display = i===idx ? 'block' : 'none'; });
+  el.querySelectorAll('.dv-xl-tab').forEach(function(t) { t.classList.remove('active'); });
+  btn.classList.add('active');
+};
+
 function closeDocViewer() {
   document.getElementById('docViewerModal').classList.remove('open');
   document.getElementById('dvFrame').src = '';
+  document.getElementById('dvContent').innerHTML = '';
+  _dvShow('loading');
 }
 
 // ── Panel switcher ──
@@ -1410,5 +1482,14 @@ function switchPanel(id) {
 
 </div><!-- /main-content -->
 </div><!-- /app-shell -->
+
+<!-- Client-side doc rendering libs (loaded on demand) -->
+<script>
+function _loadScript(src, cb) {
+  if (document.querySelector('script[src="' + src + '"]')) { cb && cb(); return; }
+  var s = document.createElement('script'); s.src = src; s.onload = cb || null;
+  document.head.appendChild(s);
+}
+</script>
 </body>
 </html>
