@@ -211,6 +211,17 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
   .sub-section { margin-top: 8px !important; padding-top: 8px !important; }
 }
 
+/* ── DOC VIEWER MODAL ── */
+#docViewerModal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.78); z-index:9500; align-items:center; justify-content:center; }
+#docViewerModal.open { display:flex; }
+.dv-shell { background:#fff; width:92vw; height:91vh; border-radius:8px; overflow:hidden; display:flex; flex-direction:column; box-shadow:0 24px 64px rgba(0,0,0,0.45); }
+.dv-hd { display:flex; align-items:center; justify-content:space-between; padding:10px 16px; background:#1a3a5c; color:#fff; flex-shrink:0; gap:12px; }
+.dv-title { font-size:0.78rem; font-weight:600; font-family:'IBM Plex Sans',sans-serif; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.dv-dl { font-size:0.7rem; color:rgba(255,255,255,0.75); text-decoration:none; border-bottom:1px solid rgba(255,255,255,0.3); padding-bottom:1px; white-space:nowrap; flex-shrink:0; }
+.dv-dl:hover { color:#fff; }
+.dv-close { background:none; border:none; color:#fff; font-size:20px; cursor:pointer; line-height:1; padding:0 0 0 4px; flex-shrink:0; }
+.dv-frame { flex:1; border:none; width:100%; background:#f7f7f7; }
+
 /* ── DRAFT BANNER ── */
 .draft-banner { font-size: 0.62rem; color: #a0aec0; font-style: italic; padding: 4px 0 16px 0; margin-bottom: 0; line-height: 1.6; border: none; background: none; }
 .draft-banner strong { font-style: normal; font-weight: 600; color: #8a9aaa; letter-spacing: 0.5px; font-size: 0.62rem; }
@@ -524,7 +535,11 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
     <div class="section">
       <div class="sec-title">2. Revenue Enhancement</div>
       <ul class="sec-pts">
-        <li><strong>BD organisation structure defined:</strong> A structured BD function has been established under an incoming BD Head, covering four pillars — Communications &amp; Branding, Public Relations, Institutional &amp; Partnerships (including corporate relations, international patients, satellite centres and CME), and Referral Development across North, Central and South Kerala zones. Satellite centre and early detection programme with a focus on oncology is under discussion.</li>
+        <li><strong>BD organisation structure defined:</strong> A structured BD function has been established under an incoming BD Head, covering four pillars — Communications &amp; Branding, Public Relations, Institutional &amp; Partnerships (including corporate relations, international patients, satellite centres and CME), and Referral Development across North, Central and South Kerala zones. Satellite centre and early detection programme with a focus on oncology is under discussion.
+          <div class="dl-links" style="margin-top:8px;">
+            <a class="dl-link" href="#" onclick="return openDocViewer('Weekly%20update/31st%20March/BD_Organisation_Structure.docx','BD Org Structure')">↗ BD Org Structure (.docx)</a>
+          </div>
+        </li>
         <li><strong>New Head of Business Development identified:</strong> senior BD leader (ex-Aster Medcity, Amrita), 18+ years in Kerala healthcare referral networks and institutional tie-ups. Offer and onboarding to be confirmed within the fortnight. In addition, new zonal referral managers for North and South Kerala have been identified.</li>
         <li>Group CEO DOP formalises authority to revise tariff structures, procedure pricing, room rates and package pricing — enabling faster rate decisions at unit level.</li>
       </ul>
@@ -541,7 +556,7 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
           <li><strong>Interim → Future state:</strong> From the current interim structure, a future state is planned with an empowered CEO and this structure will be replicated across all VPS assets.</li>
         </ul>
         <div class="dl-links" style="margin-top:8px;">
-          <a class="dl-link" href="Weekly%20update/31st%20March/VPS%20Lakshore_Org.%20Structure%20Revision_vDraft%20(1).pdf" download>↓ Org Structure Draft (.pdf)</a>
+          <a class="dl-link" href="#" onclick="return openDocViewer('Weekly%20update/31st%20March/VPS%20Lakshore_Org.%20Structure%20Revision_vDraft%20(1).pdf','Org Structure Draft')">↗ Org Structure Draft (.pdf)</a>
         </div>
       </div>
 
@@ -552,7 +567,7 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
           <li><strong>Effective 31 March 2026:</strong> New GCEO delegation of authority executed. This covers procurement (up to ₹25 L per order), civil works (up to ₹50 L), staff engagement and separation, tariff revision, payor empanelment, vendor renegotiation, and digital systems.</li>
         </ul>
         <div class="dl-links" style="margin-top:8px;">
-          <a class="dl-link" href="Weekly%20update/31st%20March/Group%20CEO%20DOP%20(2).PDF" download>↓ Group CEO DOP (.pdf)</a>
+          <a class="dl-link" href="#" onclick="return openDocViewer('Weekly%20update/31st%20March/Group%20CEO%20DOP%20(2).PDF','Group CEO DOP')">↗ Group CEO DOP (.pdf)</a>
         </div>
       </div>
 
@@ -564,8 +579,8 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
           <li><strong>Voyon Folks recommended:</strong> Fully integrated cloud HCMS — AI-enabled recruitment, LinkedIn integration, connected L&amp;D, document management and strong configurability. HQ in Kochi ensures faster implementation and local support. 3-month transition period planned between systems.</li>
         </ul>
         <div class="dl-links" style="margin-top:8px;">
-          <a class="dl-link" href="Weekly%20update/31st%20March/Voyon%20Folks%20Proposal%20-%20VPS%20Lakeshore%20Hospital%20v12.pdf" download>↓ Voyon Folks Proposal (.pdf)</a>
-          <a class="dl-link" href="Weekly%20update/31st%20March/HRMS_MD_Note.docx" download>↓ HRMS Note (.docx)</a>
+          <a class="dl-link" href="#" onclick="return openDocViewer('Weekly%20update/31st%20March/Voyon%20Folks%20Proposal%20-%20VPS%20Lakeshore%20Hospital%20v12.pdf','Voyon Folks Proposal')">↗ Voyon Folks Proposal (.pdf)</a>
+          <a class="dl-link" href="#" onclick="return openDocViewer('Weekly%20update/31st%20March/HRMS_MD_Note.docx','HRMS Note')">↗ HRMS Note (.docx)</a>
         </div>
       </div>
 
@@ -597,7 +612,7 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
         </li>
 
         <li><strong>HR statutory audit</strong> — external agency engagement is planned to close identified gaps in labour law and payroll compliance ahead of the New Wage Code coming into force.
-          <div class="dl-links" style="margin-top:8px;"><a class="dl-link" href="Weekly%20update/31st%20March/VPS%20Lakshore_Business%20Proposal_GREAT%20LEAP%20HR%20Statutory%20Audit_V1.pdf" download>↓ Proposal (.pdf)</a></div>
+          <div class="dl-links" style="margin-top:8px;"><a class="dl-link" href="#" onclick="return openDocViewer('Weekly%20update/31st%20March/VPS%20Lakshore_Business%20Proposal_GREAT%20LEAP%20HR%20Statutory%20Audit_V1.pdf','HR Statutory Audit Proposal')">↗ Proposal (.pdf)</a></div>
         </li>
 
         <li><strong>New Wage Code assessment</strong> — impact of the New Wage Code and Minimum Wage Revision (draft) being monitored; outcomes to be incorporated into planning assumptions on enactment, with scenario planning already underway.</li>
@@ -617,7 +632,7 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
       <li><strong>Better alternatives exist:</strong> Deploy capital into Lakeshore's own clinical services expansion (established brand, patient base, platform); or return to G2 only with renegotiated terms — fairer revenue split, volume guarantees, exit rights.</li>
     </ul>
     <div class="dl-links">
-      <a class="dl-link" href="Weekly%20update/31st%20March/VPS_Tirupati_Note_Mar'26.pdf" download>↓ Full Advisory Note (.pdf)</a>
+      <a class="dl-link" href="#" onclick="return openDocViewer('Weekly%20update/31st%20March/VPS_Tirupati_Note_Mar%2726.pdf','Tirupati Advisory Note')">↗ Full Advisory Note (.pdf)</a>
     </div>
 
   </div><!-- /doc -->
@@ -1119,6 +1134,20 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
   </div>
 </div>
 
+<!-- DOC VIEWER MODAL -->
+<div id="docViewerModal" onclick="if(event.target===this)closeDocViewer()">
+  <div class="dv-shell">
+    <div class="dv-hd">
+      <span class="dv-title" id="dvTitle"></span>
+      <div style="display:flex;align-items:center;gap:14px;flex-shrink:0;">
+        <a class="dv-dl" id="dvDownload" href="#" target="_blank">↓ Download</a>
+        <button class="dv-close" onclick="closeDocViewer()">✕</button>
+      </div>
+    </div>
+    <iframe class="dv-frame" id="dvFrame" src="" allowfullscreen></iframe>
+  </div>
+</div>
+
 <!-- EDIT MODAL -->
 <div id="editModal" class="modal-bg" style="display:none">
   <div class="modal">
@@ -1222,6 +1251,28 @@ function loadEdits() {
 }
 
 window.addEventListener('DOMContentLoaded', loadEdits);
+
+// ── Document Viewer ──
+var _dvBase = 'https://vpslakeshoretdx.in/';
+function openDocViewer(relUrl, label) {
+  var fullUrl = relUrl.startsWith('http') ? relUrl : _dvBase + relUrl;
+  var ext = relUrl.split('.').pop().toLowerCase().split('?')[0];
+  var src;
+  if (ext === 'pdf') {
+    src = fullUrl;
+  } else {
+    src = 'https://view.officeapps.live.com/op/view.aspx?src=' + encodeURIComponent(fullUrl);
+  }
+  document.getElementById('dvTitle').textContent = label;
+  document.getElementById('dvDownload').href = fullUrl;
+  document.getElementById('dvFrame').src = src;
+  document.getElementById('docViewerModal').classList.add('open');
+  return false;
+}
+function closeDocViewer() {
+  document.getElementById('docViewerModal').classList.remove('open');
+  document.getElementById('dvFrame').src = '';
+}
 
 // ── Panel switcher ──
 function switchPanel(id) {
