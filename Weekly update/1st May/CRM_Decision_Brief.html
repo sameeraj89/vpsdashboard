@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CRM Platform Decision — VPS Lakeshore</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;600&family=Lora:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'IBM Plex Sans',sans-serif;background:#f0f2f5;color:#1a202c;font-size:13px;line-height:1.6}
+.page{max-width:960px;margin:28px auto;background:#fff;padding:40px 48px 36px;box-shadow:0 2px 16px rgba(0,0,0,0.08)}
+.hdr{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid #0072BC;padding-bottom:14px;margin-bottom:20px}
+.hdr-left .eyebrow{font-size:0.58rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#a0aec0;font-family:'IBM Plex Mono',monospace;margin-bottom:4px}
+.hdr-left h1{font-size:1.3rem;font-weight:700;color:#0d2137;line-height:1.2}
+.hdr-left h1 span{color:#C8103E}
+.hdr-right{text-align:right;font-size:0.6rem;color:#a0aec0;font-family:'IBM Plex Mono',monospace;line-height:1.9}
+.hdr-right strong{color:#0d2137}
+.context-band{background:#f7fafc;border-left:3px solid #0072BC;padding:10px 16px;margin-bottom:20px;font-size:0.74rem;color:#2d3748;line-height:1.8}
+.context-band strong{color:#0d2137}
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-bottom:20px;border:1px solid #e2e8f0}
+.col-hdr{padding:10px 16px;font-size:0.72rem;font-weight:700;letter-spacing:0.3px;color:#fff;display:flex;align-items:center;gap:8px}
+.col-hdr-ms{background:#0072BC}
+.col-hdr-sf{background:#00A1E0}
+.col-hdr .badge{font-size:0.52rem;background:rgba(255,255,255,0.2);padding:2px 8px;border-radius:10px;font-weight:600;letter-spacing:0.5px;text-transform:uppercase}
+.compare-row{display:contents}
+.compare-row .cell{padding:9px 16px;border-top:1px solid #f0f2f5;font-size:0.72rem;color:#4a5568;vertical-align:top}
+.compare-row .cell:first-child{border-right:1px solid #e2e8f0}
+.compare-row .cell.row-label{background:#f8fafc;font-size:0.58rem;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#718096;font-family:'IBM Plex Mono',monospace;grid-column:1/-1;border:none;border-top:1px solid #e2e8f0;padding:6px 16px}
+.compare-row .cell ul{margin:0;padding-left:14px}
+.compare-row .cell ul li{margin-bottom:2px}
+.compare-row .cell strong{color:#0d2137}
+.hl-red{color:#C8103E;font-weight:600}
+.hl-blue{color:#0072BC;font-weight:600}
+.hl-green{color:#2d6a4f;font-weight:600}
+.cost-table{width:100%;border-collapse:collapse;margin-bottom:20px;font-size:0.72rem}
+.cost-table thead tr th{background:#0d2137;color:#fff;padding:7px 12px;text-align:left;font-size:0.6rem;text-transform:uppercase;letter-spacing:0.8px;font-family:'IBM Plex Mono',monospace}
+.cost-table tbody tr td{padding:7px 12px;border-bottom:1px solid #f0f2f5;color:#4a5568}
+.cost-table tbody tr:last-child td{border-bottom:none;font-weight:700;color:#0d2137;background:#f8fafc}
+.cost-table td.amt{font-family:'IBM Plex Mono',monospace;white-space:nowrap;color:#0d2137}
+.cost-table td.hl{color:#C8103E;font-weight:700;font-family:'IBM Plex Mono',monospace}
+.decision-box{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+.factor-card{border:1px solid #e2e8f0;padding:14px 16px;border-radius:4px}
+.factor-card .fc-title{font-size:0.6rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#0072BC;font-family:'IBM Plex Mono',monospace;margin-bottom:8px}
+.factor-card ul{padding-left:14px;font-size:0.71rem;color:#4a5568}
+.factor-card ul li{margin-bottom:4px}
+.rec-box{background:#0d2137;color:#fff;padding:14px 20px;margin-bottom:0;display:flex;align-items:flex-start;gap:14px}
+.rec-box .rec-label{font-size:0.55rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;font-family:'IBM Plex Mono',monospace;color:#c9a84c;margin-bottom:6px}
+.rec-box p{font-size:0.73rem;line-height:1.7;color:rgba(255,255,255,0.88)}
+.rec-box strong{color:#fff}
+.verdict{display:inline-block;background:#C8103E;color:#fff;font-size:0.6rem;font-weight:700;letter-spacing:1px;padding:3px 10px;border-radius:2px;text-transform:uppercase;margin-bottom:6px}
+.section-title{font-family:'Lora',serif;font-size:0.82rem;font-weight:600;color:#0072BC;margin-bottom:10px;margin-top:18px}
+.footer{font-size:0.56rem;color:#a0aec0;font-family:'IBM Plex Mono',monospace;text-align:center;margin-top:20px;padding-top:12px;border-top:1px solid #e2e8f0}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="hdr">
+    <div class="hdr-left">
+      <div class="eyebrow">VPS Lakeshore Hospital &amp; Research Centre · Technology &amp; Strategy</div>
+      <h1>CRM Platform Decision<br><span>Microsoft Dynamics 365 vs Salesforce</span></h1>
+    </div>
+    <div class="hdr-right">
+      <strong>Prepared:</strong> 1 May 2026<br>
+      <strong>Decision Required:</strong> May 2026<br>
+      <strong>Salesforce Offer Expiry:</strong> 10 May 2026<br>
+      <strong>Status:</strong> For Decision
+    </div>
+  </div>
+
+  <div class="context-band">
+    <strong>Business context:</strong> Lakeshore operates a <strong>1,200-doctor referral network</strong> managed by a 15-person BD field team today running on calls, WhatsApp and spreadsheets — with no central tracking or visit history. The contact centre handles <strong>2,300 inbound patient enquiries per day</strong> with agents working with zero patient context on screen. CRM is required to close both gaps: structured referral management and a CTI-integrated contact centre.
+  </div>
+
+  <!-- COMPARISON TABLE -->
+  <div class="section-title">Platform Comparison</div>
+  <div class="compare-grid">
+    <div class="col-hdr col-hdr-ms">Microsoft Dynamics 365 <span class="badge">3K Technologies · Apr 2026</span></div>
+    <div class="col-hdr col-hdr-sf">Salesforce Health Cloud <span class="badge">Salesforce Direct · Apr 2026</span></div>
+
+    <div class="compare-row"><div class="cell row-label">Core Scope</div></div>
+    <div class="compare-row">
+      <div class="cell"><ul>
+        <li><strong>Module 1:</strong> Sales &amp; Visit Management — doctor onboarding, visit planning &amp; logging, referral tracking, territory scorecards</li>
+        <li><strong>Module 2:</strong> CTI Integration — screen pop from HMS, call logging, escalation workflow for 15 contact centre agents</li>
+        <li>20 D365 Sales Enterprise licenses + 10 Power Apps (contact centre)</li>
+      </ul></div>
+      <div class="cell"><ul>
+        <li>30 Salesforce CRM licenses across contact centre, field sales, marketing, leadership and patient coordinators</li>
+        <li><strong>Agentforce Contact Center Digital</strong> — AI-powered contact centre digital channel</li>
+        <li>Tableau Cloud (2 Creator + 5 Viewer) for leadership dashboards</li>
+        <li>Premier Success Support (15% net of licenses)</li>
+      </ul></div>
+    </div>
+
+    <div class="compare-row"><div class="cell row-label">Key Strengths</div></div>
+    <div class="compare-row">
+      <div class="cell"><ul>
+        <li><span class="hl-blue">Group synergy:</span> VPS UAE already runs on D365 — shared admin, group licensing leverage</li>
+        <li>Doctor visit workflow designed specifically for Lakeshore's 1,200-doctor network</li>
+        <li>Referral revenue attribution built in — links each patient to referring doctor</li>
+        <li>Territory management and cold-doctor auto-flagging (30/60/90-day rules)</li>
+        <li>Deeper HMS/Ellider CTI read-integration proposed</li>
+        <li>Lower one-time implementation cost</li>
+      </ul></div>
+      <div class="cell"><ul>
+        <li><span class="hl-blue">Agentforce AI:</span> GenAI-native contact centre — auto-route, summarise and resolve patient queries</li>
+        <li>Health Cloud purpose-built for patient engagement, care journeys and TPA workflows</li>
+        <li>Tableau — advanced analytics beyond native Salesforce reporting</li>
+        <li>Larger ecosystem of healthcare implementation partners in India</li>
+        <li>Strong campaign and marketing automation capability</li>
+      </ul></div>
+    </div>
+
+    <div class="compare-row"><div class="cell row-label">Considerations / Risks</div></div>
+    <div class="compare-row">
+      <div class="cell"><ul>
+        <li>Proposal is budgetary; detailed scope &amp; final pricing needs sign-off</li>
+        <li>CTI integration complexity depends on HMS (Ellider) API readiness</li>
+        <li>Marketing automation requires additional Customer Insights license (₹15L+)</li>
+      </ul></div>
+      <div class="cell"><ul>
+        <li><span class="hl-red">Offer expires 10 May 2026</span> — requires decision this week</li>
+        <li>Implementation cost not included — separate partner proposal required</li>
+        <li>Ellider integration effort not yet scoped</li>
+        <li>Salesforce ecosystem adds long-term vendor dependency at higher cost</li>
+      </ul></div>
+    </div>
+
+    <div class="compare-row"><div class="cell row-label">Implementation Timeline</div></div>
+    <div class="compare-row">
+      <div class="cell"><strong>12 weeks</strong> — Phase 1 (discovery, 2 wks) → Phase 2 (D365 setup, 4 wks) → Phase 3 (CTI integration, 4 wks) → Phase 4 (UAT + go-live, 2 wks)</div>
+      <div class="cell"><strong>TBD</strong> — Implementation timeline and partner to be confirmed post-licensing. No timeline committed in current proposal.</div>
+    </div>
+  </div>
+
+  <!-- COST TABLE -->
+  <div class="section-title">Commercial Comparison (Annual, excl. GST)</div>
+  <table class="cost-table">
+    <thead>
+      <tr>
+        <th>Line Item</th>
+        <th>MS Dynamics 365</th>
+        <th>Salesforce</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Core CRM licenses</td><td class="amt">₹19,96,000 (20 users)</td><td class="amt">₹19,26,000 (30 users)</td></tr>
+      <tr><td>Contact centre / AI module</td><td class="amt">₹49,000 (Power Apps, 10)</td><td class="amt">₹28,200 (Agentforce Digital)</td></tr>
+      <tr><td>Support / success plan</td><td class="amt">—</td><td class="amt">₹2,93,130 (Premier 15%)</td></tr>
+      <tr><td>Analytics / BI</td><td class="amt">₹39,000 (Power BI, opt.)</td><td class="amt">₹2,33,400 (Tableau)</td></tr>
+      <tr><td>Marketing automation</td><td class="amt">₹15,00,000 (Customer Insights, add-on)</td><td class="amt">Included in scope</td></tr>
+      <tr><td><strong>Annual recurring (core, no marketing)</strong></td><td class="hl">~₹20.5L / yr</td><td class="hl">~₹24.8L / yr</td></tr>
+      <tr><td>One-time implementation</td><td class="amt">₹10,26,000 (approx.)</td><td class="amt">TBD (partner proposal)</td></tr>
+      <tr><td>Contract term</td><td class="amt">TBD</td><td class="amt">36 months (annual billing)</td></tr>
+    </tbody>
+  </table>
+
+  <!-- DECISION FACTORS -->
+  <div class="decision-box">
+    <div class="factor-card">
+      <div class="fc-title">Factors favouring Microsoft Dynamics</div>
+      <ul>
+        <li>VPS Group already on D365 in UAE — shared licensing, group IT governance</li>
+        <li>Purpose-built doctor visit management workflow matches Lakeshore's field team model</li>
+        <li>Lower annual cost (core modules: ~₹20.5L vs ₹24.8L) and defined implementation fee</li>
+        <li>Referral revenue attribution and cold-doctor flagging are built-in, not add-ons</li>
+        <li>12-week implementation with committed timeline and phase gates</li>
+      </ul>
+    </div>
+    <div class="factor-card">
+      <div class="fc-title">Factors favouring Salesforce</div>
+      <ul>
+        <li>Agentforce GenAI for contact centre — AI-native patient query resolution</li>
+        <li>Health Cloud with native care journey and TPA workflows</li>
+        <li>Larger India healthcare partner ecosystem for implementation</li>
+        <li>Tableau provides advanced analytics capability beyond native CRM reporting</li>
+        <li><strong style="color:#C8103E">Offer expires 10 May 2026 — decision required immediately</strong></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="rec-box">
+    <div style="flex:1">
+      <div class="rec-label">Decision Note</div>
+      <p>
+        Both platforms are commercially competitive at <strong>~₹20–25L/yr</strong>. The deciding factors are: (1) <strong>Group platform alignment</strong> — VPS UAE on D365 creates a clear governance and cost advantage for Dynamics; (2) <strong>Use-case fit</strong> — the Dynamics proposal is scoped specifically around Lakeshore's 1,200-doctor visit management workflow, whereas Salesforce is broader but generic; (3) <strong>AI capability</strong> — Salesforce's Agentforce is more mature for contact-centre AI today; (4) <strong>Urgency</strong> — Salesforce offer lapses 10 May 2026. <strong>Recommended basis for decision: confirm with VPS Group IT whether D365 group licensing leverage reduces Dynamics cost materially; if yes, Dynamics is the preferred choice. If no group licensing benefit, Salesforce's AI contact-centre capability at comparable cost is compelling — but requires a partner implementation proposal before commitment.</strong>
+      </p>
+    </div>
+  </div>
+
+  <div class="footer">VPS Lakeshore Hospital &amp; Research Centre · CRM Platform Decision Brief · 1 May 2026 · Confidential — Internal Use Only</div>
+</div>
+</body>
+</html>
