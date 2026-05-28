@@ -425,7 +425,7 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
 
   <!-- Scrollable item list -->
   <div class="sb-content">
-    <div class="sb-item active" onclick="switchPanel('may31')" id="tab-may31">
+    <div class="sb-item" onclick="switchPanel('may31')" id="tab-may31">
       <span class="sb-item-icon">📄</span>
       <div class="sb-item-text">
         <div class="sb-item-date">31 May 2026</div>
@@ -433,7 +433,7 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
       </div>
       <span class="sb-badge">NEW</span>
     </div>
-    <div class="sb-item" onclick="switchPanel('may15')" id="tab-may15">
+    <div class="sb-item active" onclick="switchPanel('may15')" id="tab-may15">
       <span class="sb-item-icon">📄</span>
       <div class="sb-item-text">
         <div class="sb-item-date">15 May 2026</div>
@@ -494,9 +494,8 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
 </div>
 <div class="hdr-rule"></div>
 
-<!-- ══════════════════════════════════ PANEL: 1 APRIL 2026 ══════════════════════════════════ -->
 <!-- ═══════ PANEL: 31 MAY 2026 — LHRC/BU/2026/006 ═══════ -->
-<div class="update-panel active" id="panel-may31">
+<div class="update-panel" id="panel-may31">
 <div class="page">
   <a class="back" href="index.html">← Back to Dashboard</a>
   <div class="doc">
@@ -504,7 +503,7 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
       <div class="dateline-left">
         <div class="dateline-eyebrow">VPS Lakeshore Hospital &amp; Research Centre</div>
         <div class="dateline-week">Fortnight of 31 May 2026</div>
-        <div class="draft-banner"><strong>DRAFT</strong> — Figures represent identified potential across all workstreams and are subject to revision. This update will be finalised with confirmed actuals as implementation progresses.</div>
+        <div class="draft-banner"><strong>DRAFT</strong> — This update is a strategic briefing for Chairman review. Figures and deal structures are indicative and subject to revision.</div>
       </div>
       <div class="dateline-right">LHRC/BU/2026/006</div>
     </div>
@@ -512,189 +511,39 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
     <div class="note-label">Note Summary</div>
     <div class="note-body">
       <div style="font-style:normal;line-height:1.9;margin-bottom:4px;padding-bottom:2px;font-family:'Lora',Georgia,serif;font-size:0.82rem;font-weight:600;color:#0072BC;">
-        <span style="color:#C8103E;">AOI Round 2 bid preparation is the priority</span> this fortnight — diligence team mobilised, advisors lined up, and a recommended structure (Burjeel infuses into Lakeshore, Lakeshore acquires AOI) being readied for the Chairman's decision. The <span style="color:#C8103E;">Material Cost Optimisation programme is being structured</span> — advisor onboarding underway with quick-win categories (IV injectables, oral solids, lab consumables) sequenced for the first wave. <span style="color:#C8103E;">FY26 appraisals closed</span>; increment letters issued; PLB payout in process. <span style="color:#0072BC;">Voyon HRMS goes live on 1 June</span> — final readiness checks underway. <span style="color:#C8103E;">THB Growth Platform Phase 1 sprint greenlit</span> — integration kick-off scheduled. <span style="color:#C8103E;">KPMG ROICR Phase 1 closing</span> next week with full gap report, updated RCMs and remediation roadmap. On <span style="color:#0072BC;">Delhi PMC</span>, architect design responses being consolidated; on <span style="color:#0072BC;">Kerala</span>, first NDAs going out to four priority targets.
+        This fortnight is dedicated to <span style="color:#C8103E;">Project Nila — VPS Lakeshore's Kerala Expansion Plan</span>. A <span style="color:#C8103E;">₹2,000–2,500 Cr capital programme</span> across 11 Tier-1 targets (24 total identified) has been structured for Chairman review and approval-in-principle. The plan adds <span style="color:#C8103E;">3,500+ beds under VPS management by FY29</span>, with the primary entry vehicle being O&amp;M concessions with mission hospitals — a model PE and listed chains cannot replicate. The <span style="color:#0072BC;">24-month execution window is live</span>: the Aster–QCIL merger (NCLT approval imminent) will reset asset valuations. Full investment documentation — IC Memorandum, Investment Thesis, LBO Model, DD Checklist, IB Execution Guide, and Competitor Benchmarking — is available for review.
       </div>
       <hr class="note-div">
-      <div><strong style="font-family:'Lora',Georgia,serif;color:#0072BC;">Cost</strong> — <span style="color:#C8103E;">Material Cost Optimisation programme being structured</span> — first wave on IV injectables, oral solids and lab consumables. <span style="color:#C8103E;">FY26 appraisals closed</span>; increment letters issued; PLB payout in process. Drug formulary revision tracking <span style="color:#0072BC;">15 June</span>.</div>
-      <hr class="note-div">
-      <div><strong style="font-family:'Lora',Georgia,serif;color:#0072BC;">Revenue</strong> — <span style="color:#C8103E;">THB Phase 1 sprint greenlit</span> — integration kicking off. BD workstreams active across PR, referrals, corporate accounts. DHCN — first partner MoUs targeted by end-June.</div>
-      <hr class="note-div">
-      <div><strong style="font-family:'Lora',Georgia,serif;color:#0072BC;">Lakeshore 2.0</strong> — <span style="color:#C8103E;">Voyon HRMS go-live 1 June</span>. CRM — Salesforce contract in final negotiation. ERP — SAP pricing received, head-to-head with Oracle complete. Karkinos transition documentation being finalised.</div>
-      <hr class="note-div">
-      <div><strong style="font-family:'Lora',Georgia,serif;color:#0072BC;">Compliance</strong> — <span style="color:#C8103E;">KPMG ROICR Phase 1 closing</span> next week — gap report, updated RCMs and remediation roadmap due. Hospital Compliance Tracker May review concluded.</div>
-      <hr class="note-div">
-      <div><strong style="font-family:'Lora',Georgia,serif;color:#0072BC;">Strategic</strong> — <span style="color:#C8103E;">AOI Round 2 bid preparation</span> in motion — advisors lined up, structure recommendation ready for Chairman. <span style="color:#0072BC;">Delhi PMC</span> architect responses being consolidated. <span style="color:#0072BC;">Kerala Playbook</span> — NDAs going out to four priority targets.</div>
+      <div><strong style="font-family:'Lora',Georgia,serif;color:#0072BC;">Strategic</strong> — <span style="color:#C8103E;">Project Nila approved-in-principle sought</span> — ₹2,000–2,500 Cr envelope, 11 Tier-1 targets, 24-month execution. O&amp;M concession pipeline: 5 mission hospitals, 3,043 beds (Lourdes, Caritas, Lisie, Pushpagiri, Believers). Brownfield acquisition pipeline: 6 targets (SUT Royal, Bharath, MIMS, Valluvanad, KIMS Kochi, Western). Greenfield: 2 sites (Palakkad, Kannur). Capital-light O&amp;M model generates &gt;60% ROIC vs 22–28% for full acquisitions.</div>
     </div>
 
     <hr class="rule-heavy page-break-after">
 
-    <div class="section">
-      <div class="sec-title">1. Cost Rationalisation</div>
-
-      <div class="sub-section" style="margin-top:0; padding-top:0; border-top:none;">
-        <div class="sub-sec-title">Material Cost Optimisation — Programme Being Structured</div>
-        <ul class="sec-pts">
-          <li><strong>Advisor onboarding in progress</strong> — the proposal received on 14 May is being structured into an execution programme. First-wave categories selected: <strong>IV injectables, oral solids and lab consumables</strong> — these carry the largest quick-win potential (15–50% margin expansion).</li>
-          <li><strong>Sequencing</strong> — Wave 1 (IV injectables, oral solids, lab consumables) to start in June; Wave 2 (consumables &amp; implants) to follow in July; Wave 3 (full formulary revision) to align with the 15 June drug formulary cycle.</li>
-          <li><strong>Governance</strong> — weekly steerco with Group CEO, CFO, COO and Pharmacy / Materials heads. Savings tracked monthly against the ₹23–25 Cr FY26 target.</li>
-        </ul>
-        <div class="dl-links" style="margin-top:8px;">
-          <a class="dl-link" href="Weekly%20update/15th%20May/VPS_Lakeshore_Material_Cost_Optimization.pptx" download>↓ Material Cost Optimisation — Proposal (.pptx)</a>
-        </div>
-      </div>
-
-      <div class="sub-section">
-        <div class="sub-sec-title">FY26 Appraisals &amp; PLB — Closed</div>
-        <ul class="sec-pts">
-          <li><strong>FY26 appraisals closed.</strong> Increment letters issued across departments. PLB payout (Grade A: 10%, Grade B: 15%) in process — payroll-system loading expected end-May.</li>
-          <li><strong>Within DOP envelope</strong> — non-KMP payroll increase contained within the +5% Board-approved outlay.</li>
-        </ul>
-      </div>
-
-      <div class="sub-section">
-        <div class="sub-sec-title">Drug Formulary Revision — 15 June</div>
-        <ul class="sec-pts">
-          <li><strong>On track for 15 June.</strong> Branded-vs-generic mix, supplier panel and consumption analytics now compiled. Formulary committee schedule confirmed; revisions will sequence with Wave 1 of the Material Cost programme.</li>
-        </ul>
-      </div>
-
-      <div class="sub-section">
-        <div class="sub-sec-title">AOP — April Close &amp; BRM</div>
-        <ul class="sec-pts">
-          <li><strong>April BRM concluded.</strong> Department-level variance read tabled with initiative-level commentary. First adjustments to initiative pacing flowed into the May plan; full reconciliation to be summarised at the next Board update.</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="section">
-      <div class="sec-title">2. Revenue Enhancement</div>
-
-      <div class="sub-section" style="margin-top:0; padding-top:0; border-top:none;">
-        <div class="sub-sec-title">THB Growth Platform — Phase 1 Sprint Greenlit</div>
-        <ul class="sec-pts">
-          <li><strong>Decision taken — Phase 1 sprint greenlit</strong> at ₹33 L for 6 months. THB integration team mobilising; Lakeshore-side workstream sponsor and counterparts being assigned.</li>
-          <li><strong>Phase 1 scope confirmed</strong>:
-            <ul style="margin-top:4px;margin-bottom:6px;padding-left:18px;">
-              <li><strong>Patient Engagement</strong> — pilot on three chronic conditions (CLD, CKD, cardiology); winback nudges across WhatsApp, SMS and voice.</li>
-              <li><strong>Care Coordinator</strong> — 3–5 coordinators across 2 priority departments (Oncology and Gastro); OP→IP conversion and post-consult follow-up.</li>
-            </ul>
-          </li>
-          <li><strong>Timeline</strong> — Month 1 integration; live engagement from Month 2; mid-Phase review at Month 5 to take the Phase 2 scale-up decision.</li>
-        </ul>
-        <div class="dl-links" style="margin-top:8px;">
-          <a class="dl-link" href="#" onclick="return openDocViewer('Weekly%20update/15th%20May/THB_Growth_Platform_Proposal.pdf','THB Growth Platform — Proposal for VPS Lakeshore')">↗ THB Growth Platform — Proposal (.pdf)</a>
-        </div>
-      </div>
-
-      <div class="sub-section">
-        <div class="sub-sec-title">BD Organisation — Two Weeks In</div>
-        <ul class="sec-pts">
-          <li><strong>Workstreams active.</strong> Referral pathway map drafted (covering ~300 referring doctors); dormant corporate accounts list compiled with re-activation calls scheduled; PR and Communications calendar for June approved.</li>
-          <li><strong>MVT Management</strong> — selected candidate joining International Patients' Programme in early June.</li>
-        </ul>
-      </div>
-
-      <div class="sub-section">
-        <div class="sub-sec-title">DHCN — Partner Outreach</div>
-        <ul class="sec-pts">
-          <li><strong>First MoUs targeted by end-June.</strong> Two partner sites in advanced discussions in Ernakulam-east and Thrissur; site visits and management meetings completed. Term-sheet template finalised.</li>
-        </ul>
-      </div>
-
-      <div class="sub-section">
-        <div class="sub-sec-title">Research Vertical — Launch</div>
-        <ul class="sec-pts">
-          <li><strong>Clinician townhall held</strong> — research cadre identified across Oncology, Gastro, Cardiology and Neuro. CTRI enrolment under way to attract pharma-sponsored studies.</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="section">
-      <div class="sec-title">3. Lakeshore 2.0</div>
-
-      <div class="sub-section" style="margin-top:0; padding-top:0; border-top:none;">
-        <div class="sub-sec-title">Voyon HRMS — 1 June Go-Live</div>
-        <ul class="sec-pts">
-          <li><strong>Go-live next week.</strong> Final readiness check underway — payroll parallel run successful; department head training closed; Primato cut-over plan signed off. Helpdesk and floor-walker support in place for the first two weeks post go-live.</li>
-        </ul>
-      </div>
-
-      <div class="sub-section">
-        <div class="sub-sec-title">CRM &amp; ERP — Closing Out Selection</div>
-        <ul class="sec-pts">
-          <li><strong>Salesforce Health Cloud (CRM)</strong> — final pricing negotiation closing this week. Implementation partner shortlisted. Ellider integration scope agreed with the vendor.</li>
-          <li><strong>SAP S/4HANA (ERP)</strong> — SAP pricing now received and benchmarked against Oracle's offer. Recommendation memo being prepared for Chairman / Board sign-off. Group licensing leverage and Burjeel integration remain the decisive case.</li>
-        </ul>
-      </div>
-
-      <div class="sub-section">
-        <div class="sub-sec-title">Karkinos Lab &amp; One Dx</div>
-        <ul class="sec-pts">
-          <li><strong>Transition documentation being finalised.</strong> Business transfer terms agreed in principle; equipment retention vs One Dx transfer list locked. STAT lab scope at Lakeshore and billing-control architecture for non-STAT volumes documented.</li>
-        </ul>
-      </div>
-
-      <div class="sub-section">
-        <div class="sub-sec-title">Group CEO DOP — In Operation</div>
-        <ul class="sec-pts">
-          <li><strong>First vendor renegotiations under DOP underway</strong> — housekeeping, security and biomedical maintenance contracts being repriced. Pharmacy and consumables vendor panel review begins next week as input into the Material Cost programme.</li>
-        </ul>
-        <div class="dl-links" style="margin-top:8px;">
-          <a class="dl-link" href="#" onclick="return openDocViewer('Weekly%20update/15th%20May/Group_CEO_Delegation_of_Powers.pdf','Group CEO Delegation of Powers — 31 March 2026')">↗ Group CEO Delegation of Powers (.pdf)</a>
-        </div>
-      </div>
-    </div>
-
-    <div class="section">
-      <div class="sec-title">4. Compliance</div>
-
-      <div class="sub-section" style="margin-top:0; padding-top:0; border-top:none;">
-        <div class="sub-sec-title">KPMG ROICR — Phase 1 Closing</div>
-        <ul class="sec-pts">
-          <li><strong>Phase 1 closes next week.</strong> KPMG to deliver the full gap report, updated Risk Control Matrices and a high-level remediation roadmap covering all five Phase 1 domains (Materials &amp; Stores, HR, Cost Accounting, Revenue &amp; Receivables, Data Governance &amp; Controls).</li>
-          <li><strong>Remediation</strong> will be staged through CIO (Master Data, HIS access controls), Finance Controller (Revenue &amp; Receivables) and Material Manager (PO / GRN controls). Workstream owners and timelines to be set on receipt of the roadmap.</li>
-          <li><strong>Phase 2 scope</strong> — KPMG to recommend the deep-dive set after Phase 1 closure; decision on Phase 2 commissioning will follow.</li>
-        </ul>
-        <div class="dl-links" style="margin-top:8px;">
-          <a class="dl-link" href="#" onclick="return openDocViewer('Weekly%20update/15th%20May/KPMG_ROICR_Status_Update_14May2026.pptx','KPMG ROICR — Status Update 14 May 2026')">↗ KPMG ROICR — Status Update (14 May) (.pptx)</a>
-        </div>
-      </div>
-
-      <div class="sub-section">
-        <div class="sub-sec-title">Hospital Compliance Tracker</div>
-        <ul class="sec-pts">
-          <li><strong>May compliance review concluded.</strong> No new major non-compliances. CIO has begun loading Data Privacy and IT particulars; Crèche reinstatement on track; Transplant licence renewal being progressed by Executive Office.</li>
-        </ul>
-      </div>
-
-      <div class="sub-section">
-        <div class="sub-sec-title">Internal Audit Closure</div>
-        <ul class="sec-pts">
-          <li><strong>Closure cadence on track.</strong> Of the 30 remaining actions from the April baseline, roughly half are slated for closure by end-June; balance to close through July with the support of the KPMG remediation roadmap.</li>
-        </ul>
-      </div>
-    </div>
-
-    <hr class="rule-heavy">
-
     <div class="commentary-label">Strategic Note</div>
-    <div class="commentary-hed">AOI Round 2 — Preparing the Bid</div>
-    <div class="commentary-para">Round 2 of the AOI process opens shortly and the focus of this fortnight has been to <strong>get Lakeshore bid-ready</strong>. Three workstreams are running in parallel. <strong>Commercial diligence</strong> — independent validation of A&amp;M's revenue and EBITDA trajectory, centre-level P&amp;L, SIS partner contract review (change-of-control, exclusivity, revenue-share), and a bridge from the 2019 $283M valuation to today's ~$170M to understand why the business has not compounded. <strong>Clinical and operational diligence</strong> — modality mix shift potential (currently 62/25/13 med/rad/surg, target 50/35/15), LINAC utilisation (~25% today, target 50%+), and clinical-leadership retention at the Hyderabad and North India clusters. <strong>Integration and divestiture</strong> — packaging Nagpur, Raipur, Imphal and Colombo as integrated onco-diagnostics units for divestiture to offset the cheque.</div>
-    <div class="commentary-para"><strong>The recommended structure</strong> — Burjeel infuses ~₹900–1,000 Cr of primary equity into VPS Lakeshore, and Lakeshore in turn acquires AOI. This keeps the India oncology platform under a single identifiable hub, gives a cleaner FDI / CCI path than a new SPV, and uses Lakeshore's existing operating capabilities to absorb AOI. Total Burjeel commitment is <strong>~₹2,100–2,400 Cr</strong> across acquisition consideration (~₹900–1,000 Cr net), Year 1–3 ramp and integration capital (~₹250–400 Cr), and the Lakeshore primary infusion (~₹1,000 Cr). A short Board paper laying out the structure, valuation, network logic, risks and ask is being prepared for Chairman review.</div>
-    <div class="commentary-para"><strong>Other strategic items.</strong> On <strong>Delhi PMC</strong>, three architects have submitted design responses against the concept brief; consolidated review and shortlisting underway with Dr. Alok and Dr. Khaled Musallam continuing to advise on the clinical programme. The <strong>Kerala Playbook</strong> is moving from strategy to execution — NDAs are going out to four Priority-1 targets (Renai, Sunrise, Indo-American, Mother) and Synod-level engagement on the mission O&amp;M track has begun. The <strong>Jaipur 200-bed concept</strong> and <strong>Kota Cancer Hospital DPR</strong> remain available for Chairman discussion at the appropriate moment.</div>
+    <div class="commentary-hed">Project Nila — Building Kerala's Dominant Healthcare Network</div>
+    <div class="commentary-para">Kerala's private hospital market is entering its consolidation decade. The <strong>Aster–QCIL merger</strong> (CCI cleared April 2025, 96.68% shareholder vote March 2026, NCLT approval imminent) will create Aster DM Quality Care Limited — 39 hospitals, 10,625+ beds nationally. This is a structural repricing event. VPS Lakeshore has a <strong>24-month window</strong> to build a multi-district network before valuations converge with pan-India chain multiples. The programme, named <strong>Project Nila</strong> after Bharatapuzha — the river at the heart of Kerala — deploys a <strong>₹2,000–2,500 Cr capital envelope</strong> across 11 Tier-1 hospital targets, adding <strong>3,500+ beds under VPS management</strong> and crossing 5,000 Kerala beds by FY29.</div>
+    <div class="commentary-para"><strong>The O&amp;M Concession model is the strategic differentiator.</strong> Mission hospitals (Catholic dioceses, Orthodox churches, charitable trusts — 2,300+ beds across Lourdes, Caritas, Lisie, Pushpagiri, Believers) are constitutionally barred from selling equity. Their founding deeds prohibit asset transfer. No PE fund and no listed chain can access them. The O&amp;M concession — under which VPS assumes full operational control for a 15–25 year term without acquiring equity or real estate — is the only model that provides the capital and management capability these hospitals need while preserving ownership, religious character, and community identity. VPS earns a <strong>5–8% management fee on gross revenue from Month 1</strong>, plus a performance share above an EBITDA threshold. Because no control premium is paid, <strong>ROIC exceeds 60%</strong> — materially above the 22–28% equity IRR from full acquisitions. VPS commits ₹50–200 Cr in modernisation capex per partner, secured against the concession term.</div>
+    <div class="commentary-para"><strong>The 11 Tier-1 targets</strong> span five priority districts and three deal structures. The O&amp;M concession pipeline leads with <strong>Lisie Hospital (CMI, Ernakulam — 1,500+ beds)</strong> as the anchor partnership, alongside Lourdes Kochi (600 beds), Caritas Kottayam (700 beds), Pushpagiri Tiruvalla (700 beds), and Believers Church Medical College (743 beds) — a combined 4,243 beds. The brownfield acquisition pipeline includes <strong>SUT Royal / TIHSL (Thiruvananthapuram, 350 beds)</strong>, Bharath Hospital Kottayam (restrucutred as O&amp;M given charitable society status), MIMS Kozhikode, Valluvanad Hospital Palakkad, KIMS Kochi, and Western Hospital Thrissur. Two greenfield sites — Palakkad and Kannur — anchor the northern coverage. The operating thesis is <strong>utilisation-led, not capex-led</strong>: target hospitals run at 55–75% occupancy with 10–14% EBITDA margins. VPS's operating system — specialist case-mix upgrade, clinical protocols, ARPP management — drives them to 24–28% EBITDA by Year 3.</div>
+    <div class="commentary-para"><strong>Approvals sought</strong> — (1) approval-in-principle for the Project Nila capital programme (₹2,000–2,500 Cr over 24 months); (2) authorisation to initiate formal engagement with the five O&amp;M concession targets at Archbishop / Provincial Superior / Bishop level; (3) internal investment committee mandate to progress brownfield due diligence on the top-3 acquisition targets. Full documentation — IC Memorandum, Investment Thesis, LBO Model, DD Checklist, IB Execution Guide, Network Architecture, and Competitor Benchmarking — is attached for review.</div>
     <div class="dl-links" style="margin-top:12px;">
-      <a class="dl-link" href="#" onclick="return openDocViewer('Weekly%20update/15th%20May/AOI_AcquisitionNote_May26.pdf','AOI Acquisition Note — May 2026')">↗ AOI Acquisition Note (.pdf)</a>
-      <a class="dl-link" href="#" onclick="return openDocViewer('Weekly%20update/15th%20May/Kerala_Expansion_Playbook_v4.pdf','Kerala Expansion Playbook v4')">↗ Kerala Expansion Playbook (.pdf)</a>
-      <a class="dl-link" href="#" onclick="return openDocViewer('Weekly%20update/15th%20May/Jaipur_Concept_Note_May26.pdf','Jaipur 200-bed Superspeciality Concept Note')">↗ Jaipur Concept Note (.pdf)</a>
-      <a class="dl-link" href="#" onclick="return openDocViewer('Weekly%20update/15th%20May/IIMS_Kota_Cancer_Hospital_DPR.pdf','IIMS Kota Cancer Hospital — Detailed Project Report')">↗ Kota Cancer Hospital DPR (.pdf)</a>
+      <a class="dl-link" href="#" onclick="return openDocViewer('Weekly%20update/31st%20May/Kerala%20Growth%20Plans/VPS_Kerala_IC_Memorandum_v7.docx','Project Nila — IC Memorandum v7')">↗ IC Memorandum (.docx)</a>
+      <a class="dl-link" href="#" onclick="return openDocViewer('Weekly%20update/31st%20May/Kerala%20Growth%20Plans/VPS_Kerala_Investment_Thesis_v7.docx','Project Nila — Investment Thesis v7')">↗ Investment Thesis (.docx)</a>
+      <a class="dl-link" href="Weekly%20update/31st%20May/Kerala%20Growth%20Plans/VPS_Kerala_LBO_Model_v7.xlsx" download>↓ LBO Model (.xlsx)</a>
+      <a class="dl-link" href="Weekly%20update/31st%20May/Kerala%20Growth%20Plans/VPS_Kerala_DD_Checklist_v7.xlsx" download>↓ DD Checklist (.xlsx)</a>
+      <a class="dl-link" href="#" onclick="return openDocViewer('Weekly%20update/31st%20May/Kerala%20Growth%20Plans/VPS_Kerala_IB_Execution_Guide_v7.docx','Project Nila — IB Execution Guide v7')">↗ IB Execution Guide (.docx)</a>
+      <a class="dl-link" href="#" onclick="return openDocViewer('Weekly%20update/31st%20May/Kerala%20Growth%20Plans/VPS_Network_Architecture_v7.docx','Project Nila — Network Architecture v7')">↗ Network Architecture (.docx)</a>
+      <a class="dl-link" href="#" onclick="return openDocViewer('Weekly%20update/31st%20May/Kerala%20Growth%20Plans/VPS_Kerala_Chairman_Brief_v7.docx','Project Nila — Chairman Brief v7')">↗ Chairman Brief (.docx)</a>
+      <a class="dl-link" href="#" onclick="return openDocViewer('Weekly%20update/31st%20May/Kerala%20Growth%20Plans/VPS_Lakeshore_Competitor_Benchmarking_2025.pdf','VPS Lakeshore Competitor Benchmarking 2025')">↗ Competitor Benchmarking (.pdf)</a>
+      <a class="dl-link" href="#" onclick="return openDocViewer('Weekly%20update/31st%20May/Kerala%20Expansion%20Playbook%20%E2%80%94%20VPS%20Lakeshore.pdf','Kerala Expansion Playbook — VPS Lakeshore')">↗ Kerala Expansion Playbook (.pdf)</a>
     </div>
 
   </div><!-- /doc -->
 </div><!-- /page -->
 </div><!-- /panel-may31 -->
 
+<!-- ══════════════════════════════════ PANEL: 1 APRIL 2026 ══════════════════════════════════ -->
 <!-- ═══════ PANEL: 15 MAY 2026 — LHRC/BU/2026/005 ═══════ -->
-<div class="update-panel" id="panel-may15">
+<div class="update-panel active" id="panel-may15">
 <div class="page">
   <a class="back" href="index.html">← Back to Dashboard</a>
   <div class="doc">
@@ -710,7 +559,7 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
     <div class="note-label">Note Summary</div>
     <div class="note-body">
       <div style="font-style:normal;line-height:1.9;margin-bottom:4px;padding-bottom:2px;font-family:'Lora',Georgia,serif;font-size:0.82rem;font-weight:600;color:#0072BC;">
-        The <span style="color:#C8103E;">AOI acquisition opportunity</span> is the headline this fortnight — A&amp;M-run process, five bidders in Round 2, a ~₹1,400–1,600 Cr ticket for 100% equity, with Lakeshore proposed as the acquiring vehicle. A <span style="color:#C8103E;">Material Cost Optimisation proposal</span> has been received — <span style="color:#C8103E;">4–5 p.p. EBITDA upside</span> (~₹28–32 Cr FY27 impact) across pharmacy and consumables. The <span style="color:#0072BC;">Group CEO Delegation of Powers has been issued</span> by the Board (Resolution No. 12, 5 March 2026), effective <span style="color:#C8103E;">31 March 2026</span>. <span style="color:#C8103E;">THB Growth Platform proposal received</span> — AI-led Patient Engagement and Care Coordinator modules; 6-month Phase 1 sprint at ₹33 L. <span style="color:#C8103E;">KPMG Phase 1 status</span> (14 May) flags data quality gaps across Master Data, Revenue &amp; Receivables, and Material &amp; Stores. On strategic items, <span style="color:#C8103E;">Delhi PMC</span> floor plans are in for review; the <span style="color:#0072BC;">Kerala Playbook</span>, <span style="color:#0072BC;">Jaipur 200-bed concept</span>, and <span style="color:#0072BC;">Kota cancer hospital DPR</span> are ready for Chairman review.
+        The fortnight has been defined by the <span style="color:#C8103E;">AOI acquisition opportunity</span> — A&amp;M-run process, five bidders in Round 2, a ~₹1,400–1,600 Cr ticket for 100% equity, with the network play built around Lakeshore as the India hub. A separate, equally consequential workstream is the <span style="color:#C8103E;">Material Cost Optimisation proposal</span> sized at <span style="color:#C8103E;">4–5 p.p. of EBITDA</span> (~₹28–32 Cr FY27 impact) across pharmacy and consumables — proposal under review. The <span style="color:#0072BC;">Group CEO Delegation of Powers has been formally issued</span> by the Board (Resolution No. 12, 5 March 2026) effective <span style="color:#C8103E;">31 March 2026</span>, empowering Mr. Abhishek Poduri to drive procurement, HR, revenue, and cost initiatives within defined limits. <span style="color:#C8103E;">THB Growth Platform proposal received</span> — AI-led Patient Engagement and Care Coordinator modules; 6-month Phase 1 sprint at ₹33 L. <span style="color:#C8103E;">KPMG Phase 1 status</span> (14 May) surfaces data quality gaps across Master Data, Revenue &amp; Receivables, and Material &amp; Stores. On the <span style="color:#C8103E;">Delhi PMC</span>, building floor plans received and under review; on the Kerala expansion, a structured <span style="color:#0072BC;">2,000–2,500 Cr Playbook</span> has been drafted for Chairman review; <span style="color:#0072BC;">Jaipur 200-bed concept</span> and <span style="color:#0072BC;">Kota cancer hospital DPR</span> have been compiled for review.
       </div>
       <hr class="note-div">
       <div><strong style="font-family:'Lora',Georgia,serif;color:#0072BC;">Cost</strong> — <span style="color:#C8103E;">Material Cost Optimisation proposal under review</span> — 4–5 p.p. EBITDA upside (~₹28–32 Cr FY27). FY26 PLB appraisals tracking to <span style="color:#C8103E;">15 May</span> close; increment letters next. Pharma margin review continuing — drug formulary revision targeted 15 June.</div>
@@ -730,12 +579,11 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
       <div class="sec-title">1. Cost Rationalisation</div>
 
       <div class="sub-section" style="margin-top:0; padding-top:0; border-top:none;">
-        <div class="sub-sec-title">Material Cost Optimisation — Proposal Received</div>
+        <div class="sub-sec-title">Material Cost Optimisation — Pioneering Programme</div>
         <ul class="sec-pts">
-          <li><strong>Identified upside of 4–5 p.p. on EBITDA margin.</strong> Material cost base — pharmacy ~₹64 Cr + consumables &amp; implants ~₹63 Cr = <strong>~₹127 Cr in FY26</strong>, growing to ₹150–160 Cr in FY27. Expected savings: <strong style="color:#C8103E;">~₹23–25 Cr in FY26</strong> and <strong style="color:#C8103E;">~₹28–32 Cr in FY27</strong>.</li>
-          <li><strong>Six levers</strong> — same-brand negotiation, substitutions, white labelling, consumption optimisation, payment-term optimisation, de-specification.</li>
-          <li><strong>Quick wins identified</strong> — IV injectables (15–17% cost reduction), oral solids (30–50% margin expansion), lab consumables (25–50%), general consumables (~30%).</li>
-          <li><strong>Approach</strong> — multi-month programme; start with the quick-win categories above and widen to the full formulary and consumables panel.</li>
+          <li><strong>Proposal under review — 4–5 p.p. of EBITDA upside</strong>. The material cost base — pharmacy (~₹64 Cr FY26) and consumables &amp; implants (~₹63 Cr FY26) — totals <strong>~₹127 Cr</strong>, projected to grow to <strong>₹150–160 Cr</strong> in FY27 against the ₹575 Cr revenue plan. Identified impact is <strong style="color:#C8103E;">~₹23–25 Cr in FY26</strong> and <strong style="color:#C8103E;">~₹28–32 Cr in FY27</strong> — equivalent to a 4–5 percentage point lift in EBITDA margin.</li>
+          <li><strong>Six levers</strong> identified — same-brand negotiation, substitutions, white labelling, consumption optimisation, payment-term optimisation, and de-specification. Pharmacy levers concentrated on IV injectables (15–17% cost reduction), oral solids (30–50% margin expansion), liquids &amp; creams (10–30%); consumables levers on lab consumables (25–50% margin expansion) and general consumables (~30%).</li>
+          <li><strong>Approach is a multi-month, item-by-item programme</strong> — opening with quick-win categories (IV injectables, oral solids, lab consumables) and progressively widening to the full formulary and consumables panel.</li>
         </ul>
         <div class="dl-links" style="margin-top:8px;">
           <a class="dl-link" href="Weekly%20update/15th%20May/VPS_Lakeshore_Material_Cost_Optimization.pptx" download>↓ Material Cost Optimisation — Proposal (.pptx)</a>
@@ -768,16 +616,16 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
       <div class="sec-title">2. Revenue Enhancement</div>
 
       <div class="sub-section" style="margin-top:0; padding-top:0; border-top:none;">
-        <div class="sub-sec-title">THB Growth Platform — Proposal Received</div>
+        <div class="sub-sec-title">THB Growth Platform — AI-led Patient Engagement &amp; Conversion</div>
         <ul class="sec-pts">
-          <li><strong>Proposal from THB Group</strong> — a healthcare-specialised AI growth platform already deployed at Mediclinic, Aster, Medanta, Max, Prime Healthcare and Metro Pacific. Comparable results: <strong>18–20% incremental revenue</strong> at Aster GCC, <strong>₹15 Cr win-back</strong> of chronic patients at a North India Top-5 chain, <strong>~80% lift in admissions and CT scans</strong> at a West India hospital.</li>
-          <li><strong>Two modules proposed for Phase 1</strong>:
+          <li><strong>Proposal received from THB Group</strong> — a healthcare-specialised AI Growth Platform deployed across Mediclinic, Aster, Medanta, Max, Prime Healthcare, Metro Pacific and others. THB's track record on comparable engagements: <strong>18–20% incremental revenue</strong> at Aster GCC (~AED 21M/quarter); <strong>₹15 Cr win-back</strong> from lost chronic patients at a North India Top-5 chain; <strong>~80% lift in admissions and CT scans</strong> at a West India hospital via the Counsellor App.</li>
+          <li><strong>Two focus modules for Lakeshore Phase 1</strong>:
             <ul style="margin-top:4px;margin-bottom:6px;padding-left:18px;">
-              <li><strong>Patient Engagement</strong> — automated WhatsApp / SMS / voice nudges to win back chronic patients (CLD, CKD, cardiology) who have not visited in 6–12 months.</li>
-              <li><strong>Care Coordinator</strong> — counsellor app for 3–5 coordinators across 1–2 departments to convert OP → IP and capture Radiology / Dx / Rx leakage.</li>
+              <li><strong>Patient Engagement Module</strong> — automated, AI-driven win-back nudges across WhatsApp, SMS and voice channels for chronic patients (CLD, CKD, cardiology to start) who have not visited Lakeshore in 6–12 months.</li>
+              <li><strong>Care Coordinator Module</strong> — counsellor app for 3–5 coordinators across 1–2 priority departments to convert OP → IP, capture Radiology / Dx / Rx leakage, and structure post-consult follow-up.</li>
             </ul>
           </li>
-          <li><strong>Phase 1 commercials — ₹33 L for 6 months</strong> (1 month integration + 5 months live, ₹5.5 L/month). Phase 2 scale-up from month 7 at ₹12.5 L/month plus one-time ₹10 L configuration. Decision sought to greenlight the sprint.</li>
+          <li><strong>Phase 1 sprint — 6 months, ₹33 L total commercials</strong> — 1 month integration + 5 months live engagement. ₹5.5 L/month all-in for both modules. Scale-up (Phase 2) starts month 7 with broader department/condition coverage at ₹12.5 L/month plus one-time ₹10 L configuration. Decision sought to greenlight the Phase 1 sprint.</li>
         </ul>
         <div class="dl-links" style="margin-top:8px;">
           <a class="dl-link" href="#" onclick="return openDocViewer('Weekly%20update/15th%20May/THB_Growth_Platform_Proposal.pdf','THB Growth Platform — Proposal for VPS Lakeshore')">↗ THB Growth Platform — Proposal (.pdf)</a>
@@ -803,21 +651,11 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
       <div class="sec-title">3. Lakeshore 2.0</div>
 
       <div class="sub-section" style="margin-top:0; padding-top:0; border-top:none;">
-        <div class="sub-sec-title">Group CEO Delegation of Powers — Issued</div>
+        <div class="sub-sec-title">Group CEO Delegation of Powers — Formally Issued</div>
         <ul class="sec-pts">
-          <li><strong>Board Resolution No. 12 (5 March 2026)</strong> and DOP document executed by the Managing Director on <strong>31 March 2026</strong>. Mr. Abhishek Poduri, Group CEO, is now formally empowered to lead revenue growth, cost optimisation and business improvement, subject to the approved Annual Budget and Board resolutions. DOP reviewed half-yearly.</li>
-          <li><strong>Key authority bands</strong>:
-            <ul style="margin-top:4px;margin-bottom:6px;padding-left:18px;">
-              <li>Operational POs up to <strong>₹25 L</strong> per order</li>
-              <li>Civil &amp; maintenance contracts up to <strong>₹50 L</strong> per contract</li>
-              <li>HIS / EMR / LIS / PACS procurement up to <strong>₹50 L</strong></li>
-              <li>Clinical consultant fees up to <strong>₹10 L/month</strong>; external advisors up to <strong>₹25 L</strong> per engagement</li>
-              <li>Tariff revisions within <strong>+30% / -15%</strong> of Board-approved tariff; patient bill discounts up to <strong>10%</strong></li>
-              <li>Vendor renegotiation, outsourcing, departmental rationalisation, non-KMP salary restructuring — within annual outlay</li>
-              <li>Sub-delegation to department and unit heads permitted within GCEO's own limits</li>
-            </ul>
-          </li>
-          <li><strong>Impact</strong> — vendor renegotiation, formulary changes, tariff implementation, outreach agreements and consultant engagement can now run on a regular operating cadence without separate Board approval.</li>
+          <li><strong>Board Resolution No. 12 (5 March 2026)</strong> authorising delegation, with the DOP document executed by the Managing Director on <strong>31 March 2026</strong>. Mr. Abhishek Poduri, Group CEO, is now formally empowered to lead business improvement, revenue growth and cost optimisation, subject to the approved Annual Budget, Board resolutions, and applicable law. The DOP will be reviewed half-yearly or as directed by the Board.</li>
+          <li><strong>Key authority bands</strong> — operational purchase orders to <strong>₹25 L per order</strong>; civil &amp; maintenance contracts to <strong>₹50 L per contract</strong>; HIS / EMR / LIS / PACS procurement to <strong>₹50 L</strong>; clinical consultant fees to <strong>₹10 L/month</strong>; external advisors to <strong>₹25 L per engagement</strong>; patient bill discounts to <strong>10% per bill</strong>; tariff revisions within <strong>+30%/-15%</strong> of Board-approved tariff; non-KMP headcount and salary restructuring within the annual outlay; vendor renegotiation, outsourcing and departmental rationalisation authority granted. Sub-delegation to department and unit heads permitted within the GCEO's own limits.</li>
+          <li><strong>Operational impact</strong> — the DOP unblocks the next layer of cost and revenue initiatives that had been awaiting formal authority — vendor renegotiation, formulary changes, tariff implementation, outreach agreements, and consultant engagement structuring can now run on a regular operating cadence.</li>
         </ul>
         <div class="dl-links" style="margin-top:8px;">
           <a class="dl-link" href="#" onclick="return openDocViewer('Weekly%20update/15th%20May/Group_CEO_Delegation_of_Powers.pdf','Group CEO Delegation of Powers — 31 March 2026')">↗ Group CEO Delegation of Powers (.pdf)</a>
@@ -845,6 +683,16 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
           <li><strong>Next phase of due diligence underway</strong> — equipment retention vs transfer-to-One Dx decisions being finalised against the fixed assets register. Transition plan, STAT-lab scope at Lakeshore, and billing-control architecture for non-STAT volumes being documented.</li>
         </ul>
       </div>
+
+      <div class="sub-section">
+        <div class="sub-sec-title">Scheme of Administration — Executed &amp; Effective 20 May 2026</div>
+        <ul class="sec-pts">
+          <li><strong>SOA formally executed and DocuSigned</strong> — the Scheme of Administration governing internal governance, authority delegation, and operating protocols is now in force effective <strong>20 May 2026</strong>. The document establishes the structural framework within which the Group CEO DOP (issued 31 March 2026) operates at departmental and unit level.</li>
+        </ul>
+        <div class="dl-links" style="margin-top:8px;">
+          <a class="dl-link" href="#" onclick="return openDocViewer('Weekly%20update/15th%20May/Complete_with_Docusign_SOA_wef20052026.pdf','Scheme of Administration — Effective 20 May 2026')">↗ Scheme of Administration (.pdf)</a>
+        </div>
+      </div>
     </div>
 
     <div class="section">
@@ -853,11 +701,11 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
       <div class="sub-section" style="margin-top:0; padding-top:0; border-top:none;">
         <div class="sub-sec-title">KPMG ROICR — Phase 1 Status (14 May)</div>
         <ul class="sec-pts">
-          <li><strong>Phase 1 fieldwork in progress.</strong> KPMG tabled a status update on 14 May. Early findings concentrated in three areas:</li>
-          <li><strong>Master Data Management</strong> — asset register has duplicate / missing serial numbers and incomplete custodian and location fields. Employee master has missing PAN / National ID, cases of "reporting manager = employee", and lapsed contracts with payroll still running. Item master shows the same item under multiple categories and items flagged as both consumable and asset.</li>
-          <li><strong>Revenue &amp; Receivables</strong> — duplicate bill numbers; missing admission number, dates, service code, company, room and bed on many IP records; a single shared HIS ID used to approve refunds and IP bill cancellations — accountability risk.</li>
-          <li><strong>Material &amp; Stores</strong> — same PO numbers across multiple vendors; open POs past validity; same GRN numbers used across vendors.</li>
-          <li><strong>Next step</strong> — KPMG to deliver the full gap report, updated RCMs and remediation roadmap at the end of the 4-week exercise. Remediation will run through CIO, Finance Controller and Material Manager workstreams.</li>
+          <li><strong>KPMG status update tabled on 14 May 2026</strong> — Phase 1 of the 4-week ROICR exercise is in active fieldwork, with early findings concentrated in three areas:</li>
+          <li><strong>Master Data Management</strong> — duplicate and missing serial numbers in the asset register; custodian and location fields incomplete; quantity / cost / capitalisation / useful-life / depreciation fields inconsistently captured. Employee master: missing PAN/National ID, reporting-manager-equals-employee instances, lapsed contract/training dates with payroll continuing (March 2026 examples). Item master: same items multi-categorised, items flagged as both consumable and asset.</li>
+          <li><strong>Revenue &amp; Receivables</strong> — duplicate bill numbers; missing admission number, admission date, discharge date, service code, company name, room category and bed number on multiple IP records; common HIS ID being used for refund and IP bill cancellation approvals — accountability and audit trail risk.</li>
+          <li><strong>Material &amp; Stores</strong> — same PO number assigned to multiple vendors; open POs with expired validity; same GRN numbers used across vendors.</li>
+          <li><strong>Next step</strong> — KPMG to complete the gap report, updated RCMs and remediation roadmap at the end of the 4-week exercise. Issues above will be staged for remediation through CIO, Finance Controller and Material Manager workstreams.</li>
         </ul>
         <div class="dl-links" style="margin-top:8px;">
           <a class="dl-link" href="#" onclick="return openDocViewer('Weekly%20update/15th%20May/KPMG_ROICR_Status_Update_14May2026.pptx','KPMG ROICR — Status Update 14 May 2026')">↗ KPMG ROICR — Status Update (.pptx)</a>
@@ -879,14 +727,29 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
       </div>
     </div>
 
+    <div class="section">
+      <div class="sec-title">5. OT Audit</div>
+
+      <div class="sub-section" style="margin-top:0; padding-top:0; border-top:none;">
+        <div class="sub-sec-title">Operating Theatre Audit — Findings &amp; Action Plan</div>
+        <ul class="sec-pts">
+          <li><strong>OT audit completed</strong> — a structured audit of Operating Theatre utilisation, scheduling, and operational protocols has been conducted across all surgical suites. Findings cover scheduling efficiency, case cancellation rates, turnaround times, and equipment readiness. Detailed observations and a prioritised action plan are set out in the presentation below.</li>
+          <li><strong>Next steps</strong> — action items to be assigned to OT Head, Surgical Department Leads, and Biomedical team with fortnightly review cadence.</li>
+        </ul>
+        <div class="dl-links" style="margin-top:8px;">
+          <a class="dl-link" href="Weekly%20update/15th%20May/Lakeshore%20OT%20audit.pptx" download>↓ Lakeshore OT Audit (.pptx)</a>
+        </div>
+      </div>
+    </div>
+
     <hr class="rule-heavy">
 
     <div class="commentary-label">Strategic Note</div>
-    <div class="commentary-hed">American Oncology Institute — An India Oncology Acquisition Opportunity</div>
-    <div class="commentary-para">A&amp;M is running a sale process for <strong>American Oncology Institute (AOI)</strong> on behalf of Varian / Siemens Healthineers, who are offloading the asset as non-core. The headline ticket is <strong>~₹1,400–1,600 Cr</strong> for 100% equity, with ~₹500 Cr of debt on the balance sheet — net cheque ~₹900–1,000 Cr. Five bidders are confirmed in Round 2. AOI is the <strong>3rd largest specialised oncology platform in India by revenue</strong> and <strong>2nd largest by centre footprint</strong> — 17 centres, 942 beds, 95 oncologists, 19 LINACs and 12 PET-CTs. FY25 revenue ₹437 Cr; A&amp;M projects FY27 revenue of ₹824 Cr and FY32 of ₹1,639 Cr.</div>
-    <div class="commentary-para"><strong>Why this matters.</strong> Burjeel + Lakeshore + Qutub Delhi + AOI together create a credible India oncology story that would otherwise take 2–3 years to build. The asset map gives us three natural clusters: <strong>Delhi PMC</strong> in the North (feeding 8 AOI centres — Gurugram, Hisar, Ludhiana, Jalandhar, Jammu, Sri Ganganagar, Kota, Aligarh), <strong>Hyderabad CoE</strong> in AP/Telangana (Guntur, Vijayawada), and <strong>Lakeshore Kochi</strong> in the South (Coimbatore). Four centres — Nagpur, Raipur, Imphal and Colombo — would be divested to offset the cheque.</div>
-    <div class="commentary-para"><strong>Proposed structure.</strong> Route the deal through VPS Lakeshore — Burjeel infuses ~₹900–1,000 Cr of primary equity into Lakeshore, and Lakeshore acquires AOI. Lakeshore is already an Indian operating company, the structure keeps the oncology story under one identifiable hub, and FDI / CCI clearance is simpler than a new SPV. Total Burjeel commitment is <strong>~₹2,100–2,400 Cr</strong> including acquisition, integration capital and the primary infusion into Lakeshore. Key risks under diligence: thin shop-in-shop margins, no real-estate ownership, low revenue per centre (~₹26 Cr vs HCG's ~₹100+), and a competitive Round 2.</div>
-    <div class="commentary-para"><strong>Other strategic items in motion.</strong> <strong>Delhi PMC</strong> floor plans have come back from the architects and are under review. The <strong>Kerala Expansion Playbook</strong> (₹2,000–2,500 Cr capital envelope, 24-month execution, 4–6 deals across mid-market acquisitions, mission O&amp;M concessions, NCLT tracks and selective greenfield) has been drafted for Chairman review. A <strong>200-bed Jaipur superspeciality concept</strong> with a dedicated radiation oncology unit has been prepared. The <strong>IIMS Kota Cancer Hospital DPR</strong> is also ready — useful background for the AOI North cluster, where Kota is one of the feeders.</div>
+    <div class="commentary-hed">American Oncology Institute — A Tier-2 Oncology Acquisition Opportunity</div>
+    <div class="commentary-para">A&amp;M is running a process for <strong>American Oncology Institute (AOI)</strong> on behalf of Varian / Siemens Healthineers, who are offloading the asset as non-core. The headline is a <strong>~₹1,400–1,600 Cr (~$140–160M)</strong> ticket for 100% equity, with ~₹500 Cr of debt on the balance sheet — net cheque ~₹900–1,000 Cr after assumption. Five bidders are confirmed in Round 2. AOI is the <strong>3rd largest specialised oncology platform in India by revenue</strong> and <strong>2nd largest by centre footprint</strong> — 17 centres (16 India + 1 Sri Lanka), 942 beds, 95 oncologists, 19 LINACs and 12 PET-CTs. FY25 revenue ₹437 Cr; A&amp;M projects FY27 consolidated revenue of ₹824 Cr at ~10% EBITDA and FY32 of ₹1,639 Cr at ~20%.</div>
+    <div class="commentary-para"><strong>The strategic logic</strong> — <strong>Burjeel Cancer Institute + VPS Lakeshore + Qutub Delhi + AOI</strong> assembles a credible, signal-rich India oncology story that would otherwise take 2–3 years to build organically. Three geographic clusters fall out of the asset map: <strong>Delhi PMC</strong> as the North hub feeding 8 AOI centres (Gurugram, Hisar, Ludhiana, Jalandhar, Jammu, Sri Ganganagar, Kota, Aligarh); <strong>Hyderabad CoE</strong> for AP/Telangana (Guntur, Vijayawada); and <strong>Lakeshore Kochi</strong> for the South (Coimbatore). Four centres — Nagpur, Raipur, Imphal and Colombo — would be divested as integrated onco-diagnostics units to offset acquisition consideration.</div>
+    <div class="commentary-para"><strong>Lakeshore-as-acquirer</strong> — the working recommendation is to route the deal through VPS Lakeshore, with Burjeel infusing ~₹900–1,000 Cr of primary equity into Lakeshore and Lakeshore in turn acquiring AOI. Lakeshore is an established Indian operating company that can absorb AOI cleanly, keeps the India oncology story under one identifiable hub, and offers a simpler FDI / CCI path than a new SPV. Total Burjeel commitment is estimated at <strong>~₹2,100–2,400 Cr</strong> across acquisition consideration, ramp / integration capital, and the Lakeshore primary infusion. Key risks under diligence: fragile shop-in-shop economics, no real-estate ownership across the network, low revenue per centre (~₹26 Cr vs HCG's ~₹100+), and a Round 2 with multiple PE bidders.</div>
+    <div class="commentary-para"><strong>Other strategic items in motion</strong> — <strong>Delhi PMC</strong> floor plans have been received from the architects and are under review; the brief earlier issued to three architects has produced design responses. The <strong>Kerala Expansion Playbook</strong> (₹2,000–2,500 Cr capital envelope, 24-month execution, 4–6 deals across mid-market acquisitions, mission O&amp;M concessions, NCLT/IBC tracks and selective greenfield) has been drafted for Chairman review. A <strong>200-bed superspeciality concept for Jaipur</strong> with a dedicated radiation oncology unit (2 LINACs, HDR brachytherapy) covering oncology, cardiac sciences, neurosciences, maternal &amp; child health and other core disciplines is prepared. The <strong>IIMS Kota Cancer Hospital DPR</strong> has also been compiled — referenced here to support the AOI northern cluster discussion (AOI has a centre in Kota).</div>
     <div class="dl-links" style="margin-top:12px;">
       <a class="dl-link" href="#" onclick="return openDocViewer('Weekly%20update/15th%20May/AOI_AcquisitionNote_May26.pdf','AOI Acquisition Note — May 2026')">↗ AOI Acquisition Note (.pdf)</a>
       <a class="dl-link" href="#" onclick="return openDocViewer('Weekly%20update/15th%20May/Kerala_Expansion_Playbook_v4.pdf','Kerala Expansion Playbook v4')">↗ Kerala Expansion Playbook (.pdf)</a>
