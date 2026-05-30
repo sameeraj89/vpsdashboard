@@ -403,9 +403,45 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <style>
-.kl-label{background:transparent;border:none;box-shadow:none;padding:0;color:#0d2137;font-family:'IBM Plex Sans',sans-serif;font-weight:600;font-size:11px;text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 3px #fff;}
-.kl-label::before{display:none;}
-#kerala-map{position:relative;z-index:0;}
+/* Ported Kerala target map (from microsite) */
+.map-wrap{border-radius:10px;overflow:hidden;border:1px solid #E2E6EC;box-shadow:0 1px 3px rgba(0,0,0,.06);background:#fff;}
+.map-header{padding:14px 18px;border-bottom:1px solid #E2E6EC;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;background:#fff;}
+.map-filters{display:flex;gap:6px;flex-wrap:wrap;}
+.map-chip{padding:5px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid #E2E6EC;background:#fff;color:#4a5568;transition:all .15s;font-family:'IBM Plex Sans',sans-serif;}
+.map-chip:hover{border-color:#0072BC;color:#0072BC;}
+.map-chip.active{background:#0072BC;color:#fff;border-color:#0072BC;}
+.map-body{display:grid;grid-template-columns:280px 1fr;height:560px;}
+@media(max-width:800px){.map-body{grid-template-columns:1fr;height:auto;}#main-map{height:420px;}.map-panel{height:auto;max-height:260px;}}
+.map-panel{background:#F7F9FB;border-right:1px solid #E2E6EC;overflow-y:auto;padding:14px;}
+.legend-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#6B7280;margin-bottom:8px;}
+.leg-item{display:flex;align-items:center;gap:8px;padding:4px 6px;border-radius:5px;font-size:11.5px;color:#4a5568;}
+.leg-item:hover{background:#eef2f6;}
+.leg-dot{width:11px;height:11px;border-radius:50%;flex-shrink:0;}
+.leg-dot.flagship{background:#2B7CBE;}.leg-dot.new-campus{background:#16A34A;}.leg-dot.p1a{background:#DC2626;}.leg-dot.p1b{background:#8B1A4A;}.leg-dot.p2a{background:#EA580C;}.leg-dot.p2b{background:#BE185D;}.leg-dot.p3{background:#B45309;}
+.leg-count{margin-left:auto;font-size:10px;color:#6B7280;font-weight:600;}
+.hosp-card{border:1px solid #E2E6EC;border-radius:6px;padding:8px 10px 8px 13px;margin-bottom:7px;cursor:pointer;position:relative;background:#fff;transition:all .15s;}
+.hosp-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:6px 0 0 6px;}
+.hosp-card.flagship::before{background:#2B7CBE;}.hosp-card.new-campus::before{background:#16A34A;}.hosp-card.p1a::before{background:#DC2626;}.hosp-card.p1b::before{background:#8B1A4A;}.hosp-card.p2a::before{background:#EA580C;}.hosp-card.p2b::before{background:#BE185D;}.hosp-card.p3::before{background:#B45309;}
+.hosp-card:hover{border-color:#0072BC;box-shadow:0 2px 8px rgba(0,0,0,.08);}
+.hosp-name{font-size:12px;font-weight:700;color:#1B2028;}
+.hosp-meta{font-size:11px;color:#6B7280;margin-top:1px;}
+.hosp-tags{display:flex;gap:4px;margin-top:4px;}
+.htag{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;padding:1px 6px;border-radius:4px;}
+.htag.a{background:rgba(220,38,38,.08);color:#991B1B;}.htag.b{background:rgba(139,26,74,.08);color:#6B1238;}.htag.h{background:rgba(180,83,9,.08);color:#92400E;}.htag.p1{background:rgba(220,38,38,.06);color:#991B1B;}.htag.p2{background:rgba(234,88,12,.06);color:#C2410C;}.htag.flagship{background:rgba(43,124,190,.08);color:#1E40AF;}.htag.new{background:rgba(22,163,74,.08);color:#166534;}
+#main-map{flex:1;height:100%;}
+.mpopup{min-width:220px;max-width:260px;font-family:'IBM Plex Sans',sans-serif;}
+.mpopup-badges{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px;}
+.mpopup-badge{font-size:9.5px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;padding:2px 7px;border-radius:4px;}
+.mbn{background:#0072BC;color:#fff;}.mbm{background:#8B1A4A;color:#fff;}.mba{background:#fbf0e2;color:#B45309;}.mbg{background:#e7f6ec;color:#16A34A;}.mbbl{background:#e6f0f8;color:#005a96;}.mbs{background:#eef2f6;color:#6B7280;}
+.mpopup-name{font-size:14px;font-weight:700;color:#1B2028;margin-bottom:2px;}
+.mpopup-city{font-size:11px;color:#6B7280;margin-bottom:8px;}
+.mpopup-stats{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px;}
+.mps{background:#F7F9FB;border:1px solid #E2E6EC;border-radius:6px;padding:5px 8px;}
+.mps-val{font-size:13px;font-weight:700;color:#1B2028;}
+.mps-lbl{font-size:9px;color:#6B7280;text-transform:uppercase;letter-spacing:.4px;margin-top:1px;}
+.mpopup-desc{font-size:11px;color:#4a5568;line-height:1.55;border-top:1px solid #E2E6EC;padding-top:8px;}
+.mpopup-action{font-size:11px;color:#8B1A4A;font-weight:600;margin-top:6px;padding:4px 7px;background:#f6e8ee;border-radius:5px;}
+#main-map .leaflet-top,#main-map .leaflet-bottom{z-index:400;}
 </style>
 </head>
 <body>
@@ -571,16 +607,40 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
 
     <div class="section">
       <div class="sec-title">3. Tier-1 Priority Targets &amp; Map</div>
-      <div style="display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap;">
-        <div style="flex:0 0 300px;min-width:240px;">
-          <div id="kerala-map" style="height:480px;width:100%;border-radius:8px;border:1px solid #e6ebf0;"></div>
-          <div style="display:flex;gap:16px;margin-top:8px;font-family:'IBM Plex Mono',monospace;font-size:0.58rem;color:#8a99a6;">
-            <span style="display:inline-flex;align-items:center;gap:5px;"><span style="width:9px;height:9px;border-radius:50%;background:#C8103E;display:inline-block;"></span>Quaternary hub</span>
-            <span style="display:inline-flex;align-items:center;gap:5px;"><span style="width:9px;height:9px;border-radius:50%;background:#0072BC;display:inline-block;"></span>Tier-1 targets (25)</span>
+      <div class="map-wrap" style="margin-bottom:14px;">
+        <div class="map-header">
+          <div>
+            <div style="font-size:13px;font-weight:600;color:#1B2028">25 priority sites (17 Playbook A + 8 Playbook B) across 11 districts &mdash; click any marker for deal details</div>
+            <div style="font-size:11px;color:#6B7280;margin-top:2px">Spoke lines connect each target to VPS Lakeshore hub at Nettoor</div>
+          </div>
+          <div class="map-filters">
+            <button class="map-chip active" onclick="mapFilter('all',this)">All</button>
+            <button class="map-chip" onclick="mapFilter('A',this)">Playbook A</button>
+            <button class="map-chip" onclick="mapFilter('B',this)">Playbook B</button>
+            <button class="map-chip" onclick="mapFilter('1',this)">Priority 1</button>
+            <button class="map-chip" onclick="mapFilter('2',this)">Priority 2</button>
           </div>
         </div>
-        <div style="flex:1;min-width:260px;">
-          <table class="plain-table" style="margin-top:0;">
+        <div class="map-body">
+          <div class="map-panel" id="map-panel">
+          <div class="legend-title">Legend</div>
+          <div class="leg-item"><div class="leg-dot flagship"></div><span>VPS Lakeshore (Hub)</span></div>
+          <div class="leg-item"><div class="leg-dot new-campus"></div><span>Kakkanad New Campus</span></div>
+          <div class="leg-item"><div class="leg-dot p1a"></div><span>Playbook A &middot; Priority 1</span><span class="leg-count">11</span></div>
+          <div class="leg-item"><div class="leg-dot p1b"></div><span>Playbook B &middot; Priority 1</span><span class="leg-count">1</span></div>
+          <div class="leg-item"><div class="leg-dot p2a"></div><span>Playbook A &middot; Priority 2</span><span class="leg-count">4</span></div>
+          <div class="leg-item"><div class="leg-dot p2b"></div><span>Playbook B &middot; Priority 2</span><span class="leg-count">7</span></div>
+          <div class="leg-item"><div class="leg-dot p3"></div><span>Academic JV</span><span class="leg-count">2</span></div>
+          <hr style="border:none;border-top:1px solid #E2E6EC;margin:10px 0;">
+          <div class="legend-title">Hospitals</div>
+          <div id="hosp-list"></div>
+          </div>
+          <div id="main-map"></div>
+        </div>
+      </div>
+
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:0.54rem;letter-spacing:0.8px;text-transform:uppercase;color:#a0aec0;margin:4px 0 6px;">Full Tier-1 Scorecard</div>
+      <table class="plain-table" style="margin-top:0;">
             <thead><tr><th>#</th><th>Hospital</th><th>Location</th><th>Beds</th><th>Structure</th><th>PB</th></tr></thead>
             <tbody>
               <tr><td>1</td><td>Renai Medicity</td><td>Kochi</td><td>335</td><td>Equity 65%</td><td>A</td></tr>
@@ -610,8 +670,6 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
               <tr><td>25</td><td>Avitis Super Specialty</td><td>Nemmara, Palakkad</td><td>180</td><td>O&amp;M / turnaround</td><td>B</td></tr>
             </tbody>
           </table>
-        </div>
-      </div>
     </div>
 
     <div class="section">
@@ -2129,7 +2187,7 @@ function switchPanel(id) {
   document.getElementById('panel-' + id).classList.add('active');
   document.getElementById('tab-' + id).classList.add('active');
   window.scrollTo(0, 0);
-  if (id === 'may31') { setTimeout(function(){ if(window.__initKeralaMap) window.__initKeralaMap(); if(window.__keralaMap){ window.__keralaMap.invalidateSize(); if(window.__keralaBounds) window.__keralaMap.fitBounds(window.__keralaBounds,{padding:[34,34]}); } }, 180); }
+  if (id === 'may31') { setTimeout(function(){ if(window.__initKeralaMap) window.__initKeralaMap(); if(window.__klmap){ window.__klmap.invalidateSize(); } }, 200); }
 }
 
 // ── Sidebar toggle ──
@@ -2260,42 +2318,112 @@ function switchPanel(id) {
 </div><!-- /app-shell -->
 <script>
 (function(){
+  const HOSPITALS = [
+  { id:'flagship',   name:'VPS Lakeshore Medical Centre', city:'Nettoor, Ernakulam', district:'Ernakulam', lat:9.9726, lng:76.3199, beds:650, type:'flagship', playbook:'Flagship', priority:0, entry:'Existing Hub', deal:'--', colorClass:'flagship', desc:"Kerala's leading private quaternary care hospital. 650 beds, multi-organ transplant, cardiac surgery, haemato-oncology. Hub of the Project Nila spoke network.", action:'All acquired/managed hospitals feed complex cases to Nettoor.' },
+  { id:'kakkanad',   name:'VPS Kakkanad New Campus', city:'SmartCity, Kakkanad', district:'Ernakulam', lat:10.0078, lng:76.3455, beds:200, type:'new-campus', playbook:'Organic', priority:0, entry:'Greenfield', deal:'Rs 450-500 Cr', colorClass:'new-campus', desc:'200-bed urban multispecialty at SmartCity. Captures IT workforce catchment and 40% corridor leakage to Aster Medcity. Expand to 350 beds by Year 7.', action:'6.17-acre land parcel (Plots B3-3 and B3-4). Groundbreak FY26.' },
+  { id:'renai',      name:'Renai Medicity',            city:'Kaloor, Kochi',      district:'Ernakulam',       lat:10.0104, lng:76.3040, beds:335, type:'target', playbook:'A', priority:1, entry:'Equity acquisition (60-70%)', deal:'Rs 250-350 Cr', score:'DB5', colorClass:'p1a', desc:'PURSUE NOW. 335-bed tertiary in Kaloor, Kochi (335 operational vs 500 capacity). Partnership firm — needs 5-sibling sign-off. CARE downgraded to B; issuer non-cooperating since 2022, so insist on FY23-25 audited accounts. Pre-emption window 6-9 months; Aster has mapped this asset.', action:'Execute NDA within 30 days. LOI within 60 days. Engage Cyril Amarchand for SPA structuring.' },
+  { id:'sunrise',    name:'Sunrise Hospital',          city:'Kochi',              district:'Ernakulam',       lat:10.0051, lng:76.2988, beds:200, type:'target', playbook:'A', priority:1, entry:'Equity acquisition (70%)', deal:'Rs 240 Cr', score:'DB5', colorClass:'p1a', desc:"IVF and W&C specialty anchor. 200-bed. Pure additive bolt-on to Lakeshore enhancing women's health vertical and referral density in the Kochi cluster. Composite score 4.4/5.", action:'Term sheet within 30 days. Pure additive bolt-on alongside Renai.' },
+  { id:'lourdes',    name:'Lourdes Hospital',          city:'Kochi',              district:'Ernakulam',       lat:9.9941,  lng:76.2887, beds:600, type:'target', playbook:'B', priority:1, entry:'O&M concession (15-25 yr)', deal:'Rs 0 capex', score:'DB5', colorClass:'p1b', desc:'Largest Catholic-managed hospital in Kochi. 600 beds (DD-verified). Archdiocese of Verapoly. Will never be sold -- 15-yr O&M concession only. ARPOB target lift from Rs 19K to Rs 30-34K. Composite score 4.5/5.', action:'Engage Archbishop of Verapoly via Bishop channel. Target MoU by Q2 FY27.' },
+  { id:'mother',     name:'Mother Hospital',           city:'Thrissur',           district:'Thrissur',        lat:10.5254, lng:76.2075, beds:300, type:'target', playbook:'A', priority:1, entry:'Equity acquisition (90%)', deal:'Rs 375 Cr', score:'DB5', colorClass:'p1a', desc:'Central Kerala first-mover. 300-bed Thrissur urban anchor (Dr M. Ali family, 2nd-generation succession). Highest population catchment density after Ernakulam. EV Rs 300-450 Cr.', action:'Engage founder generation with succession-monetisation framing. Co-brand for 24 months post-close.' },
+  { id:'indo',       name:'Indo-American Hospital',   city:'Alappuzha',          district:'Alappuzha',       lat:9.4874,  lng:76.3347, beds:205, type:'target', playbook:'A', priority:1, entry:'Equity / amalgamation (85%)', deal:'Rs 185 Cr', score:'DB4', colorClass:'p1a', desc:'Neuro-oncology bolt-on and Alappuzha coastal node. 200-bed. Gateway to backwater tourism medical travel corridor. Composite score 3.9/5.', action:'Outreach concurrent with Kochi cluster closings in FY27.' },
+  { id:'pushpagiri', name:'Pushpagiri Medical College', city:'Thiruvalla',       district:'Pathanamthitta',  lat:9.3731,  lng:76.5447, beds:678, type:'target', playbook:'Hybrid', priority:1, entry:'Academic JV (51:49)', deal:'Rs 0 capex', score:'DB5', colorClass:'p3', desc:'Syro-Malankara Catholic Archdiocese of Thiruvalla -- will not sell equity. JV (51:49): VPS takes operating majority. 678-bed medical college hospital; NMC/KUHS regulatory layers. Residency pipeline for VPS network. Highest Gulf-NRI ARPOB corridor.', action:'Phase 1: O&M framework MoU. Phase 2: JV documentation FY27. Engage via Bishop Benziger as warm introduction.' },
+  { id:'sut',        name:'SUT Royal Hospital (NCLT)', city:'Kochulloor, Trivandrum', district:'Thiruvananthapuram', lat:8.5110, lng:76.9490, beds:400, type:'target', playbook:'A', priority:1, entry:'NCLT/IBC resolution', deal:'Rs 100-150 Cr', score:'DB4', colorClass:'p1a', desc:'TIHSL entity at Kochulloor (NOT Pattom -- SUT Pattom was sold to BR Life in 2022). 400-bed distressed tertiary on NH bypass. Rs 400 Cr replacement cost at Rs 100-150 Cr. Competing bids expected from Manipal and KIMS.', action:'Retainer Cyril Amarchand Mangaldas immediately. Pre-clear Rs 150 Cr. File Form A within 45 days.' },
+  { id:'benziger',   name:'Bishop Benziger Hospital', city:'Kollam',             district:'Kollam',          lat:8.8832,  lng:76.6060, beds:600, type:'target', playbook:'B', priority:2, entry:'O&M concession (20 yr)', deal:'Rs 0 capex', score:'DB4', colorClass:'p2b', desc:'Latin Catholic -- Diocese of Quilon (NOT CSI/Anglican). DD-verified 600 beds (playbook originally stated 300). NABH-accredited. NH-66 corridor anchor for Kollam district.', action:'Engage Bishop of Quilon (Most Rev. Alex Vadakumthala) via CBCK channel. NOT Kerala CSI Synod.' },
+  { id:'caritas',    name:'Caritas Hospital',          city:'Kottayam',           district:'Kottayam',        lat:9.5916,  lng:76.5222, beds:655, type:'target', playbook:'B', priority:2, entry:'O&M / managed services', deal:'Rs 0 capex', score:'DB4', colorClass:'p2b', desc:'Knanaya Archdiocese -- 700-bed Central Travancore anchor. Note: Matha Hospital (Thrissur) merged into Caritas network September 2024 -- do not pursue Matha as standalone target.', action:'Managed services pilot first. Escalate to full O&M in FY27.' },
+  { id:'orchid',     name:'Orchid Medicity',           city:'Malappuram',         district:'Malappuram',      lat:11.0510, lng:76.0740, beds:250, type:'target', playbook:'A', priority:2, entry:'Equity -- strategic control', deal:'TBD (DD)', score:'Tranche 2', colorClass:'p2a', desc:'Tranche-2 Malabar equity candidate (verify Pvt Ltd status). Majority strategic-control acquisition fills the Malappuram gap on the north corridor.', action:'Confirm entity, beds and financials in DD before indicative offer. FY27 window.' },
+  { id:'sreevalsam', name:'Sreevalsam Inst. of Medical Sciences', city:'Edappal',  district:'Malappuram',      lat:10.8230, lng:76.0030, beds:350, type:'target', playbook:'Hybrid', priority:2, entry:'Equity / academic JV', deal:'TBD (DD)', score:'Tranche 2', colorClass:'p3', desc:'Tranche-2 Edappal medical-college candidate. Equity or academic-JV structure; residency pipeline potential alongside Pushpagiri.', action:'Verify society/Pvt structure and NMC seat position. FY28.' },
+  { id:'cm',         name:'CM Hospital',               city:'Kasaragod',          district:'Kasaragod',       lat:12.5050, lng:74.9950, beds:120, type:'target', playbook:'A', priority:2, entry:'Equity -- strategic control', deal:'TBD (DD)', score:'Tranche 2', colorClass:'p2a', desc:'Tranche-2 northern-tip anchor (verify family ownership). Only realistic strategic-control entry into Kasaragod district.', action:'DD on entity and financials. FY28.' },
+  { id:'mvjm',       name:'MVJM Hospital',             city:'Perumbavoor',        district:'Ernakulam',       lat:10.1070, lng:76.4750, beds:100, type:'target', playbook:'A', priority:2, entry:'Equity -- strategic control', deal:'TBD (DD)', score:'Tranche 2', colorClass:'p2a', desc:'Tranche-2 Perumbavoor bolt-on (verify family ownership). Extends the Ernakulam cluster east toward Kothamangalam.', action:'DD on entity and financials. FY27.' },
+  { id:'joys',       name:'Joys Hospital (W&C)',       city:'Vyttila, Kochi',     district:'Ernakulam',       lat:9.9690,  lng:76.3180, beds:60,  type:'target', playbook:'A', priority:2, entry:'Equity -- bolt-on', deal:'TBD (DD)', score:'Tranche 2', colorClass:'p2a', desc:'Tranche-2 women-and-children bolt-on at Vyttila. Small, additive to the Kochi cluster W&C franchise alongside Sunrise.', action:'DD on entity and financials. FY27.' },
+  { id:'aswani',     name:'Aswani Hospital',           city:'Thrissur',           district:'Thrissur',        lat:10.5150, lng:76.2180, beds:300, type:'target', playbook:'B', priority:2, entry:'O&M concession', deal:'capex TBD', score:'Tranche 2', colorClass:'p2b', desc:'Tranche-2 Thrissur O&M candidate. Complements Mother Hospital equity entry in the same city.', action:'Scope O&M concession terms in DD. FY27.' },
+  { id:'srmedical',  name:'SR Medical College',        city:'Varkala',            district:'Thiruvananthapuram', lat:8.7340, lng:76.7150, beds:300, type:'target', playbook:'B', priority:2, entry:'O&M (30-yr)', deal:'capex TBD', score:'Tranche 2', colorClass:'p2b', desc:'Tranche-2 Varkala medical-college O&M (30-yr). Northern Trivandrum-district academic O&M.', action:'Confirm society governance and NMC position. FY28.' },
+  { id:'puthiyedom', name:'Puthiyedom Hospital',       city:'Pala',               district:'Kottayam',        lat:9.7140,  lng:76.6860, beds:75,  type:'target', playbook:'B', priority:2, entry:'O&M concession', deal:'capex TBD', score:'Tranche 2', colorClass:'p2b', desc:'Tranche-2 Pala O&M (verify family ownership). Small Meenachil-belt node feeding the Kottayam cluster.', action:'Scope O&M terms. FY28.' },
+  { id:'travancore', name:'Travancore Medical College', city:'Mylapore, Kollam',  district:'Kollam',          lat:8.9000,  lng:76.6400, beds:650, type:'target', playbook:'B', priority:2, entry:'O&M / academic JV', deal:'capex TBD', score:'Tranche 2', colorClass:'p2b', desc:'Tranche-2 Kollam medical-college O&M / academic-JV. Large 650-bed academic asset anchoring the south alongside Bishop Benziger.', action:'Confirm society governance and NMC seats. FY28.' },
+  { id:'daya', name:'Daya General Hospital', city:'Thrissur', district:'Thrissur', lat:10.527, lng:76.214, beds:500, type:'target', playbook:'A', priority:1, entry:'Equity acquisition', deal:'Rs 210 Cr', score:'Audited', colorClass:'p1a', desc:'NEW (latest target list). 500-bed Thrissur multispecialty (public ltd). FY25 revenue ~Rs 187 Cr at 15.9% EBITDA. Equity acquisition valued ~7x EBITDA.', action:'DD on audited financials; thickens the Thrissur cluster with Mother & Aswani.' },
+  { id:'ananthapuri', name:'Ananthapuri Hospitals', city:'Thiruvananthapuram', district:'Thiruvananthapuram', lat:8.524, lng:76.918, beds:400, type:'target', playbook:'A', priority:1, entry:'Equity acquisition', deal:'Rs 165 Cr', score:'Audited', colorClass:'p1a', desc:'NEW. 400-bed Trivandrum tertiary (cardiology, neuro, oncology, transplant). FY25 rev ~Rs 175 Cr, 13.4% EBITDA. Strengthens the capital alongside SUT Royal.', action:'Equity acquisition ~7x EBITDA. Bilateral approach.' },
+  { id:'kmcherian', name:'Dr. KM Cherian IMS', city:'Chengannur, Alappuzha', district:'Alappuzha', lat:9.315, lng:76.615, beds:300, type:'target', playbook:'A', priority:1, entry:'Equity acquisition', deal:'Rs 200 Cr', score:'Audited', colorClass:'p1a', desc:'NEW. 300-bed cardiac-led tertiary at Chengannur (founder Dr K.M. Cherian). FY25 rev ~Rs 168 Cr, 17.0% EBITDA -- healthiest margin in the new set. Pvt Ltd (not a trust).', action:'Equity acquisition ~7x EBITDA. Central-Travancore cardiac node.' },
+  { id:'starcare', name:'Starcare Hospital', city:'Kozhikode', district:'Kozhikode', lat:11.25, lng:75.797, beds:290, type:'target', playbook:'A', priority:1, entry:'Equity acquisition', deal:'Rs 95 Cr', score:'Audited', colorClass:'p1a', desc:'NEW. 290-bed Kozhikode tertiary (Gulf-linked Starcare group). FY25 rev ~Rs 106 Cr, 12.9% EBITDA. First VPS foothold in Malabar (KKR/BMH & Aster-contested).', action:'Equity ~7x EBITDA. Establishes the Kozhikode beachhead.' },
+  { id:'mothercare', name:'Mother Care & Health Centre', city:'Kozhikode', district:'Kozhikode', lat:11.258, lng:75.785, beds:250, type:'target', playbook:'A', priority:1, entry:'Equity acquisition (W&C)', deal:'Rs 50 Cr', score:'Audited', colorClass:'p1a', desc:'NEW. 250-bed Kozhikode women & children / maternity & fertility hospital. FY25 rev ~Rs 63 Cr, 11.2% EBITDA. Adds a W&C node in Malabar.', action:'Equity ~7x EBITDA. Pairs with Starcare for a Kozhikode cluster.' },
+  { id:'meditrina', name:'Meditrina Hospitals', city:'Kollam', district:'Kollam', lat:8.886, lng:76.595, beds:175, type:'target', playbook:'A', priority:1, entry:'Equity acquisition', deal:'Rs 140 Cr', score:'Audited', colorClass:'p1a', desc:'NEW. 175-bed Kollam cardiac hospital (Meditrina network). FY25 rev ~Rs 181 Cr, 11.1% EBITDA. Strong cardiac franchise; anchors Kollam alongside Bishop Benziger O&M.', action:'Equity ~7x EBITDA. Cardiac-led Kollam anchor.' },
+  { id:'avitis', name:'Avitis Super Specialty', city:'Nemmara, Palakkad', district:'Palakkad', lat:10.585, lng:76.586, beds:180, type:'target', playbook:'B', priority:2, entry:'O&M / management concession', deal:'O&M / turnaround', score:'Audited', colorClass:'p2b', desc:'NEW. 180-bed Nemmara (Palakkad) super-specialty. Loss-making (FY25 rev ~Rs 69 Cr, -4.5% EBITDA) -- structured as an O&M / management turnaround rather than an equity buy. Capex ~Rs 50 Cr.', action:'Management/turnaround O&M; avoid acquiring negative EBITDA. Opens Palakkad.' },
+];
+  const COLS = {
+  flagship:     '#2B7CBE',
+  'new-campus': '#16A34A',
+  p1a:          '#DC2626',
+  p1b:          '#8B1A4A',
+  p2a:          '#EA580C',
+  p2b:          '#BE185D',
+  p3:           '#B45309',
+};
+  var inited=false;
   function initKeralaMap(){
-    var el=document.getElementById('kerala-map');
-    if(!el || typeof L==='undefined' || el._leaflet_id) return;
-    var D=[
-      ["Kasaragod",12.4996,74.9869,1,false],
-      ["Kozhikode",11.2588,75.7804,2,false],
-      ["Malappuram",11.0510,76.0711,2,false],
-      ["Palakkad",10.7867,76.6548,1,false],
-      ["Thrissur",10.5276,76.2144,3,false],
-      ["Kochi / Ernakulam",9.9816,76.2999,5,true],
-      ["Kottayam",9.5916,76.5222,2,false],
-      ["Tiruvalla",9.3833,76.5667,1,false],
-      ["Alappuzha",9.4981,76.3388,2,false],
-      ["Kollam",8.8932,76.6141,3,false],
-      ["Thiruvananthapuram",8.5241,76.9366,3,false]
-    ];
-    function badge(n,hub){
-      var sz=hub?38:28, bg=hub?'#C8103E':'#0072BC', fs=hub?15:13;
-      return L.divIcon({className:'',iconSize:[sz,sz],iconAnchor:[sz/2,sz/2],
-        html:'<div style="width:'+sz+'px;height:'+sz+'px;border-radius:50%;background:'+bg+';color:#fff;display:flex;align-items:center;justify-content:center;font:700 '+fs+'px IBM Plex Sans,sans-serif;box-shadow:0 1px 4px rgba(0,0,0,0.35);border:2px solid #fff;">'+n+'</div>'});
+    if(inited) return;
+    var el=document.getElementById('main-map');
+    if(!el || typeof L==='undefined') return;
+    inited=true;
+    var map2=L.map('main-map',{center:[10.2,76.5],zoom:7,scrollWheelZoom:false});
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; <a href="https://www.openstreetmap.org">OpenStreetMap</a> &copy; <a href="https://carto.com">CARTO</a>',subdomains:'abcd',maxZoom:19}).addTo(map2);
+    function mkIcon(h){
+      var c=COLS[h.colorClass]||'#94A3B8';
+      var r=h.type==='flagship'?14:h.type==='new-campus'?11:h.priority===1?10:8;
+      var inner=h.type==='flagship'?'<path d="M'+(r-4)+','+(r+2)+' L'+r+','+(r-5)+' L'+(r+4)+','+(r+2)+' Z" fill="white" opacity="0.9"/>':h.type==='new-campus'?'<text x="'+r+'" y="'+(r+4)+'" text-anchor="middle" fill="white" font-size="'+(r*0.9)+'" font-weight="900" font-family="Arial">+</text>':'<text x="'+r+'" y="'+(r+3)+'" text-anchor="middle" fill="white" font-size="'+(r*0.6)+'" font-weight="700" font-family="Arial">'+h.beds+'</text>';
+      var svg='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+(r*2)+' '+(r*2)+'" width="'+(r*2)+'" height="'+(r*2)+'"><circle cx="'+r+'" cy="'+r+'" r="'+(r-1)+'" fill="'+c+'" stroke="rgba(0,0,0,0.25)" stroke-width="1.5"/>'+inner+'</svg>';
+      return L.divIcon({html:svg,className:'',iconSize:[r*2,r*2],iconAnchor:[r,r*2],popupAnchor:[0,-(r*2)]});
     }
-    var map=L.map(el,{zoomControl:true,scrollWheelZoom:false,attributionControl:true});
-    L.tileLayer('https://{s}.basemap.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
-      {maxZoom:18,subdomains:'abcd',attribution:'&copy; OpenStreetMap &copy; CARTO'}).addTo(map);
-    var pts=[];
-    D.forEach(function(d){
-      var m=L.marker([d[1],d[2]],{icon:badge(d[3],d[4]),zIndexOffset:d[4]?1000:0}).addTo(map);
-      m.bindTooltip(d[0]+(d[4]?' &middot; Lakeshore hub':''),{permanent:true,direction:'right',offset:[ (d[4]?20:15),0],className:'kl-label'});
-      pts.push([d[1],d[2]]);
+    function mkPopup(h){
+      var pb=h.type==='flagship'?'<span class="mpopup-badge mbbl">Flagship Hub</span>':h.type==='new-campus'?'<span class="mpopup-badge mbg">New Campus</span>':h.playbook==='A'?'<span class="mpopup-badge mbn">Playbook A &middot; Equity</span>':h.playbook==='B'?'<span class="mpopup-badge mbm">Playbook B &middot; O&M</span>':'<span class="mpopup-badge mba">Hybrid &middot; JV</span>';
+      var pr=h.priority===1?'<span class="mpopup-badge mbn">P1</span>':h.priority===2?'<span class="mpopup-badge mba">P2</span>':h.priority===3?'<span class="mpopup-badge mba">P3</span>':'';
+      var sc=h.score?'<span class="mpopup-badge mbs">'+h.score+'</span>':'';
+      return '<div class="mpopup"><div class="mpopup-badges">'+pb+pr+sc+'</div><div class="mpopup-name">'+h.name+'</div><div class="mpopup-city">\ud83d\udccd '+h.city+'</div><div class="mpopup-stats"><div class="mps"><div class="mps-val">'+h.beds+'</div><div class="mps-lbl">Beds</div></div><div class="mps"><div class="mps-val" style="font-size:11px">'+h.deal+'</div><div class="mps-lbl">Est. Deal</div></div></div><div class="mpopup-desc">'+h.desc+'</div>'+(h.action?'<div class="mpopup-action">\u26a1 '+h.action+'</div>':'')+'</div>';
+    }
+    var ps=document.createElement('style');
+    ps.textContent='.cpop .leaflet-popup-content-wrapper{border-radius:10px;padding:0;box-shadow:0 6px 24px rgba(0,0,0,.1);border:1px solid #E2E6EC;overflow:hidden}.cpop .leaflet-popup-content{margin:0;padding:14px}.cpop .leaflet-popup-tip{background:white}';
+    document.head.appendChild(ps);
+    var markers2={};
+    HOSPITALS.forEach(function(h){
+      var m=L.marker([h.lat,h.lng],{icon:mkIcon(h)}).addTo(map2).bindPopup(mkPopup(h),{maxWidth:280,className:'cpop'});
+      markers2[h.id]={m:m,h:h,visible:true};
     });
-    window.__keralaBounds=L.latLngBounds(pts);
-    map.fitBounds(window.__keralaBounds,{padding:[34,34]});
-    window.__keralaMap=map;
+    var hub=HOSPITALS.find(function(x){return x.id==='flagship';});
+    HOSPITALS.filter(function(x){return x.type==='target';}).forEach(function(h){
+      L.polyline([[hub.lat,hub.lng],[h.lat,h.lng]],{color:h.playbook==='B'?'#8B1A4A':h.playbook==='Hybrid'?'#B45309':'#2B7CBE',weight:1,opacity:0.15,dashArray:'4 6'}).addTo(map2);
+    });
+    [{n:'Ernakulam',la:10.05,lo:76.32},{n:'Kottayam',la:9.59,lo:76.52},{n:'Pathanamthitta',la:9.27,lo:76.78},{n:'Thiruvananthapuram',la:8.52,lo:76.94},{n:'Alappuzha',la:9.49,lo:76.33},{n:'Kollam',la:8.88,lo:76.61},{n:'Thrissur',la:10.53,lo:76.21},{n:'Kozhikode',la:11.27,lo:75.80},{n:'Palakkad',la:10.72,lo:76.65}].forEach(function(d){
+      L.marker([d.la,d.lo],{icon:L.divIcon({html:'<div style="background:rgba(26,48,80,0.8);color:white;font-size:8px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;padding:2px 7px;border-radius:4px;white-space:nowrap;pointer-events:none">'+d.n+'</div>',className:'',iconAnchor:[30,8]}),interactive:false,zIndexOffset:-1000}).addTo(map2);
+    });
+    function renderCards(ids){
+      var el=document.getElementById('hosp-list'); el.innerHTML='';
+      HOSPITALS.forEach(function(h){
+        if(ids && ids.indexOf(h.id)===-1) return;
+        var d=document.createElement('div'); d.className='hosp-card '+h.colorClass;
+        var pt=h.type==='flagship'?'<span class="htag flagship">Hub</span>':h.type==='new-campus'?'<span class="htag new">New</span>':h.playbook==='A'?'<span class="htag a">A</span>':h.playbook==='B'?'<span class="htag b">B</span>':'<span class="htag h">JV</span>';
+        var pr=h.priority===1?'<span class="htag p1">P1</span>':h.priority===2?'<span class="htag p2">P2</span>':'';
+        d.innerHTML='<div class="hosp-name">'+h.name+'</div><div class="hosp-meta">'+h.city+' &middot; '+h.beds+' beds</div><div class="hosp-tags">'+pt+pr+'</div>';
+        d.onclick=function(){ map2.flyTo([h.lat,h.lng],13,{duration:0.8}); setTimeout(function(){markers2[h.id].m.openPopup();},900); };
+        el.appendChild(d);
+      });
+    }
+    renderCards();
+    var curPb='all',curPr='all';
+    window.mapFilter=function(v,el){
+      document.querySelectorAll('.map-chip').forEach(function(c){c.classList.remove('active');});
+      el.classList.add('active');
+      if(['1','2','3'].indexOf(v)>-1){curPr=v;curPb='all';}else{curPb=v;curPr='all';}
+      var vis=[];
+      HOSPITALS.forEach(function(h){
+        var show=true;
+        if(curPb!=='all'){ if(curPb==='A'&&h.playbook!=='A')show=false; if(curPb==='B'&&h.playbook!=='B')show=false; }
+        if(curPr!=='all'){ if(String(h.priority)!==curPr && h.priority!==0)show=false; }
+        if(show){ if(!map2.hasLayer(markers2[h.id].m))markers2[h.id].m.addTo(map2); vis.push(h.id); }
+        else{ if(map2.hasLayer(markers2[h.id].m))map2.removeLayer(markers2[h.id].m); }
+      });
+      renderCards(vis);
+    };
+    window.__klmap=map2;
   }
   window.__initKeralaMap=initKeralaMap;
-  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',initKeralaMap);}else{initKeralaMap();}
+  if(typeof window.mapFilter!=='function'){ window.mapFilter=function(){ initKeralaMap(); }; }
 })();
 </script>
 </body>
