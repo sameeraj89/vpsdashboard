@@ -400,6 +400,13 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
 }
 
 </style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>
+.kl-label{background:transparent;border:none;box-shadow:none;padding:0;color:#0d2137;font-family:'IBM Plex Sans',sans-serif;font-weight:600;font-size:11px;text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 3px #fff;}
+.kl-label::before{display:none;}
+#kerala-map{position:relative;z-index:0;}
+</style>
 </head>
 <body>
 
@@ -519,16 +526,14 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
 
     <!-- Interactive site card -->
     <a href="https://sameeraj89.github.io/vps_kerala_expansion/" target="_blank" rel="noopener" style="display:block;text-decoration:none;margin:18px 0 6px 0;">
-      <div style="display:flex;align-items:center;gap:16px;background:linear-gradient(110deg,#0072BC 0%,#005a96 100%);border-radius:10px;border-left:5px solid #C8103E;padding:16px 20px;box-shadow:0 6px 22px rgba(0,114,188,0.30);position:relative;overflow:hidden;">
-        <div style="position:absolute;right:-30px;top:-30px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,0.10);"></div>
-        <div style="position:absolute;right:30px;bottom:-40px;width:90px;height:90px;border-radius:50%;background:rgba(255,255,255,0.07);"></div>
-        <div style="flex-shrink:0;width:44px;height:44px;border-radius:9px;background:#C8103E;display:flex;align-items:center;justify-content:center;font-size:1.4rem;box-shadow:0 2px 8px rgba(200,16,62,0.4);">🗺️</div>
-        <div style="flex:1;z-index:1;">
-          <div style="font-family:'IBM Plex Mono',monospace;font-size:0.5rem;letter-spacing:1.6px;text-transform:uppercase;color:#ffffff;opacity:0.85;margin-bottom:3px;">Interactive Microsite</div>
-          <div style="font-family:'Lora',Georgia,serif;font-size:0.96rem;font-weight:600;color:#ffffff;line-height:1.25;">Explore the Kerala Expansion Playbook →</div>
-          <div style="font-size:0.66rem;color:#eaf4fb;margin-top:3px;">Full interactive map, target deep-dives, playbooks, financial model and phasing — click to explore the depth.</div>
+      <div style="display:flex;align-items:center;gap:16px;background:#ffffff;border:1px solid #e6ebf0;border-left:3px solid #C8103E;border-radius:10px;padding:15px 20px;box-shadow:0 1px 6px rgba(13,33,55,0.06);">
+        <div style="flex-shrink:0;width:40px;height:40px;border-radius:8px;background:#f3f7fb;display:flex;align-items:center;justify-content:center;font-size:1.15rem;">🗺️</div>
+        <div style="flex:1;">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:0.5rem;letter-spacing:1.6px;text-transform:uppercase;color:#0072BC;margin-bottom:3px;">Interactive Microsite</div>
+          <div style="font-family:'Lora',Georgia,serif;font-size:0.92rem;font-weight:600;color:#0d2137;line-height:1.25;">Explore the Kerala Expansion Playbook</div>
+          <div style="font-size:0.64rem;color:#8a99a6;margin-top:2px;">Interactive map, target deep-dives, playbooks, financial model and phasing.</div>
         </div>
-        <div style="flex-shrink:0;z-index:1;width:34px;height:34px;border-radius:50%;background:#C8103E;display:flex;align-items:center;justify-content:center;color:#ffffff;font-size:1.05rem;box-shadow:0 2px 8px rgba(200,16,62,0.4);">↗</div>
+        <div style="flex-shrink:0;color:#0072BC;font-size:1.05rem;">↗</div>
       </div>
     </a>
 
@@ -567,47 +572,12 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
     <div class="section">
       <div class="sec-title">3. Tier-1 Priority Targets &amp; Map</div>
       <div style="display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap;">
-        <div style="flex:0 0 230px;">
-          <svg viewBox="0 0 250 430" width="100%" style="max-width:240px;display:block;" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Kerala map with Tier-1 target districts">
-            <defs>
-              <linearGradient id="klGrad" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#e9f3fb"/><stop offset="100%" stop-color="#cfe6f7"/>
-              </linearGradient>
-            </defs>
-            <text x="10" y="18" font-family="'IBM Plex Mono',monospace" font-size="7.5" letter-spacing="1" fill="#9bb4c4">ARABIAN</text>
-            <text x="10" y="28" font-family="'IBM Plex Mono',monospace" font-size="7.5" letter-spacing="1" fill="#9bb4c4">SEA</text>
-            <path d="M150,18 C138,42 150,60 142,80 C134,100 120,108 116,130 C112,152 122,168 112,188 C103,206 86,212 84,234 C82,256 100,266 96,288 C93,308 78,316 80,338 C82,360 100,368 98,388 C96,406 86,414 92,426 L118,428 C126,412 120,396 130,378 C140,360 152,352 156,330 C160,308 150,294 158,272 C166,250 182,244 184,222 C186,200 174,188 180,166 C186,144 200,138 200,116 C200,96 190,86 192,66 C194,46 186,34 178,20 Z"
-              fill="url(#klGrad)" stroke="#0072BC" stroke-width="1.3" stroke-linejoin="round"/>
-            <g font-family="'IBM Plex Sans',sans-serif">
-              <circle cx="168" cy="42" r="8.5" fill="#0072BC"/><text x="168" y="45.3" text-anchor="middle" font-size="8.5" font-weight="700" fill="#fff">1</text>
-              <text x="181" y="45" font-size="8.5" fill="#0d2137" font-weight="600">Kasaragod</text>
-              <circle cx="148" cy="92" r="8.5" fill="#0072BC"/><text x="148" y="95.3" text-anchor="middle" font-size="8.5" font-weight="700" fill="#fff">2</text>
-              <text x="161" y="95" font-size="8.5" fill="#0d2137" font-weight="600">Kozhikode</text>
-              <circle cx="150" cy="126" r="8.5" fill="#0072BC"/><text x="150" y="129.3" text-anchor="middle" font-size="8.5" font-weight="700" fill="#fff">2</text>
-              <text x="163" y="129" font-size="8.5" fill="#0d2137" font-weight="600">Malappuram</text>
-              <circle cx="190" cy="150" r="8.5" fill="#0072BC"/><text x="190" y="153.3" text-anchor="middle" font-size="8.5" font-weight="700" fill="#fff">1</text>
-              <text x="203" y="153" font-size="8.5" fill="#0d2137" font-weight="600">Palakkad</text>
-              <circle cx="124" cy="176" r="8.5" fill="#0072BC"/><text x="124" y="179.3" text-anchor="middle" font-size="8.5" font-weight="700" fill="#fff">3</text>
-              <text x="137" y="179" font-size="8.5" fill="#0d2137" font-weight="600">Thrissur</text>
-              <circle cx="108" cy="216" r="11.5" fill="#C8103E"/><text x="108" y="219.8" text-anchor="middle" font-size="9.5" font-weight="700" fill="#fff">5</text>
-              <text x="123" y="214" font-size="9" fill="#0d2137" font-weight="700">Kochi / Ernakulam</text>
-              <text x="123" y="224" font-size="7" fill="#8a99a6">Lakeshore hub</text>
-              <circle cx="132" cy="258" r="8.5" fill="#0072BC"/><text x="132" y="261.3" text-anchor="middle" font-size="8.5" font-weight="700" fill="#fff">2</text>
-              <text x="145" y="261" font-size="8.5" fill="#0d2137" font-weight="600">Kottayam</text>
-              <circle cx="152" cy="288" r="8.5" fill="#0072BC"/><text x="152" y="291.3" text-anchor="middle" font-size="8.5" font-weight="700" fill="#fff">1</text>
-              <text x="165" y="291" font-size="8.5" fill="#0d2137" font-weight="600">Tiruvalla</text>
-              <circle cx="100" cy="302" r="8.5" fill="#0072BC"/><text x="100" y="305.3" text-anchor="middle" font-size="8.5" font-weight="700" fill="#fff">2</text>
-              <text x="12" y="305" font-size="8.5" fill="#0d2137" font-weight="600">Alappuzha</text>
-              <circle cx="118" cy="350" r="8.5" fill="#0072BC"/><text x="118" y="353.3" text-anchor="middle" font-size="8.5" font-weight="700" fill="#fff">3</text>
-              <text x="131" y="353" font-size="8.5" fill="#0d2137" font-weight="600">Kollam</text>
-              <circle cx="104" cy="398" r="8.5" fill="#0072BC"/><text x="104" y="401.3" text-anchor="middle" font-size="8.5" font-weight="700" fill="#fff">3</text>
-              <text x="117" y="401" font-size="8.5" fill="#0d2137" font-weight="600">Trivandrum</text>
-            </g>
-            <g font-family="'IBM Plex Mono',monospace" font-size="6.8" fill="#8a99a6">
-              <circle cx="18" cy="416" r="3.8" fill="#C8103E"/><text x="26" y="418.5">Quaternary hub</text>
-              <circle cx="18" cy="428" r="3.8" fill="#0072BC"/><text x="26" y="430.5">Tier-1 targets (25)</text>
-            </g>
-          </svg>
+        <div style="flex:0 0 300px;min-width:240px;">
+          <div id="kerala-map" style="height:480px;width:100%;border-radius:8px;border:1px solid #e6ebf0;"></div>
+          <div style="display:flex;gap:16px;margin-top:8px;font-family:'IBM Plex Mono',monospace;font-size:0.58rem;color:#8a99a6;">
+            <span style="display:inline-flex;align-items:center;gap:5px;"><span style="width:9px;height:9px;border-radius:50%;background:#C8103E;display:inline-block;"></span>Quaternary hub</span>
+            <span style="display:inline-flex;align-items:center;gap:5px;"><span style="width:9px;height:9px;border-radius:50%;background:#0072BC;display:inline-block;"></span>Tier-1 targets (25)</span>
+          </div>
         </div>
         <div style="flex:1;min-width:260px;">
           <table class="plain-table" style="margin-top:0;">
@@ -2159,6 +2129,7 @@ function switchPanel(id) {
   document.getElementById('panel-' + id).classList.add('active');
   document.getElementById('tab-' + id).classList.add('active');
   window.scrollTo(0, 0);
+  if (id === 'may31') { setTimeout(function(){ if(window.__initKeralaMap) window.__initKeralaMap(); if(window.__keralaMap){ window.__keralaMap.invalidateSize(); if(window.__keralaBounds) window.__keralaMap.fitBounds(window.__keralaBounds,{padding:[34,34]}); } }, 180); }
 }
 
 // ── Sidebar toggle ──
@@ -2287,5 +2258,45 @@ function switchPanel(id) {
 
 </div><!-- /main-content -->
 </div><!-- /app-shell -->
+<script>
+(function(){
+  function initKeralaMap(){
+    var el=document.getElementById('kerala-map');
+    if(!el || typeof L==='undefined' || el._leaflet_id) return;
+    var D=[
+      ["Kasaragod",12.4996,74.9869,1,false],
+      ["Kozhikode",11.2588,75.7804,2,false],
+      ["Malappuram",11.0510,76.0711,2,false],
+      ["Palakkad",10.7867,76.6548,1,false],
+      ["Thrissur",10.5276,76.2144,3,false],
+      ["Kochi / Ernakulam",9.9816,76.2999,5,true],
+      ["Kottayam",9.5916,76.5222,2,false],
+      ["Tiruvalla",9.3833,76.5667,1,false],
+      ["Alappuzha",9.4981,76.3388,2,false],
+      ["Kollam",8.8932,76.6141,3,false],
+      ["Thiruvananthapuram",8.5241,76.9366,3,false]
+    ];
+    function badge(n,hub){
+      var sz=hub?38:28, bg=hub?'#C8103E':'#0072BC', fs=hub?15:13;
+      return L.divIcon({className:'',iconSize:[sz,sz],iconAnchor:[sz/2,sz/2],
+        html:'<div style="width:'+sz+'px;height:'+sz+'px;border-radius:50%;background:'+bg+';color:#fff;display:flex;align-items:center;justify-content:center;font:700 '+fs+'px IBM Plex Sans,sans-serif;box-shadow:0 1px 4px rgba(0,0,0,0.35);border:2px solid #fff;">'+n+'</div>'});
+    }
+    var map=L.map(el,{zoomControl:true,scrollWheelZoom:false,attributionControl:true});
+    L.tileLayer('https://{s}.basemap.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+      {maxZoom:18,subdomains:'abcd',attribution:'&copy; OpenStreetMap &copy; CARTO'}).addTo(map);
+    var pts=[];
+    D.forEach(function(d){
+      var m=L.marker([d[1],d[2]],{icon:badge(d[3],d[4]),zIndexOffset:d[4]?1000:0}).addTo(map);
+      m.bindTooltip(d[0]+(d[4]?' &middot; Lakeshore hub':''),{permanent:true,direction:'right',offset:[ (d[4]?20:15),0],className:'kl-label'});
+      pts.push([d[1],d[2]]);
+    });
+    window.__keralaBounds=L.latLngBounds(pts);
+    map.fitBounds(window.__keralaBounds,{padding:[34,34]});
+    window.__keralaMap=map;
+  }
+  window.__initKeralaMap=initKeralaMap;
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',initKeralaMap);}else{initKeralaMap();}
+})();
+</script>
 </body>
 </html>
