@@ -443,6 +443,23 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
 .mpopup-action{font-size:11px;color:#8B1A4A;font-weight:600;margin-top:6px;padding:4px 7px;background:#f6e8ee;border-radius:5px;}
 #main-map .leaflet-top,#main-map .leaflet-bottom{z-index:400;}
 </style>
+<style>
+/* Kerala microsite CTA card */
+.klcard{display:flex;align-items:center;gap:18px;position:relative;background:#fff;border:1px solid #e6ebf0;border-radius:14px;padding:18px 22px;box-shadow:0 1px 4px rgba(13,33,55,.05);overflow:hidden;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;}
+.klcard::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,#0072BC 0%,#C8103E 100%);}
+.klcard:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(0,114,188,.16);border-color:#cfe0ee;}
+.klcard-ico{flex-shrink:0;width:54px;height:54px;border-radius:12px;background:linear-gradient(135deg,#0072BC 0%,#0d2137 100%);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,114,188,.28);}
+.klcard-body{display:block;flex:1;min-width:0;}
+.klcard-eyebrow{display:flex;align-items:center;gap:6px;font-family:'IBM Plex Mono',monospace;font-size:0.52rem;letter-spacing:1.8px;text-transform:uppercase;color:#0072BC;margin-bottom:4px;}
+.klcard-eyebrow i{width:6px;height:6px;border-radius:50%;background:#C8103E;display:inline-block;}
+.klcard-title{display:block;font-family:'Lora',Georgia,serif;font-size:1.02rem;font-weight:600;color:#0d2137;line-height:1.2;}
+.klcard-sub{display:block;font-size:0.66rem;color:#8a99a6;margin-top:3px;line-height:1.5;}
+.klcard-cta{flex-shrink:0;display:inline-flex;align-items:center;gap:6px;font-family:'IBM Plex Sans',sans-serif;font-size:0.68rem;font-weight:600;color:#0072BC;border:1.5px solid #cfe0ee;border-radius:22px;padding:7px 15px;transition:all .18s ease;white-space:nowrap;}
+.klcard:hover .klcard-cta{background:#0072BC;color:#fff;border-color:#0072BC;}
+.klcard-cta svg{transition:transform .18s ease;}
+.klcard:hover .klcard-cta svg{transform:translate(2px,-2px);}
+@media(max-width:640px){.klcard-cta{display:none;}.klcard{gap:14px;padding:16px 18px;}}
+</style>
 </head>
 <body>
 
@@ -561,16 +578,20 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
     </div>
 
     <!-- Interactive site card -->
-    <a href="https://sameeraj89.github.io/vps_kerala_expansion/" target="_blank" rel="noopener" style="display:block;text-decoration:none;margin:18px 0 6px 0;">
-      <div style="display:flex;align-items:center;gap:16px;background:#ffffff;border:1px solid #e6ebf0;border-left:3px solid #C8103E;border-radius:10px;padding:15px 20px;box-shadow:0 1px 6px rgba(13,33,55,0.06);">
-        <div style="flex-shrink:0;width:40px;height:40px;border-radius:8px;background:#f3f7fb;display:flex;align-items:center;justify-content:center;font-size:1.15rem;">🗺️</div>
-        <div style="flex:1;">
-          <div style="font-family:'IBM Plex Mono',monospace;font-size:0.5rem;letter-spacing:1.6px;text-transform:uppercase;color:#0072BC;margin-bottom:3px;">Interactive Microsite</div>
-          <div style="font-family:'Lora',Georgia,serif;font-size:0.92rem;font-weight:600;color:#0d2137;line-height:1.25;">Explore the Kerala Expansion Playbook</div>
-          <div style="font-size:0.64rem;color:#8a99a6;margin-top:2px;">Interactive map, target deep-dives, playbooks, financial model and phasing.</div>
-        </div>
-        <div style="flex-shrink:0;color:#0072BC;font-size:1.05rem;">↗</div>
-      </div>
+    <a class="klcard" href="https://sameeraj89.github.io/vps_kerala_expansion/" target="_blank" rel="noopener" style="text-decoration:none;margin:18px 0 6px 0;">
+      <span class="klcard-ico">
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <g stroke="rgba(255,255,255,0.55)" stroke-width="1.2"><line x1="14" y1="14" x2="6" y2="6"/><line x1="14" y1="14" x2="22" y2="7"/><line x1="14" y1="14" x2="7" y2="22"/><line x1="14" y1="14" x2="22" y2="21"/></g>
+          <circle cx="6" cy="6" r="2.4" fill="#fff"/><circle cx="22" cy="7" r="2.4" fill="#fff"/><circle cx="7" cy="22" r="2.4" fill="#fff"/><circle cx="22" cy="21" r="2.4" fill="#fff"/>
+          <circle cx="14" cy="14" r="3.4" fill="#C8103E" stroke="#fff" stroke-width="1.2"/>
+        </svg>
+      </span>
+      <span class="klcard-body">
+        <span class="klcard-eyebrow"><i></i>Interactive Microsite</span>
+        <span class="klcard-title">Explore the Kerala Expansion Playbook</span>
+        <span class="klcard-sub">Interactive network map &middot; 25 target deep-dives &middot; playbooks &middot; financial model &middot; phasing</span>
+      </span>
+      <span class="klcard-cta">Explore <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9 L9 3 M4.5 3 H9 V7.5"/></svg></span>
     </a>
 
     <hr class="rule-heavy page-break-after">
