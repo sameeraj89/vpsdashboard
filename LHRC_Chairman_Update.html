@@ -460,6 +460,7 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
 .klcard:hover .klcard-cta svg{transform:translate(2px,-2px);}
 @media(max-width:640px){.klcard-cta{display:none;}.klcard{gap:14px;padding:16px 18px;}}
 </style>
+<style>.plain-table[style*="table-layout:fixed"] td.amt{white-space:normal;}</style>
 </head>
 <body>
 
@@ -598,8 +599,9 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
 
     <div class="section">
       <div class="sec-title">1. Two Entry Playbooks</div>
-      <table class="plain-table">
-        <thead><tr><th></th><th>A — Strategic-Control</th><th>B — O&amp;M Concession</th></tr></thead>
+      <table class="plain-table" style="table-layout:fixed;width:100%;">
+        <colgroup><col style="width:20%"><col style="width:40%"><col style="width:40%"></colgroup>
+        <thead><tr><th>Dimension</th><th>A — Strategic-Control</th><th>B — O&amp;M Concession</th></tr></thead>
         <tbody>
           <tr><td>Entry</td><td>Majority equity / NCLT going-concern. 60–100% stake.</td><td>15–25 yr concession; no equity or title transfer.</td></tr>
           <tr><td>Capital / asset</td><td class="amt">₹140–375 Cr (EV + integration)</td><td class="amt">₹50–200 Cr modernisation capex</td></tr>
@@ -613,7 +615,8 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
 
     <div class="section">
       <div class="sec-title">2. Value-Creation Engine — Six Levers</div>
-      <table class="plain-table">
+      <table class="plain-table" style="table-layout:fixed;width:100%;">
+        <colgroup><col style="width:20%"><col style="width:50%"><col style="width:16%"><col style="width:14%"></colgroup>
         <thead><tr><th>Lever</th><th>Mechanism</th><th>Uplift</th><th>Timeline</th></tr></thead>
         <tbody>
           <tr><td>Case-mix upgrade</td><td>Route complex cases to hub; tumour boards, cath labs, transplant protocols</td><td class="amt">+5–8% EBITDA</td><td class="amt">12–18 mo</td></tr>
