@@ -486,15 +486,22 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
 
   <!-- Scrollable item list -->
   <div class="sb-content">
+    <div class="sb-item active" onclick="switchPanel('jun15')" id="tab-jun15">
+      <span class="sb-item-icon">📄</span>
+      <div class="sb-item-text">
+        <div class="sb-item-date">15 June 2026</div>
+        <div class="sb-item-label">Operational &amp; Strategic Update</div>
+      </div>
+      <span class="sb-badge">NEW</span>
+    </div>
     <div class="sb-item" onclick="switchPanel('may31')" id="tab-may31">
       <span class="sb-item-icon">📄</span>
       <div class="sb-item-text">
         <div class="sb-item-date">15th &amp; 31st May</div>
         <div class="sb-item-label">Kerala Expansion Plan</div>
       </div>
-      <span class="sb-badge">NEW</span>
     </div>
-    <div class="sb-item active" onclick="switchPanel('may15')" id="tab-may15">
+    <div class="sb-item" onclick="switchPanel('may15')" id="tab-may15">
       <span class="sb-item-icon">📄</span>
       <div class="sb-item-text">
         <div class="sb-item-date">15th &amp; 31st May</div>
@@ -554,6 +561,135 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
   </div>
 </div>
 <div class="hdr-rule"></div>
+
+<!-- ═══════ PANEL: 15 JUNE 2026 — LHRC/BU/2026/007 ═══════ -->
+<div class="update-panel active" id="panel-jun15">
+<div class="page">
+  <a class="back" href="index.html">← Back to Dashboard</a>
+  <div class="doc">
+    <div class="dateline">
+      <div class="dateline-left">
+        <div class="dateline-eyebrow">VPS Lakeshore Hospital &amp; Research Centre</div>
+        <div class="dateline-week">Fortnight of 15 June 2026 — Operational &amp; Strategic Update</div>
+        <div class="draft-banner"><strong>DRAFT</strong> — For Chairman review. FY27 figures are first two months (April–May) actuals; deal structures and valuations are indicative and subject to due diligence.</div>
+      </div>
+      <div class="dateline-right">LHRC/BU/2026/007</div>
+    </div>
+
+    <hr class="rule-heavy page-break-after">
+
+    <div class="section">
+      <div class="sec-title">1. The Numbers — FY27, First Two Months</div>
+      <p style="margin:0 0 10px;">FY27 has started in line with plan. After April and May:</p>
+      <table class="plain-table" style="table-layout:fixed;width:100%;">
+        <colgroup><col style="width:40%"><col style="width:20%"><col style="width:20%"><col style="width:20%"></colgroup>
+        <thead><tr><th>₹ Crore</th><th>FY26 actual</th><th>FY27 plan</th><th>Apr–May actual</th></tr></thead>
+        <tbody>
+          <tr><td>Total revenue</td><td class="amt">459</td><td class="amt">575</td><td class="amt"><span style="color:#C8103E;">87.0</span></td></tr>
+          <tr><td>EBITDA</td><td class="amt">101</td><td class="amt">148</td><td class="amt"><span style="color:#C8103E;">23.4</span></td></tr>
+          <tr><td>EBITDA margin</td><td class="amt">21.9%</td><td class="amt">25.7%</td><td class="amt"><span style="color:#C8103E;">26.9%</span></td></tr>
+          <tr><td>PAT margin</td><td class="amt">—</td><td class="amt">15.8%</td><td class="amt"><span style="color:#C8103E;">16.5%</span></td></tr>
+        </tbody>
+      </table>
+      <ul class="sec-pts">
+        <li>Revenue is at <strong>98%</strong> of the two-month plan. EBITDA and PAT are both <strong>ahead of plan</strong> on margin.</li>
+        <li>Costs are well controlled. Fixed costs are <span style="color:#C8103E;">₹23.6 Cr — about 18% below plan</span>; doctor cost is on budget.</li>
+        <li>One line to watch: drug &amp; consumables at <strong>30% of revenue</strong> against a 27% plan.</li>
+        <li>The full-year plan is <strong>₹575 Cr revenue (+25% on FY26)</strong> and <strong>₹148 Cr EBITDA</strong>.</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <div class="sec-title">2. New Specialities &amp; Senior Recruits</div>
+      <p style="margin:0 0 8px;">New clinical services we are adding, each with a named lead:</p>
+      <table class="plain-table" style="table-layout:fixed;width:100%;">
+        <colgroup><col style="width:58%"><col style="width:42%"></colgroup>
+        <thead><tr><th>New speciality</th><th>Clinical lead</th></tr></thead>
+        <tbody>
+          <tr><td>Functional / Restorative Neurosurgery — DBS &amp; intrathecal pumps</td><td>Dr Ramnarayan</td></tr>
+          <tr><td>Robotic &amp; minimally invasive Head &amp; Neck Oncology</td><td>Dr Gunesh Rajan (sabbatical, Univ. of Lucerne)</td></tr>
+          <tr><td>Stereotactic Radiosurgery (SRS &amp; hFSRT)</td><td>Dr Amith Mohan</td></tr>
+          <tr><td>Thoracic Surgery &amp; Lung Transplant</td><td>Dr Balasubramaniam</td></tr>
+          <tr><td>Haematology &amp; Haemato-Oncology</td><td>Dr Amit Srivastava</td></tr>
+        </tbody>
+      </table>
+      <ul class="sec-pts">
+        <li><strong>New service lines:</strong> Hand &amp; Microsurgery (confirmed); Breast Reconstruction and Burns (under evaluation).</li>
+        <li><strong>Chief of Medical Services</strong> — Maria Varghese, joining from Medical Trust.</li>
+        <li><strong>Head of IT</strong> — Rakesh Ranjan.</li>
+        <li><strong>Head of HR</strong> — appointment being finalised.</li>
+      </ul>
+      <div class="dl-links" style="margin-top:10px;">
+        <a class="dl-link" href="#" onclick="return openDocViewer('Weekly%20update/15th%20June/VPS_Lakeshore_New_Specialities.docx','New Specialities — Plan')">↗ New Specialities — Plan (.docx)</a>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="sec-title">3. Calicut Centre — Redesign</div>
+      <p style="margin:0 0 8px;">The Calicut centre is under-utilised. Three moves, running in parallel, turn it into a profitable hub and a stronger feed to Kochi:</p>
+      <ul class="sec-pts">
+        <li><strong>1. Anchor partner (O&amp;M).</strong> The centre has no inpatient anchor. We will partner with a nearby 50–100 bed hospital on an O&amp;M basis — VPS runs operations and brings brand, talent and systems; the owner keeps the asset and its debt. Targets: <strong>Rajendra (~50 beds)</strong> or <strong>Fathima (~150 beds)</strong>. Introductions made; talks continue. Low capital at risk, quick start, and it feeds complex cases up to Kochi.</li>
+        <li><strong>2. Building redesign (under exploration).</strong> Repurpose the building to a higher-yield use. Three concepts: (a) <strong>Wellness, Longevity &amp; Diagnostics</strong> with OneDx, for the affluent and NRI base; (b) <strong>Rehabilitation &amp; Neuro centre</strong>; (c) <strong>standalone plastic &amp; cosmetic surgery</strong>.</li>
+        <li><strong>3. Packages &amp; discounts (rolling out now).</strong> A Vande Bharat travel package for patients moving between Calicut and Kochi, and fixed referral discounts for the Calicut catchment.</li>
+      </ul>
+      <div class="dl-links" style="margin-top:10px;">
+        <a class="dl-link" href="#" onclick="return openDocViewer('Weekly%20update/15th%20June/Calicut_Centre_Revival_1pager.docx','Calicut Centre — Revival Plan')">↗ Calicut Centre — Revival (.docx)</a>
+        <a class="dl-link" href="#" onclick="return openDocViewer('Weekly%20update/15th%20June/Fatima_Hospital_OM_Proposal.docx','Fathima Hospital — O&amp;M Proposal')">↗ Fathima Hospital — O&amp;M (.docx)</a>
+        <a class="dl-link" href="#" onclick="return openDocViewer('Weekly%20update/15th%20June/Rajendra_Hospital_OM_Proposal.docx','Rajendra Hospital — O&amp;M Proposal')">↗ Rajendra Hospital — O&amp;M (.docx)</a>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="sec-title">4. Delhi Concept Prototype — Five Quaternary Institutes</div>
+      <p style="margin:0 0 8px;">Planned for the Qutub Institutional Area, New Delhi: not one multi-specialty hospital, but five focused quaternary institutes — each with its own identity, sharing core infrastructure, diagnostics and governance.</p>
+      <table class="plain-table" style="table-layout:fixed;width:100%;">
+        <colgroup><col style="width:34%"><col style="width:66%"></colgroup>
+        <thead><tr><th>Institute</th><th>In one line</th></tr></thead>
+        <tbody>
+          <tr><td><strong>POC</strong> — Precision Oncology Centre</td><td>Genomics-guided solid-tumour oncology; premium, NRI-pull, sets the campus apart.</td></tr>
+          <tr><td><strong>BDI</strong> — Blood Disorders Institute</td><td>Haemato-oncology, stem-cell transplant and CAR-T cellular therapy.</td></tr>
+          <tr><td><strong>NNC</strong> — Neurology &amp; Neuromuscular Centre</td><td>Neurosciences with gene therapy, epilepsy surgery and deep brain stimulation.</td></tr>
+          <tr><td><strong>LLEI</strong> — Longevity &amp; Lifespan Extension Institute</td><td>Precision prevention and regenerative medicine; fully self-pay, affluent &amp; NRI.</td></tr>
+          <tr><td><strong>CCH</strong> — Comprehensive Children's Hospital</td><td>Quaternary paediatric &amp; neonatal care, congenital cardiac surgery and paediatric BMT.</td></tr>
+        </tbody>
+      </table>
+      <div class="dl-links" style="margin-top:10px;">
+        <a class="dl-link" href="#" onclick="return openDocViewer('Weekly%20update/15th%20June/Delhi_Precision_Hospitals.pptx','Delhi Precision Hospitals — Five Prototypes')">↗ Delhi Precision Hospitals — Concept Deck (.pptx)</a>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="sec-title">5. VPS Shareholding — Recommended Route</div>
+      <p style="margin:0 0 8px;">Discussed with Chetan and Reuben. The aim: consolidate the entire share capital into the promoter block and, in the same exercise, raise the capital for the next phase of works — using only the existing shareholder base, with no new outside investor. The promoter block holds <strong>62.4%</strong> today; the remaining <strong>37.6%</strong> is spread across roughly <strong>1,695 outside shareholders</strong>.</p>
+      <table class="plain-table" style="table-layout:fixed;width:100%;">
+        <colgroup><col style="width:10%"><col style="width:70%"><col style="width:20%"></colgroup>
+        <thead><tr><th>Step</th><th>Action</th><th>Promoter block</th></tr></thead>
+        <tbody>
+          <tr><td class="amt">—</td><td>Today</td><td class="amt">62%</td></tr>
+          <tr><td class="amt">1</td><td>Declare <strong>no dividend</strong>, so an illiquid, non-yielding holding has little appeal to outside members.</td><td class="amt">62%</td></tr>
+          <tr><td class="amt">2</td><td>Set a <strong>reference price</strong> via one or two block deals with the largest outside holders — PM Sebastian (4.5%) or the KV Jolly family (2.3%). Expected <span style="color:#C8103E;">₹85–100 / share</span>.</td><td class="amt">~67%</td></tr>
+          <tr><td class="amt">3</td><td>Buy the <strong>passive float</strong> quietly through a broker, on behalf of Dr Shamsheer Vayalil, at the reference price.</td><td class="amt">~77%</td></tr>
+          <tr><td class="amt">4</td><td><strong>Rights issue</strong> near the reference price (~₹90) to fund the works — <span style="color:#C8103E;">~₹150 Cr renovation + ~₹200 Cr new block (₹350 Cr)</span>, plus debt. Promoter subscribes fully and takes up what others renounce.</td><td class="amt">~85%</td></tr>
+          <tr><td class="amt">5</td><td><strong>Top-up buy-back</strong>, then a <strong>Section 236 squeeze-out</strong> at a registered-valuer price under NCLT oversight.</td><td class="amt">90% → 100%</td></tr>
+        </tbody>
+      </table>
+      <p style="margin:8px 0 0;font-size:0.78rem;color:#4a5568;">Every step depends on the reference price; settling one large holding first sets the rate for the buy-back and the rights issue that follow. If no block deal can be struck, a registered-valuer's fair value is used instead.</p>
+      <div class="dl-links" style="margin-top:10px;">
+        <a class="dl-link" href="#" onclick="return openDocViewer('Weekly%20update/15th%20June/VPS_Shareholding_Plan_June2026.docx','VPS Shareholding Plan — Next Steps')">↗ VPS Shareholding Plan — Next Steps (.docx)</a>
+      </div>
+    </div>
+
+    <hr class="rule-heavy">
+
+    <div class="commentary-label">Strategic Note</div>
+    <div class="commentary-hed">The fortnight in short</div>
+    <div class="commentary-para">The core business is tracking plan — revenue at 98% of the two-month target, margins ahead, costs held below budget. On top of that we are widening the clinical offer (five new specialities and three senior leadership hires), reworking the Calicut centre around an O&amp;M anchor, and shaping the Delhi five-institute prototype.</div>
+    <div class="commentary-para">The one decision that needs the Chairman's steer is the <strong>shareholding consolidation</strong>. The recommended route — no dividend, a block deal to set the price, a quiet broker buy-back, a near-priced rights issue to fund the works, and a final Section 236 squeeze-out — moves the promoter block from 62% to 100% while raising the ₹350 Cr for renovation and the new block, all from within the existing shareholder base.</div>
+
+  </div><!-- /doc -->
+</div><!-- /page -->
+</div><!-- /panel-jun15 -->
+
 
 <!-- ═══════ PANEL: 31 MAY 2026 — LHRC/BU/2026/006 ═══════ -->
 <div class="update-panel" id="panel-may31">
@@ -732,7 +868,7 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
 
 <!-- ══════════════════════════════════ PANEL: 1 APRIL 2026 ══════════════════════════════════ -->
 <!-- ═══════ PANEL: 15 MAY 2026 — LHRC/BU/2026/005 ═══════ -->
-<div class="update-panel active" id="panel-may15">
+<div class="update-panel" id="panel-may15">
 <div class="page">
   <a class="back" href="index.html">← Back to Dashboard</a>
   <div class="doc">
