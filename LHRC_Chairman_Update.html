@@ -721,11 +721,14 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
           #panel-jun15 ul.d-sub{list-style:none;padding:0;margin:5px 0 3px 16px;font-size:0.7rem;color:#4a5568;line-height:1.7;}
           #panel-jun15 ul.d-sub li{padding:2px 0 2px 14px;position:relative;border-top:none !important;}
           #panel-jun15 ul.d-sub li::before{content:'·';position:absolute;left:3px;top:0;color:#C8103E;font-weight:700;}
+          #panel-jun15 #delhi-list{counter-reset:inst;}
+          #panel-jun15 #delhi-list > li.inst{padding-left:20px;}
+          #panel-jun15 #delhi-list > li.inst::before{counter-increment:inst;content:counter(inst) '.';color:#0072BC;font-weight:700;left:0;}
         </style>
-        <ul class="sec-pts">
+        <ul class="sec-pts" id="delhi-list">
           <li>Planned for the <strong>Qutub Institutional Area, New Delhi</strong> — not one multi-specialty hospital, but five focused quaternary institutes, each with its own identity, sharing core infrastructure, diagnostics and governance.</li>
 
-          <li><strong>POC — Precision Oncology Centre.</strong> Genomics-guided solid-tumour oncology — NGS-led treatment selection with molecular tumour boards, robotic surgical oncology, liquid biopsy and CAR-T.
+          <li class="inst"><strong>POC — Precision Oncology Centre.</strong> Genomics-guided solid-tumour oncology — NGS-led treatment selection with molecular tumour boards, robotic surgical oncology, liquid biopsy and CAR-T.
             <ul class="d-sub">
               <li><strong>Global benchmark:</strong> MSK Molecular Oncology, New York.</li>
               <li><strong>Possible top bills:</strong> CAR-T <span style="color:#C8103E;">₹40–55 L</span>; immunotherapy ₹15–25 L/yr.</li>
@@ -733,7 +736,7 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
             </ul>
           </li>
 
-          <li><strong>BDI — Blood Disorders Institute.</strong> Haemato-oncology, transplant and cellular therapy — leukaemias and lymphomas, allogeneic &amp; autologous HSCT, CAR-T manufacturing, and inherited disorders (thalassaemia, sickle cell, haemophilia).
+          <li class="inst"><strong>BDI — Blood Disorders Institute.</strong> Haemato-oncology, transplant and cellular therapy — leukaemias and lymphomas, allogeneic &amp; autologous HSCT, CAR-T manufacturing, and inherited disorders (thalassaemia, sickle cell, haemophilia).
             <ul class="d-sub">
               <li><strong>Global benchmark:</strong> Fred Hutchinson Cancer Center, Seattle.</li>
               <li><strong>Possible top bills:</strong> allogeneic HSCT ₹25–35 L; gene therapy <span style="color:#C8103E;">₹2.5–4 Cr</span>.</li>
@@ -741,7 +744,7 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
             </ul>
           </li>
 
-          <li><strong>NNC — Neurology &amp; Neuromuscular Centre.</strong> Neurosciences with gene therapy — SMA/neuromuscular gene therapy, epilepsy surgery with monitoring, movement disorders and Parkinson's with deep brain stimulation, and neuro-oncology.
+          <li class="inst"><strong>NNC — Neurology &amp; Neuromuscular Centre.</strong> Neurosciences with gene therapy — SMA/neuromuscular gene therapy, epilepsy surgery with monitoring, movement disorders and Parkinson's with deep brain stimulation, and neuro-oncology.
             <ul class="d-sub">
               <li><strong>Global benchmark:</strong> National Hospital for Neurology &amp; Neurosurgery, Queen Square, London.</li>
               <li><strong>Possible top bills:</strong> bilateral DBS ₹15–30 L; SMA gene therapy <span style="color:#C8103E;">₹16–17 Cr</span>.</li>
@@ -749,7 +752,7 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
             </ul>
           </li>
 
-          <li><strong>LLEI — Longevity &amp; Lifespan Extension Institute.</strong> Precision prevention, regenerative and metabolic medicine — multi-omics assessment, cellular rejuvenation, regenerative medicine and metabolic optimisation.
+          <li class="inst"><strong>LLEI — Longevity &amp; Lifespan Extension Institute.</strong> Precision prevention, regenerative and metabolic medicine — multi-omics assessment, cellular rejuvenation, regenerative medicine and metabolic optimisation.
             <ul class="d-sub">
               <li><strong>Global benchmark:</strong> Buck Institute for Research on Aging, California.</li>
               <li><strong>Possible top bills:</strong> healthspan membership ₹10–25 L/yr; multi-omics assessment ₹7–13 L.</li>
@@ -757,7 +760,7 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
             </ul>
           </li>
 
-          <li><strong>CCH — Comprehensive Children's Hospital.</strong> Quaternary paediatric and neonatal care — paediatric haemato-oncology and BMT, congenital cardiac surgery, NICU/PICU critical care, and rare genetic disorders.
+          <li class="inst"><strong>CCH — Comprehensive Children's Hospital.</strong> Quaternary paediatric and neonatal care — paediatric haemato-oncology and BMT, congenital cardiac surgery, NICU/PICU critical care, and rare genetic disorders.
             <ul class="d-sub">
               <li><strong>Global benchmark:</strong> Boston Children's Hospital, Boston.</li>
               <li><strong>Possible top bills:</strong> congenital cardiac surgery ₹5–12 L; paediatric gene therapy <span style="color:#C8103E;">₹16 Cr</span>.</li>
