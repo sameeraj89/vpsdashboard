@@ -569,11 +569,6 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
   #panel-jun15 .sec-pts { font-size: 0.74rem; }
   #panel-jun15 .plain-table { font-size: 0.74rem; }
   #panel-jun15 .plain-table th { font-size: 0.58rem; }
-  #panel-jun15 .cxinc-head { font-size: 0.74rem; }
-  #panel-jun15 .cxinc-tbl td.cxinc-j { font-size: 0.72rem; }
-  #panel-jun15 .cxinc-tbl th { font-size: 0.53rem; }
-  #panel-jun15 .cxinc-on, #panel-jun15 .cxinc-off { font-size: 0.84rem; }
-  #panel-jun15 .cxinc-cap { font-size: 0.62rem; }
 </style>
 <div class="page">
   <a class="back" href="index.html">← Back to Dashboard</a>
@@ -690,42 +685,29 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
       <div class="sub-section">
         <div class="sub-sec-title">3 · Patient Packages &amp; Discounts (rolling out now)</div>
         <ul class="sec-pts">
-          <li>A <strong>Vande Bharat travel package</strong> for patients moving between Calicut and Kochi, fixed <strong>referral discounts</strong> for the Calicut catchment, and a journey-by-journey bundle of patient benefits to pull volume in now and keep it inside the VPS network.</li>
+          <li><strong>Care Express</strong> — a Vande Bharat travel package that bundles train tickets and care for patients travelling between Calicut and Kochi, making the trip to Lakeshore seamless and affordable.</li>
+          <li><strong>Calicut referral discount</strong> — the alternative offer: a fixed <span style="color:#C8103E;">5–8%</span> concession for patients referred from the Calicut catchment, keeping them inside the VPS network.</li>
         </ul>
 
         <style>
-        .cxinc{border:1px solid #e8ecf0;border-radius:8px;padding:13px 15px;margin-top:10px;background:#fcfdfe;}
-        .cxinc-head{font-size:0.7rem;font-weight:700;color:#0072BC;margin-bottom:10px;}
-        .cxinc-tbl{width:100%;border-collapse:collapse;}
-        .cxinc-tbl th{font-family:'IBM Plex Mono',monospace;font-size:0.49rem;font-weight:700;text-transform:uppercase;letter-spacing:0.3px;color:#a0aec0;text-align:center;padding:0 3px 8px;line-height:1.35;vertical-align:bottom;}
-        .cxinc-tbl th.cxinc-j{text-align:left;}
-        .cxinc-tbl td{padding:6px 3px;text-align:center;border-top:1px solid #f0f2f5;}
-        .cxinc-tbl td.cxinc-j{text-align:left;font-weight:500;color:#1a202c;font-size:0.66rem;white-space:nowrap;}
-        .cxinc-on{color:#C8103E;font-size:0.74rem;}
-        .cxinc-off{color:#d4dae2;font-size:0.74rem;}
-        .cxinc-cap{font-size:0.57rem;color:#718096;margin-top:10px;line-height:1.55;}
+          #panel-jun15 .cxchip-wrap{border:1px solid #e8ecf0;border-radius:8px;padding:13px 15px;margin-top:10px;background:#fcfdfe;}
+          #panel-jun15 .cxchip-head{font-size:0.72rem;font-weight:700;color:#0072BC;margin-bottom:10px;}
+          #panel-jun15 .cxchip-grid{display:flex;flex-wrap:wrap;gap:8px;}
+          #panel-jun15 .cxchip{display:flex;align-items:center;gap:7px;border:1px solid #f0d4dc;background:#fdf3f6;border-radius:20px;padding:6px 13px;font-size:0.68rem;color:#1a202c;}
+          #panel-jun15 .cxchip i{width:7px;height:7px;border-radius:50%;background:#C8103E;display:inline-block;flex-shrink:0;}
+          #panel-jun15 .cxchip-cap{font-size:0.6rem;color:#718096;margin-top:10px;}
         </style>
-        <div class="cxinc">
-          <div class="cxinc-head">Patient incentives across key journeys</div>
-          <table class="cxinc-tbl">
-            <thead><tr>
-              <th class="cxinc-j">Patient journey</th>
-              <th>Clinic<br>discount</th><th>Shuttle<br>Cal⇄Kochi</th><th>Free<br>meals</th><th>Priority<br>slot</th><th>OP<br>follow-up</th><th>Care<br>co-ord.</th>
-            </tr></thead>
-            <tbody>
-              <tr><td class="cxinc-j">Breast cancer → Kochi</td><td><span class="cxinc-on">●</span></td><td><span class="cxinc-on">●</span></td><td><span class="cxinc-on">●</span></td><td><span class="cxinc-on">●</span></td><td><span class="cxinc-on">●</span></td><td><span class="cxinc-on">●</span></td></tr>
-              <tr><td class="cxinc-j">Head &amp; neck cancer → Kochi</td><td><span class="cxinc-on">●</span></td><td><span class="cxinc-on">●</span></td><td><span class="cxinc-off">○</span></td><td><span class="cxinc-on">●</span></td><td><span class="cxinc-on">●</span></td><td><span class="cxinc-on">●</span></td></tr>
-              <tr><td class="cxinc-j">Acute stroke — local</td><td><span class="cxinc-on">●</span></td><td><span class="cxinc-off">○</span></td><td><span class="cxinc-on">●</span></td><td><span class="cxinc-on">●</span></td><td><span class="cxinc-on">●</span></td><td><span class="cxinc-on">●</span></td></tr>
-              <tr><td class="cxinc-j">NRI cardiac — Gulf (planned)</td><td><span class="cxinc-off">○</span></td><td><span class="cxinc-on">●</span></td><td><span class="cxinc-on">●</span></td><td><span class="cxinc-on">●</span></td><td><span class="cxinc-on">●</span></td><td><span class="cxinc-on">●</span></td></tr>
-              <tr><td class="cxinc-j">Knee replacement — stays local</td><td><span class="cxinc-on">●</span></td><td><span class="cxinc-off">○</span></td><td><span class="cxinc-on">●</span></td><td><span class="cxinc-on">●</span></td><td><span class="cxinc-on">●</span></td><td><span class="cxinc-off">○</span></td></tr>
-              <tr><td class="cxinc-j">Renal failure → transplant → Kochi</td><td><span class="cxinc-on">●</span></td><td><span class="cxinc-on">●</span></td><td><span class="cxinc-on">●</span></td><td><span class="cxinc-on">●</span></td><td><span class="cxinc-on">●</span></td><td><span class="cxinc-on">●</span></td></tr>
-              <tr><td class="cxinc-j">Diabetes / chronic care — local</td><td><span class="cxinc-on">●</span></td><td><span class="cxinc-off">○</span></td><td><span class="cxinc-off">○</span></td><td><span class="cxinc-on">●</span></td><td><span class="cxinc-on">●</span></td><td><span class="cxinc-off">○</span></td></tr>
-            </tbody>
-          </table>
-          <div class="cxinc-cap"><span class="cxinc-on">●</span> included &nbsp;&nbsp; <span class="cxinc-off">○</span> not included &nbsp;·&nbsp; Local-only journeys get no Kochi shuttle or discount. Incentives are patient benefits, not referral fees — indicative.</div>
-        </div>
-        <div class="dl-links" style="margin-top:8px;">
-          <a class="dl-link" href="Weekly%20update/15th%20June/Calicut_Patient_Incentives.png" target="_blank" rel="noopener">↗ Full incentive map — 12 journeys (image)</a>
+        <div class="cxchip-wrap">
+          <div class="cxchip-head">Other incentives under consideration</div>
+          <div class="cxchip-grid">
+            <span class="cxchip"><i></i>Free meals during stay</span>
+            <span class="cxchip"><i></i>Subsidised bystander stay</span>
+            <span class="cxchip"><i></i>Free OP follow-up</span>
+            <span class="cxchip"><i></i>Dedicated care coordinator</span>
+            <span class="cxchip"><i></i>Free local shuttle</span>
+            <span class="cxchip"><i></i>Subsidised teleconsults</span>
+          </div>
+          <div class="cxchip-cap">Indicative — patient benefits, not referral fees; final mix to be confirmed.</div>
         </div>
       </div>
     </div>
