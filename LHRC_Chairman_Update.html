@@ -569,6 +569,7 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
   #panel-jun15 .sec-pts { font-size: 0.74rem; }
   #panel-jun15 .plain-table { font-size: 0.74rem; }
   #panel-jun15 .plain-table th { font-size: 0.58rem; }
+  #panel-jun15 #spec-table th:nth-child(2), #panel-jun15 #spec-table td:nth-child(2) { text-align: center; }
 </style>
 <div class="page">
   <a class="back" href="index.html">← Back to Dashboard</a>
@@ -620,7 +621,7 @@ body.edit-mode [data-edit-id]:empty::before { content: attr(data-placeholder); c
         <ul class="sec-pts" style="margin-bottom:9px;">
           <li>Planned additions to our clinical portfolio; discussions are at advanced stages.</li>
         </ul>
-        <table class="plain-table" style="table-layout:fixed;width:100%;">
+        <table class="plain-table" id="spec-table" style="table-layout:fixed;width:100%;">
           <colgroup><col style="width:42%"><col style="width:58%"></colgroup>
           <thead><tr><th>Speciality</th><th>Clinical lead</th></tr></thead>
           <tbody>
